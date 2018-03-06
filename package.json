@@ -20,6 +20,6 @@
   "dependencies": {
     "react": "16.2.0",
     "react-native": "0.52.0",
-    "react-native-smart-splash-screen": "^2.3.5"
+    "react-native-smart-splash-screen": "git://github.com/rgdalessandro/react-native-smart-splash-screen.git#33f0c890939e88516cd5476a5df99510e8a3ea1f"
   }
 }

@@ -3,6 +3,86 @@
   <component name="ChangeListManager">
     <list default="true" id="60a7096d-3992-4e4a-942a-78a4550184eb" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/ios/MobileApp.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ios/MobileApp.xcodeproj/project.pbxproj" />
+      <change beforePath="$PROJECT_DIR$/ios/MobileApp.xcodeproj/project.xcworkspace/xcuserdata/ricardodalessandro.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/ios/MobileApp.xcodeproj/project.xcworkspace/xcuserdata/ricardodalessandro.xcuserdatad/UserInterfaceState.xcuserstate" />
+      <change beforePath="$PROJECT_DIR$/ios/MobileApp/AppDelegate.m" afterPath="$PROJECT_DIR$/ios/MobileApp/AppDelegate.m" />
+      <change beforePath="$PROJECT_DIR$/ios/MobileApp/Base.lproj/LaunchScreen.xib" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/Objects-normal/x86_64/AppDelegate.d" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/Objects-normal/x86_64/AppDelegate.d" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/Objects-normal/x86_64/AppDelegate.o" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/Objects-normal/x86_64/AppDelegate.o" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/Objects-normal/x86_64/MobileApp_dependency_info.dat" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/Objects-normal/x86_64/MobileApp_dependency_info.dat" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileApp.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileAppTests.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/MobileApp.build/Debug-iphonesimulator/MobileAppTests.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTActionSheet.build/Debug-iphonesimulator/RCTActionSheet.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTActionSheet.build/Debug-iphonesimulator/RCTActionSheet.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTAnimation.build/Debug-iphonesimulator/RCTAnimation.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTAnimation.build/Debug-iphonesimulator/RCTAnimation.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTBlob.build/Debug-iphonesimulator/RCTBlob.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTBlob.build/Debug-iphonesimulator/RCTBlob.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTGeolocation.build/Debug-iphonesimulator/RCTGeolocation.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTGeolocation.build/Debug-iphonesimulator/RCTGeolocation.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTImage.build/Debug-iphonesimulator/RCTImage.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTImage.build/Debug-iphonesimulator/RCTImage.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTLinking.build/Debug-iphonesimulator/RCTLinking.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTLinking.build/Debug-iphonesimulator/RCTLinking.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTNetwork.build/Debug-iphonesimulator/RCTNetwork.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTNetwork.build/Debug-iphonesimulator/RCTNetwork.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTSettings.build/Debug-iphonesimulator/RCTSettings.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTSettings.build/Debug-iphonesimulator/RCTSettings.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTText.build/Debug-iphonesimulator/RCTText.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTText.build/Debug-iphonesimulator/RCTText.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTVibration.build/Debug-iphonesimulator/RCTVibration.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTVibration.build/Debug-iphonesimulator/RCTVibration.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTWebSocket.build/Debug-iphonesimulator/RCTWebSocket.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTWebSocket.build/Debug-iphonesimulator/RCTWebSocket.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTWebSocket.build/Debug-iphonesimulator/fishhook.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/RCTWebSocket.build/Debug-iphonesimulator/fishhook.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/React.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/React.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/cxxreact.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/cxxreact.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/double-conversion.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/double-conversion.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/jschelpers.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/jschelpers.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/jsinspector.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/jsinspector.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/privatedata.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/privatedata.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/third-party.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/third-party.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/yoga.build/dgph" afterPath="$PROJECT_DIR$/ios/build/Build/Intermediates.noindex/React.build/Debug-iphonesimulator/yoga.build/dgph" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app.dSYM/Contents/Resources/DWARF/MobileApp" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app.dSYM/Contents/Resources/DWARF/MobileApp" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/Base.lproj/LaunchScreen.nib" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/MobileApp" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/MobileApp" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/PlugIns/MobileAppTests.xctest/MobileAppTests" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/PlugIns/MobileAppTests.xctest/MobileAppTests" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/_CodeSignature/CodeResources" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/MobileApp.app/_CodeSignature/CodeResources" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libReact.a" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libReact.a" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libcxxreact.a" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libcxxreact.a" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libjschelpers.a" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libjschelpers.a" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libthird-party.a" afterPath="$PROJECT_DIR$/ios/build/Build/Products/Debug-iphonesimulator/libthird-party.a" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/AppDelegate.o-1WYE4ZBCFTFVL" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/AppDelegate.o-1WYE4ZBCFTFVL" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Conv.o-233VPO6BIEJS4" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Conv.o-233VPO6BIEJS4" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/CxxNativeModule.o-1M5ZVMF7QQ7IC" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/CxxNativeModule.o-1M5ZVMF7QQ7IC" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Instance.o-3BFD0PI5ELPLR" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Instance.o-3BFD0PI5ELPLR" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSBigString.o-VYXTBWJGNLWR" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSBigString.o-VYXTBWJGNLWR" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSBundleType.o-39TMAWRRW951P" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSBundleType.o-39TMAWRRW951P" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCExecutor.o-2TSZGH8KFK9H6" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCExecutor.o-2TSZGH8KFK9H6" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCHelpers.o-32UG531WCFPUY" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCHelpers.o-32UG531WCFPUY" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCNativeModules.o-FU5KH46Q3KOM" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCNativeModules.o-FU5KH46Q3KOM" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCSamplingProfiler.o-2TZZ8DSV0F9XT" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCSamplingProfiler.o-2TZZ8DSV0F9XT" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCUtils.o-1LUJNQKGYO1QV" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCUtils.o-1LUJNQKGYO1QV" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCWrapper.o-2APIB6R6EZFXL" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSCWrapper.o-2APIB6R6EZFXL" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSIndexedRAMBundle.o-1N2VGQ9J4X2EA" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/JSIndexedRAMBundle.o-1N2VGQ9J4X2EA" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/MethodCall.o-1KJKOX4TYQVAC" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/MethodCall.o-1KJKOX4TYQVAC" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/ModuleRegistry.o-BMJX09HDZ3PW" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/ModuleRegistry.o-BMJX09HDZ3PW" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/NSDataBigString.o-PU2YQQ7JO0SJ" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/NSDataBigString.o-PU2YQQ7JO0SJ" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/NativeToJsBridge.o-10B0H7B39JP49" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/NativeToJsBridge.o-10B0H7B39JP49" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Platform.o-1EDXLHVRMRKYZ" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Platform.o-1EDXLHVRMRKYZ" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxBridge.o-2FC7943GFBUPE" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxBridge.o-2FC7943GFBUPE" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxMethod.o-2I19DNBSHSQCN" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxMethod.o-2I19DNBSHSQCN" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxModule.o-16MPMN1NTEBK4" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxModule.o-16MPMN1NTEBK4" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxUtils.o-6H8TSY5RJX9S" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTCxxUtils.o-6H8TSY5RJX9S" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTFollyConvert.o-T5G6KPZVR309" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTFollyConvert.o-T5G6KPZVR309" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTJSCHelpers.o-9YKWUIO5ZK41" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTJSCHelpers.o-9YKWUIO5ZK41" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTMessageThread.o-2G18JXZ5ZLMCY" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTMessageThread.o-2G18JXZ5ZLMCY" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTNativeModule.o-2M5BK6XOA5XE4" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTNativeModule.o-2M5BK6XOA5XE4" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTObjcExecutor.o-31XM9QUL7JFZS" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/RCTObjcExecutor.o-31XM9QUL7JFZS" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/SampleCxxModule.o-27RZJ4CNPQ71S" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/SampleCxxModule.o-27RZJ4CNPQ71S" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/StringBase.o-EG1DTAT9R622" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/StringBase.o-EG1DTAT9R622" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Value.o-15QNS793N51OC" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/Value.o-15QNS793N51OC" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/demangle-7B942820D95A2665.o-1GPSYPXQ07KO8" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/demangle-7B942820D95A2665.o-1GPSYPXQ07KO8" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/dynamic.o-HQLOAOOTBFXG" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/dynamic.o-HQLOAOOTBFXG" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/json.o-3JMO0ILMTM1GJ" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/json.o-3JMO0ILMTM1GJ" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/logging.o-2RUUCSF7X6JV4" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/logging.o-2RUUCSF7X6JV4" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/raw_logging.o-1ZIT4IMMI5VPA" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/raw_logging.o-1ZIT4IMMI5VPA" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/signalhandler.o-2C2WWZ72KM893" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/signalhandler.o-2C2WWZ72KM893" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/symbolize.o-33JKJSOQW7RKO" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/symbolize.o-33JKJSOQW7RKO" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/utilities.o-PPZFE19XNGY9" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/utilities.o-PPZFE19XNGY9" />
+      <change beforePath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/vlog_is_on.o-1KBBLJDY5HDKA" afterPath="$PROJECT_DIR$/ios/build/Index/DataStore/v5/units/vlog_is_on.o-1KBBLJDY5HDKA" />
+      <change beforePath="$PROJECT_DIR$/ios/build/info.plist" afterPath="$PROJECT_DIR$/ios/build/info.plist" />
+      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" afterPath="$PROJECT_DIR$/yarn.lock" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,7 +95,20 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/app/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,8 +119,8 @@
         <option value="$PROJECT_DIR$/App.js" />
         <option value="$PROJECT_DIR$/src/components/app/App.test.js" />
         <option value="$PROJECT_DIR$/src/components/app/App.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -75,6 +168,24 @@
               <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
               <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -120,15 +231,16 @@
       <option name="presentableId" value="Default" />
       <updated>1520364323261</updated>
       <workItem from="1520364324621" duration="4211000" />
-      <workItem from="1520370899790" duration="2063000" />
+      <workItem from="1520370899790" duration="3817000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6274000" />
+    <option name="totallyTimeSpent" value="8028000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="248" y="-1417" width="1146" height="1417" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31849912" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -137,7 +249,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32267657" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32267657" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -165,6 +277,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -179,13 +294,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/app/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -193,6 +302,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -212,6 +324,16 @@
         <state relative-caret-position="375">
           <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/app/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

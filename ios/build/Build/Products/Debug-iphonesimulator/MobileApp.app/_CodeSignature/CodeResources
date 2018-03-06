@@ -40,10 +40,6 @@
 		<data>
 		N02EgGLkUGNobEM122ZTkFBtxQM=
 		</data>
-		<key>Base.lproj/LaunchScreen.nib</key>
-		<data>
-		/sAqYZynrDW2DDd0gUjfUMU6xn8=
-		</data>
 		<key>Frameworks/IDEBundleInjection.framework/IDEBundleInjection</key>
 		<data>
 		ooz0sIAaLKBGoFU5iKq8DR11NmY=
@@ -89,6 +85,10 @@
 		<data>
 		/pFbtUhYNLrGglqdrP3axyjDJUM=
 		</data>
+		<key>LaunchScreen.nib</key>
+		<data>
+		pfDyWCbXC03lB4YFASctteWSc5g=
+		</data>
 		<key>PkgInfo</key>
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
@@ -107,11 +107,15 @@
 		</data>
 		<key>PlugIns/MobileAppTests.xctest/MobileAppTests</key>
 		<data>
-		xX/A92seCl4z3+2OtBmWYWKD+tg=
+		sp8ClzehafCQVrRZwcmKOH7tSPc=
 		</data>
 		<key>PlugIns/MobileAppTests.xctest/_CodeSignature/CodeResources</key>
 		<data>
 		Pr47ur1lWCe4Yq8DNUhUu5KfCAY=
+		</data>
+		<key>splash.png</key>
+		<data>
+		1Eq1gOE9YLEnuwyYM/VLCiCUQ8E=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -215,17 +219,6 @@
 			LGjc2pO20wHwztPUbzWwiu5hDV1SWZHBAa/XIscNuNM=
 			</data>
 		</dict>
-		<key>Base.lproj/LaunchScreen.nib</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			/sAqYZynrDW2DDd0gUjfUMU6xn8=
-			</data>
-			<key>hash2</key>
-			<data>
-			st2ik4EhEFoC/y0ulms86qKbtIgE66UO/cWt0reMEnw=
-			</data>
-		</dict>
 		<key>Frameworks/IDEBundleInjection.framework/IDEBundleInjection</key>
 		<dict>
 			<key>hash</key>
@@ -327,6 +320,17 @@
 			Jh5i9giCFfo5GhN25CjMKdDJ6Kdlz/p4L95RITR+WeA=
 			</data>
 		</dict>
+		<key>LaunchScreen.nib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			pfDyWCbXC03lB4YFASctteWSc5g=
+			</data>
+			<key>hash2</key>
+			<data>
+			EnXKkhsu0DU0y1D4/qaeWiq8VXPlnE2kQBKOYVomLh0=
+			</data>
+		</dict>
 		<key>PlugIns/MobileAppTests.xctest.dSYM/Contents/Info.plist</key>
 		<dict>
 			<key>hash</key>
@@ -364,11 +368,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			xX/A92seCl4z3+2OtBmWYWKD+tg=
+			sp8ClzehafCQVrRZwcmKOH7tSPc=
 			</data>
 			<key>hash2</key>
 			<data>
-			ceuEW2iF+5hc9z/XVB9mp8clMxLaHWv7PQajR30wMMk=
+			E+k8uq9QJCA+OoA6s8++W9gnjoCkVI98s+DdZRGBeM0=
 			</data>
 		</dict>
 		<key>PlugIns/MobileAppTests.xctest/_CodeSignature/CodeResources</key>
@@ -380,6 +384,17 @@
 			<key>hash2</key>
 			<data>
 			K/Q2iv5lzP/bH3CXllPWyDeP7EVzqCiqFOJekqAl8Cs=
+			</data>
+		</dict>
+		<key>splash.png</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			1Eq1gOE9YLEnuwyYM/VLCiCUQ8E=
+			</data>
+			<key>hash2</key>
+			<data>
+			On0wZ1GoIE2X6XdSzxKGDFM008qFQ6E4lQfvKUFcaQ0=
 			</data>
 		</dict>
 	</dict>
