@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="60a7096d-3992-4e4a-942a-78a4550184eb" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/package-lock.json" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/workspace.xml" afterPath="$PROJECT_DIR$/android/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/ios/MobileApp.xcodeproj/project.xcworkspace/xcuserdata/ricardodalessandro.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/ios/MobileApp.xcodeproj/project.xcworkspace/xcuserdata/ricardodalessandro.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" afterPath="$PROJECT_DIR$/yarn.lock" />
-    </list>
+    <list default="true" id="60a7096d-3992-4e4a-942a-78a4550184eb" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -97,44 +88,6 @@
               <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
               <item name="node_modules" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="react-native-smart-splash-screen" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="react-native-smart-splash-screen" type="462c0819:PsiDirectoryNode" />
-              <item name="ios" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="react-native-smart-splash-screen" type="462c0819:PsiDirectoryNode" />
-              <item name="ios" type="462c0819:PsiDirectoryNode" />
-              <item name="RCTSplashScreen" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="react-native-smart-splash-screen" type="462c0819:PsiDirectoryNode" />
-              <item name="ios" type="462c0819:PsiDirectoryNode" />
-              <item name="RCTSplashScreen" type="462c0819:PsiDirectoryNode" />
-              <item name="RCTSplashScreen.xcodeproj" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile-App" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-App" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="react-native-smart-splash-screen" type="462c0819:PsiDirectoryNode" />
-              <item name="ios" type="462c0819:PsiDirectoryNode" />
-              <item name="SplashScreenResource" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -180,12 +133,12 @@
       <option name="presentableId" value="Default" />
       <updated>1520364323261</updated>
       <workItem from="1520364324621" duration="4211000" />
-      <workItem from="1520370899790" duration="759000" />
+      <workItem from="1520370899790" duration="923000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4970000" />
+    <option name="totallyTimeSpent" value="5134000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="248" y="-1417" width="1146" height="1417" extended-state="0" />
