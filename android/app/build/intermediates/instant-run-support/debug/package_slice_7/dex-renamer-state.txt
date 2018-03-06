@@ -1,0 +1,4 @@
+#Tue Mar 06 14:36:23 CST 2018
+base.0=/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/transforms/dexMerger/debug/7
+path.0=classes.dex
+renamed.0=classes.dex
