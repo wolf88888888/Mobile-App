@@ -1,28 +1,6 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/res/merged/debug/values-sr_values-sr.arsc.flat",
-            "map": [
-                {
-                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-sr/values-sr.xml",
-                    "from": {
-                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "280,389,497,620,723,829,915,1019,1137,1225,1330,1438,1539,1643,1751,1852,1980,2077",
-                        "endColumns": "108,107,122,102,105,85,103,117,87,104,107,100,103,107,100,127,96,100",
-                        "endOffsets": "384,492,615,718,824,910,1014,1132,1220,1325,1433,1534,1638,1746,1847,1975,2072,2173"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,164,272,395,498,604,690,794,912,1000,1105,1213,1314,1418,1526,1627,1755,1852",
-                        "endColumns": "108,107,122,102,105,85,103,117,87,104,107,100,103,107,100,127,96,100",
-                        "endOffsets": "159,267,390,493,599,685,789,907,995,1100,1208,1309,1413,1521,1622,1750,1847,1948"
-                    }
-                }
-            ]
-        },
-        {
             "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/res/merged/debug/values-kk-rKZ_values-kk-rKZ.arsc.flat",
             "map": [
                 {
@@ -40,6 +18,28 @@
                         "startOffsets": "55,167,275,398,501,611,696,802,921,1002,1105,1210,1308,1415,1524,1624,1739,1838",
                         "endColumns": "111,107,122,102,109,84,105,118,80,102,104,97,106,108,99,114,98,100",
                         "endOffsets": "162,270,393,496,606,691,797,916,997,1100,1205,1303,1410,1519,1619,1734,1833,1934"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/res/merged/debug/values-sr_values-sr.arsc.flat",
+            "map": [
+                {
+                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-sr/values-sr.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "280,389,497,620,723,829,915,1019,1137,1225,1330,1438,1539,1643,1751,1852,1980,2077",
+                        "endColumns": "108,107,122,102,105,85,103,117,87,104,107,100,103,107,100,127,96,100",
+                        "endOffsets": "384,492,615,718,824,910,1014,1132,1220,1325,1433,1534,1638,1746,1847,1975,2072,2173"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,164,272,395,498,604,690,794,912,1000,1105,1213,1314,1418,1526,1627,1755,1852",
+                        "endColumns": "108,107,122,102,105,85,103,117,87,104,107,100,103,107,100,127,96,100",
+                        "endOffsets": "159,267,390,493,599,685,789,907,995,1100,1208,1309,1413,1521,1622,1750,1847,1948"
                     }
                 }
             ]
@@ -155,6 +155,28 @@
             ]
         },
         {
+            "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/res/merged/debug/values-land_values-land.arsc.flat",
+            "map": [
+                {
+                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "4,7,10,13,16,17",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "280,568,875,1171,1470,1541",
+                        "endColumns": "61,71,69,63,70,67",
+                        "endOffsets": "337,635,940,1230,1536,1604"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,117,189,259,323,394",
+                        "endColumns": "61,71,69,63,70,67",
+                        "endOffsets": "112,184,254,318,389,457"
+                    }
+                }
+            ]
+        },
+        {
             "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/res/merged/debug/values-v23_values-v23.arsc.flat",
             "map": [
                 {
@@ -174,28 +196,6 @@
                         "endLines": "2,3,4,10,16,17",
                         "endColumns": "134,74,86,12,12,104",
                         "endOffsets": "185,260,347,675,1015,1120"
-                    }
-                }
-            ]
-        },
-        {
-            "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/res/merged/debug/values-land_values-land.arsc.flat",
-            "map": [
-                {
-                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-land/values-land.xml",
-                    "from": {
-                        "startLines": "4,7,10,13,16,17",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "280,568,875,1171,1470,1541",
-                        "endColumns": "61,71,69,63,70,67",
-                        "endOffsets": "337,635,940,1230,1536,1604"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "55,117,189,259,323,394",
-                        "endColumns": "61,71,69,63,70,67",
-                        "endOffsets": "112,184,254,318,389,457"
                     }
                 }
             ]
