@@ -4,20 +4,13 @@
             "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-in/values-in.xml",
             "map": [
                 {
-                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-in/values-in.xml",
+                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.4.0.aar/793fc1197d479caeadb8d1d2ff097cba/res/values-in/values-in.xml",
                     "from": {
-                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "280,390,498,621,723,828,915,1019,1135,1221,1324,1433,1534,1638,1746,1854,1977,2076",
-                        "endColumns": "109,107,122,101,104,86,103,115,85,102,108,100,103,107,107,122,98,100",
-                        "endOffsets": "385,493,616,718,823,910,1014,1130,1216,1319,1428,1529,1633,1741,1849,1972,2071,2172"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,165,273,396,498,603,690,794,910,996,1099,1208,1309,1413,1521,1629,1752,1851",
-                        "endColumns": "109,107,122,101,104,86,103,115,85,102,108,100,103,107,107,122,98,100",
-                        "endOffsets": "160,268,391,493,598,685,789,905,991,1094,1203,1304,1408,1516,1624,1747,1846,1947"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,165,273,396,498,603,690,794,910,992,1071,1157,1260,1369,1470,1574,1682,1790,1913,2012",
+                        "endColumns": "109,107,122,101,104,86,103,115,81,78,85,102,108,100,103,107,107,122,98,100",
+                        "endOffsets": "160,268,391,493,598,685,789,905,987,1066,1152,1255,1364,1465,1569,1677,1785,1908,2007,2108"
                     }
                 }
             ]

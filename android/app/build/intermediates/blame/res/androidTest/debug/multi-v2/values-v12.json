@@ -4,16 +4,8 @@
             "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-v12/values-v12.xml",
             "map": [
                 {
-                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-v12/values-v12.xml",
+                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.4.0.aar/793fc1197d479caeadb8d1d2ff097cba/res/values-v12/values-v12.xml",
                     "from": {
-                        "startLines": "4,7,10,11",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "285,509,709,828",
-                        "endLines": "6,9,10,11",
-                        "endColumns": "12,12,118,94",
-                        "endOffsets": "504,704,823,918"
-                    },
-                    "to": {
                         "startLines": "2,5,8,9",
                         "startColumns": "4,4,4,4",
                         "startOffsets": "55,279,479,598",

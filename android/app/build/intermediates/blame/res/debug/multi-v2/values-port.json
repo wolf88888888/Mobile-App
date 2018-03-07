@@ -4,15 +4,8 @@
             "outputFile": "/Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.0.1.aar/bbf2387bf907339b0721222e295a8b8a/res/values-port/values-port.xml",
+                    "source": "/Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.4.0.aar/793fc1197d479caeadb8d1d2ff097cba/res/values-port/values-port.xml",
                     "from": {
-                        "startLines": "4",
-                        "startColumns": "4",
-                        "startOffsets": "280",
-                        "endColumns": "55",
-                        "endOffsets": "331"
-                    },
-                    "to": {
                         "startLines": "2",
                         "startColumns": "4",
                         "startOffsets": "55",

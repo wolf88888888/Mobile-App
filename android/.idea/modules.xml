@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobileApp.iml" filepath="$PROJECT_DIR$/MobileApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../node_modules/react-native-smart-splash-screen/android/react-native-smart-splashscreen.iml" filepath="$PROJECT_DIR$/../node_modules/react-native-smart-splash-screen/android/react-native-smart-splashscreen.iml" />
     </modules>
   </component>
 </project>
