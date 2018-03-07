@@ -38,7 +38,7 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		N02EgGLkUGNobEM122ZTkFBtxQM=
+		5LUyo+UZBZMu3do9vTR5tPRmc5k=
 		</data>
 		<key>Frameworks/IDEBundleInjection.framework/IDEBundleInjection</key>
 		<data>
@@ -87,7 +87,7 @@
 		</data>
 		<key>LaunchScreen.nib</key>
 		<data>
-		jtH04t/XoP/70wKktxOXuZBfC+s=
+		3q7d7CzKnVAJL8/3j4ztw0fxOT8=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -99,7 +99,7 @@
 		</data>
 		<key>PlugIns/MobileAppTests.xctest.dSYM/Contents/Resources/DWARF/MobileAppTests</key>
 		<data>
-		8Xvxm9FabRjdW2UZmNBBpk9k2TY=
+		H6aYB2mwQkzwYng0MPukL1NMY94=
 		</data>
 		<key>PlugIns/MobileAppTests.xctest/Info.plist</key>
 		<data>
@@ -107,7 +107,7 @@
 		</data>
 		<key>PlugIns/MobileAppTests.xctest/MobileAppTests</key>
 		<data>
-		sp8ClzehafCQVrRZwcmKOH7tSPc=
+		58bMFnrWgZGC9O4EeWf0XFCHltE=
 		</data>
 		<key>PlugIns/MobileAppTests.xctest/_CodeSignature/CodeResources</key>
 		<data>
@@ -212,11 +212,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			N02EgGLkUGNobEM122ZTkFBtxQM=
+			5LUyo+UZBZMu3do9vTR5tPRmc5k=
 			</data>
 			<key>hash2</key>
 			<data>
-			LGjc2pO20wHwztPUbzWwiu5hDV1SWZHBAa/XIscNuNM=
+			b8za2SwlMQYbBU67CuXOc5Hm4pgC7JJf7yoEa8ZuAak=
 			</data>
 		</dict>
 		<key>Frameworks/IDEBundleInjection.framework/IDEBundleInjection</key>
@@ -324,11 +324,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			jtH04t/XoP/70wKktxOXuZBfC+s=
+			3q7d7CzKnVAJL8/3j4ztw0fxOT8=
 			</data>
 			<key>hash2</key>
 			<data>
-			VlR6FT1bBtd9irc246vaCeSNGjpsJ+zzR6tFK6GT+q8=
+			ttsmPJeZFl7UxB5IIrJe6MTZiC0vmL49i+4J6884y0Q=
 			</data>
 		</dict>
 		<key>PlugIns/MobileAppTests.xctest.dSYM/Contents/Info.plist</key>
@@ -346,11 +346,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			8Xvxm9FabRjdW2UZmNBBpk9k2TY=
+			H6aYB2mwQkzwYng0MPukL1NMY94=
 			</data>
 			<key>hash2</key>
 			<data>
-			CwND2G3rDuTTl24IGa5c+MYxpVR5UGE2zEsKuRW1neg=
+			AefB8IrJ4N2M4W0hsWQEwT4OltuaNbMtJ+D1JjGDYno=
 			</data>
 		</dict>
 		<key>PlugIns/MobileAppTests.xctest/Info.plist</key>
@@ -368,11 +368,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sp8ClzehafCQVrRZwcmKOH7tSPc=
+			58bMFnrWgZGC9O4EeWf0XFCHltE=
 			</data>
 			<key>hash2</key>
 			<data>
-			E+k8uq9QJCA+OoA6s8++W9gnjoCkVI98s+DdZRGBeM0=
+			d6nc0fyrSDxDd7dhQwERkJMDiYcoNHF/kvTi0CQ0rwI=
 			</data>
 		</dict>
 		<key>PlugIns/MobileAppTests.xctest/_CodeSignature/CodeResources</key>
