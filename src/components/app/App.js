@@ -1,12 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen'
+
+import { RootNavigator, LoginNavigator } from '../../routes';
 
 import TopSpacer from '../common/TopSpacer';
 
-export default class App extends React.Component {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoginComplete: false
+    };
+
+    this.onLoginComplete = this.onLoginComplete.bind(this);
+  }
+
   componentDidMount () {
-    //SplashScreen.close(SplashScreen.animationType.scale, 850, 500)
     SplashScreen.close({
       animationType: SplashScreen.animationType.scale,
       duration: 850,
@@ -14,18 +24,32 @@ export default class App extends React.Component {
     })
   }
 
+  onLoginComplete() {
+    this.setState({ isLoginComplete: true });
+  }
+
+  renderNavigation() {
+    if (this.state.isLoginComplete) return <RootNavigator />;
+    else return <LoginNavigator screenProps={{ onLoginComplete: this.isLoginComplete }} />
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <TopSpacer />
+        <StatusBar
+          backgroundColor="rgba(0,0,0,0)"
+          translucent={true}
+          barStyle="light-content"
+        />
+        {/*<TopSpacer />*/}
 
-        <View style={styles.appContainer}>
-          <Text style={styles.text}>LockChain</Text>
-        </View>
+        {this.renderNavigation()}
       </View>
     );
   }
 }
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -37,8 +61,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#DA7B61',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  text: {
-    color: '#fff'
   }
 });

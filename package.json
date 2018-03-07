@@ -22,6 +22,7 @@
     "react": "16.2.0",
     "react-native": "0.52.0",
     "react-native-iphone-x-helper": "^1.0.2",
-    "react-native-smart-splash-screen": "git://github.com/rgdalessandro/react-native-smart-splash-screen.git#a803be27fececa72f446cb16b4b2d2dd6c5c09e4"
+    "react-native-smart-splash-screen": "git://github.com/rgdalessandro/react-native-smart-splash-screen.git#a803be27fececa72f446cb16b4b2d2dd6c5c09e4",
+    "react-navigation": "^1.4.0"
   }
 }
