@@ -4,7 +4,7 @@
 .expo/
 
 # dependencies
-**/node_modules
+node_modules
 
 # misc
 .env.local
@@ -16,24 +16,24 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-### Xcode ###
-**/*.pbxuser
+# Xcode
+*.pbxuser
 !default.pbxuser
-**/*.mode1v3
+*.mode1v3
 !default.mode1v3
-**/*.mode2v3
+*.mode2v3
 !default.mode2v3
-**/*.perspectivev3
+*.perspectivev3
 !default.perspectivev3
-**/xcuserdata
-**/*.xccheckout
-**/*.moved-aside
-**/DerivedData
-**/*.xcuserstate
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.xcuserstate
 
-### IntelliJ & PhPStorm ###
+# IntelliJ & PhPStorm
 *.iml
-**/.idea
+.idea
 
-### Builds ###
-**/build/
+# Builds
+build
