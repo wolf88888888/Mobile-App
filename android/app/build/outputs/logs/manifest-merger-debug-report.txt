@@ -4,7 +4,7 @@ ADDED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-Ap
 INJECTED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/src/main/AndroidManifest.xml:1:1-33:12
 INJECTED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/src/main/AndroidManifest.xml:1:1-33:12
 INJECTED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/src/main/AndroidManifest.xml:1:1-33:12
-MERGED from [:react-native-smart-splashscreen] /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/node_modules/react-native-smart-splash-screen/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-12:12
+MERGED from [:react-native-smart-splashscreen] /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/node_modules/react-native-smart-splash-screen/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-11:12
 MERGED from [com.facebook.react:react-native:0.52.0] /Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/react-native-0.52.0.aar/b412916afa2780dd27226ee96812b516/AndroidManifest.xml:2:1-15:12
 MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.4.0.aar/793fc1197d479caeadb8d1d2ff097cba/AndroidManifest.xml:17:1-27:12
 MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-23.4.0.aar/bd58e15e807a8fe0feb11b35697a60c8/AndroidManifest.xml:2:1-9:12
@@ -50,8 +50,8 @@ uses-sdk
 ADDED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/src/main/AndroidManifest.xml:9:5-11:41
 INJECTED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/src/main/AndroidManifest.xml:9:5-11:41
 INJECTED from /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/android/app/src/main/AndroidManifest.xml:9:5-11:41
-MERGED from [:react-native-smart-splashscreen] /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/node_modules/react-native-smart-splash-screen/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:8:5-10:41
-MERGED from [:react-native-smart-splashscreen] /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/node_modules/react-native-smart-splash-screen/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:8:5-10:41
+MERGED from [:react-native-smart-splashscreen] /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/node_modules/react-native-smart-splash-screen/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-smart-splashscreen] /Users/ricardodalessandro/Documents/RGD_Solutions/LockChain/Mobile-App/node_modules/react-native-smart-splash-screen/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.react:react-native:0.52.0] /Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/react-native-0.52.0.aar/b412916afa2780dd27226ee96812b516/AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.react:react-native:0.52.0] /Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/react-native-0.52.0.aar/b412916afa2780dd27226ee96812b516/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/ricardodalessandro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-23.4.0.aar/793fc1197d479caeadb8d1d2ff097cba/AndroidManifest.xml:21:5-23:78

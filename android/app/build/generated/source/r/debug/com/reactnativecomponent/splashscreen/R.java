@@ -313,7 +313,6 @@ public final class R {
         public static final int highlighted_text_material_light = 0x7f040024;
         public static final int hint_foreground_material_dark = 0x7f040025;
         public static final int hint_foreground_material_light = 0x7f040026;
-        public static final int lockchain_orange = 0x7f040027;
         public static final int material_blue_grey_800 = 0x7f040028;
         public static final int material_blue_grey_900 = 0x7f040029;
         public static final int material_blue_grey_950 = 0x7f04002a;
@@ -690,7 +689,6 @@ public final class R {
         public static final int abc_shareactionprovider_share_with = 0x7f0b0010;
         public static final int abc_shareactionprovider_share_with_application = 0x7f0b0011;
         public static final int abc_toolbar_collapse_description = 0x7f0b0012;
-        public static final int app_name = 0x7f0b0013;
         public static final int catalyst_copy_button = 0x7f0b0014;
         public static final int catalyst_debugjs = 0x7f0b0015;
         public static final int catalyst_debugjs_nuclide = 0x7f0b0016;
