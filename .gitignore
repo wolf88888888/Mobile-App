@@ -33,7 +33,7 @@ DerivedData
 
 ### IntelliJ & PhPStorm ###
 *.iml
-/.idea
+**/.idea
 
 ### Builds ###
 **/build/
