@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">LockChain</string>
+    <color name="lockchain_orange">#DA7B61</color>
+</resources>
