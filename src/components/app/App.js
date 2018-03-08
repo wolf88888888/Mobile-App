@@ -39,8 +39,6 @@ class App extends React.Component {
           translucent={true}
           barStyle="light-content"
         />
-        {/*<TopSpacer />*/}
-
         {this.renderNavigation()}
       </View>
     );
