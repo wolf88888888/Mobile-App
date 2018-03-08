@@ -1,6 +1,6 @@
 import { StackNavigator } from 'react-navigation';
 
-import Login from './components/login/Login';
+import Welcome from './components/login/Welcome';
 
 // export const RootNavigator = StackNavigator(
 //   {
@@ -13,18 +13,10 @@ import Login from './components/login/Login';
 
 export const LoginNavigator = StackNavigator(
   {
-    Login: { screen: Login }
+    Welcome: { screen: Welcome }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Welcome',
     headerMode: 'none',
-    // navigationOptions: {
-    //   header: {
-    //     style: {
-    //       shadowOpacity: 0,
-    //       elevation: 0
-    //     }
-    //   }
-    // }
   }
 );
