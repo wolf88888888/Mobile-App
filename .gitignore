@@ -36,7 +36,7 @@ DerivedData
 project.xcworkspace
 
 # Gradle
-/build/
+.gradle
 /RNTester/android/app/build/
 /RNTester/android/app/gradle/
 /RNTester/android/app/gradlew
@@ -54,11 +54,7 @@ buck-out
 .watchmanconfig
 
 # Android
-.idea
-.gradle
 local.properties
-*.iml
-android/
 
 # Node
 node_modules
