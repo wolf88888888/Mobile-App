@@ -8,7 +8,7 @@ class Welcome extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <GoBack icon="fontawesome|times" />
+        <GoBack icon="times" />
         <Text style={styles.text}>Welcome</Text>
       </View>
     );

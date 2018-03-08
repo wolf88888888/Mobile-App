@@ -1,12 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
 const GoBack = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.iconView}>
-        <Text>x</Text>
+        <Text style={styles.iconText}>
+          <FontAwesome>{Icons[props.icon]}</FontAwesome>
+        </Text>
       </View>
     </View>
   );
@@ -38,9 +41,13 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderColor: '#fff',
-    borderWidth: 1,
+    borderWidth: 2,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  iconText: {
+    color: '#fff',
+    fontSize: 8
   }
 });
