@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import SplashScreen from 'react-native-smart-splash-screen'
+import SplashScreen from 'react-native-smart-splash-screen';
 
 import { RootNavigator, LoginNavigator } from '../../routes';
 
@@ -17,8 +17,8 @@ class App extends React.Component {
   componentDidMount () {
     SplashScreen.close({
       animationType: SplashScreen.animationType.scale,
-      duration: 850,
-      delay: 500,
+      duration: 500,
+      delay: 100,
     })
   }
 
