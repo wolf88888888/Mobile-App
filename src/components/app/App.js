@@ -4,8 +4,6 @@ import SplashScreen from 'react-native-smart-splash-screen'
 
 import { RootNavigator, LoginNavigator } from '../../routes';
 
-import TopSpacer from '../common/TopSpacer';
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -55,11 +53,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column'
-  },
-  appContainer: {
-    flex: 1,
-    backgroundColor: '#DA7B61',
-    alignItems: 'center',
-    justifyContent: 'center',
   }
 });

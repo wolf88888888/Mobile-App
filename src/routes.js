@@ -18,13 +18,13 @@ export const LoginNavigator = StackNavigator(
   {
     initialRouteName: 'Login',
     headerMode: 'none',
-    navigationOptions: {
-      header: {
-        style: {
-          shadowOpacity: 0,
-          elevation: 0
-        }
-      }
-    }
+    // navigationOptions: {
+    //   header: {
+    //     style: {
+    //       shadowOpacity: 0,
+    //       elevation: 0
+    //     }
+    //   }
+    // }
   }
 );
