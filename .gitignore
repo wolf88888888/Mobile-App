@@ -36,6 +36,7 @@ DerivedData
 project.xcworkspace
 
 # Gradle
+.gradle/
 android/app/gradle/
 android/app/gradlew
 android/app/gradlew.bat
