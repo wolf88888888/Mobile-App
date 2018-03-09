@@ -23,11 +23,15 @@ class Welcome extends React.Component {
           </View>
 
           <View style={styles.facebookButton}>
+            <Text style={styles.buttonIcon}><FontAwesome>{Icons.facebookF}</FontAwesome></Text>
             <Text style={styles.buttonText}>
-              <FontAwesome>{Icons.facebookF}</FontAwesome>
               Continue with Facebook
             </Text>
           </View>
+
+          <Text style={styles.createAccountText}>Create an Account</Text>
+
+          <Text style={styles.finePrintText}>By tapping Log In, Continue or Create Account, I agree to LockChain's Terms of Service, Payments Terms of Service and Privacy Policy.</Text>
         </View>
 
         <View style={styles.lowOpacity}>
@@ -62,13 +66,13 @@ const styles = StyleSheet.create({
   },
   splashImage: {
     width: 100,
-    height: 80,
+    height: 78,
     marginTop: 4
   },
   titleText: {
     color: '#fff',
-    fontSize: 26,
-    marginTop: -8,
+    fontSize: 25,
+    marginTop: -1,
     fontFamily: 'FuturaStd-Light'
   },
   loginButton: {
@@ -82,19 +86,42 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  buttonIcon: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'FuturaStd-Light',
+    position: 'absolute',
+    left: 36,
+    top: 15
+  },
   buttonText: {
     color: '#fff',
-    fontSize: 17
+    fontSize: 17,
+    fontFamily: 'FuturaStd-Light'
   },
   facebookButton: {
     height: 50,
     width: 280,
-    backgroundColor: '#222',
+    backgroundColor: '#273842',
     borderRadius: 25,
     marginTop: 16,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  createAccountText: {
+    marginTop: 30,
+    color: '#fff',
+    fontSize: 17,
+    fontFamily: 'FuturaStd-Light'
+  },
+  finePrintText: {
+    marginTop: 60,
+    marginLeft: 10,
+    marginRight: 10,
+    color: '#fff',
+    fontSize: 13,
+    fontFamily: 'FuturaStd-Light'
   },
   lowOpacity: {
     opacity: 0.3
