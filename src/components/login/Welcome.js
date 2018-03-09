@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Image from 'react-native-remote-svg';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
 import GoBack from '../common/GoBack';
@@ -11,7 +12,23 @@ class Welcome extends React.Component {
       <View style={styles.container}>
         <GoBack icon="times" />
 
-        <Text style={styles.text}>Welcome</Text>
+        <View style={styles.main}>
+          <Image
+            source={require('../../assets/splash.png')}
+            style={styles.splashImage} />
+          <Text style={styles.titleText}>Welcome to LockChain</Text>
+
+          <View style={styles.loginButton}>
+            <Text style={styles.buttonText}>Log In</Text>
+          </View>
+
+          <View style={styles.facebookButton}>
+            <Text style={styles.buttonText}>
+              <FontAwesome>{Icons.facebookF}</FontAwesome>
+              Continue with Facebook
+            </Text>
+          </View>
+        </View>
 
         <View style={styles.lowOpacity}>
           <Image
@@ -35,11 +52,49 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: '#DA7B61',
   },
-  text: {
-    color: '#fff'
+  main: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  splashImage: {
+    width: 100,
+    height: 80,
+    marginTop: 4
+  },
+  titleText: {
+    color: '#fff',
+    fontSize: 26,
+    marginTop: -8,
+    fontFamily: 'FuturaStd-Light'
+  },
+  loginButton: {
+    height: 50,
+    width: 280,
+    borderColor: '#fff',
+    borderWidth: 1.5,
+    borderRadius: 25,
+    marginTop: 62,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17
+  },
+  facebookButton: {
+    height: 50,
+    width: 280,
+    backgroundColor: '#222',
+    borderRadius: 25,
+    marginTop: 16,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   lowOpacity: {
     opacity: 0.3

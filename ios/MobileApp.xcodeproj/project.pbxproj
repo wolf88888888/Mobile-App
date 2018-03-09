@@ -34,6 +34,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* MobileAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MobileAppTests.m */; };
 		462BFACC204FE8B900E32BF8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 462BFACB204FE8B800E32BF8 /* LaunchScreen.xib */; };
+		4687AA0820525437000F3A9D /* FuturaStd-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4687A9E120525437000F3A9D /* FuturaStd-Light.otf */; };
 		469D81A22051E4B400C506F6 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 469D817B2051E4B400C506F6 /* FontAwesome.otf */; };
 		46A6F58F204F4FBC00BF95D4 /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46A6F553204F4C6700BF95D4 /* libRCTSplashScreen.a */; };
 		46A6F597204F86F200BF95D4 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 46A6F596204F86F200BF95D4 /* splash.png */; };
@@ -348,6 +349,7 @@
 		2D02E4901E0B4A5D006451C7 /* MobileApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MobileApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		462BFACB204FE8B800E32BF8 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = MobileApp/LaunchScreen.xib; sourceTree = "<group>"; };
+		4687A9E120525437000F3A9D /* FuturaStd-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FuturaStd-Light.otf"; sourceTree = "<group>"; };
 		469D817B2051E4B400C506F6 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
 		46A6F540204F4C6700BF95D4 /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		46A6F596204F86F200BF95D4 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash.png; path = AppIcon.appiconset/splash.png; sourceTree = "<group>"; };
@@ -541,6 +543,7 @@
 			isa = PBXGroup;
 			children = (
 				469D817B2051E4B400C506F6 /* FontAwesome.otf */,
+				4687A9E120525437000F3A9D /* FuturaStd-Light.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -1091,6 +1094,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46A6F597204F86F200BF95D4 /* splash.png in Resources */,
+				4687AA0820525437000F3A9D /* FuturaStd-Light.otf in Resources */,
 				462BFACC204FE8B900E32BF8 /* LaunchScreen.xib in Resources */,
 				469D81A22051E4B400C506F6 /* FontAwesome.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,

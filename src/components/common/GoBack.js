@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderColor: '#fff',
-    borderWidth: 2,
+    borderWidth: 1.5,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

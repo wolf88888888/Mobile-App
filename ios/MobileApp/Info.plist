@@ -4,6 +4,7 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
+		<string>FuturaStd-Light.otf</string>
 		<string>FontAwesome.otf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
