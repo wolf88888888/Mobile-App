@@ -23,7 +23,7 @@ class Welcome extends React.Component {
           </View>
 
           <View style={styles.facebookButton}>
-            <Text style={styles.buttonIcon}><FontAwesome>{Icons.facebookF}</FontAwesome></Text>
+            <View style={styles.buttonIconView}><Text style={styles.buttonIconText}><FontAwesome>{Icons.facebookF}</FontAwesome></Text></View>
             <Text style={styles.buttonText}>
               Continue with Facebook
             </Text>
@@ -86,19 +86,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  buttonIcon: {
-    color: '#fff',
-    fontSize: 18,
-    fontFamily: 'FuturaStd-Light',
-    position: 'absolute',
-    left: 36,
-    top: 15
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 17,
-    fontFamily: 'FuturaStd-Light'
-  },
   facebookButton: {
     height: 50,
     width: 280,
@@ -106,8 +93,23 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 16,
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  buttonIconView: {
+    marginRight: 12,
+    marginBottom: 3
+  },
+  buttonIconText: {
+    color: '#fff',
+    fontSize: 17,
+    fontFamily: 'FuturaStd-Light'
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontFamily: 'FuturaStd-Light'
   },
   createAccountText: {
     marginTop: 30,
