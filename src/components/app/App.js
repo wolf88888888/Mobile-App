@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen';
 
 import { RootNavigator, LoginNavigator } from '../../routes';
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {

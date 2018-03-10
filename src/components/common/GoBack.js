@@ -4,19 +4,33 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
 const GoBack = (props) => {
-  return (
-    <View style={styles.container}>
+  let renderIcon = null;
+
+  if (props.icon) {
+    renderIcon = (
       <View style={styles.iconView}>
         <Text style={styles.iconText}>
           <FontAwesome>{Icons[props.icon]}</FontAwesome>
         </Text>
       </View>
+    );
+  }
+
+  if (props.icon && props.onPress) {
+    renderIcon = (
+      <TouchableOpacity onPress={() => props.onPress()}>{ renderIcon }</TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      { renderIcon }
     </View>
   );
 };
 
 GoBack.defaultProps = {
-  icon: 'arrow-circle-o-left'
+  icon: 'arrowLeft'
 };
 
 GoBack.propTypes = {

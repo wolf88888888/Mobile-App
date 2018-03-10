@@ -1,12 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
 import GoBack from '../common/GoBack';
 
-class Welcome extends React.Component {
+class Welcome extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -18,16 +18,20 @@ class Welcome extends React.Component {
             style={styles.splashImage} />
           <Text style={styles.titleText}>Welcome to LockChain</Text>
 
-          <View style={styles.loginButton}>
-            <Text style={styles.buttonText}>Log In</Text>
-          </View>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+            <View style={styles.loginButton}>
+              <Text style={styles.buttonText}>Log In</Text>
+            </View>
+          </TouchableOpacity>
 
-          <View style={styles.facebookButton}>
-            <View style={styles.buttonIconView}><Text style={styles.buttonIconText}><FontAwesome>{Icons.facebookF}</FontAwesome></Text></View>
-            <Text style={styles.buttonText}>
-              Continue with Facebook
-            </Text>
-          </View>
+          <TouchableOpacity>
+            <View style={styles.facebookButton}>
+              <View style={styles.buttonIconView}><Text style={styles.buttonIconText}><FontAwesome>{Icons.facebookF}</FontAwesome></Text></View>
+              <Text style={styles.buttonText}>
+                Continue with Facebook
+              </Text>
+            </View>
+          </TouchableOpacity>
 
           <Text style={styles.createAccountText}>Create an Account</Text>
 
@@ -55,7 +59,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
     backgroundColor: '#DA7B61',
   },
   main: {
