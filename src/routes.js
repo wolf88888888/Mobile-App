@@ -3,6 +3,7 @@ import { StackNavigator } from 'react-navigation';
 import Welcome from './components/login/Welcome';
 import Login from './components/login/Login';
 import CreateAccount from './components/login/CreateAccount';
+import CreatePassword from './components/login/CreatePassword';
 
 // export const RootNavigator = StackNavigator(
 //   {
@@ -17,10 +18,11 @@ export const LoginNavigator = StackNavigator(
   {
     Welcome: { screen: Welcome },
     Login: { screen: Login },
-    CreateAccount: { screen: CreateAccount }
+    CreateAccount: { screen: CreateAccount },
+    CreatePassword: { screen: CreatePassword }
   },
   {
-    initialRouteName: 'CreateAccount',
+    initialRouteName: 'Welcome',
     headerMode: 'none',
   }
 );

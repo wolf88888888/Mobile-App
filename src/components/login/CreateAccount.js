@@ -99,7 +99,7 @@ class CreateAccount extends Component {
 
           <View style={styles.nextButtonView}>
             <TouchableOpacity
-              disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email) || !userDoesAgree}
+              disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
               onPress={() => navigate('CreatePassword')}>
               <View style={styles.nextButton}>
                 <Text style={styles.buttonText}>

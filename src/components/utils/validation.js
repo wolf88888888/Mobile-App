@@ -8,5 +8,9 @@ export const validateEmail = (email) => {
 };
 
 export const validatePassword = (password) => {
-  return !!password;
+  return !!password && password.length > 7;
+};
+
+export const validateConfirmPassword = (password, confirmPassword) => {
+  return !!password && !!confirmPassword && password === confirmPassword;
 };
