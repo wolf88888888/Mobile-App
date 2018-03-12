@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import Switch from 'react-native-customisable-switch';
 import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
@@ -16,12 +17,14 @@ class CreateAccount extends Component {
       firstName: '',
       lastName: '',
       email: '',
-      userDoesAgree: true
-    }
+      userDoesAgree: true,
+      checkZIndex: 1          // zIndex of switchCheckView
+    };
+    this.animationTime = 150; // time for switch to slide from one end to the other
   }
 
   render() {
-    const { firstName, lastName, email, userDoesAgree } = this.state;
+    const { firstName, lastName, email, userDoesAgree, checkZIndex } = this.state;
     const { navigate } = this.props.navigation;
 
     return (
@@ -67,11 +70,31 @@ class CreateAccount extends Component {
 
           <View style={styles.finePrintView}>
             <Text style={styles.finePrintText}>I'd like to receive promotional communications, including discounts, surveys and inspiration via email, SMS and phone.</Text>
-            <Switch
-              onTintColor='#e4a193'
-              tintColor='#e4a193'
-              value={userDoesAgree}
-              onValueChange={(userDoesAgree) => this.setState({ userDoesAgree })}/>
+            <View>
+              { userDoesAgree ?
+                <View style={[styles.switchCheckView, { zIndex: checkZIndex } ]}><Text style={styles.switchCheckText}><FontAwesome>{Icons.check}</FontAwesome></Text></View>
+                : null }
+              <Switch
+                value={userDoesAgree}
+                onChangeValue={() => {
+                  this.setState({ userDoesAgree: !userDoesAgree, checkZIndex: 0 });
+                  setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                }}
+                activeTextColor='#DA7B61'
+                activeBackgroundColor='#e4a193'
+                inactiveBackgroundColor='#DA7B61'
+                switchWidth={62}
+                switchBorderColor='#e4a193'
+                switchBorderWidth={1}
+                buttonWidth={30}
+                buttonHeight={30}
+                buttonBorderRadius={15}
+                buttonBorderColor='#fff'
+                buttonBorderWidth={0}
+                animationTime={this.animationTime}
+                padding={false}
+              />
+            </View>
           </View>
 
           <View style={styles.nextButtonView}>
@@ -146,6 +169,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'FuturaStd-Light',
     maxWidth: 280
+  },
+  switchCheckView: {
+    position: 'absolute',
+    top: 10,
+    left: 10
+  },
+  switchCheckText: {
+    color: '#DA7B61',
+    fontSize: 10.5,
   },
   nextButtonView: {
     display: 'flex',

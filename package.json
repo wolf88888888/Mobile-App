@@ -21,6 +21,7 @@
     "prop-types": "^15.6.1",
     "react": "16.2.0",
     "react-native": "0.52.0",
+    "react-native-customisable-switch": "git://github.com/baderahmed/react-native-customisable-switch.git#118fe5aa51150b8c471c081a23ba38087aa210c6",
     "react-native-fontawesome": "^5.7.0",
     "react-native-iphone-x-helper": "^1.0.2",
     "react-native-remote-svg": "^1.1.1",
