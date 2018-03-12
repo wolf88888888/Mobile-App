@@ -8,6 +8,8 @@ import GoBack from '../common/GoBack';
 
 class Welcome extends Component {
   render() {
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <GoBack icon="times" />
@@ -18,7 +20,7 @@ class Welcome extends Component {
             style={styles.splashImage} />
           <Text style={styles.titleText}>Welcome to LockChain</Text>
 
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigate('Login')}>
             <View style={styles.loginButton}>
               <Text style={styles.buttonText}>Log In</Text>
             </View>
@@ -33,7 +35,9 @@ class Welcome extends Component {
             </View>
           </TouchableOpacity>
 
-          <Text style={styles.createAccountText}>Create an Account</Text>
+          <TouchableOpacity onPress={() => navigate('CreateAccount')}>
+            <Text style={styles.createAccountText}>Create an Account</Text>
+          </TouchableOpacity>
 
           <Text style={styles.finePrintText}>By tapping Log In, Continue or Create Account, I agree to LockChain's Terms of Service, Payments Terms of Service and Privacy Policy.</Text>
         </View>

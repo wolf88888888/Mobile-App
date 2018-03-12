@@ -7,7 +7,6 @@ import { validateEmail, validatePassword } from '../utils/validation';
 
 import GoBack from '../common/GoBack';
 import SmartInput from '../common/SmartInput';
-import {Icons} from "react-native-fontawesome";
 
 class Login extends Component {
   constructor(props) {
