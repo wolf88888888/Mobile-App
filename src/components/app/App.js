@@ -37,8 +37,8 @@ class App extends Component {
         <StatusBar
           backgroundColor="rgba(0,0,0,0)"
           translucent={true}
-          barStyle="light-content"
-        />
+          barStyle="light-content" />
+
         {this.renderNavigation()}
       </View>
     );
