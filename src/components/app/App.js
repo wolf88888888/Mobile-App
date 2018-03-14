@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StatusBar, AsyncStorage, StyleSheet, View } from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen';
 
 import { RootNavigator, LoginNavigator } from '../../routes';
@@ -19,16 +19,22 @@ class App extends Component {
       animationType: SplashScreen.animationType.scale,
       duration: 500,
       delay: 100,
-    })
+    });
+
+    AsyncStorage.getAllKeys().then(keys => console.log('~~~keys:', keys));
   }
 
   onLoginComplete() {
     this.setState({ isLoginComplete: true });
   }
 
+  onLogOut() {
+    this.setState({ isLoginComplete: false });
+  }
+
   renderNavigation() {
-    if (this.state.isLoginComplete) return <RootNavigator />;
-    else return <LoginNavigator screenProps={{ onLoginComplete: this.isLoginComplete }} />
+    if (this.state.isLoginComplete) return <RootNavigator screenProps={{ onLogOut: this.onLogOut }} />;
+    else return <LoginNavigator screenProps={{ onLoginComplete: this.onLoginComplete }} />
   }
 
   render() {

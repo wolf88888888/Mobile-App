@@ -4,7 +4,7 @@ import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
-import { validatePassword, validateConfirmPassword } from '../utils/validation';
+import { validatePassword, validateConfirmPassword } from '../../utils/validation';
 
 import GoBack from '../common/GoBack';
 import SmartInput from '../common/SmartInput';
@@ -21,6 +21,7 @@ class CreatePassword extends Component {
   render() {
     const { password, confirmPassword } = this.state;
     const { navigate } = this.props.navigation;
+    const { params } = this.props.navigation.state;
 
     return (
       <View style={styles.container}>
@@ -62,7 +63,7 @@ class CreatePassword extends Component {
           <View style={styles.nextButtonView}>
             <TouchableOpacity
               disabled={!validatePassword(password) || !validateConfirmPassword(password, confirmPassword)}
-              onPress={() => navigate('Terms')}>
+              onPress={() => navigate('Terms', { ...params, password })}>
               <View style={styles.nextButton}>
                 <Text style={styles.buttonText}>
                   <FontAwesome>{Icons.arrowRight}</FontAwesome>

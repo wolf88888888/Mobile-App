@@ -1,10 +1,38 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, TouchableOpacity, AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
-import {validateConfirmPassword, validatePassword} from "../utils/validation";
+
+import { register } from '../../utils/requester';
+import {domainPrefix} from "../../config";
 
 const Terms = (props) => {
   const { navigate, pop } = props.navigation;
+  const { params } = props.navigation.state;
+
+  const onClickAccept = async () => {
+    const user = { ...params };
+
+    //TODO: update backend to have it understand and process userWantsPromo correctly
+    register(user, null).then((res) => {
+      if (res.success) {
+        AsyncStorage[domainPrefix + '.auth.lockchain'] = data.Authorization;
+        //TODO: Get first name + last name from response included with Authorization token (Backend)
+        AsyncStorage[domainPrefix + '.auth.username'] = user.email;
+        props.screenProps.onLoginComplete();
+      }
+      else {
+        res.response.then(res => {
+          const errors = res.errors;
+          for (let key in errors) {
+            if (typeof errors[key] !== 'function') {
+              console.log('Error registering new user:', errors[key].message);
+              //TODO: give user feedback about having and error registering
+            }
+          }
+        });
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -18,7 +46,7 @@ const Terms = (props) => {
       <Text style={styles.paragraph}>I agree many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</Text>
 
       <View style={styles.buttonsView}>
-        <TouchableOpacity onPress={() => navigate('Home')}>
+        <TouchableOpacity onPress={() => onClickAccept()}>
           <View style={styles.acceptButtonView}>
             <Text style={styles.acceptButtonText}>Accept</Text>
           </View>

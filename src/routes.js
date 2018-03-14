@@ -6,14 +6,17 @@ import CreateAccount from './components/login/CreateAccount';
 import CreatePassword from './components/login/CreatePassword';
 import Terms from './components/login/Terms';
 
-// export const RootNavigator = StackNavigator(
-//   {
-//     Home: { screen: HomeScreen }
-//   },
-//   {
-//     headerMode: 'none'
-//   }
-// );
+import HomeScreen from './components/home/HomeScreen';
+
+export const RootNavigator = StackNavigator(
+  {
+    Home: { screen: HomeScreen }
+  },
+  {
+    initialRouteName: 'Home',
+    headerMode: 'none'
+  }
+);
 
 export const LoginNavigator = StackNavigator(
   {

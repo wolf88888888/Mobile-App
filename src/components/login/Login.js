@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { AsyncStorage, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 
-import { validateEmail, validatePassword } from '../utils/validation';
+import { domainPrefix } from '../../config';
+import { validateEmail, validatePassword } from '../../utils/validation';
+import { login } from '../../utils/requester';
 
 import GoBack from '../common/GoBack';
 import SmartInput from '../common/SmartInput';
@@ -15,6 +17,32 @@ class Login extends Component {
       email: '',
       password: ''
     }
+  }
+
+  onClickLogIn() {
+    const { email, password } = this.state;
+    const user = { email, password };
+
+    login(user, null).then((res) => {
+      if (res.success) {
+        res.response.json().then((data) => {
+          AsyncStorage[domainPrefix + '.auth.lockchain'] = data.Authorization;
+          //TODO: Get first name + last name from response included with Authorization token (Backend)
+          AsyncStorage[domainPrefix + '.auth.username'] = user.email;
+          this.props.screenProps.onLoginComplete();
+        });
+      } else {
+        res.response.then(res => {
+          const errors = res.errors;
+          for (let key in errors) {
+            if (typeof errors[key] !== 'function') {
+              console.log('Error logging in:', errors[key].message);
+              //TODO: give user feedback about having and error logging in
+            }
+          }
+        });
+      }
+    });
   }
 
   render() {
@@ -55,7 +83,7 @@ class Login extends Component {
 
           <TouchableOpacity
             disabled={!validateEmail(email) || !validatePassword(password)}
-            onPress={() => navigate('Home')}>
+            onPress={() => this.onClickLogIn()}>
             <View style={styles.LogInButton}>
               <Text style={styles.buttonText}>
                 Log In

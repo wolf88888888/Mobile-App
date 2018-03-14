@@ -5,7 +5,7 @@ import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
-import { validateName, validateEmail } from '../utils/validation';
+import { validateName, validateEmail } from '../../utils/validation';
 
 import GoBack from '../common/GoBack';
 import SmartInput from '../common/SmartInput';
@@ -17,14 +17,14 @@ class CreateAccount extends Component {
       firstName: '',
       lastName: '',
       email: '',
-      userDoesAgree: true,
+      userWantsPromo: true,
       checkZIndex: 1          // zIndex of switchCheckView
     };
     this.animationTime = 150; // time for switch to slide from one end to the other
   }
 
   render() {
-    const { firstName, lastName, email, userDoesAgree, checkZIndex } = this.state;
+    const { firstName, lastName, email, userWantsPromo, checkZIndex } = this.state;
     const { navigate } = this.props.navigation;
 
     return (
@@ -71,13 +71,13 @@ class CreateAccount extends Component {
           <View style={styles.finePrintView}>
             <Text style={styles.finePrintText}>I'd like to receive promotional communications, including discounts, surveys and inspiration via email, SMS and phone.</Text>
             <View>
-              { userDoesAgree ?
+              { userWantsPromo ?
                 <View style={[styles.switchCheckView, { zIndex: checkZIndex } ]}><Text style={styles.switchCheckText}><FontAwesome>{Icons.check}</FontAwesome></Text></View>
                 : null }
               <Switch
-                value={userDoesAgree}
+                value={userWantsPromo}
                 onChangeValue={() => {
-                  this.setState({ userDoesAgree: !userDoesAgree, checkZIndex: 0 });
+                  this.setState({ userWantsPromo: !userWantsPromo, checkZIndex: 0 });
                   setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
                 }}
                 activeTextColor='#DA7B61'
@@ -100,7 +100,7 @@ class CreateAccount extends Component {
           <View style={styles.nextButtonView}>
             <TouchableOpacity
               disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
-              onPress={() => navigate('CreatePassword')}>
+              onPress={() => navigate('CreatePassword', { firstName, lastName, email, userWantsPromo })}>
               <View style={styles.nextButton}>
                 <Text style={styles.buttonText}>
                   <FontAwesome>{Icons.arrowRight}</FontAwesome>
