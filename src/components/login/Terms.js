@@ -2,8 +2,8 @@ import React from 'react';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { register } from '../../utils/requester';
-import {domainPrefix} from "../../config";
+import { domainPrefix } from "../../config";
+import { register, login } from '../../utils/requester';
 
 const Terms = (props) => {
   const { navigate, pop } = props.navigation;
@@ -12,13 +12,29 @@ const Terms = (props) => {
   const onClickAccept = async () => {
     const user = { ...params };
 
-    //TODO: update backend to have it understand and process userWantsPromo correctly
     register(user, null).then((res) => {
       if (res.success) {
-        AsyncStorage[domainPrefix + '.auth.lockchain'] = data.Authorization;
-        //TODO: Get first name + last name from response included with Authorization token (Backend)
-        AsyncStorage[domainPrefix + '.auth.username'] = user.email;
-        props.screenProps.onLoginComplete();
+        console.log('~~~res:', res);
+        login(user, null).then((res) => {
+          if (res.success) {
+            res.response.json().then((data) => {
+              AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
+              //TODO: Get first name + last name from response included with Authorization token (Backend)
+              AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
+              this.props.screenProps.onLoginComplete();
+            });
+          } else {
+            res.response.then(res => {
+              const errors = res.errors;
+              for (let key in errors) {
+                if (typeof errors[key] !== 'function') {
+                  console.log('Error logging in:', errors[key].message);
+                  //TODO: give user feedback about having and error logging in
+                }
+              }
+            });
+          }
+        });
       }
       else {
         res.response.then(res => {

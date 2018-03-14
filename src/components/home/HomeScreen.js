@@ -1,12 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { AsyncStorage, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
 class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>HomeScreen</Text>
+        <TouchableOpacity onPress={() => this.props.screenProps.onLogOut()}>
+          <Text style={styles.text}>HomeScreen</Text>
+        </TouchableOpacity>
       </View>
     );
   }

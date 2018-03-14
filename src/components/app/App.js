@@ -2,39 +2,47 @@ import React, { Component } from 'react';
 import { StatusBar, AsyncStorage, StyleSheet, View } from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen';
 
+import { domainPrefix } from "../../config";
 import { RootNavigator, LoginNavigator } from '../../routes';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoginComplete: false
+      isLoginComplete: undefined
     };
 
     this.onLoginComplete = this.onLoginComplete.bind(this);
   }
 
   componentDidMount () {
+    AsyncStorage.getAllKeys().then(keys => {
+      if (keys.includes(`${domainPrefix}.auth.lockchain`) && keys.includes(`${domainPrefix}.auth.username`))
+        this.setState({ isLoginComplete: true });
+      else this.setState({ isLoginComplete: false });
+    });
+
     SplashScreen.close({
       animationType: SplashScreen.animationType.scale,
       duration: 500,
-      delay: 100,
+      delay: 800,
     });
-
-    AsyncStorage.getAllKeys().then(keys => console.log('~~~keys:', keys));
   }
 
   onLoginComplete() {
     this.setState({ isLoginComplete: true });
+    AsyncStorage.getAllKeys().then(keys => console.log('~~~keys:', keys));
   }
 
   onLogOut() {
+    AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
     this.setState({ isLoginComplete: false });
   }
 
   renderNavigation() {
-    if (this.state.isLoginComplete) return <RootNavigator screenProps={{ onLogOut: this.onLogOut }} />;
-    else return <LoginNavigator screenProps={{ onLoginComplete: this.onLoginComplete }} />
+    if (typeof this.state.isLoginComplete === 'undefined') return null;
+    else if (this.state.isLoginComplete) return <RootNavigator screenProps={{ onLogOut: this.onLogOut.bind(this) }} />;
+    else return <LoginNavigator screenProps={{ onLoginComplete: this.onLoginComplete.bind(this) }} />
   }
 
   render() {

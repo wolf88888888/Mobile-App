@@ -86,6 +86,9 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
 }
 
 export async function register(userObj, captchaToken) {
+  //TODO: update backend to have it understand and process userWantsPromo correctly
+  delete userObj.userWantsPromo;
+
   return sendRequest(`${host}users/signup`, RequestMethod.POST, userObj, captchaToken).then(res => {
     return res;
   });
