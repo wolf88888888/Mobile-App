@@ -38,7 +38,7 @@ class SearchBar extends Component {
 
         <TextInput
           ref='input'
-          underlineColorAndroid='#e4a193'
+          underlineColorAndroid='#bdbdbd'
           style={styles.input}
           {...this.props} />
       </View>

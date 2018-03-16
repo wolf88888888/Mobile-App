@@ -23,7 +23,7 @@ class AppLoading extends Component {
     const keys = await AsyncStorage.getAllKeys();
     const isLoggedIn =  keys.includes(`${domainPrefix}.auth.lockchain`) &&
                         keys.includes(`${domainPrefix}.auth.username`);
-    console.log('~~~isLoggedIn',isLoggedIn);
+
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
     this.props.navigation.navigate(isLoggedIn ? 'App' : 'Login');

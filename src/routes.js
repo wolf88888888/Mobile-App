@@ -9,6 +9,7 @@ import CreatePassword from './components/login/CreatePassword';
 import Terms from './components/login/Terms';
 
 import Explore from './components/explore/Explore';
+import NavTabBar from './components/tabs/NavTabBar';
 
 export const LoginNavigator = StackNavigator(
   {
@@ -26,14 +27,16 @@ export const LoginNavigator = StackNavigator(
 
 export const MainNavigator = TabNavigator(
   {
-    Profile: { screen: Explore },
-    Messages: { screen: Explore },
-    MyTrips: { screen: Explore },
-    Favorites: { screen: Explore },
-    Explore: { screen: Explore },
+    PROFILE: { screen: Explore },
+    MESSAGES: { screen: Explore },
+    MY_TRIPS: { screen: Explore },
+    FAVORITES: { screen: Explore },
+    EXPLORE: { screen: Explore },
   },
   {
-    initialRouteName: 'Explore'
+    initialRouteName: 'EXPLORE',
+    tabBarComponent: NavTabBar,
+    tabBarPosition: 'bottom',
   }
 );
 

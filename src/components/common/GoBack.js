@@ -29,10 +29,6 @@ const GoBack = (props) => {
   );
 };
 
-GoBack.defaultProps = {
-  icon: 'arrowLeft'
-};
-
 GoBack.propTypes = {
   icon: PropTypes.string,
   onPress: PropTypes.func
