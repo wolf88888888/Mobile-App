@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { AsyncStorage, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
 import SearchBar from './SearchBar';
 
-class HomeScreen extends React.Component {
+class Explore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,20 +27,23 @@ class HomeScreen extends React.Component {
             leftIcon='search' />
         </View>
 
-        <TouchableOpacity onPress={() => this.props.screenProps.onLogOut()}>
-          <Text style={styles.text}>HomeScreen</Text>
+        <TouchableOpacity onPress={() => {
+          AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+          this.props.navigation.navigate('Login');
+        }}>
+          <Text style={styles.text}>Explore</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
 
-HomeScreen.propTypes = {
+Explore.propTypes = {
   // start react-navigation props
   navigation: PropTypes.object.isRequired
 };
 
-export default HomeScreen;
+export default Explore;
 
 const styles = StyleSheet.create({
   container: {

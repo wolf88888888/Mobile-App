@@ -1,4 +1,6 @@
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, TabNavigator, SwitchNavigator } from 'react-navigation';
+
+import AppLoading from './components/app/AppLoading';
 
 import Welcome from './components/login/Welcome';
 import Login from './components/login/Login';
@@ -6,17 +8,7 @@ import CreateAccount from './components/login/CreateAccount';
 import CreatePassword from './components/login/CreatePassword';
 import Terms from './components/login/Terms';
 
-import HomeScreen from './components/home/HomeScreen';
-
-export const RootNavigator = StackNavigator(
-  {
-    Home: { screen: HomeScreen }
-  },
-  {
-    initialRouteName: 'Home',
-    headerMode: 'none'
-  }
-);
+import Explore from './components/explore/Explore';
 
 export const LoginNavigator = StackNavigator(
   {
@@ -29,5 +21,29 @@ export const LoginNavigator = StackNavigator(
   {
     initialRouteName: 'Welcome',
     headerMode: 'none',
+  }
+);
+
+export const MainNavigator = TabNavigator(
+  {
+    Profile: { screen: Explore },
+    Messages: { screen: Explore },
+    MyTrips: { screen: Explore },
+    Favorites: { screen: Explore },
+    Explore: { screen: Explore },
+  },
+  {
+    initialRouteName: 'Explore'
+  }
+);
+
+export const AppNavigator = SwitchNavigator(
+  {
+    AppLoading: AppLoading,
+    Login: LoginNavigator,
+    App: MainNavigator
+  },
+  {
+    initialRouteName: 'AppLoading',
   }
 );

@@ -29,7 +29,7 @@ class Login extends Component {
           AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
           //TODO: Get first name + last name from response included with Authorization token (Backend)
           AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-          this.props.screenProps.onLoginComplete();
+          this.props.navigation.navigate('App');
         });
       } else {
         res.response.then(res => {
