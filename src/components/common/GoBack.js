@@ -34,7 +34,8 @@ GoBack.defaultProps = {
 };
 
 GoBack.propTypes = {
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  onPress: PropTypes.func
 };
 
 export default GoBack;

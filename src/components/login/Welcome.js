@@ -12,7 +12,7 @@ class Welcome extends Component {
 
     return (
       <View style={styles.container}>
-        <GoBack icon="times" />
+        <GoBack />
 
         <View style={styles.main}>
           <Image
