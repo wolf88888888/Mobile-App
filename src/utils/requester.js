@@ -99,3 +99,27 @@ export async function login(userObj, captchaToken) {
     return res;
   });
 }
+
+export async function getCurrencyRates() {
+  return sendRequest(`${host}rates`, RequestMethod.GET).then(res => {
+    return res.response.json();
+  });
+}
+
+export async function getLocRateInUserSelectedCurrency(userSelectedCurrency) {
+  return fetch(`https://api.coinmarketcap.com/v1/ticker/lockchain/?convert=${userSelectedCurrency}`).then(res => {
+    return res.json();
+  });
+}
+
+export function getTopHomes() {
+  return sendRequest(`${host}listings/top`, RequestMethod.GET).then(res => {
+    return res.response.json();
+  });
+}
+
+export async function getPropertyById(id) {
+  return sendRequest(`${host}listings/${id}`, RequestMethod.GET).then(res => {
+    return res.response.json();
+  });
+}

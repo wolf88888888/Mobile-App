@@ -19,6 +19,8 @@ class Login extends Component {
     }
   }
 
+  //TODO: Need a way to generate a Google ReCAPTCHA token
+
   onClickLogIn() {
     const { email, password } = this.state;
     const user = { email, password };

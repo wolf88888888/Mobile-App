@@ -26,6 +26,9 @@
     "react-native-iphone-x-helper": "^1.0.2",
     "react-native-remote-svg": "^1.1.1",
     "react-native-smart-splash-screen": "git://github.com/rgdalessandro/react-native-smart-splash-screen.git#a803be27fececa72f446cb16b4b2d2dd6c5c09e4",
-    "react-navigation": "^1.4.0"
+    "react-navigation": "^1.4.0",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6"
   }
 }

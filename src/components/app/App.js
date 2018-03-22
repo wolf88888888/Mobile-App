@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { StatusBar, View } from 'react-native';
+import { Provider } from 'react-redux';
 
 import { AppNavigator } from '../../routes';
+import configureStore from "../../utils/configure-store";
+
+const store = configureStore();
 
 class App extends Component {
-render() {
+  render() {
     return (
       <View style={{ flex:1 }}>
         <StatusBar
@@ -12,7 +16,9 @@ render() {
           translucent={true}
           barStyle="light-content" />
 
-        <AppNavigator />
+        <Provider store={store}>
+          <AppNavigator />
+        </Provider>
       </View>
     );
   }

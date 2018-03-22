@@ -1,10 +1,25 @@
-import React, {Component} from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { Component } from 'react';
+import { AsyncStorage, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Welcome from "../login/Welcome";
+
+import { setLocRate } from '../../actions/paymentInfo';
+import { getLocRateInUserSelectedCurrency, getCurrencyRates } from '../../utils/requester';
 
 class NavTabBar extends Component {
+  componentDidMount() {
+    const { currency } = this.props.paymentInfo;
+
+    getLocRateInUserSelectedCurrency(currency).then((data) => {
+      this.props.dispatch(setLocRate(data[0][`price_${currency.toLowerCase()}`]));
+    });
+
+    getCurrencyRates().then((data) => {
+      AsyncStorage.setItem('currencyRates', JSON.stringify(data))
+    });
+  }
+
   render() {
     const { navigate, state} = this.props.navigation;
     const { index, routes } = state;
@@ -76,7 +91,14 @@ NavTabBar.propTypes = {
   navigation: PropTypes.object.isRequired
 };
 
-export default NavTabBar;
+export default connect(mapStateToProps)(NavTabBar);
+
+function mapStateToProps(state) {
+  const { paymentInfo } = state;
+  return {
+    paymentInfo
+  };
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -1,23 +1,47 @@
-import React from 'react';
-import { AsyncStorage, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
-import SearchBar from './SearchBar';
+import { getTopHomes } from '../../utils/requester';
 
-class Explore extends React.Component {
+import SearchBar from './SearchBar';
+import SmallPropertyTile from './SmallPropertyTile';
+
+class Explore extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      topHomes: null
     };
   }
 
+  componentDidMount() {
+    getTopHomes().then(topHomes => this.setState({ topHomes }));
+  }
+
+  renderHomes() {
+    return (
+      <View style={styles.sectionView}>
+        <View style={styles.subtitleView}>
+          <Text style={styles.subtitleText}>Popular Homes</Text>
+        </View>
+
+        <View style={styles.tilesView}>
+          { this.state.topHomes.content.map(listing => <SmallPropertyTile listingsType='homes' listing={listing} key={listing.id} />) }
+        </View>
+      </View>
+    );
+  }
+
+  //TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
+
   render() {
-    const { search } = this.state;
+    const { search, topHomes } = this.state;
 
     return (
       <View style={styles.container}>
-        <View style={styles.searchArea}>
+        <View style={styles.searchAreaView}>
           <SearchBar
             autoCorrect={false}
             value={search}
@@ -27,11 +51,15 @@ class Explore extends React.Component {
             leftIcon='search' />
         </View>
 
+        <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
+        { topHomes ? this.renderHomes() : null }
+        </ScrollView>
+
         <TouchableOpacity onPress={() => {
           AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
           this.props.navigation.navigate('Login');
         }}>
-          <Text style={styles.text}>Explore</Text>
+          <Text style={styles.text}>Log Out</Text>
         </TouchableOpacity>
       </View>
     );
@@ -50,15 +78,38 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#f0f1f3',
+    backgroundColor: '#f0f1f3'
   },
-  searchArea: {
+  searchAreaView: {
     width: '100%',
     height: 105,
     backgroundColor: '#273842',
     paddingTop: 40,
     paddingLeft: 17,
     paddingRight: 17
+  },
+  sectionView: {
+    width: '100%',
+    paddingLeft: 17,
+    paddingRight: 17,
+  },
+  subtitleView: {
+    width: '100%',
+    paddingTop: 18,
+    paddingBottom: 5,
+    borderBottomWidth: 0.5,
+    borderColor: '#d7d8d8'
+  },
+  subtitleText: {
+    fontSize: 16,
+    fontFamily: 'FuturaStd-Light'
+  },
+  tilesView: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between'
   },
   text: {
     color: '#000'
