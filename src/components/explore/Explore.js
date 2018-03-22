@@ -17,7 +17,10 @@ class Explore extends Component {
   }
 
   componentDidMount() {
-    getTopHomes().then(topHomes => this.setState({ topHomes }));
+    getTopHomes().then(topHomes => {
+      const truncated = topHomes.content.slice(0,4);
+      this.setState({ topHomes: truncated })
+    });
   }
 
   renderHomes() {
@@ -28,7 +31,7 @@ class Explore extends Component {
         </View>
 
         <View style={styles.tilesView}>
-          { this.state.topHomes.content.map(listing => <SmallPropertyTile listingsType='homes' listing={listing} key={listing.id} />) }
+          { this.state.topHomes.map(listing => <SmallPropertyTile listingsType='homes' listing={listing} key={listing.id} />) }
         </View>
       </View>
     );
