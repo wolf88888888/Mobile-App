@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Switch from 'react-native-customisable-switch';
-import Image from 'react-native-remote-svg';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
-
-import { validateName, validateEmail } from '../../utils/validation';
-
+import React, { Component } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Switch from 'react-native-customisable-switch';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Image from 'react-native-remote-svg';
+import { validateEmail, validateName } from '../../utils/validation';
 import GoBack from '../common/GoBack';
 import SmartInput from '../common/SmartInput';
 

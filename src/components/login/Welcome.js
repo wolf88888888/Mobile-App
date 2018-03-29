@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Image from 'react-native-remote-svg';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
-
+import React, { Component } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Image from 'react-native-remote-svg';
 import GoBack from '../common/GoBack';
 
 class Welcome extends Component {
