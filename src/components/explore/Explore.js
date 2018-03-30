@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { getTopHomes } from '../../utils/requester';
 
+import DateAndGuestPicker from './DateAndGuestPicker';
 import SearchBar from './SearchBar';
 import SmallPropertyTile from './SmallPropertyTile';
 
@@ -12,6 +13,9 @@ class Explore extends Component {
     super(props);
     this.state = {
       search: '',
+      checkInDate: 'Thu, 25 Jan',
+      checkOutDate: 'Sat, 27 Jan',
+      guests: 0,
       topHomes: null
     };
   }
@@ -40,7 +44,7 @@ class Explore extends Component {
   //TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
 
   render() {
-    const { search, topHomes } = this.state;
+    const { search, checkInDate, checkOutDate, guests, topHomes } = this.state;
 
     return (
       <View style={styles.container}>
@@ -55,7 +59,8 @@ class Explore extends Component {
         </View>
 
         <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-        { topHomes ? this.renderHomes() : null }
+          <DateAndGuestPicker checkInDate={checkInDate} checkOutDate={checkOutDate} guests={guests} />
+          { topHomes ? this.renderHomes() : null }
         </ScrollView>
 
         <TouchableOpacity onPress={() => {
