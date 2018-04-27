@@ -3,88 +3,101 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 
+// TODO: move styles to separate file
+const styles = StyleSheet.create({
+    rightIconView: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 34,
+        width: 34,
+        borderRadius: 17,
+        marginTop: 7,
+        marginRight: 7,
+        marginBottom: 7,
+        backgroundColor: '#e4a193'
+    },
+    rightIconText: {
+        color: '#DA7B61',
+        fontSize: 11
+    },
+    container: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderColor: '#e4a193',
+        borderWidth: 1,
+        borderRadius: 25,
+        height: 50
+    },
+    input: {
+        flex: 1,
+        marginLeft: 20,
+        marginRight: 20,
+        color: '#fff',
+        fontSize: 17,
+        fontFamily: 'FuturaStd-Light'
+    }
+});
+
 class SmartInput extends Component {
-  renderRightButton() {
-    const { rightIcon, onRightPress } = this.props;
-    let renderButton = null;
-
-    if (rightIcon) {
-      renderButton = (
-        <View style={styles.rightIconView}>
-          <Text style={styles.rightIconText}>
-            <FontAwesome>{Icons[rightIcon]}</FontAwesome>
-          </Text>
-        </View>
-      );
+    static propTypes = {
+        onRightPress: PropTypes.func,
+        rightIcon: PropTypes.string
     }
 
-    if (rightIcon && onRightPress) {
-      renderButton = (
-        <TouchableOpacity onPress={() => onRightPress()}>{ renderButton }</TouchableOpacity>
-      );
+    static defaultProps = {
+        onRightPress: () => {},
+        rightIcon: ''
     }
 
-    return renderButton
-  }
+    constructor() {
+        super();
+        this.input = {
+            focus: () => {}
+        };
+    }
+    focus() {
+        this.input.focus();
+    }
 
-  focus() {
-    this.refs.input.focus();
-  }
+    renderRightButton() {
+        const { rightIcon, onRightPress } = this.props;
+        let renderButton = null;
 
-  render() {
-    return (
-      <View style={[styles.container]}>
-        <TextInput
-          ref='input'
-          underlineColorAndroid='#e4a193'
-          style={styles.input}
-          {...this.props} />
+        if (rightIcon) {
+            renderButton = (
+                <View style={styles.rightIconView}>
+                    <Text style={styles.rightIconText}>
+                        <FontAwesome>{Icons[rightIcon]}</FontAwesome>
+                    </Text>
+                </View>
+            );
+        }
 
-        { this.renderRightButton() }
-      </View>
-    );
-  }
+        if (rightIcon && onRightPress) {
+            renderButton = (
+                <TouchableOpacity onPress={() => onRightPress()}>{ renderButton }</TouchableOpacity>
+            );
+        }
+
+        return renderButton;
+    }
+
+    render() {
+        return (
+            <View style={[styles.container]}>
+                <TextInput
+                    ref={(i) => { this.input = i; }}
+                    underlineColorAndroid="#e4a193"
+                    style={styles.input}
+                    {...this.props}
+                />
+
+                { this.renderRightButton() }
+            </View>
+        );
+    }
 }
 
-SmartInput.propTypes = {
-  onRightPress: PropTypes.func,
-  rightIcon: PropTypes.string
-};
-
 export default SmartInput;
-
-const styles = StyleSheet.create({
-  rightIconView: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 34,
-    width: 34,
-    borderRadius: 17,
-    marginTop: 7,
-    marginRight: 7,
-    marginBottom: 7,
-    backgroundColor: '#e4a193',
-  },
-  rightIconText: {
-    color: '#DA7B61',
-    fontSize: 11,
-  },
-  container:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderColor: '#e4a193',
-    borderWidth: 1,
-    borderRadius: 25,
-    height: 50
-  },
-  input: {
-    flex: 1,
-    marginLeft: 20,
-    marginRight: 20,
-    color: '#fff',
-    fontSize: 17,
-    fontFamily: 'FuturaStd-Light'
-  }
-});

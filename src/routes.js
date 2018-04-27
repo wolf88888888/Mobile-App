@@ -12,41 +12,41 @@ import Explore from './components/explore/Explore';
 import NavTabBar from './components/tabs/NavTabBar';
 
 export const LoginNavigator = StackNavigator(
-  {
-    Welcome: { screen: Welcome },
-    Login: { screen: Login },
-    CreateAccount: { screen: CreateAccount },
-    CreatePassword: { screen: CreatePassword },
-    Terms: { screen: Terms }
-  },
-  {
-    initialRouteName: 'Welcome',
-    headerMode: 'none',
-  }
+    {
+        Welcome: { screen: Welcome },
+        Login: { screen: Login },
+        CreateAccount: { screen: CreateAccount },
+        CreatePassword: { screen: CreatePassword },
+        Terms: { screen: Terms }
+    },
+    {
+        initialRouteName: 'Welcome',
+        headerMode: 'none'
+    }
 );
 
 export const MainNavigator = TabNavigator(
-  {
-    PROFILE: { screen: Explore },
-    MESSAGES: { screen: Explore },
-    MY_TRIPS: { screen: Explore },
-    FAVORITES: { screen: Explore },
-    EXPLORE: { screen: Explore },
-  },
-  {
-    initialRouteName: 'EXPLORE',
-    tabBarComponent: NavTabBar,
-    tabBarPosition: 'bottom',
-  }
+    {
+        PROFILE: { screen: Explore },
+        MESSAGES: { screen: Explore },
+        MY_TRIPS: { screen: Explore },
+        FAVORITES: { screen: Explore },
+        EXPLORE: { screen: Explore }
+    },
+    {
+        initialRouteName: 'EXPLORE',
+        tabBarComponent: NavTabBar,
+        tabBarPosition: 'bottom'
+    }
 );
 
 export const AppNavigator = SwitchNavigator(
-  {
-    AppLoading: AppLoading,
-    Login: LoginNavigator,
-    App: MainNavigator
-  },
-  {
-    initialRouteName: 'AppLoading',
-  }
+    {
+        AppLoading,
+        Login: LoginNavigator,
+        App: MainNavigator
+    },
+    {
+        initialRouteName: 'AppLoading'
+    }
 );
