@@ -21,7 +21,7 @@ const Button = ({
     textStyle
 }) => (
     <View style={[styles.buttonWrap, wrapStyle]}>
-        <TouchableOpacity onPress={onPress} style={{display: 'flex', justifyContent: 'center'}}>
+        <TouchableOpacity onPress={onPress} style={styles.touchableOpacity}>
             <Text style={[styles.buttonText, textStyle]}>{text}</Text>
         </TouchableOpacity>
     </View>

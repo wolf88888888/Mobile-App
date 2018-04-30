@@ -15,6 +15,10 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 17,
         fontFamily: 'FuturaStd-Light'
+    },
+    touchableOpacity: {
+        display: 'flex',
+        justifyContent: 'center'
     }
 });
 
