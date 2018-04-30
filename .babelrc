@@ -5,6 +5,7 @@
   "env": {
     "development": {
       "plugins": [
+        "transform-decorators-legacy",
         "transform-react-jsx-source"
       ]
     }
