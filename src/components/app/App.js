@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { StatusBar, View } from 'react-native';
 import { Provider } from 'react-redux';
 
-import { AppNavigator } from '../../routes';
-import configureStore from '../../utils/configure-store';
-
-const store = configureStore();
+import { AppNavigator } from '../../routing/routes';
+import store from '../../redux/store';
 
 class App extends Component {
     componentDidMount() {
