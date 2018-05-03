@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        marginHorizontal: 20,
+        marginLeft: 20,
+        marginRight: 20,
         color: '#fff',
-        marginBottom: -4,
         fontSize: 17,
         fontFamily: 'FuturaStd-Light'
     }
@@ -89,9 +89,8 @@ class SmartInput extends Component {
             <View style={[styles.container]}>
                 <TextInput
                     ref={(i) => { this.input = i; }}
+                    underlineColorAndroid="#e4a193"
                     style={styles.input}
-                    underlineColorAndroid="rgba(0,0,0,0)"
-                    selectionColor="white"
                     {...this.props}
                 />
 
