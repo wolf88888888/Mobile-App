@@ -128,8 +128,11 @@ class DateAndGuestPicker extends Component {
     }
 
     onGuests() {
-      console.log("onGuest - DateAndGuestPicker");
       this.props.gotoGuests();
+    }
+
+    onSearch() {
+      this.props.gotoSearch();
     }
 
     render() {
@@ -167,7 +170,7 @@ class DateAndGuestPicker extends Component {
                     </View>
                 </View>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.onSearch()}>
                     <View style={styles.searchButtonView}>
                         <Text style={styles.searchButtonText}>Search</Text>
                     </View>

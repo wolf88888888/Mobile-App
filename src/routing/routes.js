@@ -11,6 +11,7 @@ import Terms from '../components/screens/Terms';
 import Explore from '../components/screens/Explore';
 import NavTabBar from './tabs/NavTabBar';
 import Guests from '../components/screens/Guests';
+import PropertyFacilities from '../components/screens/PropertyFacilities';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -44,7 +45,8 @@ export const MainNavigator = TabNavigator(
 export const FullNavigator = StackNavigator(
     {
         MainScreen: { screen: MainNavigator },
-        GuestsScreen: { screen: Guests }
+        GuestsScreen: { screen: Guests },
+        PropertyFacilitiesScreen: { screen: PropertyFacilities }
     },
     {
         initialRouteName: 'MainScreen',

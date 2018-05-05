@@ -114,16 +114,11 @@ class Explore extends Component {
     }
 
     gotoGuests() {
-      console.log("onGuest - Explore temple");
-      if (this.props.navigation) {
-        console.log("exist");
-
-      }
-      else {
-        console.log("unexist");
-
-      }
       this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData});
+    }
+
+    gotoSearch() {
+      this.props.navigation.navigate('PropertyFacilitiesScreen');
     }
     // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
 
@@ -152,7 +147,8 @@ class Explore extends Component {
                       adults={adults}
                       children={children}
                       infants={infants}
-                      gotoGuests={() => this.gotoGuests()} />
+                      gotoGuests={() => this.gotoGuests()}
+                      gotoSearch={() => this.gotoSearch()}/>
                     { topHomes ? this.renderHomes() : null }
                 </ScrollView>
 
