@@ -59,9 +59,6 @@ class Guests extends Component {
     }
 
     onDone() {
-      console.log(this.state.adults);
-      console.log(this.state.children);
-      console.log(this.state.infants);
       this.props.navigation.goBack();
       if (this.props.navigation.state.params && this.props.navigation.state.params.updateData) {
         this.props.navigation.state.params.updateData({ adults: this.state.adults, children: this.state.children, infants: this.state.infants });

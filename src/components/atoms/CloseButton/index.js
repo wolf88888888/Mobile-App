@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
@@ -6,33 +6,27 @@ import Image from 'react-native-remote-svg';
 
 import styles from './styles';
 
-const CloseButton = (props) => {
-    let renderIcon = (
-          <View style={styles.container}>
-            <Image source={require('../../../assets/close.svg')} style={styles.ButtonImage}/>
-          </View>
-      );
-
-    if (props.onPress) {
-        renderIcon = (
-            <TouchableOpacity onPress={() => props.onPress()}>{ renderIcon }</TouchableOpacity>
-        );
+class CloseButton extends Component {
+    constructor(props) {
+        super(props);
     }
 
-    return (
-        <View style={styles.container}>
-            { renderIcon }
-        </View>
-    );
-};
+    render() {
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.ButtonView} onPress={() => this.props.onPress()}>
+                  <Image source={require('../../../assets/close.svg')} style={styles.ButtonImage}/>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+}
 
 CloseButton.propTypes = {
-    icon: PropTypes.string,
     onPress: PropTypes.func
 };
 
 CloseButton.defaultProps = {
-    icon: '',
     onPress: () => {}
 };
 

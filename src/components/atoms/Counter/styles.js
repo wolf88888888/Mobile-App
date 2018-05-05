@@ -18,7 +18,14 @@ const styles = StyleSheet.create({
     ButtonImage: {
         width: 35,
         height: 35,
+        opacity: 1,
     },
+
+    DisableImage: {
+        width: 35,
+        height: 35,
+        opacity: 0.8,
+    }
 });
 
 export default styles;
