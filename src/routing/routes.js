@@ -10,6 +10,7 @@ import Terms from '../components/screens/Terms';
 
 import Explore from '../components/screens/Explore';
 import NavTabBar from './tabs/NavTabBar';
+import Guests from '../components/screens/Guests';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -40,11 +41,22 @@ export const MainNavigator = TabNavigator(
     }
 );
 
+export const FullNavigator = StackNavigator(
+    {
+        MainScreen: { screen: MainNavigator },
+        GuestsScreen: { screen: Guests }
+    },
+    {
+        initialRouteName: 'MainScreen',
+        headerMode: 'none'
+    }
+);
+
 export const AppNavigator = SwitchNavigator(
     {
         AppLoading,
         Login: LoginNavigator,
-        App: MainNavigator
+        App: FullNavigator
     },
     {
         initialRouteName: 'AppLoading'

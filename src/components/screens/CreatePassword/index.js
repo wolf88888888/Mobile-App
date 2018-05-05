@@ -183,7 +183,7 @@ class CreatePassword extends Component {
 
                 <View style={styles.lowOpacity}>
                     <Image
-                        source={require('../../assets/get-started-white-outline.svg')}
+                        source={require('../../../assets/get-started-white-outline.svg')}
                         style={styles.getStartedImage}
                     />
                 </View>

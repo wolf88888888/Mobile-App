@@ -100,7 +100,7 @@ android {
     defaultConfig {
         applicationId "com.mobileapp"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         ndk {
@@ -138,7 +138,7 @@ android {
 
 dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.android.support:appcompat-v7:23.4.0"
     compile "com.facebook.react:react-native:+"             // From node_modules
     compile project(':react-native-smart-splashscreen')     // From node_modules
 }

@@ -36,29 +36,30 @@ class Login extends Component {
     // TODO: Need a way to generate a Google ReCAPTCHA token
 
     onClickLogIn() {
-        const { email, password } = this.state;
-        const user = { email, password };
-
-        login(user, null).then((res) => {
-            if (res.success) {
-                res.response.json().then((data) => {
-                    AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
-                    // TODO: Get first name + last name from response included with Authorization token (Backend)
-                    AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                    this.props.navigation.navigate('App');
-                });
-            } else {
-                res.response.then((response) => {
-                    const { errors } = response;
-                    Object.keys(errors).forEach((key) => {
-                        if (typeof key !== 'function') {
-                            console.log('Error logging in:', errors[key].message);
-                            // TODO: give user feedback about having and error logging in
-                        }
-                    });
-                });
-            }
-        });
+      this.props.navigation.navigate('App');
+        // const { email, password } = this.state;
+        // const user = { email, password };
+        //
+        // login(user, null).then((res) => {
+        //     if (res.success) {
+        //         res.response.json().then((data) => {
+        //             AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
+        //             // TODO: Get first name + last name from response included with Authorization token (Backend)
+        //             AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
+        //             this.props.navigation.navigate('App');
+        //         });
+        //     } else {
+        //         res.response.then((response) => {
+        //             const { errors } = response;
+        //             Object.keys(errors).forEach((key) => {
+        //                 if (typeof key !== 'function') {
+        //                     console.log('Error logging in:', errors[key].message);
+        //                     // TODO: give user feedback about having and error logging in
+        //                 }
+        //             });
+        //         });
+        //     }
+        // });
     }
 
     @autobind
@@ -110,12 +111,11 @@ class Login extends Component {
                                 onChangeText={this.onChangeHandler('password')}
                                 placeholder="Password"
                                 placeholderTextColor="#fff"
-
                             />
                         </View>
 
                         <TouchableOpacity
-                            disabled={!validateEmail(email) || !validatePassword(password)}
+                            //disabled={!validateEmail(email) || !validatePassword(password)}
                             onPress={() => this.onClickLogIn()}
                         >
                             <View style={styles.LogInButton}>

@@ -5,6 +5,7 @@ import { getTopHomes } from '../../../utils/requester';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
+import { withNavigation } from 'react-navigation';
 
 
 // TODO: move styles in separate file
@@ -64,14 +65,18 @@ class Explore extends Component {
             navigate: () => {}
         }
     }
+
     constructor(props) {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.updateData = this.updateData.bind(this);
         this.state = {
             search: '',
             checkInDate: 'Thu, 25 Jan',
             checkOutDate: 'Sat, 27 Jan',
-            guests: 0,
+            adults: 0,
+            children: 0,
+            infants: 0,
             topHomes: null
         };
     }
@@ -103,11 +108,28 @@ class Explore extends Component {
         );
     }
 
+    updateData(data) {
+      console.log(data);
+      this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+    }
+
+    gotoGuests() {
+      console.log("onGuest - Explore temple");
+      if (this.props.navigation) {
+        console.log("exist");
+
+      }
+      else {
+        console.log("unexist");
+
+      }
+      this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData});
+    }
     // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
 
     render() {
         const {
-            search, checkInDate, checkOutDate, guests, topHomes
+            search, checkInDate, checkOutDate, adults, children, infants, topHomes
         } = this.state;
 
         return (
@@ -124,7 +146,13 @@ class Explore extends Component {
                 </View>
 
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-                    <DateAndGuestPicker checkInDate={checkInDate} checkOutDate={checkOutDate} guests={guests} />
+                    <DateAndGuestPicker
+                      checkInDate={checkInDate}
+                      checkOutDate={checkOutDate}
+                      adults={adults}
+                      children={children}
+                      infants={infants}
+                      gotoGuests={() => this.gotoGuests()} />
                     { topHomes ? this.renderHomes() : null }
                 </ScrollView>
 
@@ -140,4 +168,4 @@ class Explore extends Component {
     }
 }
 
-export default Explore;
+export default withNavigation(Explore);

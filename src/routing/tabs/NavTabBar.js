@@ -4,7 +4,6 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-
 import { setLocRate } from '../../redux/common/actions';
 import { getLocRateInUserSelectedCurrency, getCurrencyRates } from '../../utils/requester';
 
@@ -16,6 +15,8 @@ import { getLocRateInUserSelectedCurrency, getCurrencyRates } from '../../utils/
 class NavTabBar extends Component {
     componentDidMount() {
         const { currency } = this.props.paymentInfo;
+        console.log("begin");
+        console.log(this.props.paymentInfo);
 
         getLocRateInUserSelectedCurrency(currency).then((data) => {
             this.props.dispatch(setLocRate(data[0][`price_${currency.toLowerCase()}`]));
@@ -97,14 +98,15 @@ NavTabBar.propTypes = {
     navigation: PropTypes.object.isRequired
 };
 
-export default connect(mapStateToProps)(NavTabBar);
-
 function mapStateToProps(state) {
-    const { paymentInfo } = state;
+    //const { paymentInfo } = state;
     return {
-        paymentInfo
+        paymentInfo: state
     };
 }
+
+export default connect(mapStateToProps)(NavTabBar);
+
 
 const styles = StyleSheet.create({
     container: {

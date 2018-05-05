@@ -126,8 +126,14 @@ const styles = StyleSheet.create({
 class DateAndGuestPicker extends Component {
     componentDidMount() {
     }
+
+    onGuests() {
+      console.log("onGuest - DateAndGuestPicker");
+      this.props.gotoGuests();
+    }
+
     render() {
-        const { checkInDate, checkOutDate, guests } = this.props;
+        const { checkInDate, checkOutDate, adults, children, infants} = this.props;
 
         return (
             <View style={styles.container}>
@@ -146,10 +152,13 @@ class DateAndGuestPicker extends Component {
                         </View>
                     </View>
 
-                    <View style={guests ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
-                        <Text style={styles.label}>Guests</Text>
-                        <Text style={styles.value}>{ guests || '-' }</Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={() => this.onGuests()}>
+                        <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
+                            <Text style={styles.label}>Guests</Text>
+                            <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
+                        </View>
+                    </TouchableOpacity>
 
                     <View style={styles.optionsPickerViewIncomplete}>
                         <Text style={styles.iconText}>
@@ -171,7 +180,9 @@ class DateAndGuestPicker extends Component {
 DateAndGuestPicker.propTypes = {
     checkInDate: PropTypes.string.isRequired,
     checkOutDate: PropTypes.string.isRequired,
-    guests: PropTypes.number.isRequired
+    adults: PropTypes.number.isRequired,
+    children: PropTypes.number.isRequired,
+    infants: PropTypes.number.isRequired
 };
 
 export default DateAndGuestPicker;
