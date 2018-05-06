@@ -11,7 +11,12 @@ import Terms from '../components/screens/Terms';
 import Explore from '../components/screens/Explore';
 import NavTabBar from './tabs/NavTabBar';
 import Guests from '../components/screens/Guests';
-import PropertyFacilities from '../components/screens/PropertyFacilities';
+
+import Property from '../components/screens/Property';
+import PropertyFacilites from '../components/screens/PropertyFacilites';
+import AdditionalPrices from '../components/screens/AdditionalPrices';
+import HouseRules from '../components/screens/HouseRules';
+
 
 export const LoginNavigator = StackNavigator(
     {
@@ -46,7 +51,10 @@ export const FullNavigator = StackNavigator(
     {
         MainScreen: { screen: MainNavigator },
         GuestsScreen: { screen: Guests },
-        PropertyFacilitiesScreen: { screen: PropertyFacilities }
+        PropertyScreen: { screen: Property },
+        PropertyFacilitesScreen: { screen: PropertyFacilites },
+        AdditionalPricesScreen: { screen: AdditionalPrices },
+        HouseRulesScreen: { screen: HouseRules }
     },
     {
         initialRouteName: 'MainScreen',
