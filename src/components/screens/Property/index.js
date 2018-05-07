@@ -8,7 +8,7 @@ import {
 
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
-import CloseButton from '../../atoms/CloseButton';
+import GoBack from '../../atoms/GoBack';
 
 import styles from './styles';
 
@@ -81,7 +81,8 @@ class Property extends Component {
         return (
             <View style={styles.container}>
               <ScrollView style={styles.scrollView}>
-              <CloseButton style={{zIndex:1}} onPress={() => this.onClose()}/>
+              <GoBack style={{zIndex:1}} onPress={() => this.onClose()}
+                icon="arrowLeft"/>
 
                   <View style={styles.logoContainer}>
                       <Image style={styles.logo} source = {require('../../../assets/image.jpg')} />
