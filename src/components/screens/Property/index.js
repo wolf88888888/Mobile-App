@@ -169,28 +169,14 @@ class Property extends Component {
 
                               <TouchableOpacity>
                                   <View style={styles.sideView}>
-
-
+                                  <ProgressBarAndroid />
+                                    <ProgressBarAndroid styleAttr="Horizontal" />
+                                    <ProgressBarAndroid styleAttr="Horizontal" color="#2196F3" />
                                     <ProgressBarAndroid
                                       styleAttr="Horizontal"
                                       indeterminate={false}
                                       progress={0.5}
-                                    />
-                                    <Text style={styles.smallReviews}>7.3 reviews</Text>
-
-                                    <ProgressBarAndroid
-                                      styleAttr="Horizontal"
-                                      indeterminate={false}
-                                      progress={0.5}
-                                    />
-                                    <Text style={styles.smallReviews}>7.3 reviews</Text>
-
-                                    <ProgressBarAndroid
-                                      styleAttr="Horizontal"
-                                      indeterminate={false}
-                                      progress={0.5}
-                                    />
-                                    <Text style={styles.smallReviews}>7.3 reviews</Text>
+                                  />
                                   </View>
                               </TouchableOpacity>
                          </View>
@@ -220,7 +206,7 @@ class Property extends Component {
                         <View style={styles.sidebar}>
 
                                 <View>
-                                  <Image style={styles.circleImg} source = {require('../../../assets/image.jpg')} />
+                                  <Image style={styles.circleImgBig} source = {require('../../../assets/image.jpg')} />
                                 </View>
 
                                 <View style={{marginLeft:20}}>
@@ -228,12 +214,24 @@ class Property extends Component {
                                     <Text>* * * * *</Text>
                                 </View>
 
+                                <Text style={styles.firstRedText}>Contact Host</Text>
+
                          </View>
 
-                         <ListView
-                           dataSource={this.state.dataSource}
-                           renderRow={this._renderRow}
-                           />
+                         <View style={styles.ComponentView}>
+                            <Text style={styles.firstText}>House Rules</Text>
+                            <Text onPress={() => navigate('HouseRulesScreen')}style={styles.firstRedText}>Read</Text>
+                         </View>
+
+                         <View style={styles.ComponentView}>
+                            <Text style={styles.firstText}>Cancellation Policy</Text>
+                            <Text style={styles.firstRedText}>Flexible</Text>
+                         </View>
+
+                         <View style={styles.ComponentView}>
+                            <Text style={styles.firstText}>Additional Prices</Text>
+                            <Text onPress={() => navigate('AdditionalPricesScreen')} style={styles.firstRedText}>Check</Text>
+                         </View>
 
 
 
@@ -242,13 +240,11 @@ class Property extends Component {
                               <Text>Facilites</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => navigate('HouseRulesScreen')}>
+                        <TouchableOpacity>
                               <Text>House Rules</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => navigate('AdditionalPricesScreen')}>
+                        <TouchableOpacity>
                               <Text>Additional Prices</Text>
                         </TouchableOpacity>
 

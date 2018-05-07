@@ -45,6 +45,7 @@ import {
              paddingBottom:10,
              flexDirection: 'row',
              flex:1,
+             justifyContent:'space-between'
 
         },
         textInput:{
@@ -128,6 +129,10 @@ import {
          firstText:{
            fontSize:22
          },
+         firstRedText:{
+           fontSize:22,
+           color:'#DA7B61'
+         },
          sideView: {
                width: 140,
                height:100,
@@ -163,6 +168,10 @@ import {
          },circleImg:{
            width:40,
            height:40,
+           borderRadius:50
+         },circleImgBig:{
+           width:60,
+           height:60,
            borderRadius:50
          }
         });
