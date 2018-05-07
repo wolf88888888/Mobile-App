@@ -240,13 +240,13 @@ class Property extends Component {
                               <Text>Facilites</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity>
-                              <Text>House Rules</Text>
+                        <TouchableOpacity onPress={() => navigate('ReviewHouseScreen')}>
+                            <Text>ReviewHouse</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity>
-                              <Text>Additional Prices</Text>
-                        </TouchableOpacity>
+                        <Text onPress={() => navigate('ReviewPayScreen')}>ReviewPay</Text>
+                        <Text onPress={() => navigate('ReviewTripScreen')}>ReviewTrip</Text>
+                        <Text onPress={() => navigate('ReviewSendScreen')}>ReviewSend</Text>
 
                         <View style={styles.space}>
 
