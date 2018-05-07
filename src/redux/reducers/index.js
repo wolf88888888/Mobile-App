@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
+import { payment } from '../common/reducers';
 
 const rootReducer = combineReducers({
-    test: (state = {}) => state
+    paymentInfo: payment
 });
 
 export default rootReducer;

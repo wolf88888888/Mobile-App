@@ -9,7 +9,8 @@ import CreatePassword from '../components/screens/CreatePassword';
 import Terms from '../components/screens/Terms';
 
 import Explore from '../components/screens/Explore';
-import NavTabBar from './tabs/NavTabBar';
+import NavTabBar from '../components/organisms/NavTabBar';
+
 
 export const LoginNavigator = StackNavigator(
     {
