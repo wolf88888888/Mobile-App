@@ -17,6 +17,11 @@ import PropertyFacilites from '../components/screens/PropertyFacilites';
 import AdditionalPrices from '../components/screens/AdditionalPrices';
 import HouseRules from '../components/screens/HouseRules';
 
+import ReviewHouse from '../components/screens/Review/ReviewHouse';
+import ReviewPay from '../components/screens/Review/ReviewPay';
+import ReviewSend from '../components/screens/Review/ReviewSend';
+import ReviewTrip from '../components/screens/Review/ReviewTrip';
+
 
 export const LoginNavigator = StackNavigator(
     {
@@ -54,7 +59,12 @@ export const FullNavigator = StackNavigator(
         PropertyScreen: { screen: Property },
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         AdditionalPricesScreen: { screen: AdditionalPrices },
-        HouseRulesScreen: { screen: HouseRules }
+        HouseRulesScreen: { screen: HouseRules },
+
+        ReviewHouseScreen: { screen: ReviewHouse },
+        ReviewPayScreen: { screen: ReviewPay },
+        ReviewSendScreen: { screen: ReviewSend },
+        ReviewTripScreen: { screen: ReviewTrip }
     },
     {
         initialRouteName: 'MainScreen',
