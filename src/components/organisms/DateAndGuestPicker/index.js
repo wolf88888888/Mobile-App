@@ -124,6 +124,13 @@ const styles = StyleSheet.create({
 
 
 class DateAndGuestPicker extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onGuests = this.onGuests.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+    }
+
     componentDidMount() {
     }
 
@@ -156,7 +163,7 @@ class DateAndGuestPicker extends Component {
                     </View>
 
                     <TouchableOpacity
-                        onPress={() => this.onGuests()}>
+                        onPress={this.onGuests}>
                         <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
                             <Text style={styles.label}>Guests</Text>
                             <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
@@ -170,7 +177,7 @@ class DateAndGuestPicker extends Component {
                     </View>
                 </View>
 
-                <TouchableOpacity onPress={() => this.onSearch()}>
+                <TouchableOpacity onPress={this.onSearch}>
                     <View style={styles.searchButtonView}>
                         <Text style={styles.searchButtonText}>Search</Text>
                     </View>

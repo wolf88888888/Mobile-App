@@ -15,8 +15,6 @@ import { getLocRateInUserSelectedCurrency, getCurrencyRates } from '../../utils/
 class NavTabBar extends Component {
     componentDidMount() {
         const { currency } = this.props.paymentInfo;
-        console.log("begin");
-        console.log(this.props.paymentInfo);
 
         getLocRateInUserSelectedCurrency(currency).then((data) => {
             this.props.dispatch(setLocRate(data[0][`price_${currency.toLowerCase()}`]));

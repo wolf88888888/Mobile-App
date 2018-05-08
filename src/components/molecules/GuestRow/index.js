@@ -11,12 +11,27 @@ import Counter from '../../atoms/Counter'
 import styles from './styles';
 
 class GuestRow extends Component {
+
+    static get propTypes() {
+        return {
+          title: PropTypes.string.isRequired,
+          subtitle: PropTypes.string.isRequired,
+          type: PropTypes.string.isRequired,
+          count: PropTypes.number.isRequired
+        }
+    };
+
+    constructor(props) {
+        super(props);
+        this.onChanged = this.onChanged.bind(this);
+    }
+
     componentDidMount() {
     }
 
     onChanged(value) {
       if (this.props.onChanged) {
-        this.props.onChanged(value);
+        this.props.onChanged(this.props.type, value);
       }
     }
 
@@ -28,16 +43,10 @@ class GuestRow extends Component {
                 <Text style={styles.titleStyle}>{title}</Text>
                 {subtitle != "" && (<Text style={styles.subtitleStyle}>{subtitle}</Text>)}
               </View>
-              <Counter style={styles.countStyle} count={count} onChanged={this.onChanged.bind(this)}/>
+              <Counter style={styles.countStyle} count={count} onChanged={this.onChanged}/>
             </View>
         );
     }
 }
-
-GuestRow.propTypes = {
-    title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string.isRequired,
-    count: PropTypes.number.isRequired
-};
 
 export default GuestRow;

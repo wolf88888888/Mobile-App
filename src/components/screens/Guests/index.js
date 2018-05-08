@@ -31,10 +31,16 @@ class Guests extends Component {
 
     constructor(props) {
         super(props);
+        this.onClose = this.onClose.bind(this);
+        this.onDone = this.onDone.bind(this);
+        this.onPersonChange = this.onPersonChange.bind(this);
+        // this.onAdults = this.onAdults.bind(this);
+        // this.onChildren = this.onChildren.bind(this);
+        // this.onInfants = this.onInfants.bind(this);
         this.state = {
-          adults:0,
-          children:0,
-          infants:0,
+            adults:0,
+            children:0,
+            infants:0,
         };
         const { params } = this.props.navigation.state;
         this.state.adults = params ? params.adults : 0;
@@ -42,26 +48,20 @@ class Guests extends Component {
         this.state.infants = params ? params.infants : 0;
     }
 
+    onPersonChange(type, value) {
+        this.setState((prevState) => ({
+            [type]: value
+        }))
+    }
+
     onClose() {
       this.props.navigation.goBack();
-    }
-
-    onAdults(value) {
-      this.state.adults = value;
-    }
-
-    onChildren(value) {
-      this.state.children = value;
-    }
-
-    onInfants(value) {
-      this.state.infants = value;
     }
 
     onDone() {
       this.props.navigation.goBack();
       if (this.props.navigation.state.params && this.props.navigation.state.params.updateData) {
-        this.props.navigation.state.params.updateData({ adults: this.state.adults, children: this.state.children, infants: this.state.infants });
+        this.props.navigation.state.params.updateData(this.state);
       }
     }
 
@@ -70,14 +70,14 @@ class Guests extends Component {
 
         return (
             <View style={styles.container}>
-              <CloseButton onPress={() => this.onClose()}/>
+              <CloseButton onPress={this.onClose}/>
               <View style={styles.bodyRows}>
-                <GuestRow title={"Adults"} subtitle={""} count={this.state.adults} onChanged={this.onAdults.bind(this)}/>
-                <GuestRow title={"Children"} subtitle={"Age 2-12"} count={this.state.children} onChanged={this.onChildren.bind(this)}/>
-                <GuestRow title={"Infants"} subtitle={"Under 2"} count={this.state.infants} onChanged={this.onInfants.bind(this)}/>
+                <GuestRow title={"Adults"} count={this.state.adults} type={"adults"} onChanged={this.onPersonChange}/>
+                <GuestRow title={"Children"} subtitle={"Age 2-12"} count={this.state.children} type={"children"} onChanged={this.onPersonChange}/>
+                <GuestRow title={"Infants"} subtitle={"Under 2"} count={this.state.infants} type={"infants"} onChanged={this.onPersonChange}/>
               </View>
               <View style={styles.bottomView}>
-                <TouchableOpacity style={styles.doneButtonView} onPress={() => this.onDone()}>
+                <TouchableOpacity style={styles.doneButtonView} onPress={this.onDone}>
                     <Text style={styles.doneButtonText}>Done</Text>
                 </TouchableOpacity>
               </View>

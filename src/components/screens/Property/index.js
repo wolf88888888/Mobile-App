@@ -48,11 +48,9 @@ class Property extends Component {
           {
               name:"Check-In Time",
               time:"2PM - 10PM",
-
           },{
               name:"Check-Out Time",
               time:"12PM(noon)",
-
           }
         ]),
       }
@@ -64,12 +62,9 @@ class Property extends Component {
         <View style={styles.ComponentView}>
            <Text style={styles.firstText}>{rowData.name}</Text>
            <Text style={styles.firstText}>{rowData.time}</Text>
-
         </View>
       );
     }
-
-
 
         onClose() {
           this.props.navigation.goBack();

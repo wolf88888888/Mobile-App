@@ -6,20 +6,14 @@ import Image from 'react-native-remote-svg';
 
 import styles from './styles';
 
-class CloseButton extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.ButtonView} onPress={() => this.props.onPress()}>
-                  <Image source={require('../../../assets/close.svg')} style={styles.ButtonImage}/>
-                </TouchableOpacity>
-            </View>
-        );
-    }
+const CloseButton = (props) => {
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.ButtonView} onPress={props.onPress}>
+              <Image source={require('../../../assets/close.svg')} style={styles.ButtonImage}/>
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 CloseButton.propTypes = {
