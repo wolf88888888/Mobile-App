@@ -8,9 +8,11 @@ import {
 
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
-import GoBack from '../../atoms/GoBack';
+import CloseButton from '../../atoms/CloseButton';
 
 import styles from './styles';
+
+import FlexImage from '../../atoms/FlexImage';
 
 
 const data = [
@@ -43,6 +45,7 @@ class Property extends Component {
 
     constructor(){
       super();
+      this.onClose = this.onClose.bind(this);
       this.state = {
         dataSource:ds.cloneWithRows([
           {
@@ -66,22 +69,18 @@ class Property extends Component {
       );
     }
 
-        onClose() {
-          this.props.navigation.goBack();
-        }
+    onClose() {
+      this.props.navigation.goBack();
+    }
 
-        render() {
+    render() {
         const { navigate } = this.props.navigation;
-
         return (
             <View style={styles.container}>
-              <ScrollView style={styles.scrollView}>
-              <GoBack style={{zIndex:1}} onPress={() => this.onClose()}
-                icon="arrowLeft"/>
+                <ScrollView >
+                    <CloseButton onPress={this.onClose}/>
 
-                  <View style={styles.logoContainer}>
-                      <Image style={styles.logo} source = {require('../../../assets/image.jpg')} />
-                  </View>
+                    <FlexImage source = {require('../../../assets/temple/overview.jpg')} />
 
                   <View style={styles.textView}>
                       <Text style={styles.normalText}>In the historic quarter of Santo Spirito,on the left bank of the ricer Arno,studio apartment is perfect for those traveling alone or as a couple.To walk berween Santo Spirito,Pante Vecchio and Babali Gardens is a magical experience.</Text>
@@ -121,11 +120,8 @@ class Property extends Component {
                       </View>
                       </View>
 
-
-
-
                       <View style={{}}>
-                          <Image style={styles.logo} source = {require('../../../assets/image.jpg')} />
+                          <Image style={styles.logo} source = {require('../../../assets/temple/location.jpg')} />
                       </View>
 
                         <View>
@@ -180,7 +176,7 @@ class Property extends Component {
                          <View style={styles.sidebar}>
 
                                  <View>
-                                   <Image style={styles.circleImg} source = {require('../../../assets/image.jpg')} />
+                                   <Image style={styles.circleImg} source = {require('../../../assets/temple/overview.jpg')} />
                                  </View>
 
                                  <View style={{marginLeft:20}}>
@@ -202,7 +198,7 @@ class Property extends Component {
                         <View style={styles.sidebar}>
 
                                 <View>
-                                  <Image style={styles.circleImgBig} source = {require('../../../assets/image.jpg')} />
+                                  <Image style={styles.circleImgBig} source = {require('../../../assets/temple/overview.jpg')} />
                                 </View>
 
                                 <View style={{marginLeft:20}}>
@@ -259,8 +255,8 @@ class Property extends Component {
                   </View>
 
                   <TouchableOpacity>
-                      <View style={styles.searchButtonView}>
-                          <Text style={styles.searchButtonText}>Check Availability</Text>
+                      <View style={styles.ButtonView}>
+                          <Text style={styles.ButtonText}>Check Availability</Text>
                       </View>
                   </TouchableOpacity>
              </View>

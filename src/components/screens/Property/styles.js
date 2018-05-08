@@ -1,23 +1,19 @@
-import { StyleSheet } from 'react-native';
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    Keyboard,ListView,Button,ScrollView,TextInput,Dimensions
-    } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
-    const numColumns = 6;
-        const styles = StyleSheet.create({
-        container: {
-             flex: 1
-        },
-        scrollContainer:{
-             flex:1,
+const numColumns = 6;
+const dimensionWindows = Dimensions.get('window');
+const styles = StyleSheet.create({
+    container: {
+         flex: 1
+    },
 
-        },
-        scrollView:{
+    logoImage: {
+        flex: 1,
+        alignSelf: 'stretch',
+        width: dimensionWindows.width,
+        height: dimensionWindows.height,
+    },
 
-        },
         footer:{
              position:'absolute',
              backgroundColor: '#ffffff',
@@ -33,21 +29,8 @@ import {
              flexDirection: 'row',
              flex:1,
              justifyContent:'space-between'
-
         },
-        sidebar:{
-             backgroundColor: '#ffffff',
-             left:0,
-             right:0,
-             zIndex:10,
-             paddingTop:10,
-             paddingLeft:10,
-             paddingBottom:10,
-             flexDirection: 'row',
-             flex:1,
-             justifyContent:'space-between'
 
-        },
         textInput:{
              alignSelf:'stretch',
              color:'#fff',
@@ -56,7 +39,12 @@ import {
              borderTopWidth:2,
              borderTopColor:'#ededed'
         },
-        searchButtonView: {
+
+        footerText:{
+            fontSize:18
+        },
+
+        ButtonView: {
               width: '100%',
               backgroundColor: '#DA7B61',
               justifyContent: 'center',
@@ -66,25 +54,39 @@ import {
               paddingLeft:10,
 
           },
-          searchButtonText: {
+
+          ButtonText: {
               color: '#fff',
               fontFamily: 'FuturaStd-Light',
               fontSize: 17,
               padding: 14,
               alignItems: 'center'
           },
-          footerText:{
-              fontSize:18
+
+          sidebar:{
+               backgroundColor: '#ffffff',
+               left:0,
+               right:0,
+               zIndex:10,
+               paddingTop:10,
+               paddingLeft:10,
+               paddingBottom:10,
+               flexDirection: 'row',
+               flex:1,
+               justifyContent:'space-between'
+
           },
+
           logoContainer:{
-               alignItems:'center',
-               flexGrow:1,
-               justifyContent:'center',
-               position:'absolute',
-               zIndex:-1
+              position:'absolute',
+              flexDirection: "row",
+              alignItems: "stretch",
+              backgroundColor: '#ff0000'
          },
          logo:{
-               height:220
+              flex: 1,
+              width: null,
+              height: null
          },
          redText:{
                color:'red'

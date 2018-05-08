@@ -23,7 +23,7 @@ const ReviewImageItem = ({
     <View style={styles.Item}>
 
             <View style={styles.imgItem}>
-                <Image style={styles.img} source = {require('../../../assets/image.jpg')} />
+                <Image style={styles.img} source = {require('../../../assets/temple/overview.jpg')} />
             </View>
 
             <View style={styles.nameItem}>

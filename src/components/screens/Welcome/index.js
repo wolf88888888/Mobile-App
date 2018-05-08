@@ -34,6 +34,7 @@ const Welcome = ({
             <Button
                 wrapStyle={styles.facebookButton}
                 text="Continue with Facebook"
+                onPress={() => navigate('App')}
             />
             <Button
                 wrapStyle={styles.createAccountButton}
@@ -57,4 +58,3 @@ const Welcome = ({
 Welcome.propTypes = propTypes;
 
 export default Welcome;
-

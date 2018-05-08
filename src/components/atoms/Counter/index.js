@@ -45,11 +45,11 @@ class Counter extends Component {
         const { count } = this.props;
         return (
             <View style={styles.container}>
-              <TouchableOpacity onPress={() => this.onMinus()}>
+              <TouchableOpacity onPress={this.onMinus}>
                   <Image source={require('../../../assets/minus.svg')} style={ this.state.count > 0 ? styles.ButtonImage : styles.DisableImage }/>
               </TouchableOpacity>
               <Text style={styles.value}>{this.state.count > 0 ? this.state.count : "0+"}</Text>
-              <TouchableOpacity onPress={() => this.onPlus()}>
+              <TouchableOpacity onPress={this.onPlus}>
                   <Image source={require('../../../assets/plus.svg')} style={styles.ButtonImage}/>
               </TouchableOpacity>
             </View>
