@@ -13,12 +13,12 @@ export const REACT_APP_LOCExchange = '0xa43dca51ebb1e3bdb7a9020b11b90a793d38f55a
 // export const PUBLIC_URL = 'https://dev.lockchain.co/';
 
 // Staging server
-export const apiHost = 'https://staging.lockchain.co:8444/lockchain/';
-export const imgHost = 'https://staging.lockchain.co:8084/';
-export const basePath = 'https://staging.lockchain.co/';
+export const apiHost = 'https://staging.locktrip.com/api/';
+export const imgHost = 'https://static.locktrip.com/';
+export const basePath = 'https://staging.locktrip.com/';
 export const routerPrefix = '.';
 export const domainPrefix = 'rc';
-export const PUBLIC_URL = 'https://staging.lockchain.co/';
+export const PUBLIC_URL = 'https://staging.locktrip.com/';
 
 // Production server
 // export const apiHost = 'https://staging.lockchain.co:8443/lockchain/';
