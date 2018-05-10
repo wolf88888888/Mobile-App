@@ -25,9 +25,9 @@ async function getHeaders(headers = null) {
 }
 
 async function sendRequest(endpoint, method, postObj = null, captchaToken = null, headers = {
-    Accept: 'application/json',
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
-    Captcha: captchaToken
+    'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b',
 }, onLogOut) {
     const allHeaders = getHeaders(headers);
 
