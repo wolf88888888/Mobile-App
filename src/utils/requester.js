@@ -90,8 +90,8 @@ export async function register(userObj, captchaToken) {
     return sendRequest(`${host}users/signup`, RequestMethod.POST, userObj, captchaToken).then(res => res);
 }
 
-export async function login(userObj, captchaToken) {
-    return sendRequest(`${host}login`, RequestMethod.POST, userObj, captchaToken, {}).then(res => res);
+export async function login(userObj) {
+    return sendRequest(`${host}login`, RequestMethod.POST, userObj).then(res => res);
 }
 
 export async function getCurrencyRates() {

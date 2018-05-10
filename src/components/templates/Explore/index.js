@@ -127,14 +127,6 @@ class Explore extends Component {
                     <DateAndGuestPicker checkInDate={checkInDate} checkOutDate={checkOutDate} guests={guests} />
                     { topHomes ? this.renderHomes() : null }
                 </ScrollView>
-
-                <TouchableOpacity onPress={() => {
-                    AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
-                    this.props.navigation.navigate('Login');
-                }}
-                >
-                    <Text style={styles.text}>Log Out</Text>
-                </TouchableOpacity>
             </View>
         );
     }

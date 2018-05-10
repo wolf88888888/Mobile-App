@@ -73,7 +73,7 @@ class Login extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={Keyboard.dismiss}
-                accessible={false}
+                accessible={true}
             >
                 <View style={styles.container}>
                     <GoBack

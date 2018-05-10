@@ -16,7 +16,7 @@ const Terms = (props) => {
 
     const onClickAccept = async () => {
         const user = { ...params };
-
+        console.log(user);
         // TODO: Need a way to generate a Google ReCAPTCHA token
 
         register(user, null).then((res) => {

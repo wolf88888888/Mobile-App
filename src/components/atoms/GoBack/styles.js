@@ -11,13 +11,11 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginLeft: 15,
         borderRadius: 15,
-        borderColor: '#fff',
         borderWidth: 1.5,
         alignItems: 'center',
         justifyContent: 'center'
     },
     iconText: {
-        color: '#fff',
         fontSize: 12
     }
 });

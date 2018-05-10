@@ -6,11 +6,10 @@ import styles from './styles';
 
 const GoBack = (props) => {
     let renderIcon = null;
-    Keyboard.dismiss()
     if (props.icon) {
         renderIcon = (
-            <View style={styles.iconView}>
-                <Text style={styles.iconText}>
+            <View style={[styles.iconView, { borderColor: props.color }]}>
+                <Text style={[styles.iconText, { color: props.color }]}>
                     <FontAwesome>{Icons[props.icon]}</FontAwesome>
                 </Text>
             </View>
@@ -19,25 +18,27 @@ const GoBack = (props) => {
 
     if (props.icon && props.onPress) {
         renderIcon = (
-            <TouchableOpacity onPress={() => props.onPress()}>{ renderIcon }</TouchableOpacity>
+            <TouchableOpacity onPress={() => { Keyboard.dismiss(); props.onPress() }}>{renderIcon}</TouchableOpacity>
         );
     }
 
     return (
         <View style={styles.container}>
-            { renderIcon }
+            {renderIcon}
         </View>
     );
 };
 
 GoBack.propTypes = {
     icon: PropTypes.string,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    color: PropTypes.string
 };
 
 GoBack.defaultProps = {
     icon: '',
-    onPress: () => {}
+    onPress: () => { },
+    color: '#fff'
 };
 
 export default GoBack;
