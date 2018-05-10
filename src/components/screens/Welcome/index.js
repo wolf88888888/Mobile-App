@@ -2,14 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {
     Text,
-    View
+    View,
+    BackHandler
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 
 import GoBack from '../../atoms/GoBack';
 import Button from '../../atoms/Button';
 
-import SplashPNG from '../../../assets/splash.png';
+import SplashPNG from '../../../assets/svg/locktrip_logo.svg';
 import styles from './styles';
 
 const propTypes = {
@@ -22,9 +23,9 @@ const Welcome = ({
     navigation: { navigate }
 }) => (
     <View style={styles.container}>
-        <GoBack />
+        <GoBack icon="times" onPress={BackHandler.exitApp} />
         <Image source={SplashPNG} style={styles.splashImage} />
-        <Text style={styles.titleText}>Welcome to LockTrip</Text>
+        <Text style={styles.titleText}>Welcome</Text>
         <View style={styles.buttonCollectionWrap}>
             <Button
                 onPress={() => navigate('Login')}
@@ -47,7 +48,7 @@ const Welcome = ({
         </Text>
         <View style={styles.lowOpacity}>
             <Image
-                source={require('../../../assets/get-started-white-outline.svg')}
+                source={require('../../../assets/vector.png')}
                 style={styles.getStartedImage}
             />
         </View>

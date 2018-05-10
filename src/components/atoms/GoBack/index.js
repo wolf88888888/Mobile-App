@@ -7,25 +7,22 @@ import PropTypes from 'prop-types';
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 90,
-        position: 'relative'
+        height: 80
     },
     iconView: {
-        position: 'absolute',
-        top: 40,
-        left: 18,
-        width: 24,
-        height: 24,
-        borderRadius: 12,
+        width: 30,
+        height: 30,
+        marginTop: 40,
+        marginLeft: 15,
+        borderRadius: 15,
         borderColor: '#fff',
         borderWidth: 1.5,
-        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     iconText: {
         color: '#fff',
-        fontSize: 8
+        fontSize: 12
     }
 });
 
