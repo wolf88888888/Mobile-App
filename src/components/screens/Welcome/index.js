@@ -12,6 +12,7 @@ import Button from '../../atoms/Button';
 
 import SplashPNG from '../../../assets/svg/locktrip_logo.svg';
 import styles from './styles';
+import GetStartedImage from '../../atoms/GetStartedImage';
 
 const propTypes = {
     navigation: PropTypes.shape({
@@ -46,12 +47,7 @@ const Welcome = ({
             By tapping Log In, Continue or Create Account, I agree to LockChain's Terms of Service,
             Payments Terms of Service and Privacy Policy.
         </Text>
-        <View style={styles.lowOpacity}>
-            <Image
-                source={require('../../../assets/vector.png')}
-                style={styles.getStartedImage}
-            />
-        </View>
+        <GetStartedImage />
     </View>
 );
 

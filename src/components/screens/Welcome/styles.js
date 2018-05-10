@@ -44,16 +44,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontFamily: 'FuturaStd-Light',
         textAlign: 'justify'
-    },
-    lowOpacity: {
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-end'
-    },
-    getStartedImage: {
-        width: 400,
-        height: 80
     }
 });
 
