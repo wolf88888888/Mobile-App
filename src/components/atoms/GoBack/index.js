@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Keyboard } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
 const GoBack = (props) => {
     let renderIcon = null;
-
+    Keyboard.dismiss()
     if (props.icon) {
         renderIcon = (
             <View style={styles.iconView}>
