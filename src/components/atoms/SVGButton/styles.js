@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     ButtonView: {
-        position: 'absolute',
         top: 40,
         left: 18,
         width: 24,
@@ -15,7 +14,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    
+
     ButtonImage: {
         width: 24,
         height: 24,

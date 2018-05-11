@@ -4,32 +4,54 @@ const numColumns = 6;
 const dimensionWindows = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
-         flex: 1
+        flex: 1,
+    },
+
+    WhiteBackButton: {
+        zIndex: 1,
+        position: 'absolute',
+    },
+
+    scrollView: {
+    },
+
+    body: {
+        flex: 1,
+        zIndex: 2,
+        flexDirection: 'column',
     },
 
     logoImage: {
-        flex: 1,
         alignSelf: 'stretch',
         width: dimensionWindows.width,
-        height: dimensionWindows.height,
+        height: dimensionWindows.width * 5 / 8,
     },
 
-        footer:{
-             position:'absolute',
-             backgroundColor: '#ffffff',
-             bottom:0,
-             left:0,
-             right:0,
-             zIndex:10,
-             paddingTop:20,
-             paddingLeft:20,
-             paddingBottom:20,
-             borderTopWidth:10,
-             borderTopColor:'#ddd',
-             flexDirection: 'row',
-             flex:1,
-             justifyContent:'space-between'
-        },
+    titleView: {
+        backgroundColor: '#ffffff',
+        marginTop:-25,
+        height:125,
+        marginLeft:15,
+        marginRight:15,
+    },
+
+    normalText:{
+        fontFamily: 'FuturaStd-Light',
+        fontSize:15,
+        paddingTop:10,
+        paddingLeft:15,
+        paddingRight:15,
+    },
+
+    footer:{
+         backgroundColor: '#ffffff',
+         paddingTop:20,
+         paddingLeft:20,
+         paddingBottom:20,
+         borderTopColor:'#ddd',
+         flexDirection: 'row',
+         justifyContent:'space-between'
+    },
 
         textInput:{
              alignSelf:'stretch',
@@ -101,10 +123,6 @@ const styles = StyleSheet.create({
                fontWeight:'bold',
                marginTop:20
 
-         },
-         normalText:{
-            fontSize:18,
-            padding:10
          },
          textView:{
             marginLeft:15,
