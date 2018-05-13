@@ -8,7 +8,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard
 } from 'react-native';
-import Image from 'react-native-remote-svg';
+// import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
 import GoBack from '../../atoms/GoBack';
@@ -73,7 +73,7 @@ class Login extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={Keyboard.dismiss}
-                accessible={true}
+                accessible
             >
                 <View style={styles.container}>
                     <GoBack

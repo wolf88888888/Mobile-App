@@ -10,13 +10,18 @@ class DateAndGuestPicker extends Component {
     componentDidMount() {
     }
     render() {
-        const { checkInDate, checkOutDate, guests } = this.props;
+        const {
+            checkInDate, checkOutDate, guests, onDatesSelect
+        } = this.props;
 
         return (
             <View style={styles.container}>
                 <View style={styles.pickerRow}>
-                    <View style={checkInDate && checkOutDate ? styles.datesPickerViewComplete : styles.datesPickerViewIncomplete}>
-                        <TouchableOpacity onPress={() => this.calendar.open()}>
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => this.calendar.open()}
+                            style={checkInDate && checkOutDate ? styles.datesPickerViewComplete : styles.datesPickerViewIncomplete}
+                        >
                             <View style={styles.datePickerView}>
                                 <Text style={styles.label}>Check In</Text>
                                 <Text style={styles.value}>{ checkInDate || 'Select Date' }</Text>
@@ -26,7 +31,7 @@ class DateAndGuestPicker extends Component {
 
                             <View style={styles.datePickerView}>
                                 <Text style={styles.label}>Check Out</Text>
-                                <Text style={styles.value}>{ checkOutDate || '-' }</Text>
+                                <Text style={styles.value}>{ checkOutDate || '------' }</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -49,7 +54,11 @@ class DateAndGuestPicker extends Component {
                     </View>
                 </TouchableOpacity>
                 <Calendar
+                    startDate={checkInDate}
+                    endDate={checkOutDate}
+                    format="ddd-DD-MMMM"
                     ref={(calendar) => { this.calendar = calendar; }}
+                    onConfirm={onDatesSelect}
                 />
             </View>
         );
@@ -59,7 +68,8 @@ class DateAndGuestPicker extends Component {
 DateAndGuestPicker.propTypes = {
     checkInDate: PropTypes.string.isRequired,
     checkOutDate: PropTypes.string.isRequired,
-    guests: PropTypes.number.isRequired
+    guests: PropTypes.number.isRequired,
+    onDatesSelect: PropTypes.func.isRequired
 };
 
 export default DateAndGuestPicker;

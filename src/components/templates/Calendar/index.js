@@ -186,8 +186,8 @@ export default class Calendar extends Component {
         const startMoment = startDate ? startDate.clone() : null;
         const endMoment = endDate ? endDate.clone() : null;
         this.props.onConfirm({
-            startDate: startMoment ? startMoment.toDate() : null,
-            endDate: endMoment ? endMoment.toDate() : null,
+            startDate: startMoment ? startMoment.format(this.props.format) : null,
+            endDate: endMoment ? endMoment.format(this.props.format) : null,
             startMoment,
             endMoment
         });
