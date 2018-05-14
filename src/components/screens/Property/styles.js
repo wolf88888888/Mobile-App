@@ -5,20 +5,20 @@ const dimensionWindows = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:'#f0f1f3'
     },
 
     WhiteBackButton: {
         zIndex: 1,
-        position: 'absolute',
     },
 
     scrollView: {
     },
 
     body: {
-        flex: 1,
-        zIndex: 2,
+        zIndex: -1,
         flexDirection: 'column',
+        marginTop:-90
     },
 
     logoImage: {
@@ -30,17 +30,72 @@ const styles = StyleSheet.create({
     titleView: {
         backgroundColor: '#ffffff',
         marginTop:-25,
-        height:125,
+        height:135,
         marginLeft:15,
         marginRight:15,
     },
 
+    topTitleText:{
+        fontFamily: 'FuturaStd-Bold',
+        fontSize:21,
+        paddingTop:10,
+        paddingLeft:10,
+        paddingRight:10,
+        color:'#000000'
+    },
+
+    rateViewContainer: {
+        flexDirection: 'row',
+    },
+
+    rateText:{
+        fontFamily: 'FuturaStd-Light',
+        fontSize:11,
+        paddingLeft:10,
+        paddingRight:10,
+        color:'#898c8d',
+    },
+
+    lineStyle:{
+        borderWidth:0.3,
+        borderColor:'#cccccc',
+        margin:7,
+    },
+
+    detailsStyle: {
+      flexDirection:'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginLeft:5,
+      marginRight:5,
+    },
+
     normalText:{
         fontFamily: 'FuturaStd-Light',
-        fontSize:15,
-        paddingTop:10,
-        paddingLeft:15,
-        paddingRight:15,
+        fontSize:14,
+    },
+
+    smallTitle:{
+      fontFamily: 'FuturaStd-Bold',
+      fontSize:14,
+      marginTop:10
+    },
+
+    descriptionView: {
+        marginHorizontal: 10,
+        padding: 10,
+    },
+
+    spaceText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize:13,
+    },
+
+    map: {
+        alignSelf: 'stretch',
+        marginTop:10,
+        width: dimensionWindows.width,
+        height: dimensionWindows.width * 5 / 8,
     },
 
     footer:{
@@ -63,6 +118,7 @@ const styles = StyleSheet.create({
         },
 
         footerText:{
+            fontFamily: 'FuturaStd-Light',
             fontSize:18
         },
 
@@ -113,11 +169,6 @@ const styles = StyleSheet.create({
          redText:{
                color:'red'
          },
-         smallTitle:{
-               fontSize:18,
-               marginTop:10
-
-         },
          textTitle:{
                fontSize:22,
                fontWeight:'bold',
@@ -154,31 +205,16 @@ const styles = StyleSheet.create({
            color:'#DA7B61'
          },
          sideView: {
-               width: 140,
+               width: 200,
                height:100,
                alignItems:'center',
                justifyContent: 'center',
-               backgroundColor: 'rgb(162,197,191)',
+               backgroundColor: 'rgb(162,0,191)',
                marginLeft:2,
                marginRight:2
 
          },
-             bigReviews:{
-               fontSize:30,
-               color: '#fff'
-         },
              smallReviews:{
-               fontSize:12,
-               color: '#fff'
-         },
-         sideViewFirst: {
-               width: 100,
-               height:100,
-               backgroundColor: 'rgb(162,197,191)',
-               justifyContent: 'center',
-               alignItems: 'center',
-               marginLeft:2,
-               marginRight:2
 
          },
          sideText:{

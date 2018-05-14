@@ -10,6 +10,9 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 
 class Counter extends Component {
+    static propTypes = {
+        count: PropTypes.number.isRequired
+    };
 
     constructor(props) {
         super(props);
@@ -56,9 +59,5 @@ class Counter extends Component {
         );
     }
 }
-
-Counter.propTypes = {
-    count: PropTypes.number.isRequired
-};
 
 export default Counter;

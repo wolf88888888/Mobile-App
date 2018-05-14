@@ -17,12 +17,10 @@ const SVGButton = (props) => {
 }
 
 SVGButton.propTypes = {
-    path: PropTypes.string,
     onPress: PropTypes.func
 };
 
 SVGButton.defaultProps = {
-    path: PropTypes.string,
     onPress: () => {}
 };
 

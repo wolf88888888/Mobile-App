@@ -21,6 +21,7 @@ import ReviewHouse from '../components/screens/Review/ReviewHouse';
 import ReviewPay from '../components/screens/Review/ReviewPay';
 import ReviewSend from '../components/screens/Review/ReviewSend';
 import ReviewTrip from '../components/screens/Review/ReviewTrip';
+import RequestAccepted from '../components/screens/Review/RequestAccepted';
 
 
 export const LoginNavigator = StackNavigator(
@@ -64,7 +65,9 @@ export const FullNavigator = StackNavigator(
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },
         ReviewSendScreen: { screen: ReviewSend },
-        ReviewTripScreen: { screen: ReviewTrip }
+        ReviewTripScreen: { screen: ReviewTrip },
+        RequestAcceptedScreen: { screen: RequestAccepted }
+
     },
     {
         initialRouteName: 'MainScreen',
