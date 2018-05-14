@@ -10,7 +10,7 @@ import Terms from '../components/templates/Terms';
 
 import Explore from '../components/screens/Explore';
 import NavTabBar from '../components/organisms/NavTabBar';
-import Profile from '../components/screens/Profile'
+import Profile from '../components/screens/Profile';
 
 
 export const LoginNavigator = StackNavigator(

@@ -24,10 +24,10 @@ async function getHeaders(headers = null) {
     return headers;
 }
 
-async function sendRequest(endpoint, method, postObj = null, captchaToken = null, headers = {
-    'Accept': 'application/json',
+async function sendRequest(endpoint, method, postObj = null, captchaToken = null, headers = { // eslint-disable-line
+    Accept: 'application/json',
     'Content-Type': 'application/json',
-    'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b',
+    'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b'
 }, onLogOut) {
     const allHeaders = getHeaders(headers);
 
