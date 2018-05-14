@@ -174,11 +174,10 @@ class Property extends Component {
 
                               <View style={styles.sideView}>
                                   <View style={{flexDirection:'column', justifyContent:'space-between'}}>
-                                  <Text>Value for money</Text>
-                                  <Text>4.8</Text>
+                                    <Text>Value for money</Text>
+                                    <Text>4.8</Text>
                                   </View>
-                                  </View>
-                                  <View style={[props.style, {width:150, height:2.5, backgroundColor:'#ffffff'}]}>
+                                  <View style={{width:150, height:2.5, backgroundColor:'#ffffff'}}>
                                       <View style={{width:100, height:2.5, backgroundColor:'#a2c5bf'}}>
                                       </View>
                                   </View>
