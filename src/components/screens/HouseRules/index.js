@@ -3,11 +3,11 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Keyboard,ListView
+    Keyboard, ListView
     } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
-import CloseButton from '../../atoms/CloseButton';
+import BackButton from '../../atoms/BackButton';
 
 import styles from './styles';
 
@@ -28,28 +28,23 @@ class HouseRules extends Component {
 
     constructor(){
       super();
+      this.onClose = this.onClose.bind(this);
       this.state = {
         dataSource:ds.cloneWithRows([
-          {
-              name:"No smoking",
-          },{
-              name:"No parties or events",
-          },{
-              name:"Not safe or suitable for children {0-12 years} ",
-          },{
-              name:"Suitable for pets",
-          }
+            {name:"No smoking",},{name:"No parties or events",},{name:"Not safe or suitable for children {0-12 years} ",},{name:"Suitable for pets",}
         ]),
       }
     }
 
-    _renderRow(rowData){
-
-      return(
-        <View style={styles.View}>
-           <Text style={styles.text}>{rowData.name}</Text>
-        </View>
-      );
+    renderRow(rowData){
+        return(
+            <View style={styles.item}>
+                <View style={styles.ComponentView}>
+                    <Text style={styles.text}>{rowData.name}</Text>
+                </View>
+                <View style={styles.lineStyle}/>
+            </View>
+        );
     }
 
 
@@ -62,14 +57,15 @@ class HouseRules extends Component {
 
         return (
             <View style={styles.container}>
-              <CloseButton onPress={() => this.onClose()}/>
-              <Text style={styles.textTitle}>House Rules</Text>
+                <BackButton onPress={this.onClose}/>
+                <Text style={styles.title}>House Rules</Text>
 
-              <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow}
-             />
-            </View>
+                <ListView
+                  style={styles.list}
+                  dataSource={this.state.dataSource}
+                  renderRow={this.renderRow}
+               />
+           </View>
         );
     }
 }

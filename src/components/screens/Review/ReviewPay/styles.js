@@ -14,39 +14,42 @@ const styles = StyleSheet.create({
            left:0,
            right:0,
            zIndex:10,
-           paddingTop:10,
+           paddingTop:17,
            paddingLeft:20,
-           paddingBottom:10,
-           borderTopWidth:10,
+           paddingBottom:17,
+           borderTopWidth:3,
            borderTopColor:'#ddd',
 
          },
-         searchButtonView: {
-               width:'100%',
-               backgroundColor: '#DA7B61',
-               justifyContent: 'center',
-               alignItems: 'center',
-               right:10,
-               paddingLeft:10,
-           },
-           searchButtonText: {
-               color: '#fff',
-               fontFamily: 'FuturaStd-Light',
-               fontSize: 17,
-               padding: 14,
-               alignItems: 'center'
-           },redUnderline:{
-             color:'#DA7B61',
-             borderBottomWidth:1,
-             fontFamily: 'FuturaStd-Light',
-             borderBottomColor:'#DA7B61'
-           },text:{
-             fontFamily: 'FuturaStd-Light',
-             marginLeft:20,
-             marginTop:50,
-             fontSize:15,
-             color:'black'
-           }
+     searchButtonView: {
+           width:'98%',
+           backgroundColor: '#DA7B61',
+           justifyContent: 'center',
+           alignItems: 'center',
+           right:10,
+           paddingLeft:10,
+       },
+       searchButtonText: {
+           color: '#fff',
+           fontFamily: 'FuturaStd-Light',
+           fontSize: 17,
+           padding: 14,
+           alignItems: 'center'
+       },
+       redUnderline:{
+         color:'#DA7B61',
+         borderBottomWidth:3,
+         fontFamily: 'FuturaStd-Light',
+         textDecorationLine: 'underline',
+         borderBottomColor:'#DA7B61'
+       },
+       text:{
+         fontFamily: 'FuturaStd-Light',
+         marginLeft:20,
+         marginTop:35,
+         fontSize:14,
+         color:'black'
+       }
 });
 
 export default styles;

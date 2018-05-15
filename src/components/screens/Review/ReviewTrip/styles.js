@@ -13,22 +13,23 @@ const styles = StyleSheet.create({
            left:0,
            right:0,
            zIndex:10,
-           paddingTop:10,
+           paddingTop:17,
            paddingLeft:20,
-           paddingBottom:10,
-           borderTopWidth:10,
+           paddingBottom:17,
+           borderTopWidth:3,
            borderTopColor:'#ddd',
            flexDirection:'row',
            justifyContent:'space-between'
          },
          searchButtonView: {
-               width:200,
+               width:170,
                backgroundColor: '#DA7B61',
                justifyContent: 'center',
                alignItems: 'center',
                right:10,
                paddingLeft:10,
-           },
+               marginRight:6
+             },
            searchButtonText: {
                color: '#fff',
                fontFamily: 'FuturaStd-Light',

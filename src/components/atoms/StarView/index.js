@@ -29,7 +29,7 @@ class StarView extends React.Component {
             height:16,
         },
         emptyStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/empty-star.svg')}/>,
-        filledStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/full-star.svg')}/>,
+        filledStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/empty-star-full.svg')}/>,
     };
 
     constructor(props) {

@@ -7,79 +7,80 @@ import {
     } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
-import CloseButton from '../../../atoms/CloseButton';
+import BackButton from '../../../atoms/BackButton';
 import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ListItem from '../../../molecules/ListItem';
 
 class ReviewTrip extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
 
-    static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        }
-    }
+  static propTypes = {
+      navigation: PropTypes.shape({
+          navigate: PropTypes.func
+      })
+  }
 
-    onClose() {
+  static defaultProps = {
+      navigation: {
+          navigate: () => {}
+      }
+  }
+
+  constructor(){
+      super();
+      this.onClose = this.onClose.bind(this);
+      this.onNext = this.onNext.bind(this);
+  }
+
+  onClose() {
       this.props.navigation.goBack();
-    }
+  }
 
-    render() {
-    const { navigate } = this.props.navigation;
+  onNext() {
+      this.props.navigation.navigate('ReviewSendScreen');
+  }
 
-    return (
-        <View style={styles.container}>
-          <CloseButton onPress={() => this.onClose()}/>
+  render() {
+      const { navigate } = this.props.navigation;
 
-          <ReviewTitle
-              text="Review House Rules"
-              pageNumber="STEP 2 OF 4 "
-              optional=""
-          />
+      return (
+          <View style={styles.container}>
+              <BackButton onPress={this.onClose}/>
 
-          <ListItem
-            textFirst="No smoking"
-            textLast =""
-          />
+              <ReviewTitle
+                  text="Review House Rules"
+                  pageNumber="STEP 2 OF 4 "
+                  optional=""/>
 
-          <ListItem
-            textFirst="Suitabele for pets"
-            textLast =""
-          />
+              <ListItem
+                  textFirst="No smoking"
+                  textLast =""/>
 
-          <ListItem
-            textFirst="Not Safe or suitable for children(0-12 years)"
-            textLast =""
-          />
+              <ListItem
+                  textFirst="Suitabele for pets"
+                  textLast =""/>
 
-          <ListItem
-            textFirst="Check-In Time"
-            textLast ="2PM - 10PM"
-          />
+              <ListItem
+                  textFirst="Not Safe or suitable for children(0-12 years)"
+                  textLast =""/>
 
-          <ListItem
-            textFirst="Check-Out Time"
-            textLast ="12 PM noon"
-          />
+              <ListItem
+                  textFirst="Check-In Time"
+                  textLast ="2PM - 10PM"/>
 
-          <View style={styles.footer}>
-
-              <View></View>
-              <TouchableOpacity>
-                  <View style={styles.searchButtonView}>
-                      <Text style={styles.searchButtonText}>Agree</Text>
-                  </View>
-              </TouchableOpacity>
-
-         </View>
-
-        </View>
-    );
+              <ListItem
+                  textFirst="Check-Out Time"
+                  textLast ="12 PM noon"/>
+              <View style={styles.footer}>
+                  <View></View>
+                    <TouchableOpacity onPress={this.onNext}>
+                        <View style={styles.searchButtonView}>
+                            <Text style={styles.searchButtonText}>Agree</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
     }
 }
 

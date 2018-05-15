@@ -75,8 +75,8 @@ class ReadMoreView extends React.Component {
       }
 
       return (
-        <Text style={styles.button} onPress={this._handlePressReadMore}>
-          Read more
+        <Text style={[styles.button, this.props.buttonStyle]} onPress={this._handlePressReadMore}>
+          read more
         </Text>
       )
     } else if (shouldShowReadMore && showAllText) {
@@ -85,8 +85,8 @@ class ReadMoreView extends React.Component {
       }
 
       return (
-        <Text style={styles.button} onPress={this._handlePressReadLess}>
-          Hide
+        <Text style={[styles.button, this.props.buttonStyle]} onPress={this._handlePressReadLess}>
+          hide
         </Text>
       );
     }

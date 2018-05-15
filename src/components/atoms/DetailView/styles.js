@@ -10,20 +10,25 @@ const styles = StyleSheet.create({
     },
 
     detailImage: {
-        width:28,
-        height:28,
+        width:22,
+        height:22,
+    },
+
+    detailView: {
+        flexDirection:'row',
+        marginTop:5,
     },
 
     detailText: {
         fontFamily: 'FuturaStd-Light',
         fontSize:12,
-        color:'#56595c'
+        color:'#56595c',
     },
 
     detailTopText: {
       fontFamily: 'FuturaStd-Light',
       fontSize:6,
-      color:'#56595c'
+      color:'#56595c',
     }
 });
 

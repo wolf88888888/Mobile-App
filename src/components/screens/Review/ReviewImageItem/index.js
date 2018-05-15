@@ -5,7 +5,7 @@ import {
     Text
 } from 'react-native';
 import Image from 'react-native-remote-svg';
-import PopoverTooltip from 'react-native-popover-tooltip'
+import PopoverTooltip from 'react-native-popover-tooltip';
 import styles from './styles';
 
 const defaulProps = {

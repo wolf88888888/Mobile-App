@@ -20,9 +20,8 @@ const CircleItem = ({
 
 }) => (
     <View style={styles.Item}>
-
             <View style={styles.imgItem}>
-                <Image style={styles.img} source = {require('../../../assets/temple/overview.jpg')} />
+                <Image style={styles.img} source = {require('../../../assets/temple/avatar.png')} />
             </View>
 
             <View style={styles.nameItem}>

@@ -9,22 +9,22 @@ const styles = StyleSheet.create({
 
   optionalText:{
     color:'black',
-    fontSize:14,
+    fontSize:9,
     fontFamily: 'FuturaStd-Light',
 
   },
   titleText:{
     color:'black',
-    fontSize:23,
+    fontSize:17,
     fontFamily: 'FuturaStd-Light',
+    marginTop:14
   },
   nameItem:{
-
     marginLeft:10
   },
   img:{
-    width:80,
-    height:80,
+    width:62,
+    height:62,
     borderRadius:50
   }
 

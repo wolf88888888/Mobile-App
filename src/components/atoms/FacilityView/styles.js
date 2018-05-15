@@ -1,16 +1,15 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const dimensionWindows = Dimensions.get('window');
-const containWidth = (dimensionWindows.width - 100) / 6;
+const containWidth = (dimensionWindows.width - 65) / 6;
 const imageWidth = containWidth;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:5,
-        marginLeft:5,
-        marginRight:5,
+        marginLeft:2.5,
+        marginRight:2.5,
         width: containWidth,
         height: containWidth,
     },

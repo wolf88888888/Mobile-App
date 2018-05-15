@@ -7,7 +7,7 @@ import {
     } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
-import CloseButton from '../../atoms/CloseButton';
+import BackButton from '../../atoms/BackButton';
 
 import styles from './styles';
 
@@ -27,36 +27,37 @@ class AdditionalPrices extends Component {
     }
 
     constructor(){
-      super();
-      this.state = {
-        dataSource:ds.cloneWithRows([
-          {
-              name:"Cleaning Fee",
-              money:'52',
-
-          },{
-              name:"Security Deposit",
-              money:'202',
-
-          },{
-              name:"Weekend Price ",
-              money:'356/night',
-
-          }
-        ]),
-      }
+        super();
+        this.onClose = this.onClose.bind(this);
+        this.state = {
+            dataSource:ds.cloneWithRows([
+                {
+                    name:"Cleaning Fee",
+                    money:'52',
+                },
+                {
+                    name:"Security Deposit",
+                    money:'202',
+                },
+                {
+                    name:"Weekend Price ",
+                    money:'356/night',
+                }
+            ]),
+        }
     }
 
-    _renderRow(rowData){
-
-      return(
-        <View style={styles.View}>
-           <Text style={styles.textStyle}>{rowData.name}</Text>
-           <Text style={styles.textStyle}>${rowData.money}</Text>
-        </View>
-      );
+    renderRow(rowData){
+        return(
+            <View style={styles.item}>
+                <View style={styles.ComponentView}>
+                    <Text style={styles.text}>{rowData.name}</Text>
+                    <Text style={styles.text}>${rowData.money}</Text>
+                </View>
+                <View style={styles.lineStyle}/>
+            </View>
+        );
     }
-
 
     onClose() {
       this.props.navigation.goBack();
@@ -67,13 +68,13 @@ class AdditionalPrices extends Component {
 
         return (
             <View style={styles.container}>
-              <CloseButton onPress={() => this.onClose()}/>
-              <Text style={styles.textTitle}>Additional Prices</Text>
+                <BackButton onPress={this.onClose}/>
+                <Text style={styles.title}>Additional Prices</Text>
 
-              <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow}
-             />
+                <ListView
+                    style={styles.list}
+                    dataSource={this.state.dataSource}
+                    renderRow={this.renderRow}/>
             </View>
         );
     }

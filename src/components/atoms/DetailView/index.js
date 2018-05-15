@@ -18,11 +18,12 @@ const DetailView = (props) => {
         <View style={styles.container}>
             <Image source={props.image} style={styles.detailImage}/>
 
-            <View style={{flexDirection: 'row'}}>
+            <View style={styles.detailView}>
                 <View style={{alignItems: 'flex-end'}}>
                     <Text style={styles.detailText}>{props.detail}</Text>
                 </View>
-                {props.supText != '' ?
+                {
+                    props.supText != '' ?
                     <View style={{alignItems: 'flex-start'}}>
                         <Text style={styles.detailTopText}>{props.supText}</Text>
                     </View>

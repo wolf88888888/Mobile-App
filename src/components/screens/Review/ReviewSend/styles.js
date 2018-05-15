@@ -6,48 +6,52 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#f0f1f3',
         fontFamily: 'FuturaStd-Light'
-    },footer:{
+    },
+    footer:{
            position:'absolute',
            backgroundColor: '#ffffff',
            bottom:0,
            left:0,
            right:0,
            zIndex:10,
-           paddingTop:10,
+           paddingTop:17,
            paddingLeft:20,
-           paddingBottom:10,
-           borderTopWidth:10,
+           paddingBottom:17,
+           borderTopWidth:3,
            borderTopColor:'#ddd',
            flexDirection:'row',
            justifyContent:'space-between'
          },
-         searchButtonView: {
-               width:200,
-               backgroundColor: '#DA7B61',
-               justifyContent: 'center',
-               alignItems: 'center',
-               right:10,
-               paddingLeft:10,
-           },
-           searchButtonText: {
-               color: '#fff',
-               fontFamily: 'FuturaStd-Light',
-               fontSize: 17,
-               padding: 14,
-               alignItems: 'center'
-           },textInput:{
-             fontSize:22,
-             marginLeft:20,
-             marginTop:30,
-             height: 280,
-             width:'90%',
-             borderColor: 'gray',
-             borderWidth: 1,
-             
+     searchButtonView: {
+           width:170,
+           backgroundColor: '#DA7B61',
+           justifyContent: 'center',
+           alignItems: 'center',
+           right:10,
+           paddingLeft:10,
+           marginRight:10
+       },
+     searchButtonText: {
+         color: '#fff',
+         fontFamily: 'FuturaStd-Light',
+         fontSize: 17,
+         padding: 14,
+         alignItems: 'center'
+     },
+     textInput:{
+       marginLeft:20,
+       marginTop:42,
+       height: 230,
+       width:'90%',
+       borderColor: 'gray',
+       backgroundColor:'white',
+       padding: 14,
+     },
+     textReport:{
+       fontFamily: 'FuturaStd-Light',
+       fontSize: 19,
 
-
-
-           }
+     }
 });
 
 export default styles;

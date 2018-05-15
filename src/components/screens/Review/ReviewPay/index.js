@@ -7,7 +7,7 @@ import {
     } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
-import CloseButton from '../../../atoms/CloseButton';
+import BackButton from '../../../atoms/BackButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
 import ListItem from '../../../molecules/ListItem';
@@ -29,16 +29,25 @@ class ReviewPay extends Component {
         }
     }
 
+    constructor(){
+        super();
+        this.onClose = this.onClose.bind(this);
+        this.onNext = this.onNext.bind(this);
+    }
+
     onClose() {
-      this.props.navigation.goBack();
+        this.props.navigation.goBack();
+    }
+
+    onNext() {
     }
 
     render() {
     const { navigate } = this.props.navigation;
 
     return (
-        <View style={styles.container}>
-          <CloseButton onPress={() => this.onClose()}/>
+        <View style={styles.container}  >
+          <BackButton onPress={() => this.onClose()}/>
 
           <ReviewTitle
               text="Review and Pay"
@@ -71,17 +80,13 @@ class ReviewPay extends Component {
             I agree to the <Text style={styles.redUnderline}>House Rules</Text> and to the <Text style={styles.redUnderline}>Cancellation Ploicy.</Text>I also agree to pay the total amount shown,which includes Cleaning Fees.
           </Text>
 
-
           <View style={styles.footer}>
-
               <TouchableOpacity>
                   <View style={styles.searchButtonView}>
                       <Text style={styles.searchButtonText}>Confirm & Pay</Text>
                   </View>
               </TouchableOpacity>
-
          </View>
-
 
         </View>
     );
