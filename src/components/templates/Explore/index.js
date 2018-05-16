@@ -70,6 +70,8 @@ class Explore extends Component {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
+        this.gotoGuests = this.gotoGuests.bind(this);
+        this.gotoSearch = this.gotoSearch.bind(this);
         this.state = {
             search: '',
             checkInDate: 'Thu, 25 Jan',
@@ -149,8 +151,8 @@ class Explore extends Component {
                       adults={adults}
                       children={children}
                       infants={infants}
-                      gotoGuests={() => this.gotoGuests()}
-                      gotoSearch={() => this.gotoSearch()}
+                      gotoGuests={this.gotoGuests}
+                      gotoSearch={this.gotoSearch}
 
 
                       />

@@ -47,7 +47,7 @@ class ReviewPay extends Component {
 
         return (
             <View style={styles.container}  >
-                <BackButton onPress={() => this.onClose()}/>
+                <BackButton onPress={this.onClose}/>
 
                 <ReviewTitle
                     text="Review and Pay"
