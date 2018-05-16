@@ -18,10 +18,13 @@ const FacilityView = (props) => {
     return (
         <View style={[styles.container, props.style]}>
             {
-                props.more != ''?
-                    <TouchableOpacity onPress={props.onPress}>
-                        <Text style={styles.facilityMore}>+{props.more}</Text>
-                    </TouchableOpacity>
+                props.isMore == true?
+                    props.more != 0 ?
+                        <TouchableOpacity onPress={props.onPress}>
+                            <Text style={styles.facilityMore}>+{props.more}</Text>
+                        </TouchableOpacity>
+                    :
+                        <View/>
                 :
                     <Image source={props.image} style={styles.facilityImage}/>
             }
@@ -31,11 +34,13 @@ const FacilityView = (props) => {
 }
 
 FacilityView.propTypes = {
-    more: PropTypes.string,
+    more: PropTypes.number,
+    isMore: PropTypes.bool,
 };
 
 FacilityView.defaultProps = {
-    more: '',
+    more: 0,
+    isMore: false,
 };
 
 export default FacilityView;

@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
       width: 130
     },
     value: {
-        fontFamily: 'FuturaStd',
-        fontSize:20,
+        fontFamily: 'FuturaStd-Light',
+        fontSize:17,
         color: '#54575a',
         textAlign: 'center',
         width:50,

@@ -1,7 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-const numColumns = 6;
-const dimensionWindows = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -50,50 +48,6 @@ const styles = StyleSheet.create({
         color: '#d97b61',
         fontSize: 15,
     },
-
-    footer:{
-        flexDirection: 'row',
-        justifyContent:'space-between',
-        height:80,
-        backgroundColor: '#ffffff',
-    },
-
-    amount: {
-        fontFamily: 'FuturaStd-Medium',
-        color: '#000000',
-        fontSize: 16,
-        lineHeight:20,
-    },
-
-    unit: {
-        fontFamily: 'FuturaStd-Light',
-        color: '#000000',
-        fontSize: 11,
-        lineHeight:20,
-    },
-
-    size: {
-        fontFamily: 'FuturaStd-Light',
-        color: '#000000',
-        fontSize: 16,
-        lineHeight:20,
-    },
-
-    ButtonView: {
-        backgroundColor: '#DA7B61',
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin:15,
-    },
-
-    ButtonText: {
-        color: '#fff',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 16,
-        padding: 14,
-        alignItems: 'center'
-    },
-
 });
 
 export default styles;

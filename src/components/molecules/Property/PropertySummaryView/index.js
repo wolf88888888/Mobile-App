@@ -4,10 +4,11 @@ import {
         TouchableOpacity,
         View,
         ListView,
-        Dimensions
+        Dimensions,
+        ViewPropTypes
       } from 'react-native';
 import Image from 'react-native-remote-svg';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
 
 import FacilityView from '../../../atoms/FacilityView'
@@ -17,11 +18,36 @@ import ReadMoreView from '../../../atoms/ReadMoreView'
 
 import styles from './styles';
 
+
+const RNViewPropTypes = ViewPropTypes || View.propTypes;
+const RNPropTypes = PropTypes || React.PropTypes;
+
 class PropertySummaryView extends Component {
 
-    static get propTypes() {
-        return {
-        }
+    static propTypes = {
+        title: RNPropTypes.string.isRequired,
+        rateExp: RNPropTypes.string.isRequired,
+        rateVal: RNPropTypes.number.isRequired,
+        reviewNum: RNPropTypes.number.isRequired,
+        guests: RNPropTypes.number.isRequired,
+        size: RNPropTypes.number.isRequired,
+        bathroom: RNPropTypes.number.isRequired,
+        bedroom: RNPropTypes.number.isRequired,
+        description: RNPropTypes.string.isRequired,
+        space: RNPropTypes.string.isRequired,
+    };
+
+    static defaultProps = {
+        title: '',
+        rateExp: '',
+        rateVal: 0,
+        reviewNum: 0,
+        guests: 0,
+        size: 0,
+        bathroom: 0,
+        bedroom: 0,
+        description: '',
+        space: '',
     };
 
     constructor(props) {
@@ -36,52 +62,45 @@ class PropertySummaryView extends Component {
         const ratingSize = 8;
         return (
           <View style={styles.container}>
-              <Image style={styles.logoImage} source={require('../../../../assets/temple/overview.jpg')} />
+              <Image style={styles.logoImage} source={this.props.logo} />
               <CardView style={styles.topView}
                   cardElevation={1.5}
                   cardMaxElevation={1.5}
                   cornerRadius={0}>
                   <Text style={styles.topTitleText}>
-                      Garden Loft Apartment
+                      {this.props.title}
                   </Text>
                   <View style={[styles.rateViewContainer, {height:ratingHeight}]}>
                       <Text style={[styles.rateText, {
                       fontSize:ratingSize, height:ratingHeight, paddingTop:2}]}>
-                          Excellent 4.1/5
+                          {this.props.rateExp} {this.props.rateVal}/5
                       </Text>
                       <StarRatings
                           maximumValue = {5}
                           minimumValue = {0}
-                          value = {4.2}
+                          value = {this.props.rateVal}
                           style = {{width:60, height:ratingHeight, paddingTop:0}}
                           starStyle={{width:ratingSize, height:ratingSize,}}
                           emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../../assets/empty-star.svg')}/>}
                           filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../../assets/empty-star-full.svg')}/>}/>
 
                       <Text style={[styles.rateText, {fontSize:ratingSize, height:ratingHeight, paddingTop:2, paddingLeft:0}]}>
-                          73 Reviews
+                          {this.props.reviewNum} Reviews
                       </Text>
                   </View>
                   <View style={styles.lineStyle} />
-                  <PropertyDetailsView guests={4} size={85} bathroom={1} bedroom={1}/>
+                  <PropertyDetailsView guests={this.props.reviewNum} size={this.props.size} bathroom={this.props.bathroom} bedroom={this.props.bedroom}/>
               </CardView>
 
               <View style={styles.descriptionView}>
-                  <Text style={styles.normalText}>In the historic quarter of Santo Spirito,on the left bank of the ricer Arno,studio apartment is perfect for those traveling alone or as a couple.To walk berween Santo Spirito,Pante Vecchio and Babali Gardens is a magical experience.</Text>
+                  <Text style={styles.normalText}>{this.props.description}</Text>
                   <Text style={styles.smallTitle}>The Space</Text>
                   <ReadMoreView
                       numberOfLines={2}
                       onReady={this._handleTextReady}
                       buttonStyle={styles.readmore}>
-                      <Text style={styles.spaceText}>
-                          On the third floor of a typical Florentine building, the apartment
-                          consists of an entrance with wardrobes and loft with double bed,
-                          On the third floor of a typical Florentine building, the apartment
-                          consists of an entrance with wardrobes and loft with double bed,
-                          On the third floor of a typical Florentine building, the apartment
-                          consists of an entrance with wardrobes and loft with double bed,
-                          On the third floor of a typical Florentine building, the apartment
-                          consists of an entrance with wardrobes and loft with double bed
+                        <Text style={styles.spaceText}>
+                            {this.props.space}
                        </Text>
                   </ReadMoreView>
               </View>

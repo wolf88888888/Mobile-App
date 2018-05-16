@@ -12,9 +12,18 @@ import styles from './styles';
 
 class PropertyDetailsView extends Component {
 
-    static get propTypes() {
-        return {
-        }
+    static propTypes = {
+        guests: PropTypes.number.isRequired,
+        size: PropTypes.number.isRequired,
+        bathroom: PropTypes.number.isRequired,
+        bedroom: PropTypes.number.isRequired,
+    }
+
+    static defaultProps = {
+        guests: 0,
+        size: 0,
+        bathroom: 0,
+        bedroom: 0,
     };
 
     constructor(props) {

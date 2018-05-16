@@ -29,10 +29,10 @@ class SimilarHomes extends Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows([{info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
-                  {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
-                  {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
-                  {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
-                  {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'}]),
+                {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
+                {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
+                {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
+                {info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'}]),
         };
     }
 

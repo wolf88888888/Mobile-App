@@ -16,11 +16,6 @@ const containWidth = dimensionWindows.width / 3;
 
 class SleepingArrangements extends Component {
 
-    static get propTypes() {
-        return {
-        }
-    };
-
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});

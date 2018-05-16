@@ -16,22 +16,18 @@ const defaulProps = {
 /* eslint-disable */
 const ReviewImageItem = ({
     text,
-    pageNumber,
-    optional
-
+    info,
+    description
 }) => (
-    <View style={styles.Item}>
-
-            <View style={styles.imgItem}>
-                <Image style={styles.img} source = {require('../../../assets/temple/overview.jpg')} />
-            </View>
-
-            <View style={styles.nameItem}>
-              <Text style={styles.greenText}>{pageNumber}</Text>
-              <Text style={styles.titleText}>{text}</Text>
-              <Text style={styles.optionalText}>{optional}</Text>
-            </View>
-
+    <View style={styles.container}>
+          <Image style={styles.img} source = {require('../../../assets/temple/overview.jpg')} />
+          <View style={styles.majorContainer}>
+              <View style={styles.detailContainer}>
+                <Text style={styles.info}>{info}</Text>
+                <Text style={styles.title}>{text}</Text>
+                <Text style={styles.description}>{description}</Text>
+              </View>
+          </View>
     </View>
 );
 

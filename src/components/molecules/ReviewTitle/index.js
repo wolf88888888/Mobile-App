@@ -10,22 +10,16 @@ import styles from './styles';
 const defaulProps = {
     text: '',
     pageNumber:'',
-    optional:''
+    optional:'',
+    titleStyle:{}
 };
 /* eslint-disable */
-const ReviewTitle = ({
-    text,
-    pageNumber,
-    optional
-
-}) => (
-    <View style={styles.Item}>
-
-          <Text style={styles.greenText}>{pageNumber}</Text>
-
+const ReviewTitle = (props) => (
+    <View style={[styles.container, props.style]}>
+          <Text style={styles.greenText}>{props.pageNumber}</Text>
           <View style={styles.nameItem}>
-            <Text style={styles.titleText}>{text}</Text>
-            <Text style={styles.optionalText}>{optional}</Text>
+              <Text style={[styles.titleText, props.titleStyle]}>{props.text}</Text>
+              <Text style={styles.optionalText}>{props.optional}</Text>
           </View>
 
     </View>

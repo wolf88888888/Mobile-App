@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
     },
 
     name:{
-      fontFamily: 'FuturaStd-Medium',
-      fontSize:16,
-      marginLeft:5,
-      color: '#000000',
+        fontFamily: 'FuturaStd-Medium',
+        fontSize:16,
+        marginLeft:5,
+        color: '#000000',
     },
 
     rateViewContainer: {

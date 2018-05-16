@@ -14,15 +14,14 @@ import Guests from '../components/screens/Guests';
 
 import Property from '../components/screens/Property';
 import PropertyFacilites from '../components/screens/PropertyFacilites';
-import AdditionalPrices from '../components/screens/AdditionalPrices';
-import HouseRules from '../components/screens/HouseRules';
+import PropertyRules from '../components/screens/PropertyRules';
+import PropertyPrices from '../components/screens/PropertyPrices';
 
-import ReviewHouse from '../components/screens/Review/ReviewHouse';
-import ReviewPay from '../components/screens/Review/ReviewPay';
-import ReviewSend from '../components/screens/Review/ReviewSend';
-import ReviewTrip from '../components/screens/Review/ReviewTrip';
-import RequestAccepted from '../components/screens/Review/RequestAccepted';
-
+import ReviewHouse from '../components/screens/Booking/ReviewHouse';
+import ReviewPay from '../components/screens/Booking/ReviewPay';
+import ReviewSend from '../components/screens/Booking/ReviewSend';
+import ReviewTrip from '../components/screens/Booking/ReviewTrip';
+import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -59,8 +58,8 @@ export const FullNavigator = StackNavigator(
         GuestsScreen: { screen: Guests },
         PropertyScreen: { screen: Property },
         PropertyFacilitesScreen: { screen: PropertyFacilites },
-        AdditionalPricesScreen: { screen: AdditionalPrices },
-        HouseRulesScreen: { screen: HouseRules },
+        PropertyRulesScreen: { screen: PropertyRules },
+        PropertyPricesScreen: { screen: PropertyPrices },
 
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },

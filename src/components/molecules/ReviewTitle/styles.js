@@ -1,34 +1,34 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  Item:{
-    marginLeft:20,
-    marginTop:30
-  },
-  greenText:{
-    color:'green',
-    marginTop:-5,
-    fontSize:11,
-    fontFamily: 'FuturaStd-Light',
-  },
-  optionalText:{
-    color:'black',
-    fontSize:14,
-    marginTop:10,
-    marginLeft:2,
-    fontFamily: 'FuturaStd-Light',
+    container:{
+        marginLeft:20,
+        marginTop:20
+    },
 
-  },
-  titleText:{
-    color:'black',
-    fontSize:20,
-    fontFamily: 'FuturaStd-Bold',
-    marginTop:4
-  },
-  nameItem:{
-    flexDirection:'row'
-  },
+    greenText:{
+        fontFamily: 'FuturaStd-Light',
+        color:'#a2c5bf',
+        fontSize:10.5,
+    },
 
+    optionalText:{
+        color:'#000000',
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 11,
+        marginTop: 10,
+        marginLeft: 2,
+    },
+
+    titleText:{
+        color:'#000000',
+        fontSize: 20,
+        fontFamily: 'FuturaStd-Medium',
+    },
+
+    nameItem:{
+        flexDirection:'row'
+    },
 
 });
 

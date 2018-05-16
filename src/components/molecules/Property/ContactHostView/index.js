@@ -17,47 +17,37 @@ const dimensionWindows = Dimensions.get('window');
 const mainWidth = (dimensionWindows.width - 130) / 2;
 
 class ContactHostView extends Component {
+    static propTypes = {
+        avatar: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        detail: PropTypes.string.isRequired,
+    };
 
-    static get propTypes() {
-        return {
-          // title: PropTypes.string.isRequired,
-          // subtitle: PropTypes.string.isRequired,
-          // type: PropTypes.string.isRequired,
-          // count: PropTypes.number.isRequired
-        }
+    static defaultProps = {
+        avatar: null,
+        name: "",
+        detail: "",
     };
 
     constructor(props) {
         super(props);
-        this.onFacilityMore = this.onFacilityMore.bind(this);
     }
 
     componentDidMount() {
     }
 
-
-    onFacilityMore() {
-        this.props.onFacilityMore();
-    }
-
-
-    _handleTextReady = () => {
-        console.log('ready!');
-    }
-
     render() {
-        const { title, subtitle, count } = this.props;
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>The Host</Text>
                 <View style={styles.personalInfo}>
                     <View style={styles.avatarContainer}>
                         <View>
-                            <Image style={styles.avatar} source = {require('../../../../assets/temple/avatar.png')} />
+                            <Image style={styles.avatar} source = {this.props.avatar} />
                         </View>
                         <View style={styles.infoContainer}>
-                            <Text style={styles.name}>Britney</Text>
-                            <Text style={styles.info}>Oia, Greece • Joined in May 2011</Text>
+                            <Text style={styles.name}>{this.props.name}</Text>
+                            <Text style={styles.info}>{this.props.detail}</Text>
                         </View>
                     </View>
                     <View style={styles.contactContainer}>

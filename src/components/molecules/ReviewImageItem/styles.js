@@ -1,38 +1,51 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const dimensionWindows = Dimensions.get('window');
+
+const containWidth = dimensionWindows.width * 0.3;
+const containHeight = containWidth * 2 / 3;
 
 const styles = StyleSheet.create({
-  Item:{
-    marginLeft:20,
-    marginTop:30,
-    flexDirection:'row'
-  },
-  greenText:{
-    color:'green',
-    fontSize:12,
-    fontFamily: 'FuturaStd-Light',
-  },
-  optionalText:{
-    color:'black',
-    fontSize:14,
-    marginTop:10,
-    marginLeft:2,
-    fontFamily: 'FuturaStd-Light',
+    container:{
+        marginTop:30,
+        marginLeft:20,
+        marginRight:20,
+        flexDirection:'row'
+    },
 
-  },
-  titleText:{
-    color:'black',
-    fontSize:23,
-    fontFamily: 'FuturaStd-Light',
-  },
-  nameItem:{
+    majorContainer: {
+        marginLeft:10,
+        flexDirection:'column',
+        justifyContent: 'flex-end',
+        height: containHeight,
+    },
 
-    marginLeft:10
-  },
-  img:{
-    width:120,
-    height:80
-  }
+    detailContainer: {
+        flexDirection:'column',
+    },
 
+    info: {
+        fontFamily: 'FuturaStd-Light',
+        color:'#a2c5bf',
+        fontSize: 9,
+    },
+
+    title: {
+        fontFamily: 'FuturaStd-Medium',
+        fontSize:15,
+        color: '#000000',
+    },
+
+    description:{
+        fontFamily: 'FuturaStd-Light',
+        fontSize:10,
+        color:'#54585b',
+    },
+
+    img:{
+        alignSelf: 'stretch',
+        width: containWidth,
+        height: containHeight,
+    }
 });
 
 

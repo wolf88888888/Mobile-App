@@ -10,14 +10,14 @@ const styles = StyleSheet.create({
     },
 
     titleStyle:{
-      fontFamily: 'FuturaStd',
-      fontSize:20,
+      fontFamily: 'FuturaStd-Light',
+      fontSize:17,
       color: '#54575a',
     },
 
     subtitleStyle:{
-      fontFamily: 'FuturaStd',
-      fontSize:13,
+      fontFamily: 'FuturaStd-Light',
+      fontSize:12,
       color: '#54575a',
     },
 

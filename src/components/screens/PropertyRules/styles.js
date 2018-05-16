@@ -19,28 +19,23 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
 
+
     item : {
         flexDirection:'column',
     },
 
     ComponentView:{
-        alignItems:'center',
-        flexDirection:'row',
+        flexDirection:'column',
         marginLeft: 20,
         marginRight: 20,
-        justifyContent:'space-between',
+        justifyContent:'space-between'
     },
 
-    firstText:{
+    text:{
         fontSize:16,
         lineHeight:60,
         fontFamily: 'FuturaStd-Light',
         color: '#000000',
-    },
-
-    ImageStyle:{
-        width:25,
-        height:25,
     },
 
     lineStyle:{
