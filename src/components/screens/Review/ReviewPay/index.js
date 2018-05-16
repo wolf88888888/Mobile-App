@@ -10,7 +10,7 @@ import Image from 'react-native-remote-svg';
 import BackButton from '../../../atoms/BackButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
-import ListItem from '../../../molecules/ListItem';
+import ReviewListItem from '../../../molecules/Property/ReviewListItem';
 
 import styles from './styles';
 
@@ -61,17 +61,17 @@ class ReviewPay extends Component {
               optional="25 Jan - 27 Jan.2 guests"
           />
 
-          <ListItem
+          <ReviewListItem
             textFirst="$85 * 2 nights"
             textLast ="$180.00"
           />
 
-          <ListItem
+          <ReviewListItem
             textFirst="Cleaning Fee"
             textLast ="$25.00"
           />
 
-          <ListItem
+          <ReviewListItem
             textFirst="Total (USD)"
             textLast ="$205.00"
           />

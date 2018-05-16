@@ -6,6 +6,7 @@ import {
       } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
+import MapView from 'react-native-maps';
 import styles from './styles';
 
 class LocationView extends Component {
@@ -21,15 +22,9 @@ class LocationView extends Component {
 
     constructor(props) {
         super(props);
-        this.onFacilityMore = this.onFacilityMore.bind(this);
     }
 
     componentDidMount() {
-    }
-
-
-    onFacilityMore() {
-        this.props.onFacilityMore();
     }
 
     render() {
@@ -43,7 +38,30 @@ class LocationView extends Component {
                     <Text style={styles.subtitle}>Transpotation</Text>
                     <Text style={styles.subdetail}>Geting around the island is possible either by bus transport, taxi or by rending a car or on ATV.</Text>
                 </View>
-                <Image source={require('../../../../assets/temple/location.jpg')} style={styles.map} />
+                <View style={{flexDirection:'column'}}>
+                    <View style={styles.info}>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.location}>Florence, Italy</Text>
+                            <Text style={styles.description}>The exact location will be provided after booking.</Text>
+                        </View>
+                    </View>
+                    <MapView
+                        style={styles.map}
+                        region={{
+                          latitude: 43.769562,
+                          longitude: 11.255814,
+                          latitudeDelta: 0.005,
+                          longitudeDelta: 0.005,
+                        }}>
+                        <MapView.Circle
+                                center={{latitude: 43.769562, longitude: 11.255814}}
+                                radius = { 200 }
+                                strokeWidth = { 1 }
+                                strokeColor = { 'rgba(162,197,191,0.5)' }
+                                fillColor = { 'rgba(162,197,191,0.5)' }
+                        />
+                    </MapView>
+                </View>
             </View>
         );
     }

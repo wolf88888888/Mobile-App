@@ -10,11 +10,8 @@ import Image from 'react-native-remote-svg';
 import CloseButton from '../../../atoms/CloseButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
-import ListItem from '../../../molecules/ListItem';
 
 import styles from './styles';
-
-
 
 class RequestAccepted extends Component {
     static propTypes = {
@@ -63,7 +60,7 @@ class RequestAccepted extends Component {
             </TouchableOpacity>
             <TouchableOpacity>
                 <View style={styles.secondBlock}>
-            
+
 
                 </View>
             </TouchableOpacity>

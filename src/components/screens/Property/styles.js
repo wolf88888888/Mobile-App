@@ -8,8 +8,10 @@ const styles = StyleSheet.create({
         backgroundColor:'#f0f1f3'
     },
 
-    WhiteBackButton: {
+    topButtonContainer: {
         zIndex: 1,
+        flexDirection: 'row',
+        justifyContent:'space-between',
     },
 
     scrollView: {

@@ -41,13 +41,46 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light',
         fontSize: 10,
         color: '#000000',
+        lineHeight: 17,
         marginTop: 5
     },
 
+    info: {
+        zIndex: 1,
+        flexDirection: 'column',
+        height:50,
+        marginTop:20,
+        marginLeft:45,
+        marginRight:45,
+        justifyContent:'center',
+        backgroundColor:'#ffffff'
+    },
+
+    infoContainer: {
+        flexDirection: 'column',
+        justifyContent:'center',
+        backgroundColor:'#ffffff',
+        marginLeft: 10
+    },
+
+    location: {
+          fontFamily: 'FuturaStd-Medium',
+          fontSize: 13,
+          color: '#000000',
+          marginTop: 5,
+    },
+
+    description: {
+          fontFamily: 'FuturaStd-Light',
+          fontSize: 10,
+          lineHeight:15,
+          color: '#000000',
+    },
 
     map: {
+        zIndex: -1,
+        marginTop:-65,
         alignSelf: 'stretch',
-        marginTop:10,
         width: dimensionWindows.width,
         height: dimensionWindows.width * 5 / 8,
     },

@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     },
 
     smallTitle:{
-      fontFamily: 'FuturaStd-Light',
+      fontFamily: 'FuturaStd-Medium',
       fontSize:12,
       marginTop:5,
       lineHeight: 20,

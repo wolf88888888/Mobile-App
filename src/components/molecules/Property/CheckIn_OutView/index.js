@@ -41,7 +41,7 @@ class CheckIn_OutView extends Component {
                 </View>
                 <View style={[styles.titleContainter, {marginTop:30}]}>
                     <Text style={styles.title}>Check-Out Time</Text>
-                    <Text style={styles.title}>12PM(noon)</Text>
+                    <Text style={styles.title}>12PM (noon)</Text>
                 </View>
             </View>
         );

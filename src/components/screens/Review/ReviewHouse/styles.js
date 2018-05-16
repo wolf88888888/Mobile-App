@@ -5,8 +5,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#f0f1f3',
-        fontFamily: 'FuturaStd-Light',
     },
+    
     footer:{
          position:'absolute',
          backgroundColor: '#ffffff',

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         fontSize:17,
         color: '#000000',
     },

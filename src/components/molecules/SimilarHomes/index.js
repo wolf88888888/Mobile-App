@@ -10,6 +10,7 @@ import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 import FacilityView from '../../atoms/FacilityView'
 import StarRatings from '../../atoms/StarRatings';
+import LikeButton from '../../atoms/LikeButton';
 
 import styles from './styles';
 
@@ -24,6 +25,7 @@ class SimilarHomes extends Component {
 
     constructor(props) {
         super(props);
+        this.onLike = this.onLike.bind(this);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows([{info:'ENTIRE APARTMENT • 1 BEDROOM  • 1 BED • 1.5 BATHS', name:'Garden Loft Apartment', rateName:'Excellent', rate:4.1, reviews:73, price:'$350 (LOC 1.2) per night'},
@@ -35,6 +37,10 @@ class SimilarHomes extends Component {
     }
 
     componentDidMount() {
+    }
+
+    onLike() {
+
     }
 
     render() {
@@ -49,6 +55,7 @@ class SimilarHomes extends Component {
                     horizontal={true}
                     renderRow={(rowData) =>
                         <View style={styles.listItem}>
+                            <LikeButton like={false} onLike={this.onLike} ButtonViewStyle={{top: 15, right:15, width: 22, height: 22, alignSelf: 'flex-end'}} ButtonStyle={{width:22, height:22}}/>
                             <Image style={styles.logoImage} source = {require('../../../assets/temple/overview.jpg')} />
                             <Text style={styles.info}>
                                 {rowData.info}

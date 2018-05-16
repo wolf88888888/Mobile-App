@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     },
     ButtonView: {
         top: 40,
-        left: 18,
+        right:18,
         width: 24,
         height: 24,
         alignItems: 'center',

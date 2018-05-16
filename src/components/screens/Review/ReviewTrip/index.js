@@ -10,7 +10,7 @@ import Image from 'react-native-remote-svg';
 import BackButton from '../../../atoms/BackButton';
 import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
-import ListItem from '../../../molecules/ListItem';
+import ReviewListItem from '../../../molecules/Property/ReviewListItem';
 
 class ReviewTrip extends Component {
 
@@ -52,23 +52,23 @@ class ReviewTrip extends Component {
                   pageNumber="STEP 2 OF 4 "
                   optional=""/>
 
-              <ListItem
+              <ReviewListItem
                   textFirst="No smoking"
                   textLast =""/>
 
-              <ListItem
+              <ReviewListItem
                   textFirst="Suitabele for pets"
                   textLast =""/>
 
-              <ListItem
+              <ReviewListItem
                   textFirst="Not Safe or suitable for children(0-12 years)"
                   textLast =""/>
 
-              <ListItem
+              <ReviewListItem
                   textFirst="Check-In Time"
                   textLast ="2PM - 10PM"/>
 
-              <ListItem
+              <ReviewListItem
                   textFirst="Check-Out Time"
                   textLast ="12 PM noon"/>
               <View style={styles.footer}>

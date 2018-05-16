@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 
     title:{
         fontSize: 20,
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         marginLeft: 20,
         marginTop: 10,
         color: '#000000'
@@ -28,26 +28,26 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         marginLeft: 20,
         marginRight: 20,
-        justifyContent:'space-between'
+        justifyContent:'space-between',
+        backgroundColor:'#ff0000'
     },
 
     firstText:{
-        marginTop: 20,
         fontSize:16,
+        lineHeight:60,
         fontFamily: 'FuturaStd-Light',
-        color: '#000000'
+        color: '#000000',
+        backgroundColor: '#ffff00'
     },
 
     ImageStyle:{
-        marginTop:10,
-        width:30,
-        height:30,
+        width:25,
+        height:25,
     },
 
     lineStyle:{
         borderWidth:0.3,
         borderColor:'#cccccc',
-        marginTop:20,
         marginLeft:20,
         marginRight:20,
     },

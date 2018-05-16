@@ -2,20 +2,20 @@ import { StyleSheet, Dimensions } from 'react-native';
 const dimensionWindows = Dimensions.get('window');
 
 const containWidth = dimensionWindows.width * 0.6;
-const containHeight = containWidth * 3 / 4;
+const containHeight = containWidth * 2 / 3;
 const styles = StyleSheet.create({
     container: {
-      marginTop:10,
-      marginBottom:10,
-      flexDirection:'column',
+        marginTop:10,
+        marginBottom:10,
+        flexDirection:'column',
     },
 
     title:{
-      fontFamily: 'FuturaStd-Medium',
-      fontSize:16,
-      marginLeft:20,
-      marginBottom:10,
-      color: '#000000',
+        fontFamily: 'FuturaStd-Medium',
+        fontSize:16,
+        marginLeft:20,
+        marginBottom:10,
+        color: '#000000',
     },
 
     listItem: {
@@ -29,10 +29,16 @@ const styles = StyleSheet.create({
         borderColor:'#cccccc',
     },
 
+    likeButton: {
+        zIndex: 1,
+    },
+
     logoImage: {
-          alignSelf: 'stretch',
-          width: containWidth,
-          height: containHeight,
+        zIndex: -1,
+        marginTop: -90,
+        alignSelf: 'stretch',
+        width: containWidth,
+        height: containHeight,
     },
 
     info: {

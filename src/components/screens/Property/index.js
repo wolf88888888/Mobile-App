@@ -11,6 +11,7 @@ import Image from 'react-native-remote-svg';
 import CardView from 'react-native-cardview'
 
 import WhiteBackButton from '../../atoms/WhiteBackButton';
+import LikeButton from '../../atoms/LikeButton';
 import FacilityView from '../../atoms/FacilityView'
 import RoomFacility from '../../molecules/Property/RoomFacility'
 import SleepingArrangements from '../../molecules/Property/SleepingArrangements'
@@ -45,6 +46,7 @@ class Property extends Component {
         this.onHouseRules = this.onHouseRules.bind(this);
         this.onAdditionalPrice = this.onAdditionalPrice.bind(this);
         this.onCheck = this.onCheck.bind(this);
+        this.onLike = this.onLike.bind(this);
         this.state = {
         }
     }
@@ -69,12 +71,19 @@ class Property extends Component {
         this.props.navigation.navigate('ReviewHouseScreen');
     }
 
+    onLike(like) {
+        console.log("onLike");
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                    <WhiteBackButton style={styles.WhiteBackButton} onPress={this.onClose}/>
+                    <View style={styles.topButtonContainer}>
+                        <WhiteBackButton onPress={this.onClose}/>
+                        <LikeButton like={false} onLike={this.onLike}/>
+                    </View>
                     <View style={styles.body}>
                         <PropertySummaryView />
 

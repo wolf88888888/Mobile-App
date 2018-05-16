@@ -11,7 +11,7 @@ import BackButton from '../../../atoms/BackButton';
 import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
-import ListItem from '../../../molecules/ListItem';
+import ReviewListItem from '../../../molecules/Property/ReviewListItem';
 
 class ReviewHouse extends Component {
     static propTypes = {
@@ -57,15 +57,15 @@ class ReviewHouse extends Component {
                     text="Garden Loft Apartment"
                     optional="Hosted by Alexandra"/>
 
-                <ListItem
+                <ReviewListItem
                   textFirst="Dales"
                   textLast ="25 Jan - 27 Jan" />
 
-                <ListItem
+                <ReviewListItem
                   textFirst="Guests"
                   textLast ="2 guests" />
 
-                <ListItem
+                <ReviewListItem
                   textFirst="Cancellation Policy"
                   textLast ="Check"/>
 
