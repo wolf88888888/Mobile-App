@@ -25,7 +25,7 @@ let store = createStore(rootReducer, enchancer); // eslint-disable-line
 if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     const acceptCallback = () => {
-        const nextRootReducer = require('./reducers').default;
+        const nextRootReducer = require('../reducers').default;
         store.replaceReducer(nextRootReducer);
     };
     module.hot.accept('../reducers', acceptCallback);

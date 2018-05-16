@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
@@ -62,18 +63,18 @@ class Explore extends Component {
     static defaultProps = {
         navigation: {
             navigate: () => {}
-        }
+        },
+        search: '',
+        checkInDate: '',
+        checkOutDate: '',
+        guests: 0,
+        topHomes: [],
+        onDatesSelect: () => {},
+        onSearchChange: () => {}
     }
     constructor(props) {
         super(props);
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.state = {
-            search: '',
-            checkInDate: 'Thu, 25 Jan',
-            checkOutDate: 'Sat, 27 Jan',
-            guests: 0,
-            topHomes: null
-        };
+        this.onSearchHandler = this.onSearchHandler.bind(this);
     }
 
     componentDidMount() {
@@ -83,10 +84,8 @@ class Explore extends Component {
         });
     }
 
-    onChangeHandler(property) {
-        return (value) => {
-            this.setState({ [property]: value });
-        };
+    onSearchHandler(value) {
+        this.props.onSearchChange(value);
     }
 
     renderHomes() {
@@ -107,8 +106,8 @@ class Explore extends Component {
 
     render() {
         const {
-            search, checkInDate, checkOutDate, guests, topHomes
-        } = this.state;
+             search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
+        } = this.props;
 
         return (
             <View style={styles.container}>
@@ -116,7 +115,7 @@ class Explore extends Component {
                     <SearchBar
                         autoCorrect={false}
                         value={search}
-                        onChangeText={this.onChangeHandler('search')}
+                        onChangeText={this.onSearchHandler}
                         placeholder="Discover your next experience"
                         placeholderTextColor="#bdbdbd"
                         leftIcon="search"
@@ -124,17 +123,14 @@ class Explore extends Component {
                 </View>
 
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-                    <DateAndGuestPicker checkInDate={checkInDate} checkOutDate={checkOutDate} guests={guests} />
-                    { topHomes ? this.renderHomes() : null }
+                    <DateAndGuestPicker
+                        checkInDate={checkInDate}
+                        checkOutDate={checkOutDate}
+                        guests={guests}
+                        onDatesSelect={onDatesSelect}
+                    />
+                    { topHomes.length ? this.renderHomes() : null }
                 </ScrollView>
-
-                <TouchableOpacity onPress={() => {
-                    AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
-                    this.props.navigation.navigate('Login');
-                }}
-                >
-                    <Text style={styles.text}>Log Out</Text>
-                </TouchableOpacity>
             </View>
         );
     }

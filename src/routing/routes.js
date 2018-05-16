@@ -6,10 +6,12 @@ import Welcome from '../components/screens/Welcome';
 import Login from '../components/screens/Login';
 import CreateAccount from '../components/screens/CreateAccount';
 import CreatePassword from '../components/screens/CreatePassword';
-import Terms from '../components/screens/Terms';
+import Terms from '../components/templates/Terms';
 
 import Explore from '../components/screens/Explore';
-import NavTabBar from './tabs/NavTabBar';
+import NavTabBar from '../components/organisms/NavTabBar';
+import Profile from '../components/screens/Profile';
+
 
 export const LoginNavigator = StackNavigator(
     {
@@ -27,7 +29,7 @@ export const LoginNavigator = StackNavigator(
 
 export const MainNavigator = TabNavigator(
     {
-        PROFILE: { screen: Explore },
+        PROFILE: { screen: Profile },
         MESSAGES: { screen: Explore },
         MY_TRIPS: { screen: Explore },
         FAVORITES: { screen: Explore },

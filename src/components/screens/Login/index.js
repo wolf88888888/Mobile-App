@@ -8,7 +8,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard
 } from 'react-native';
-import Image from 'react-native-remote-svg';
+// import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
 import GoBack from '../../atoms/GoBack';
@@ -16,7 +16,7 @@ import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
 import { validateEmail, validatePassword } from '../../../utils/validation';
 import { login } from '../../../utils/requester';
-
+import GetStartedImage from '../../atoms/GetStartedImage';
 import styles from './styles';
 
 
@@ -33,13 +33,11 @@ class Login extends Component {
         password: ''
     }
 
-    // TODO: Need a way to generate a Google ReCAPTCHA token
-
     onClickLogIn() {
         const { email, password } = this.state;
         const user = { email, password };
 
-        login(user, null).then((res) => {
+        login(user).then((res) => {
             if (res.success) {
                 res.response.json().then((data) => {
                     AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
@@ -75,7 +73,7 @@ class Login extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={Keyboard.dismiss}
-                accessible={false}
+                accessible
             >
                 <View style={styles.container}>
                     <GoBack
@@ -125,13 +123,7 @@ class Login extends Component {
                             </View>
                         </TouchableOpacity>
                     </View>
-
-                    <View style={styles.lowOpacity}>
-                        <Image
-                            source={require('../../../assets/get-started-white-outline.svg')}
-                            style={styles.getStartedImage}
-                        />
-                    </View>
+                    <GetStartedImage />
                 </View>
             </TouchableWithoutFeedback>
         );

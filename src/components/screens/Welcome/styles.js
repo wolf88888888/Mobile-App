@@ -9,9 +9,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#DA7B61'
     },
     splashImage: {
-        width: 100,
-        height: 78,
-        marginTop: 4
+        width: 200,
+        height: 80
     },
     buttonCollectionWrap: {
         display: 'flex',
@@ -25,7 +24,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5
     },
     facebookButton: {
-        backgroundColor: 'black',
+        backgroundColor: '#223843',
         elevation: 3
     },
     createAccountButton: {
@@ -39,22 +38,12 @@ const styles = StyleSheet.create({
     },
     finePrintText: {
         marginTop: 60,
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 30,
+        marginRight: 30,
         color: '#fff',
         fontSize: 13,
-        fontFamily: 'FuturaStd-Light'
-    },
-    lowOpacity: {
-        opacity: 0.3,
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-end'
-    },
-    getStartedImage: {
-        width: 400,
-        height: 80
+        fontFamily: 'FuturaStd-Light',
+        textAlign: 'justify'
     }
 });
 
