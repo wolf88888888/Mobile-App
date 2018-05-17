@@ -22,26 +22,27 @@ const Terms = (props) => {
         register(user, null).then((res) => {
             if (res.success) {
                 console.log('~~~res:', res);
-                login(user, null).then((res) => {
-                    if (res.success) {
-                        res.response.json().then((data) => {
-                            AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
-                            // TODO: Get first name + last name from response included with Authorization token (Backend)
-                            AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                            navigate('App');
-                        });
-                    } else {
-                        res.response.then((res) => {
-                            const errors = res.errors;
-                            for (const key in errors) {
-                                if (typeof errors[key] !== 'function') {
-                                    console.log('Error logging in:', errors[key].message);
-                                    // TODO: give user feedback about having and error logging in
-                                }
-                            }
-                        });
-                    }
-                });
+                navigate('CreateWallet');
+                // login(user, null).then((res) => {
+                //     if (res.success) {
+                //         res.response.json().then((data) => {
+                //             AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
+                //             // TODO: Get first name + last name from response included with Authorization token (Backend)
+                //             AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
+                //             navigate('CreateWallet');
+                //         });
+                //     } else {
+                //         res.response.then((res) => {
+                //             const errors = res.errors;
+                //             for (const key in errors) {
+                //                 if (typeof errors[key] !== 'function') {
+                //                     console.log('Error logging in:', errors[key].message);
+                //                     // TODO: give user feedback about having and error logging in
+                //                 }
+                //             }
+                //         });
+                //     }
+                // });
             } else {
                 res.response.then((res) => {
                     const errors = res.errors;
