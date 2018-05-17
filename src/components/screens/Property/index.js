@@ -19,7 +19,7 @@ import CheckIn_OutView from '../../atoms/Property/CheckIn_OutView';
 import LocationView from '../../atoms/Property/LocationView';
 import RatingView from '../../molecules/Property/RatingView';
 import ContactHostView from '../../molecules/Property/ContactHostView';
-import PropertyFooter from '../../atoms/Property/PropertyFooter';
+import Footer from '../../atoms/Footer';
 import SimilarHomes from '../../molecules/SimilarHomes';
 
 import styles from './styles';
@@ -180,7 +180,7 @@ class Property extends Component {
                     </View>
                 </ScrollView>
 
-                <PropertyFooter info0={'$85'} unit0={'/ per night'} info1={'0.56 LOC'} unit1={'/ per night'} button={'Check Availability'} onClick={this.onCheck}/>
+                <Footer info0={'$85'} unit0={'/ per night'} info1={'0.56 LOC'} unit1={'/ per night'} button={'Check Availability'} onClick={this.onCheck}/>
             </View>
         );
     }

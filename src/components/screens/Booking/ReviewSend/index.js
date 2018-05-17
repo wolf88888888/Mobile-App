@@ -11,7 +11,7 @@ import BackButton from '../../../atoms/BackButton';
 import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import HostInfo from '../../../atoms/Property/HostInfo';
-import PropertyFooter from '../../../atoms/Property/PropertyFooter';
+import Footer from '../../../atoms/Footer';
 import Textarea from '../../../atoms/Textarea';
 
 class ReviewSend extends Component {
@@ -71,7 +71,7 @@ class ReviewSend extends Component {
                         underlineColorAndroid={'transparent'}
                     />
                 </View>
-                <PropertyFooter style={styles.footer} button={'Next'} onClick={this.onNext}/>
+                <Footer style={styles.footer} button={'Next'} onClick={this.onNext}/>
             </View>
         );
     }

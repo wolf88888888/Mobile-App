@@ -11,7 +11,7 @@ import BackButton from '../../../atoms/BackButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
 import ReviewListItem from '../../../atoms/Property/ReviewListItem';
-import PropertyFooter from '../../../atoms/Property/PropertyFooter';
+import Footer from '../../../atoms/Footer';
 
 import styles from './styles';
 
@@ -81,7 +81,7 @@ class ReviewPay extends Component {
                 </Text>
 
 
-                <PropertyFooter style={styles.footer} button={'Confirm & Pay'} fullButton={true} onClick={this.onNext}/>
+                <Footer style={styles.footer} button={'Confirm & Pay'} fullButton={true} onClick={this.onNext}/>
             </View>
         );
     }

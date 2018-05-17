@@ -12,7 +12,7 @@ import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
 import ReviewListItem from '../../../atoms/Property/ReviewListItem';
-import PropertyFooter from '../../../atoms/Property/PropertyFooter';
+import Footer from '../../../atoms/Footer';
 
 class ReviewHouse extends Component {
     static propTypes = {
@@ -69,7 +69,7 @@ class ReviewHouse extends Component {
                     textFirst="Cancellation Policy"
                     textLast ="Check"/>
 
-                <PropertyFooter style={styles.footer} info0={'$170'} unit0={'for 2 nights'} info1={'1.12 LOC'} unit1={'for 2 nights'} button={'Next'} onClick={this.onNext}/>
+                <Footer style={styles.footer} info0={'$170'} unit0={'for 2 nights'} info1={'1.12 LOC'} unit1={'for 2 nights'} button={'Next'} onClick={this.onNext}/>
             </View>
         );
     }

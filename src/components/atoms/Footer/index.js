@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import styles from './styles';
 
-class PropertyFooter extends Component {
+class Footer extends Component {
 
     static propTypes = {
         info0: PropTypes.string,
@@ -71,4 +71,4 @@ class PropertyFooter extends Component {
     }
 }
 
-export default PropertyFooter;
+export default Footer;

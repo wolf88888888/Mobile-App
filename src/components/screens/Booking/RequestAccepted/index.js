@@ -10,7 +10,7 @@ import Image from 'react-native-remote-svg';
 import BackButton from '../../../atoms/BackButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewImageItem from '../../../molecules/ReviewImageItem';
-import PropertyFooter from '../../../atoms/Property/PropertyFooter';
+import Footer from '../../../atoms/Footer';
 
 import styles from './styles';
 
@@ -86,7 +86,7 @@ class RequestAccepted extends Component {
               You won''t be charged until you are confirming
           </Text>
 
-          <PropertyFooter style={styles.footer} button={'View your trips'} fullButton={true} onClick={this.onNext}/>
+          <Footer style={styles.footer} button={'View your trips'} fullButton={true} onClick={this.onNext}/>
         </View>
     );
     }

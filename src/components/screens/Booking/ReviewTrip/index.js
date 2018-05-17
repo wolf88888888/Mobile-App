@@ -11,7 +11,7 @@ import BackButton from '../../../atoms/BackButton';
 import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewListItem from '../../../atoms/Property/ReviewListItem';
-import PropertyFooter from '../../../atoms/Property/PropertyFooter';
+import Footer from '../../../atoms/Footer';
 
 class ReviewTrip extends Component {
 
@@ -73,7 +73,7 @@ class ReviewTrip extends Component {
                   textFirst="Check-Out Time"
                   textLast ="12 PM noon"/>
 
-              <PropertyFooter style={styles.footer} button={'Agree'} onClick={this.onNext}/>
+              <Footer style={styles.footer} button={'Agree'} onClick={this.onNext}/>
             </View>
         );
     }
