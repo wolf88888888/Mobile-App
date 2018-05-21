@@ -77,7 +77,6 @@ class Explore extends Component {
     constructor(props) {
         super(props);
         this.onSearchHandler = this.onSearchHandler.bind(this);
-        this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
