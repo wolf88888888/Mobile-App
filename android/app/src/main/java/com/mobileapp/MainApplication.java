@@ -9,6 +9,8 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;    //import package
+import com.kishanjvaghela.cardview.RNCardViewPackage;
+import com.airbnb.android.react.maps.MapsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +26,10 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
+          new RNCardViewPackage(),
           new MainReactPackage(),
-          new RCTSplashScreenPackage()    //register Module
+          new RCTSplashScreenPackage(),    //register Module
+          new MapsPackage()
       );
     }
 

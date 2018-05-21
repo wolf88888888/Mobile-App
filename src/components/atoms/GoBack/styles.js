@@ -3,20 +3,25 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 80
+        height: 90,
+        position: 'relative'
     },
     iconView: {
-        width: 30,
-        height: 30,
-        marginTop: 40,
-        marginLeft: 15,
-        borderRadius: 15,
+        position: 'absolute',
+        top: 40,
+        left: 18,
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderColor: '#fff',
         borderWidth: 1.5,
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     iconText: {
-        fontSize: 12
+        color: '#fff',
+        fontSize: 8
     }
 });
 

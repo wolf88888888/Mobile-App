@@ -12,6 +12,18 @@ import Explore from '../components/screens/Explore';
 import NavTabBar from '../components/organisms/NavTabBar';
 import Profile from '../components/screens/Profile';
 
+import Guests from '../components/screens/Guests';
+
+import Property from '../components/screens/Property';
+import PropertyFacilites from '../components/screens/PropertyFacilites';
+import PropertyRules from '../components/screens/PropertyRules';
+import PropertyPrices from '../components/screens/PropertyPrices';
+
+import ReviewHouse from '../components/screens/Booking/ReviewHouse';
+import ReviewPay from '../components/screens/Booking/ReviewPay';
+import ReviewSend from '../components/screens/Booking/ReviewSend';
+import ReviewTrip from '../components/screens/Booking/ReviewTrip';
+import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -42,11 +54,33 @@ export const MainNavigator = TabNavigator(
     }
 );
 
+export const FullNavigator = StackNavigator(
+    {
+        MainScreen: { screen: MainNavigator },
+        GuestsScreen: { screen: Guests },
+        PropertyScreen: { screen: Property },
+        PropertyFacilitesScreen: { screen: PropertyFacilites },
+        PropertyRulesScreen: { screen: PropertyRules },
+        PropertyPricesScreen: { screen: PropertyPrices },
+
+        ReviewHouseScreen: { screen: ReviewHouse },
+        ReviewPayScreen: { screen: ReviewPay },
+        ReviewSendScreen: { screen: ReviewSend },
+        ReviewTripScreen: { screen: ReviewTrip },
+        RequestAcceptedScreen: { screen: RequestAccepted }
+
+    },
+    {
+        initialRouteName: 'MainScreen',
+        headerMode: 'none'
+    }
+);
+
 export const AppNavigator = SwitchNavigator(
     {
         AppLoading,
         Login: LoginNavigator,
-        App: MainNavigator
+        App: FullNavigator
     },
     {
         initialRouteName: 'AppLoading'
