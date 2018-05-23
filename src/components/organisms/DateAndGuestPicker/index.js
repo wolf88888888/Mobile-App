@@ -18,15 +18,17 @@ class DateAndGuestPicker extends Component {
     }
 
     onGuests() {
-      this.props.gotoGuests();
+        this.props.gotoGuests();
     }
 
     onSearch() {
-      this.props.gotoSearch();
+        this.props.gotoSearch();
     }
 
     render() {
-        const { checkInDate, checkOutDate, adults, children, infants, onDatesSelect} = this.props;
+        const {
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect
+        } = this.props;
 
         return (
             <View style={styles.container}>
@@ -51,7 +53,8 @@ class DateAndGuestPicker extends Component {
                     </View>
 
                     <TouchableOpacity
-                        onPress={this.onGuests}>
+                        onPress={this.onGuests}
+                    >
                         <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
                             <Text style={styles.label}>Guests</Text>
                             <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
@@ -88,7 +91,9 @@ DateAndGuestPicker.propTypes = {
     onDatesSelect: PropTypes.func.isRequired,
     adults: PropTypes.number.isRequired,
     children: PropTypes.number.isRequired,
-    infants: PropTypes.number.isRequired
+    infants: PropTypes.number.isRequired,
+    gotoSearch: PropTypes.func.isRequired,
+    gotoGuests: PropTypes.func.isRequired
 };
 
 export default DateAndGuestPicker;
