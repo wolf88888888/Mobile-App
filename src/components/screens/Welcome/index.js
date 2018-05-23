@@ -36,6 +36,7 @@ const Welcome = ({
             <Button
                 wrapStyle={styles.facebookButton}
                 text="Continue with Facebook"
+                onPress={() => navigate('App')}
             />
             <Button
                 wrapStyle={styles.createAccountButton}
@@ -44,8 +45,7 @@ const Welcome = ({
             />
         </View>
         <Text style={styles.finePrintText}>
-            By tapping Log In, Continue or Create Account, I agree to LockChain's Terms of Service,
-            Payments Terms of Service and Privacy Policy.
+            By tapping Log In, Continue or Create Account, I agree to LockChain's Terms of Service, Payments Terms of Service and Privacy Policy.
         </Text>
         <GetStartedImage />
     </View>
@@ -54,4 +54,3 @@ const Welcome = ({
 Welcome.propTypes = propTypes;
 
 export default Welcome;
-

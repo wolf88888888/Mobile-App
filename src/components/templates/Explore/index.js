@@ -6,6 +6,7 @@ import { getTopHomes } from '../../../utils/requester';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
+import { withNavigation } from 'react-navigation';
 
 
 // TODO: move styles in separate file
@@ -75,6 +76,7 @@ class Explore extends Component {
     constructor(props) {
         super(props);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
 
     componentDidMount() {
@@ -86,6 +88,10 @@ class Explore extends Component {
 
     onSearchHandler(value) {
         this.props.onSearchChange(value);
+    }
+
+    onSearch() {
+        this.props.navigation.navigate('UserProfile');
     }
 
     renderHomes() {
@@ -128,6 +134,7 @@ class Explore extends Component {
                         checkOutDate={checkOutDate}
                         guests={guests}
                         onDatesSelect={onDatesSelect}
+                        onSearch={this.onSearch}
                     />
                     { topHomes.length ? this.renderHomes() : null }
                 </ScrollView>
@@ -136,4 +143,4 @@ class Explore extends Component {
     }
 }
 
-export default Explore;
+export default withNavigation(Explore);

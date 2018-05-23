@@ -11,7 +11,7 @@ import Terms from '../components/templates/Terms';
 import Explore from '../components/screens/Explore';
 import NavTabBar from '../components/organisms/NavTabBar';
 import Profile from '../components/screens/Profile';
-
+import UserProfile from '../components/screens/UserProfile';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -27,13 +27,24 @@ export const LoginNavigator = StackNavigator(
     }
 );
 
+export const ExploreNavigator = StackNavigator(
+    {
+        Explore: { screen: Explore },
+        UserProfile: { screen: UserProfile },
+    },
+    {
+        initialRouteName: 'Explore',
+        headerMode: 'none'
+    }
+);
+
 export const MainNavigator = TabNavigator(
     {
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Explore },
         MY_TRIPS: { screen: Explore },
         FAVORITES: { screen: Explore },
-        EXPLORE: { screen: Explore }
+        EXPLORE: { screen: ExploreNavigator }
     },
     {
         initialRouteName: 'EXPLORE',

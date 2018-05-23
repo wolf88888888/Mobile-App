@@ -9,6 +9,7 @@ import Calendar from '../../templates/Calendar';
 class DateAndGuestPicker extends Component {
     componentDidMount() {
     }
+
     render() {
         const {
             checkInDate, checkOutDate, guests, onDatesSelect
@@ -48,7 +49,7 @@ class DateAndGuestPicker extends Component {
                     </View>
                 </View>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.props.onSearch}>
                     <View style={styles.searchButtonView}>
                         <Text style={styles.searchButtonText}>Search</Text>
                     </View>
