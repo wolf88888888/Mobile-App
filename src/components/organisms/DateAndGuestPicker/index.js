@@ -7,11 +7,27 @@ import Calendar from '../../templates/Calendar';
 
 
 class DateAndGuestPicker extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onGuests = this.onGuests.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+    }
+
     componentDidMount() {
     }
+
+    onGuests() {
+        this.props.gotoGuests();
+    }
+
+    onSearch() {
+        this.props.gotoSearch();
+    }
+
     render() {
         const {
-            checkInDate, checkOutDate, guests, onDatesSelect
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect
         } = this.props;
 
         return (
@@ -36,10 +52,14 @@ class DateAndGuestPicker extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={guests ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
-                        <Text style={styles.label}>Guests</Text>
-                        <Text style={styles.value}>{ guests || '-' }</Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={this.onGuests}
+                    >
+                        <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
+                            <Text style={styles.label}>Guests</Text>
+                            <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
+                        </View>
+                    </TouchableOpacity>
 
                     <View style={styles.optionsPickerViewIncomplete}>
                         <Text style={styles.iconText}>
@@ -48,7 +68,7 @@ class DateAndGuestPicker extends Component {
                     </View>
                 </View>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.onSearch}>
                     <View style={styles.searchButtonView}>
                         <Text style={styles.searchButtonText}>Search</Text>
                     </View>
@@ -68,8 +88,12 @@ class DateAndGuestPicker extends Component {
 DateAndGuestPicker.propTypes = {
     checkInDate: PropTypes.string.isRequired,
     checkOutDate: PropTypes.string.isRequired,
-    guests: PropTypes.number.isRequired,
-    onDatesSelect: PropTypes.func.isRequired
+    onDatesSelect: PropTypes.func.isRequired,
+    adults: PropTypes.number.isRequired,
+    children: PropTypes.number.isRequired,
+    infants: PropTypes.number.isRequired,
+    gotoSearch: PropTypes.func.isRequired,
+    gotoGuests: PropTypes.func.isRequired
 };
 
 export default DateAndGuestPicker;

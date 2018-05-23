@@ -6,6 +6,7 @@ import { getTopHomes } from '../../../utils/requester';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
+import { withNavigation } from 'react-navigation';
 
 
 // TODO: move styles in separate file
@@ -72,9 +73,19 @@ class Explore extends Component {
         onDatesSelect: () => {},
         onSearchChange: () => {}
     }
+
     constructor(props) {
         super(props);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.updateData = this.updateData.bind(this);
+        this.gotoGuests = this.gotoGuests.bind(this);
+        this.gotoSearch = this.gotoSearch.bind(this);
+        this.state = {
+            adults: 0,
+            children: 0,
+            infants: 0,
+            topHomes: []
+        };
     }
 
     componentDidMount() {
@@ -102,12 +113,29 @@ class Explore extends Component {
         );
     }
 
+    updateData(data) {
+      console.log(data);
+      this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+    }
+
+    gotoGuests() {
+      this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData});
+    }
+
+    gotoSearch() {
+      this.props.navigation.navigate('PropertyScreen');
+    }
+
+
     // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
 
     render() {
         const {
-             search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
+             search, checkInDate, checkOutDate, onDatesSelect
         } = this.props;
+        const {
+             adults, children, infants, topHomes
+        } = this.state;
 
         return (
             <View style={styles.container}>
@@ -124,16 +152,20 @@ class Explore extends Component {
 
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
                     <DateAndGuestPicker
-                        checkInDate={checkInDate}
-                        checkOutDate={checkOutDate}
-                        guests={guests}
-                        onDatesSelect={onDatesSelect}
-                    />
-                    { topHomes.length ? this.renderHomes() : null }
+                      checkInDate={checkInDate}
+                      checkOutDate={checkOutDate}
+                      adults={adults}
+                      children={children}
+                      infants={infants}
+                      gotoGuests={this.gotoGuests}
+                      gotoSearch={this.gotoSearch}
+                      onDatesSelect={onDatesSelect}
+                      />
+                    { topHomes ? this.renderHomes() : null }
                 </ScrollView>
             </View>
         );
     }
 }
 
-export default Explore;
+export default withNavigation(Explore);
