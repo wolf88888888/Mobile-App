@@ -109,3 +109,11 @@ export function getTopHomes() {
 export async function getPropertyById(id) {
     return sendRequest(`${host}listings/${id}`, RequestMethod.GET).then(res => res.response.json());
 }
+
+export async function getRegionsBySearchParameter(param) {
+    return sendRequest(`${host}regions/search?query=${param}`, RequestMethod.GET).then(res => res.response.json());
+}
+
+export async function getCountriesWithListings() {
+    return sendRequest(`${host}countries?hasListings=true&size=10000&sort=name,asc`).then(res => res.response.json());
+}

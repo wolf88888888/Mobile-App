@@ -26,8 +26,10 @@
   },
   "dependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "base-64": "^0.1.0",
     "core-decorators": "^0.20.0",
     "immutable": "^3.8.2",
+    "lodash": "^4.17.10",
     "moment": "^2.22.1",
     "prop-types": "^15.6.1",
     "react": "16.2.0",
@@ -45,6 +47,8 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "sockjs-client": "^1.1.4",
+    "stompjs": "^2.3.3"
   }
 }
