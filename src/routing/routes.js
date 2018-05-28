@@ -11,6 +11,7 @@ import Terms from '../components/templates/Terms';
 import Explore from '../components/screens/Explore';
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Profile from '../components/screens/Profile';
+import Inbox from '../components/screens/Message/Inbox';
 
 import Guests from '../components/screens/Guests';
 
@@ -42,7 +43,7 @@ export const LoginNavigator = StackNavigator(
 export const MainNavigator = TabNavigator(
     {
         PROFILE: { screen: Profile },
-        MESSAGES: { screen: Explore },
+        MESSAGES: { screen: Inbox },
         MY_TRIPS: { screen: Explore },
         FAVORITES: { screen: Explore },
         EXPLORE: { screen: Explore }
