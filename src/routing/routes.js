@@ -84,6 +84,6 @@ export const AppNavigator = SwitchNavigator(
         App: FullNavigator
     },
     {
-        initialRouteName: 'AppLoading'
+        initialRouteName: 'Login'
     }
 );

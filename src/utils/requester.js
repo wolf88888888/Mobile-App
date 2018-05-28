@@ -117,3 +117,9 @@ export async function getRegionsBySearchParameter(param) {
 export async function getCountriesWithListings() {
     return sendRequest(`${host}countries?hasListings=true&size=10000&sort=name,asc`).then(res => res.response.json());
 }
+
+export async function getMyConversations(searchTerm) {
+    return sendRequest(`${host}users/me/conversations${searchTerm !== null && searchTerm !== undefined ? `${searchTerm}&` : '?'}sort=id,desc`, RequestMethod.GET).then(res => {
+        return res;
+    });
+}
