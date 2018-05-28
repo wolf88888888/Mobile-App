@@ -29,6 +29,7 @@
     "base-64": "^0.1.0",
     "core-decorators": "^0.20.0",
     "immutable": "^3.8.2",
+    "javascript-time-ago": "^1.0.30",
     "lodash": "^4.17.10",
     "missing": "0.0.1",
     "moment": "^2.22.1",
