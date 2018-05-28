@@ -3,7 +3,7 @@ import { SEARCH_VALUE, SELECT_CHECK_IN_CHECK_OUT, SEARCH_REGIONS, SET_TOP_HOMES,
 import { PROPERTY_TYPE } from './constants';
 
 const initialState = {
-    propertyType: PROPERTY_TYPE.HOTELS
+    propertyType: PROPERTY_TYPE.HOMES
 };
 
 export default function explore(state = immutable.fromJS(initialState), action) {
@@ -38,8 +38,8 @@ export default function explore(state = immutable.fromJS(initialState), action) 
             .set('selected', immutable.fromJS(action.params));
 
     case SET_AUTOCOMPLETE:
-        if (state.get('propertyType') === PROPERTY_TYPE.HOMES && !state.get('autocomplete')) {
-            return state.set('autocomplete', state.get('countries')
+        if (state.get('propertyType') === PROPERTY_TYPE.HOMES) {
+            return state.set('autocomplete', state.getIn(['countries', 'content'])
                 .filter((country) => {
                     if (!action.params || state.get('selected')) {
                         return false;
