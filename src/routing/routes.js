@@ -28,6 +28,9 @@ import ReviewSend from '../components/screens/Booking/ReviewSend';
 import ReviewTrip from '../components/screens/Booking/ReviewTrip';
 import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
+import PropertyScreen from '../components/screens/Property';
+import Filters from '../components/screens/Filters';
+
 export const LoginNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
@@ -61,7 +64,7 @@ export const FullNavigator = StackNavigator(
     {
         MainScreen: { screen: MainNavigator },
         GuestsScreen: { screen: Guests },
-        PropertyScreen: { screen: Property },
+        PropertyScreen: {screen: PropertyScreen},
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
@@ -70,8 +73,8 @@ export const FullNavigator = StackNavigator(
         ReviewPayScreen: { screen: ReviewPay },
         ReviewSendScreen: { screen: ReviewSend },
         ReviewTripScreen: { screen: ReviewTrip },
-        RequestAcceptedScreen: { screen: RequestAccepted }
-
+        RequestAcceptedScreen: { screen: RequestAccepted },
+        FilterScreen: { screen: Filters },
     },
     {
         initialRouteName: 'MainScreen',
