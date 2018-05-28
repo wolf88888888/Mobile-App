@@ -12,6 +12,8 @@ import Explore from '../components/screens/Explore';
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Profile from '../components/screens/Profile';
 import Inbox from '../components/screens/Message/Inbox';
+import MyTrips from '../components/screens/MyTrips';
+import Favourites from '../components/screens/Favorites';
 
 import Guests from '../components/screens/Guests';
 
@@ -44,8 +46,8 @@ export const MainNavigator = TabNavigator(
     {
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
-        MY_TRIPS: { screen: Explore },
-        FAVORITES: { screen: Explore },
+        MY_TRIPS: { screen: MyTrips },
+        FAVORITES: { screen: Favourites },
         EXPLORE: { screen: Explore }
     },
     {
@@ -84,6 +86,6 @@ export const AppNavigator = SwitchNavigator(
         App: FullNavigator
     },
     {
-        initialRouteName: 'Login'
+        initialRouteName: 'AppLoading'
     }
 );
