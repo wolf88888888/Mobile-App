@@ -182,6 +182,9 @@ class Property extends Component {
     onBackPress = () => {
         this.props.navigation.goBack();
     }
+    gotoHotelDetailsPage = () =>{
+        alert('sanan');
+    }
 
     renderAutocomplete() {
         return (
@@ -210,7 +213,7 @@ class Property extends Component {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity
         } = this.state;
 
-        var data = 'region=52612&currency=USD&startDate=30/05/2018&endDate=01/06/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
+        var data = 'region=52612&currency=USD&startDate=27/05/2018&endDate=28/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
 
         return (
             <View style={styles.container}>
@@ -257,30 +260,32 @@ class Property extends Component {
                                <TouchableOpacity style={styles.favoritesButton}>
                                    <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
                                </TouchableOpacity>
-                               <View style={styles.cardContent}>
-                                   {/* <View style={styles.locationContainer}>
-                                       <Text style={styles.locationText}>LONDON</Text>
-                                       <SeparatorDot height={13} width={15}/>
-                                       <Text style={styles.locationText}>ENGLAND</Text>
-                                   </View> */}
-                                   <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                                   <View style={styles.aboutPlaceView}>
-                                       <Text style={styles.placeReviewText}>Excellent </Text>
-                                       <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
-                                       <View style={styles.ratingIconsWrapper}>
-                                           <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                           <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                           <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                           <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                           <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                       </View>
-                                       <Text style={styles.totalReviews}> 73 Reviews</Text>
-                                   </View>
-                                   <View style={styles.costView}>
-                                       <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">${item.price}(LOC 1.2) </Text>
-                                       <Text style={styles.perNight}>per night</Text>
-                                   </View>
-                               </View>
+                               <TouchableOpacity onPress={this.gotoHotelDetailsPage}>
+                                    <View style={styles.cardContent}>
+                                        {/* <View style={styles.locationContainer}>
+                                            <Text style={styles.locationText}>LONDON</Text>
+                                            <SeparatorDot height={13} width={15}/>
+                                            <Text style={styles.locationText}>ENGLAND</Text>
+                                        </View> */}
+                                        <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                                        <View style={styles.aboutPlaceView}>
+                                            <Text style={styles.placeReviewText}>Excellent </Text>
+                                            <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
+                                            <View style={styles.ratingIconsWrapper}>
+                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                            </View>
+                                            <Text style={styles.totalReviews}> 73 Reviews</Text>
+                                        </View>
+                                        <View style={styles.costView}>
+                                            <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">${item.price}(LOC 1.2) </Text>
+                                            <Text style={styles.perNight}>per night</Text>
+                                        </View>
+                                    </View>
+                               </TouchableOpacity>
                             </View>
                         }
                     />
@@ -306,7 +311,7 @@ class Property extends Component {
       }
 
       sendInitialWebsocketRequest() {
-         let query = 'region=52612&currency=USD&startDate=30/05/2018&endDate=01/06/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
+         let query = 'region=52612&currency=USD&startDate=27/05/2018&endDate=28/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
     
         const msg = {
           query: query,

@@ -43,6 +43,7 @@ export default class RoomDetailsReview extends Component {
             creationDate:'',
             cancellationLOCPrice: '',
             cancellationPrice: '',
+            
         }
     }
 
@@ -57,10 +58,24 @@ export default class RoomDetailsReview extends Component {
 
     componentDidMount() {
         // const booking = JSON.parse(decodeURI(searchParams.get('booking')));
-        testBook(this.props.testBookParameter)
+        const {params} = this.props.navigation.state
+        var value = {
+            "quoteId":'249426531-1',
+                "rooms":[{
+                    "adults":[{
+                            "title":"Mr","firstName":"test","lastName":"test"
+                        },{
+                            "title":"Mr","firstName":"test","lastName":"test"}
+                    ],"children":[]
+                }],
+                "currency":"USD"
+        }
+        console.log(value)
+        testBook(value)
         .then(res => res.response.json())
         // here you set the response in to json 
         .then(parsed => {
+            console.log('sanan here is res')
             // here you parse your json
             // here you set you data from json into your variables
             //const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'DD/MM/YYYY HH:mm:ss');
@@ -77,6 +92,7 @@ export default class RoomDetailsReview extends Component {
         })
         .catch(err => {
             console.log(err);
+            console.log('sanan you can\'t find res here')
         });
     }
 
@@ -103,7 +119,7 @@ export default class RoomDetailsReview extends Component {
                                 <View  style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.setModalVisible(!this.state.modalVisible);
+                                            this.props.navigation.goBack();;
                                         }}>
                                         <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')}/>
                                     </TouchableOpacity>
@@ -200,7 +216,7 @@ export default class RoomDetailsReview extends Component {
                                     <Text style={styles.listItemText}>Guests</Text>
                                 </View>
                                 <View style={styles.listItemRhsWrapper}>
-                                   <Text style={styles.rhs}>{params.guests.length}</Text>
+                                   <Text style={styles.rhs}>{this.state.guests}</Text>
                                 </View>
                             </View>
                             <View style={styles.listItem}>
@@ -266,7 +282,7 @@ RoomDetailsReview.defaultProps = {
         }
     ],
     testBookParameter: {
-        "quoteId":"248347878-281",
+        "quoteId":"249357191-0",
             "rooms":[{
                 "adults":[{
                         "title":"Mr","firstName":"test","lastName":"test"
@@ -284,5 +300,4 @@ RoomDetailsReview.propTypes = {
     priceInUserCurreny : PropTypes.number,
     priceInLoc : PropTypes.number,
     guests : PropTypes.array,
-    testBookParameter: PropTypes.object
   };

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     titleText:{
         color:'#000000',
         fontSize: 20,
-        fontFamily: 'FuturaStd-Medium',
+        fontFamily: 'futura',
     },
 
     nameItem:{

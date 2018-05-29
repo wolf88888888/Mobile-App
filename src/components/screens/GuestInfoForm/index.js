@@ -17,6 +17,8 @@ export default class GuestInfoForm extends Component {
     _keyExtractor = (item, index) => item.key;
 
     render() {
+        const {params} = this.props.navigation.state
+
         console.disableYellowBox = true
         return (
             <View style={styles.container}>
@@ -70,7 +72,8 @@ export default class GuestInfoForm extends Component {
         )
     }
     onProceedPress = () => {
-        this.props.navigation.navigate('RoomDetailsReview', this.props);
+        const {params} = this.props.navigation.state
+        this.props.navigation.navigate('RoomDetailsReview', {'quoteId':params.roomDetail.quoteId,'guests': this.props.guests.length});
         
     }
 }
@@ -80,7 +83,8 @@ GuestInfoForm.defaultProps = {
     hotelAddress: 'Kensington road',
     priceInUserCurreny : 457,
     priceInLoc : 49.3,
-    quoteId: '248129359-0',
+    quoteId: '249357191-0',
+    roomDetail:{},
     guests: [
         {
             key: 0,
@@ -94,12 +98,6 @@ GuestInfoForm.defaultProps = {
             firstName: '',
             lastName: ''
         },
-        {
-            key: 2,
-            genderRepresentation: 'Mrs',
-            firstName: '',
-            lastName: ''
-        }
     ]
 }
 
@@ -108,6 +106,7 @@ GuestInfoForm.propTypes = {
     hotelAddress: PropTypes.string,
     priceInUserCurreny : PropTypes.number,
     priceInLoc : PropTypes.number,
-    guests : PropTypes.array,
-    quoteId: PropTypes.string
+    // guests : PropTypes.array,
+    quoteId: PropTypes.string,
+    roomDetail: PropTypes.object
   };

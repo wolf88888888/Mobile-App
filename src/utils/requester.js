@@ -36,7 +36,12 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
     };
 
     const postParams = {
-        headers: allHeaders,
+        // headers: allHeaders,
+        headers: {
+            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0ZGV2QGN5YmVyY2xvdWRzLmNvbSIsImV4cCI6MTUyODQ0Nzg0Nn0.cEd9pR9Rv2DKbiQi0g9YSU7u63voFB7b4Ox-Ui8nXWcpkCMswGK1JK8uiLpTUaBJIdpQjSxPw6ThoqUP8g_Tjw',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
         method: 'POST',
         body: JSON.stringify(postObj)
     };
@@ -122,4 +127,19 @@ export async function getMyConversations(searchTerm) {
     return sendRequest(`${host}users/me/conversations${searchTerm !== null && searchTerm !== undefined ? `${searchTerm}&` : '?'}sort=id,desc`, RequestMethod.GET).then(res => {
         return res;
     });
+}
+
+export async function testBook(bookingObj) {
+    return sendRequest(`${host}api/hotels/booking`, RequestMethod.POST, bookingObj).then(res => {
+      return res;
+    });
+}
+
+export async function getHotelById(id, search) {
+    //return sendRequest(`https://staging.locktrip.com/api/api/hotels/32392?region=15664&currency=USD&startDate=25/05/2018&endDate=26/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D`, RequestMethod.GET).then(res => res);
+    return sendRequest(`${host}api/hotels/${id}${search}`, RequestMethod.GET).then(res => res);
+}
+
+export async function getHotelRooms(id, search) {
+    return sendRequest(`${host}api/hotels/${id}/rooms${search}`, RequestMethod.GET).then(res => res);
 }
