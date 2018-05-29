@@ -11,6 +11,9 @@ import Terms from '../components/templates/Terms';
 import Explore from '../components/screens/Explore';
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Profile from '../components/screens/Profile';
+import Inbox from '../components/screens/Message/Inbox';
+import MyTrips from '../components/screens/MyTrips';
+import Favourites from '../components/screens/Favorites';
 
 import Guests from '../components/screens/Guests';
 
@@ -24,6 +27,9 @@ import ReviewPay from '../components/screens/Booking/ReviewPay';
 import ReviewSend from '../components/screens/Booking/ReviewSend';
 import ReviewTrip from '../components/screens/Booking/ReviewTrip';
 import RequestAccepted from '../components/screens/Booking/RequestAccepted';
+
+import PropertyScreen from '../components/screens/Property';
+import Filters from '../components/screens/Filters';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -42,9 +48,9 @@ export const LoginNavigator = StackNavigator(
 export const MainNavigator = TabNavigator(
     {
         PROFILE: { screen: Profile },
-        MESSAGES: { screen: Explore },
-        MY_TRIPS: { screen: Explore },
-        FAVORITES: { screen: Explore },
+        MESSAGES: { screen: Inbox },
+        MY_TRIPS: { screen: MyTrips },
+        FAVORITES: { screen: Favourites },
         EXPLORE: { screen: Explore }
     },
     {
@@ -58,7 +64,7 @@ export const FullNavigator = StackNavigator(
     {
         MainScreen: { screen: MainNavigator },
         GuestsScreen: { screen: Guests },
-        PropertyScreen: { screen: Property },
+        PropertyScreen: {screen: PropertyScreen},
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
@@ -67,8 +73,8 @@ export const FullNavigator = StackNavigator(
         ReviewPayScreen: { screen: ReviewPay },
         ReviewSendScreen: { screen: ReviewSend },
         ReviewTripScreen: { screen: ReviewTrip },
-        RequestAcceptedScreen: { screen: RequestAccepted }
-
+        RequestAcceptedScreen: { screen: RequestAccepted },
+        FilterScreen: { screen: Filters },
     },
     {
         initialRouteName: 'MainScreen',

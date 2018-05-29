@@ -161,14 +161,15 @@ const styles = StyleSheet.create({
         marginRight: 18
     },
     card: {
-        height: 230,
-        width: '100%',
+        height: 190,
+        width: '48%',
         backgroundColor: '#fff',
         marginBottom: 10,
+        marginHorizontal: 5,
         
     },
     popularHotelsImage: {
-        height: 150,
+        height: 100,
         width: null
     },
     cardContent: {
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
     },
     costView: {
         flexDirection: 'row',
-        marginTop: 10
+        marginTop: 15
     },
     cost: {
         fontSize: 12,
@@ -296,15 +297,6 @@ const styles = StyleSheet.create({
     },
     bottomGap: {
         height: 50
-    },
-    backButton:{
-        marginTop: 25,
-        marginLeft: 15,
-    },
-    btn_backImage:{
-        height: 24,
-        width: 24,
-        resizeMode: 'contain'
-      },
+    }
 });
 export default styles;
