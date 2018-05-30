@@ -180,8 +180,7 @@ class Explore extends Component {
         );
     }
 
-    // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
-
+  
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
@@ -201,12 +200,13 @@ class Explore extends Component {
                         leftIcon="search"
                     />
                 </View>
-                {!!this.props.autocomplete.length && this.renderAutocomplete()}
+                {!this.props.autocomplete.length && this.renderAutocomplete()}
                 <DateAndGuestPicker
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
                         adults={adults}
-                        children={children} // eslint-disable-line
+                        children={children}
+                        {/*eslint-disable-line*/}
                         guests = {guests + children}
                         infants={infants}
                         gotoGuests={this.gotoGuests}

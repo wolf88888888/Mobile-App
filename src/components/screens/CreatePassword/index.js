@@ -7,8 +7,6 @@ import { validatePassword, validateConfirmPassword } from '../../../utils/valida
 import GoBack from '../../atoms/GoBack';
 import SmartInput from '../../atoms/SmartInput';
 
-
-// TODO: keep styles in saparate file
 const styles = StyleSheet.create({
     container: {
         flex: 1,

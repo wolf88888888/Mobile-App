@@ -5,7 +5,6 @@ import styles from './styles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Requester, { testBook } from '../../../utils/requester';
-// import { testBook, } from '../../../utils/requester';
 
 export default class RoomDetailsReview extends Component {
     
@@ -57,7 +56,6 @@ export default class RoomDetailsReview extends Component {
     }
 
     componentDidMount() {
-        // const booking = JSON.parse(decodeURI(searchParams.get('booking')));
         const {params} = this.props.navigation.state
         var value = {
             "quoteId":'249426531-1',
@@ -78,7 +76,6 @@ export default class RoomDetailsReview extends Component {
             console.log('sanan here is res')
             // here you parse your json
             // here you set you data from json into your variables
-            //const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'DD/MM/YYYY HH:mm:ss');
             const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
             const endDate = moment(parsed.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
             this.setState({
@@ -159,12 +156,6 @@ export default class RoomDetailsReview extends Component {
                                 </View>
                             </View>
                             <Text style={{fontFamily: 'FuturaStd-Light',}}>USD {this.state.cancellationPrice} - ({this.state.cancellationPrice}LOC)</Text>
-                            {/* <TextInput
-                                style={styles.walletPasswordInput}
-                                onChangeText={(walletPassword) => this.setState({walletPassword})}
-                                value={this.state.walletPassword}
-                                placeholder="Wallet password"
-                            /> */}
                             <TouchableOpacity style={styles.confirmButton} onPress={() => {
                                             this.setCancellationView(!this.state.cancellationView);
                                         }}>

@@ -120,7 +120,7 @@ class Chat extends Component {
 
                 {/* Here is the flatlist where all the message are going to be set start */}
                 <FlatList inverted style={styles.listBg}
-                    data={this.state.messages}// Data source
+                    data={this.state.messages}
                     renderItem={({ item }) =>
                         (
                             <MessageView
@@ -137,7 +137,7 @@ class Chat extends Component {
                 {/* This section contain the bottom area where you can write your message and send image from gallery or camera start */}
                 <View style={styles.footerView}>{/* Footer View for sending message etc */}
                     <TextInput style={styles.footerInputText}
-                        underlineColorAndroid="rgba(0,0,0,0)" // Removing android underline for default edittext
+                        underlineColorAndroid="rgba(0,0,0,0)"  
                         placeholder="Write message"/>
                         {/* camera button is here */}
                     <TouchableOpacity onPress={this.onCameraPress}>
@@ -155,12 +155,6 @@ class Chat extends Component {
 
     // Methods
     onCameraPress = () => {
-        // ImagePickerIOS.openSelectDialog({}, imageUri => {
-        //   this.setState({ image: imageUri });
-        // }, error => console.log(error));
-        // ImagePicker.launchCamera(this.options, (response)  => {
-        //   // Same code as in above section!
-        // });
         ImagePicker.launchCamera({}, (response) => {
         // Same code as in above section!
         });

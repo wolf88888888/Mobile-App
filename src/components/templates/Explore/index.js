@@ -103,7 +103,6 @@ class Explore extends Component {
     }
 
 
-    // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
 
     renderAutocomplete() {
         return (
@@ -146,14 +145,14 @@ class Explore extends Component {
                         leftIcon="search"
                     />
                 </View>
-                {!!this.props.autocomplete.length && this.renderAutocomplete()}
+                {!this.props.autocomplete.length && this.renderAutocomplete()}
 
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
                     <DateAndGuestPicker
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
                         adults={adults}
-                        children={children} // eslint-disable-line
+                        children={children}
                         infants={infants}
                         gotoGuests={this.gotoGuests}
                         gotoSearch={this.gotoSearch}

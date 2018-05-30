@@ -34,9 +34,6 @@ class Guests extends Component {
         this.onClose = this.onClose.bind(this);
         this.onDone = this.onDone.bind(this);
         this.onPersonChange = this.onPersonChange.bind(this);
-        // this.onAdults = this.onAdults.bind(this);
-        // this.onChildren = this.onChildren.bind(this);
-        // this.onInfants = this.onInfants.bind(this);
         this.state = {
             adults:0,
             children:0,

@@ -106,7 +106,6 @@ GuestInfoForm.propTypes = {
     hotelAddress: PropTypes.string,
     priceInUserCurreny : PropTypes.number,
     priceInLoc : PropTypes.number,
-    // guests : PropTypes.array,
     quoteId: PropTypes.string,
     roomDetail: PropTypes.object
   };

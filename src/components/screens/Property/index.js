@@ -206,8 +206,6 @@ class Property extends Component {
         );
     }
 
-    // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
-
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity
@@ -232,13 +230,13 @@ class Property extends Component {
                         leftIcon="search"
                     />
                 </View>
-                {!!this.props.autocomplete.length && this.renderAutocomplete()}
+                {!this.props.autocomplete.length && this.renderAutocomplete()}
 
                 <DateAndGuestPicker
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
                         adults={adults}
-                        children={children} // eslint-disable-line
+                        children={children} 
                         guests = {guests + children}
                         infants={infants}
                         gotoGuests={this.gotoGuests}
@@ -262,11 +260,6 @@ class Property extends Component {
                                </TouchableOpacity>
                                <TouchableOpacity onPress={this.gotoHotelDetailsPage}>
                                     <View style={styles.cardContent}>
-                                        {/* <View style={styles.locationContainer}>
-                                            <Text style={styles.locationText}>LONDON</Text>
-                                            <SeparatorDot height={13} width={15}/>
-                                            <Text style={styles.locationText}>ENGLAND</Text>
-                                        </View> */}
                                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                         <View style={styles.aboutPlaceView}>
                                             <Text style={styles.placeReviewText}>Excellent </Text>
@@ -290,11 +283,14 @@ class Property extends Component {
                         }
                     />
 
-                <SockJsClient url={apiHost + 'handler'} topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(data))}`]}
-                    onMessage={this.handleReceiveSingleHotel} ref={(client) => { clientRef = client }}
+                <SockJsClient url={apiHost + 'handler'} 
+                    topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(data))}`]}
+                    onMessage={this.handleReceiveSingleHotel} 
+                    ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest}
                     getRetryInterval={() => { return 3000; }}
-                    debug={true} />
+                    debug={true} 
+                    />
             </View>
         );
     }

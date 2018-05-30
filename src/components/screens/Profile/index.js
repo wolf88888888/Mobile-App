@@ -19,7 +19,6 @@ class Profile extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    // const { locAddress } = this.props.userInfo;
     return (
       <View style={styles.container}>
         <GoBack
@@ -96,14 +95,6 @@ Profile.propTypes = {
 };
 
 export default Profile;
-
-// function mapStateToProps(state) {
-//     const { paymentInfo, userInfo } = state;
-//     return {
-//         paymentInfo,
-//         userInfo
-//     };
-// }
 
 const styles = StyleSheet.create({
   container: {

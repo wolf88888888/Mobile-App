@@ -47,7 +47,6 @@ class HotelDetails extends Component {
             rooms:[],
         }
 
-        // this.state.hotel = this.props.navigation.state.params.hotel;
         this.state.hotel = {
 
             "city":{
@@ -207,7 +206,6 @@ class HotelDetails extends Component {
     }
 
     onFacilityMore() {
-        // this.props.navigation.navigate('PropertyFacilitesScreen');
     }
 
     onBooking(roomData) {
@@ -219,6 +217,7 @@ class HotelDetails extends Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
+                
                     <View style={styles.topButtonContainer}>
                         <WhiteBackButton onPress={this.onClose}/>
                     </View>
@@ -238,7 +237,7 @@ class HotelDetails extends Component {
                             style = {styles.roomfacility}
                             onFacilityMore = {this.onFacilityMore}/>
 
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
+                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]}/>
 
                         <AvailableRoomsView
                             id='1920'
@@ -249,14 +248,14 @@ class HotelDetails extends Component {
                         <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
 
                          <LocationView
-                            location={this.state.hotel.region.regionName + ", " + this.state.hotel.region.country.name}//"Florence, Italy"
+                            location={this.state.hotel.region.regionName + ", " + this.state.hotel.region.country.name}
                             titleStyle={{fontSize: 17}}
                             description={this.state.hotel.additionalInfo.mainAddress}
                             lat={parseFloat(this.state.hotel.latitude)}
                             lon={parseFloat(this.state.hotel.longitude)}
                             radius={200}/>
-                        <View style={{marginBottom:50}} />
-                    </View>
+                        <View style={{marginBottom:50}}/>                    
+
                 </ScrollView>
             </View>
         );

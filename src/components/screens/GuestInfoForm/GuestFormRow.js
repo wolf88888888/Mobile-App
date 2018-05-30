@@ -31,8 +31,7 @@ export default class GuestFormRow extends Component {
         });
     }
 
-    onValueChange = value => {
-        //if (value) this.setState({value})
+    onValueChange = value => {     
         this.setState({gender:value});
       }
 

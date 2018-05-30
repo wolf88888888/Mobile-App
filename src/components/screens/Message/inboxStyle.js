@@ -63,8 +63,6 @@ const styles = StyleSheet.create({
     },
 
     messageSubTitle:{
-        //fontSize: Sizes.scale(12),
-        //color: '#DA7B61',
         fontFamily: 'FuturaStd-Light',
         fontSize: 14,
         fontWeight: '200',
@@ -102,7 +100,6 @@ const styles = StyleSheet.create({
         color:'#222'
     },
     topText:{
-        //alignItems: 'center',
         marginHorizontal: 20,
         marginTop: 10,
         justifyContent: 'center',

@@ -44,7 +44,6 @@ class MyTrips extends Component {
         )
     }
     onStartExploring = () =>{
-        // this.props.navigation.navigate('AllMyTrips')
     }
 }
 
