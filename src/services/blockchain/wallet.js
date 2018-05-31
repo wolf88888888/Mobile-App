@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 
-import bip39 from 'bip39';
 import ethers from 'ethers';
 import {
   BaseValidators
@@ -28,9 +27,9 @@ class Wallet {
   static async createFromPassword(password) {
     BaseValidators.validatePassword(password);
 
-    const mnemonic = bip39.generateMnemonic();
+    const mnemonic = await ethers.HDNode.entropyToMnemonic(ethers.utils.randomBytes(16));
 
-    return await this.generateAccountFromMnemonicEthers(mnemonic, password, () => {});
+    return await this.generateAccountFromMnemonicEthers(mnemonic, password, () => { });
   }
 
   static async recoverFromMnemonic(mnemonic, password, address) {
@@ -38,7 +37,7 @@ class Wallet {
     BaseValidators.validateAddress(address, ERROR.INVALID_RECOVERED_ADDRESS);
     this.validateMnemonic(mnemonic);
 
-    let result = await this.generateAccountFromMnemonicEthers(mnemonic, password, () => {});
+    let result = await this.generateAccountFromMnemonicEthers(mnemonic, password, () => { });
 
     if (result.address !== address) {
       throw ERROR.INVALID_RECOVERED_ADDRESS;
@@ -61,7 +60,7 @@ class Wallet {
   }
 
   static validateMnemonic(mnemonic) {
-    if (!bip39.validateMnemonic(mnemonic)) {
+    if (!ethers.HDNode.isValidMnemonic(mnemonic)) {
       throw ERROR.INVALID_MNEMONIC;
     }
 
