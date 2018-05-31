@@ -78,13 +78,16 @@ class Explore extends Component {
         this.state = {
             search: '',
             checkInDate: startDate.format('ddd, DD MMM').toString(),
+            checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
             checkOutDate:  endDate.format('ddd, DD MMM').toString(),
+            checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
             guests: 2,
             adults: 2,
             children: 1,
             infants: 0,
             topHomes: [],
             listings : [],
+            roomsDummyData : [{"adults":2,"children":[]},{"adults":2,"children":[]}]
         };
     }
 
@@ -139,7 +142,7 @@ class Explore extends Component {
     }
 
     updateData(data) {
-      this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+        this.setState({ adults: data.adults, children: data.children, infants: data.infants, guests : data.adults + data.children + data.infants});
     }
 
     gotoGuests() {
@@ -151,7 +154,69 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-      this.props.navigation.navigate('PropertyScreen', {searchedCity: this.state.search, searchedCityId: 72, checkInDate : this.state.checkInDate, checkOutDate : this.state.checkOutDate, guests: this.state.guests});
+        // var totalRoom = 5
+        // var totalAdults = 6
+        // for(room = 1; room<=totalRoom; room++){
+        //     console.log(room)
+        // }
+        
+
+        // var totalRoom = 5
+        // var sitePersonel = [];
+        // var employees = []
+        // var totalAdults = 9
+        // var c = 0
+        // for (var i = 0; i < totalRoom; i++){
+        //     if(totalAdults == totalRoom){
+        //         var employee = {
+        //             "adults": 1,
+        //             "children": []
+        //         }
+        //         sitePersonel.push(employee);
+        //     }
+        //     else if (totalAdults %2 != 0){
+        //         var getAdultsPerRoom =  totalAdults / totalRoom
+        //         console.log(i % totalAdults == 0 ? Math.ceil(getAdultsPerRoom + 1):Math.round(getAdultsPerRoom));
+        //     }
+        //     else{
+        //         var getAdultsPerRoom =  totalAdults / totalRoom 
+        //         console.log(i % 2 == 0 ? Math.ceil(getAdultsPerRoom):Math.floor(getAdultsPerRoom));
+        //     }
+
+
+        //     // if(totalAdults == totalRoom){
+        //     //     var employee = {
+        //     //         "adults": 1,
+        //     //         "children": []
+        //     //     }
+        //     //     sitePersonel.push(employee);
+        //     // }
+        //     // else if (totalAdults %2 != 0){
+        //     //     var convertedToEven = totalAdults-1
+        //     //     var getAdultsPerRoom =  convertedToEven / totalRoom 
+        //     //     var employee = {
+        //     //         "adults": i === 0 ? Math.round(getAdultsPerRoom + 1):Math.ceil(getAdultsPerRoom),
+        //     //         "children": []
+        //     //     }
+        //     //     sitePersonel.push(employee);
+        //     // }
+        //     // else{
+        //     //     var getAdultsPerRoom =  totalAdults / totalRoom 
+        //     //     var employee = {
+        //     //         "adults": i == 0 ?  Math.round(getAdultsPerRoom - 1): Math.ceil(getAdultsPerRoom),
+        //     //         "children": []
+        //     //     }
+        //     //     sitePersonel.push(employee);
+        //     // }
+        // }
+
+        //var manager = "Jane Doe";
+        //sitePersonel.employees[0].manager = manager;
+
+        // console.log(JSON.stringify(sitePersonel));
+
+        
+        this.props.navigation.navigate('PropertyScreen', {searchedCity: this.state.search, searchedCityId: 72, checkInDate : this.state.checkInDate, checkInDateFormated: this.state.checkInDateFormated, checkOutDate : this.state.checkOutDate, checkOutDateFormated: this.state.checkOutDateFormated, guests: this.state.guests, children: this.state.children, roomsDummyData: encodeURIComponent(JSON.stringify(this.state.roomsDummyData))});
     }
 
     handleAutocompleteSelect(id, name) {
@@ -185,9 +250,6 @@ class Explore extends Component {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
         } = this.state;
-
-        var data = 'region=52612&currency=USD&startDate=27/05/2018&endDate=28/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
-
         return (
             <View style={styles.container}>
 
@@ -201,23 +263,25 @@ class Explore extends Component {
                     />
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
-                <DateAndGuestPicker
-                        checkInDate={checkInDate}
-                        checkOutDate={checkOutDate}
-                        adults={adults}
-                        children={children}
-                        {/*eslint-disable-line*/}
-                        guests = {guests + children}
-                        infants={infants}
-                        gotoGuests={this.gotoGuests}
-                        gotoSearch={this.gotoSearch}
-                        onDatesSelect={this.onDatesSelect}
-                        gotoSettings={this.gotoSettings}
-                        showSearchButton= {true}
-                    />
-                <TouchableOpacity onPress={this.gotoSearch} style={styles.fab}>
-                    <Text style={styles.fabText}>LOC/EUR 0.56</Text>
-                </TouchableOpacity>
+                <View style={styles.itemView}>
+                    <DateAndGuestPicker
+                            checkInDate={checkInDate}
+                            checkOutDate={checkOutDate}
+                            adults={adults}
+                            children={children}
+                            //{/*eslint-disable-line*/}
+                            guests = {guests + children}
+                            infants={infants}
+                            gotoGuests={this.gotoGuests}
+                            gotoSearch={this.gotoSearch}
+                            onDatesSelect={this.onDatesSelect}
+                            gotoSettings={this.gotoSettings}
+                            showSearchButton= {true}
+                        />
+                    <TouchableOpacity onPress={this.gotoSearch} style={styles.fab}>
+                        <Text style={styles.fabText}>LOC/EUR 0.56</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }

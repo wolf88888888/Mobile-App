@@ -218,45 +218,45 @@ class HotelDetails extends Component {
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                 
-                    <View style={styles.topButtonContainer}>
-                        <WhiteBackButton onPress={this.onClose}/>
-                    </View>
-                    <View style={styles.body}>
-                        <HotelDetailView
-                            dataSourcePreview = {this.state.dataSourcePreview}
-                            title = {this.state.hotel.name}
-                            rateExp = {""}
-                            rateVal = {this.state.hotel.star}
-                            reviewNum = {0}
-                            address = {this.state.hotel.additionalInfo.mainAddress}
-                            description = {this.state.description}
-                            onBooking = {this.onBooking}
-                            />
+                <View style={styles.topButtonContainer}>
+                    <WhiteBackButton onPress={this.onClose}/>
+                </View>
+                <View style={styles.body}>
+                    <HotelDetailView
+                        dataSourcePreview = {this.state.dataSourcePreview}
+                        title = {this.state.hotel.name}
+                        rateExp = {""}
+                        rateVal = {this.state.hotel.star}
+                        reviewNum = {0}
+                        address = {this.state.hotel.additionalInfo.mainAddress}
+                        description = {this.state.description}
+                        onBooking = {this.onBooking}
+                        />
 
-                        <FacilitiesView
-                            style = {styles.roomfacility}
-                            onFacilityMore = {this.onFacilityMore}/>
+                    <FacilitiesView
+                        style = {styles.roomfacility}
+                        onFacilityMore = {this.onFacilityMore}/>
 
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]}/>
+                    <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]}/>
 
-                        <AvailableRoomsView
-                            id='1920'
-                            navigate= {navigate}
-                            search='?region=15359&currency=USD&startDate=30/05/2018&endDate=31/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D'
-                            onBooking={this.onBooking}/>
+                    <AvailableRoomsView
+                        id='1920'
+                        navigate= {navigate}
+                        search='?region=15359&currency=USD&startDate=30/05/2018&endDate=31/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D'
+                        onBooking={this.onBooking}/>
 
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
+                    <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
 
-                         <LocationView
-                            location={this.state.hotel.region.regionName + ", " + this.state.hotel.region.country.name}
-                            titleStyle={{fontSize: 17}}
-                            description={this.state.hotel.additionalInfo.mainAddress}
-                            lat={parseFloat(this.state.hotel.latitude)}
-                            lon={parseFloat(this.state.hotel.longitude)}
-                            radius={200}/>
-                        <View style={{marginBottom:50}}/>                    
-
-                </ScrollView>
+                     <LocationView
+                        location={this.state.hotel.region.regionName + ", " + this.state.hotel.region.country.name}
+                        titleStyle={{fontSize: 17}}
+                        description={this.state.hotel.additionalInfo.mainAddress}
+                        lat={parseFloat(this.state.hotel.latitude)}
+                        lon={parseFloat(this.state.hotel.longitude)}
+                        radius={200}/>
+                    <View style={{marginBottom:50}}/>                    
+                </View>
+            </ScrollView>
             </View>
         );
     }

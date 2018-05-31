@@ -37,6 +37,38 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#fff'
     },
+
+    
+    //new styles
+    btn_backImage:{
+        height: 28,
+        width: 28,
+        marginTop: 44,
+        marginLeft: 16,
+      },
+    btn_ImageNumber:{
+        height: 58,
+        width: 58,
+        marginTop: 34,
+        marginLeft: 6,
+      },
+      senderImage:{
+        height: 58,
+        width: 58,
+        marginTop: 4,
+        marginLeft: 16,
+      },
+      flatList:{
+        marginLeft: 14,
+        marginRight: 18
+    },
+    img_round:{
+        height: 58,
+        width: 58,
+        borderRadius: 30,
+        backgroundColor:'#cc8068'
+    }
+
 });
 
 export default styles;

@@ -1,22 +1,19 @@
-import React, { Component } from 'react';
-import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import { getTopHomes } from '../../../utils/requester';
-import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
+import React, { Component } from 'react';
+import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import Image from 'react-native-remote-svg';
+import SplashScreen from 'react-native-smart-splash-screen';
+import { withNavigation } from 'react-navigation';
+import SockJsClient from 'react-stomp';
+import { apiHost, imgHost } from '../../../config';
+import { getRegionsBySearchParameter, getTopHomes } from '../../../utils/requester';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import { withNavigation } from 'react-navigation';
-
-import SplashScreen from 'react-native-smart-splash-screen';
-import Image from 'react-native-remote-svg';
+import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
-import SockJsClient from 'react-stomp';
-import { apiHost, domainPrefix, imgHost } from '../../../config';
-import moment from 'moment';
-import Calendar from '../../templates/Calendar'
 
 
-import { getRegionsBySearchParameter, getCountriesWithListings } from '../../../utils/requester';
+
 
 var clientRef = '';
 var utf8 = require('utf8');
@@ -67,8 +64,8 @@ class Property extends Component {
 
     constructor(props) {
         super(props);
+        
         console.disableYellowBox = true;
-
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
@@ -82,7 +79,9 @@ class Property extends Component {
         this.state = {
             search: '',
             checkInDate: '',
+            checkInDateFormated: '',
             checkOutDate: '',
+            checkOutDateFormated: '',
             guests: 0,
             adults: 2,
             children: 1,
@@ -96,13 +95,15 @@ class Property extends Component {
         this.state.searchedCity = params ? params.searchedCity : 'Amad';
         this.state.searchedCityId = params ? params.searchedCityId : 0;
         this.state.checkInDate = params ? params.checkInDate : '';
+        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
+        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.checkOutDate = params ? params.checkOutDate : '';
         this.state.guests = params ? params.guests : 2;
+        this.state.children = params ? params.children : 0;
     }
 
     componentWillMount(){
         //Remove Splash
-        console.disableYellowBox = true;
         SplashScreen.close({
             animationType: SplashScreen.animationType.scale,
             duration: 0,
@@ -208,11 +209,10 @@ class Property extends Component {
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity
+            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated
         } = this.state;
-
-        var data = 'region=52612&currency=USD&startDate=27/05/2018&endDate=28/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
-
+        var data = 'region=52612&currency=USD&startDate='+checkInDateFormated+'&endDate='+checkOutDateFormated+'&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
+        console.log('sanan children:'+children +'sanan children:'+guests)
         return (
             <View style={styles.container}>
 
@@ -231,66 +231,67 @@ class Property extends Component {
                     />
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
+                <View style={styles.itemView}>
+                    <DateAndGuestPicker
+                            checkInDate={checkInDate}
+                            checkOutDate={checkOutDate}
+                            adults={adults}
+                            children={children} 
+                            guests = {guests + children}
+                            infants={infants}
+                            gotoGuests={this.gotoGuests}
+                            gotoSearch={this.gotoSearch}
+                            onDatesSelect={this.onDatesSelect}
+                            gotoSettings={this.gotoSettings}
+                            showSearchButton= {false}
+                        />
 
-                <DateAndGuestPicker
-                        checkInDate={checkInDate}
-                        checkOutDate={checkOutDate}
-                        adults={adults}
-                        children={children} 
-                        guests = {guests + children}
-                        infants={infants}
-                        gotoGuests={this.gotoGuests}
-                        gotoSearch={this.gotoSearch}
-                        onDatesSelect={this.onDatesSelect}
-                        gotoSettings={this.gotoSettings}
-                        showSearchButton= {false}
-                    />
 
-
-                <FlatList style={styles.flatList}
-                        data={this.state.listings}
-                        renderItem={
-                            ({item}) => 
-                            <View style={styles.card}>
-                               <Image 
-                               source={{uri : imgHost + item.photos[0]}} 
-                               style={styles.popularHotelsImage}/>
-                               <TouchableOpacity style={styles.favoritesButton}>
-                                   <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
-                               </TouchableOpacity>
-                               <TouchableOpacity onPress={this.gotoHotelDetailsPage}>
-                                    <View style={styles.cardContent}>
-                                        <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                                        <View style={styles.aboutPlaceView}>
-                                            <Text style={styles.placeReviewText}>Excellent </Text>
-                                            <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
-                                            <View style={styles.ratingIconsWrapper}>
-                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                    <FlatList style={styles.flatList}
+                            data={this.state.listings}
+                            renderItem={
+                                ({item}) => 
+                                <View style={styles.card}>
+                                <Image 
+                                source={{uri : imgHost + item.photos[0]}} 
+                                style={styles.popularHotelsImage}/>
+                                <TouchableOpacity style={styles.favoritesButton}>
+                                    <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={this.gotoHotelDetailsPage}>
+                                        <View style={styles.cardContent}>
+                                            <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                                            <View style={styles.aboutPlaceView}>
+                                                <Text style={styles.placeReviewText}>Excellent </Text>
+                                                <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
+                                                <View style={styles.ratingIconsWrapper}>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                </View>
+                                                <Text style={styles.totalReviews}> 73 Reviews</Text>
                                             </View>
-                                            <Text style={styles.totalReviews}> 73 Reviews</Text>
+                                            <View style={styles.costView}>
+                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">${item.price}(LOC 1.2) </Text>
+                                                <Text style={styles.perNight}>per night</Text>
+                                            </View>
                                         </View>
-                                        <View style={styles.costView}>
-                                            <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">${item.price}(LOC 1.2) </Text>
-                                            <Text style={styles.perNight}>per night</Text>
-                                        </View>
-                                    </View>
-                               </TouchableOpacity>
-                            </View>
-                        }
-                    />
-
-                <SockJsClient url={apiHost + 'handler'} 
+                                </TouchableOpacity>
+                                </View>
+                            }
+                        />
+                </View>
+                
+                {/* <SockJsClient url={apiHost + 'handler'} 
                     topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(data))}`]}
                     onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
-                    onConnect={this.sendInitialWebsocketRequest}
+                    onConnect={this.sendInitialWebsocketRequest.bind(this)}
                     getRetryInterval={() => { return 3000; }}
-                    debug={true} 
-                    />
+                    debug={true}
+                    /> */}
             </View>
         );
     }
@@ -307,8 +308,7 @@ class Property extends Component {
       }
 
       sendInitialWebsocketRequest() {
-         let query = 'region=52612&currency=USD&startDate=27/05/2018&endDate=28/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
-    
+        let query = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
         const msg = {
           query: query,
           uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'

@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: 'column',
         alignItems: 'stretch',
         backgroundColor: '#f0f1f3'
@@ -14,6 +13,9 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingLeft: 17,
         paddingRight: 17
+    },
+    itemView:{
+        height: '83%'
     },
     sectionView: {
         width: '100%',
@@ -266,6 +268,7 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     fab: {
+        
         position: 'absolute',
         right: 18,
         bottom: 10,

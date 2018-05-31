@@ -13,6 +13,7 @@ import NavTabBar from '../components/organisms/NavTabBar/container';
 import Profile from '../components/screens/Profile';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
+import UserMyTrips from '../components/screens/MyTrips/MyTrips';
 import Favourites from '../components/screens/Favorites';
 
 import Guests from '../components/screens/Guests';
@@ -77,6 +78,8 @@ export const FullNavigator = StackNavigator(
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
 
+        UserMyTrips : { screen: UserMyTrips},
+
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },
         ReviewSendScreen: { screen: ReviewSend },
@@ -86,7 +89,7 @@ export const FullNavigator = StackNavigator(
         AvailableRoomsView: { screen: AvailableRoomsView},
     },
     {
-        initialRouteName: 'HotelDetails',
+        initialRouteName: 'UserMyTrips',
         headerMode: 'none'
     }
 );
