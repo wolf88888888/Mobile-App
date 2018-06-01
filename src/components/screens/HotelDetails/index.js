@@ -254,7 +254,8 @@ class HotelDetails extends Component {
                             lat={parseFloat(this.state.hotel.latitude)}
                             lon={parseFloat(this.state.hotel.longitude)}
                             radius={200}/>
-                        <View style={{marginBottom:50}}/>                    
+                        <View style={{marginBottom:50}}/> 
+                        </View>                   
 
                 </ScrollView>
             </View>

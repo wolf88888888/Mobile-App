@@ -206,7 +206,7 @@ class Explore extends Component {
                         checkOutDate={checkOutDate}
                         adults={adults}
                         children={children}
-                        {/*eslint-disable-line*/}
+                       
                         guests = {guests + children}
                         infants={infants}
                         gotoGuests={this.gotoGuests}
