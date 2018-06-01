@@ -89,7 +89,7 @@ export const FullNavigator = StackNavigator(
         AvailableRoomsView: { screen: AvailableRoomsView},
     },
     {
-        initialRouteName: 'UserMyTrips',
+        initialRouteName: 'MainScreen',
         headerMode: 'none'
     }
 );

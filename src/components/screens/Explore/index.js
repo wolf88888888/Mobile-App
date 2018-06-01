@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Picker, Item } from 'react-native';
 import PropTypes from 'prop-types';
 import { getTopHomes } from '../../../utils/requester';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -14,7 +14,6 @@ import SockJsClient from 'react-stomp';
 import { apiHost, domainPrefix, imgHost } from '../../../config';
 import moment from 'moment';
 import Calendar from '../../templates/Calendar'
-
 import { getRegionsBySearchParameter, getCountriesWithListings } from '../../../utils/requester';
 
 var clientRef = '';
@@ -87,7 +86,36 @@ class Explore extends Component {
             infants: 0,
             topHomes: [],
             listings : [],
-            roomsDummyData : [{"adults":2,"children":[]},{"adults":2,"children":[]}]
+            roomsDummyData : [{ adults: 1, children: [] }],
+            childrenBool: false,
+            modalVisible: false,
+            cancellationView: false,
+            childCount:[
+                {
+                    key : 0,
+                    value:'1'
+                },
+                {
+                    key : 1,
+                    value:'2'
+                },
+                {
+                    key : 1,
+                    value:'3'
+                },
+                {
+                    key : 1,
+                    value:'4'
+                },
+                {
+                    key : 1,
+                    value:'5'
+                },
+                {
+                    key : 1,
+                    value:'6'
+                }
+            ],
         };
     }
 
@@ -115,9 +143,12 @@ class Explore extends Component {
     }
 
     onDatesSelect({ startDate, endDate }){
+        var year = (new Date()).getFullYear();
         this.setState({
             checkInDate : startDate,
             checkOutDate : endDate,
+            checkInDateFormated : moment(startDate).format('DD/MM/').toString()+year,
+            checkOutDateFormated : moment(endDate).format('DD/MM/').toString()+year,
         });
     }
 
@@ -142,11 +173,11 @@ class Explore extends Component {
     }
 
     updateData(data) {
-        this.setState({ adults: data.adults, children: data.children, infants: data.infants, guests : data.adults + data.children + data.infants});
+        this.setState({ adults: data.adults, children: data.children, infants: data.infants, guests : data.adults + data.children + data.infants, childrenBool: data.childrenBool});
     }
 
     gotoGuests() {
-        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData});
+        this.props.navigation.navigate('GuestsScreen', {guests : this.state.guests, adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
@@ -154,69 +185,23 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-        // var totalRoom = 5
-        // var totalAdults = 6
-        // for(room = 1; room<=totalRoom; room++){
-        //     console.log(room)
+        this.props.navigation.navigate('PropertyScreen', {
+            searchedCity: this.state.search, 
+            searchedCityId: 72, 
+            checkInDate : this.state.checkInDate, 
+            checkInDateFormated: this.state.checkInDateFormated, 
+            checkOutDate : this.state.checkOutDate, 
+            checkOutDateFormated: this.state.checkOutDateFormated, 
+            guests: this.state.guests, 
+            children: this.state.children, 
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+        });
+        // if(this.state.childrenBool){
+        //     this.setModalVisible(true);
         // }
-        
-
-        // var totalRoom = 5
-        // var sitePersonel = [];
-        // var employees = []
-        // var totalAdults = 9
-        // var c = 0
-        // for (var i = 0; i < totalRoom; i++){
-        //     if(totalAdults == totalRoom){
-        //         var employee = {
-        //             "adults": 1,
-        //             "children": []
-        //         }
-        //         sitePersonel.push(employee);
-        //     }
-        //     else if (totalAdults %2 != 0){
-        //         var getAdultsPerRoom =  totalAdults / totalRoom
-        //         console.log(i % totalAdults == 0 ? Math.ceil(getAdultsPerRoom + 1):Math.round(getAdultsPerRoom));
-        //     }
-        //     else{
-        //         var getAdultsPerRoom =  totalAdults / totalRoom 
-        //         console.log(i % 2 == 0 ? Math.ceil(getAdultsPerRoom):Math.floor(getAdultsPerRoom));
-        //     }
-
-
-        //     // if(totalAdults == totalRoom){
-        //     //     var employee = {
-        //     //         "adults": 1,
-        //     //         "children": []
-        //     //     }
-        //     //     sitePersonel.push(employee);
-        //     // }
-        //     // else if (totalAdults %2 != 0){
-        //     //     var convertedToEven = totalAdults-1
-        //     //     var getAdultsPerRoom =  convertedToEven / totalRoom 
-        //     //     var employee = {
-        //     //         "adults": i === 0 ? Math.round(getAdultsPerRoom + 1):Math.ceil(getAdultsPerRoom),
-        //     //         "children": []
-        //     //     }
-        //     //     sitePersonel.push(employee);
-        //     // }
-        //     // else{
-        //     //     var getAdultsPerRoom =  totalAdults / totalRoom 
-        //     //     var employee = {
-        //     //         "adults": i == 0 ?  Math.round(getAdultsPerRoom - 1): Math.ceil(getAdultsPerRoom),
-        //     //         "children": []
-        //     //     }
-        //     //     sitePersonel.push(employee);
-        //     // }
+        // else{
+            
         // }
-
-        //var manager = "Jane Doe";
-        //sitePersonel.employees[0].manager = manager;
-
-        // console.log(JSON.stringify(sitePersonel));
-
-        
-        this.props.navigation.navigate('PropertyScreen', {searchedCity: this.state.search, searchedCityId: 72, checkInDate : this.state.checkInDate, checkInDateFormated: this.state.checkInDateFormated, checkOutDate : this.state.checkOutDate, checkOutDateFormated: this.state.checkOutDateFormated, guests: this.state.guests, children: this.state.children, roomsDummyData: encodeURIComponent(JSON.stringify(this.state.roomsDummyData))});
     }
 
     handleAutocompleteSelect(id, name) {
@@ -245,6 +230,10 @@ class Explore extends Component {
         );
     }
 
+    onValueChange = value => {     
+        this.setState({childCount:value});
+    }
+
   
     render() {
         const {
@@ -252,6 +241,51 @@ class Explore extends Component {
         } = this.state;
         return (
             <View style={styles.container}>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.modalView}>
+                        <View style={styles.popup}>
+                            <View style={styles.labelCloseView}>
+                                <Text style={styles.walletPasswordLabel}>Children</Text>
+                                <View  style={styles.closeButtonView}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setCancellationView(!this.state.cancellationView);
+                                        }}>
+                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')}/>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={{flexDirection: 'row', height: '20%'}}>
+                                <Text style={{fontFamily: 'FuturaStd-Light', marginTop: 15}}>Room 1</Text>
+                                <Picker 
+                                    selectedValue={this.state.childCount} 
+                                    style={{height: '100%', width: '60%', marginLeft: 40}}
+                                    itemStyle={{height:'100%',fontFamily: 'FuturaStd-Light', fontSize: 12}}
+                                    onValueChange={this.onValueChange}
+                                    >
+                                        <Item label="No Children" value="noChildren" />
+                                        <Item label="1" value="1" />
+                                        <Item label="2" value="2" />
+                                        <Item label="3" value="3" />
+                                        <Item label="4" value="4" />
+                                        <Item label="5" value="5" />
+                                        <Item label="6" value="6" />
+                                </Picker>
+                            </View>
+                            <TouchableOpacity style={styles.confirmButton} onPress={() => {
+                                            this.setCancellationView(!this.state.cancellationView);
+                                        }}>
+                                <Text style={styles.confirmButtonText}>Confirm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
 
                 <View style={styles.searchAreaView}>
                     <SearchBar
@@ -267,11 +301,11 @@ class Explore extends Component {
                     <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
-                            adults={adults}
-                            children={children}
+                            adults={guests}
+                            children={0}
                             //{/*eslint-disable-line*/}
-                            guests = {guests + children}
-                            infants={infants}
+                            guests = {0}
+                            infants={0}
                             gotoGuests={this.gotoGuests}
                             gotoSearch={this.gotoSearch}
                             onDatesSelect={this.onDatesSelect}
@@ -297,6 +331,16 @@ class Explore extends Component {
             console.log(response);
         }
       }
+
+      // Control Modal Visibility
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
+
+    setCancellationView(visible) {
+        this.setState({modalVisible: false})
+        this.setState({cancellationView: visible});
+    }
 }
 
 function SeparatorDot(props) {

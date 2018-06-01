@@ -84,12 +84,16 @@ class Property extends Component {
             checkOutDateFormated: '',
             guests: 0,
             adults: 2,
+            childrenBool: false,
             children: 1,
             infants: 0,
             topHomes: [],
             listings : [],
+            listings2 : [],
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
+            roomsDummyData: [],
+            urlForService:''
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : 'Amad';
@@ -98,8 +102,10 @@ class Property extends Component {
         this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
         this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.checkOutDate = params ? params.checkOutDate : '';
-        this.state.guests = params ? params.guests : 2;
+        this.state.guests = params ? params.guests : 0;
         this.state.children = params ? params.children : 0;
+        this.state.roomsDummyData = params ? params.roomsDummyData : [];
+        this.state.urlForService = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
     }
 
     componentWillMount(){
@@ -159,11 +165,11 @@ class Property extends Component {
     }
 
     updateData(data) {
-      this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+        this.setState({ adults: data.adults, children: data.children, infants: data.infants});
     }
 
     gotoGuests() {
-        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData});
+        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
@@ -183,8 +189,9 @@ class Property extends Component {
     onBackPress = () => {
         this.props.navigation.goBack();
     }
-    gotoHotelDetailsPage = () =>{
-        alert('sanan');
+    gotoHotelDetailsPage = (item) =>{
+        console.log(item)
+        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
     }
 
     renderAutocomplete() {
@@ -206,13 +213,11 @@ class Property extends Component {
             </ScrollView>
         );
     }
-
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated
+            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
         } = this.state;
-        var data = 'region=52612&currency=USD&startDate='+checkInDateFormated+'&endDate='+checkOutDateFormated+'&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
-        console.log('sanan children:'+children +'sanan children:'+guests)
+        
         return (
             <View style={styles.container}>
 
@@ -235,10 +240,10 @@ class Property extends Component {
                     <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
-                            adults={adults}
-                            children={children} 
-                            guests = {guests + children}
-                            infants={infants}
+                            adults={guests}
+                            children={0} 
+                            guests = {0}
+                            infants={0}
                             gotoGuests={this.gotoGuests}
                             gotoSearch={this.gotoSearch}
                             onDatesSelect={this.onDatesSelect}
@@ -248,9 +253,10 @@ class Property extends Component {
 
 
                     <FlatList style={styles.flatList}
-                            data={this.state.listings}
+                            data={this.state.listings2}
                             renderItem={
                                 ({item}) => 
+                                <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
                                 <View style={styles.card}>
                                 <Image 
                                 source={{uri : imgHost + item.photos[0]}} 
@@ -258,7 +264,7 @@ class Property extends Component {
                                 <TouchableOpacity style={styles.favoritesButton}>
                                     <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={this.gotoHotelDetailsPage}>
+                                
                                         <View style={styles.cardContent}>
                                             <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                             <View style={styles.aboutPlaceView}>
@@ -278,20 +284,21 @@ class Property extends Component {
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>
-                                </TouchableOpacity>
+                                
                                 </View>
+                                </TouchableOpacity>
                             }
                         />
                 </View>
                 
-                {/* <SockJsClient url={apiHost + 'handler'} 
-                    topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(data))}`]}
+                <SockJsClient url={apiHost + 'handler'} 
+                    topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
                     onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest.bind(this)}
                     getRetryInterval={() => { return 3000; }}
                     debug={true}
-                    /> */}
+                    />
             </View>
         );
     }
@@ -300,6 +307,11 @@ class Property extends Component {
     handleReceiveSingleHotel(response) {
         if (response.hasOwnProperty('allElements')) {
             clientRef.disconnect();
+            if(this.state.listings.length > 0){
+                this.setState({
+                    listings2 : this.state.listings,
+                });
+            }
         } else {
             this.setState(prevState => ({
                 listings: [...prevState.listings, response]
@@ -308,7 +320,8 @@ class Property extends Component {
       }
 
       sendInitialWebsocketRequest() {
-        let query = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
+        let query = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        // let query = 'region=52612&currency=USD&startDate=01/06/2018&endDate=02/06/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
         const msg = {
           query: query,
           uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'
@@ -333,3 +346,4 @@ function SeparatorDot(props) {
 
 
 export default withNavigation(Property);
+

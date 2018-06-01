@@ -57,25 +57,19 @@ export default class RoomDetailsReview extends Component {
 
     componentDidMount() {
         const {params} = this.props.navigation.state
-        var value = {
-            "quoteId":'249426531-1',
-                "rooms":[{
-                    "adults":[{
-                            "title":"Mr","firstName":"test","lastName":"test"
-                        },{
-                            "title":"Mr","firstName":"test","lastName":"test"}
-                    ],"children":[]
-                }],
-                "currency":"USD"
-        }
-        console.log(value)
-        testBook(value)
+        console.log(params.quoteId)
+        var newVal =
+            {"quoteId":params.quoteId,
+"rooms":[{"adults":[{"title":"Mr","firstName":"test","lastName":"test"}],"children":[]}],"currency":"USD"}
+        
+        testBook(newVal)
         .then(res => res.response.json())
         // here you set the response in to json 
         .then(parsed => {
             console.log('sanan here is res')
             // here you parse your json
             // here you set you data from json into your variables
+
             const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
             const endDate = moment(parsed.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
             this.setState({
@@ -89,7 +83,6 @@ export default class RoomDetailsReview extends Component {
         })
         .catch(err => {
             console.log(err);
-            console.log('sanan you can\'t find res here')
         });
     }
 
@@ -116,7 +109,7 @@ export default class RoomDetailsReview extends Component {
                                 <View  style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.navigation.goBack();;
+                                            this.props.navigation.goBack();
                                         }}>
                                         <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')}/>
                                     </TouchableOpacity>
@@ -167,7 +160,7 @@ export default class RoomDetailsReview extends Component {
                 {/* Cancellation Fee Button View end */}
                 <ScrollView >
                     {/*Back Button*/}
-                    <TouchableOpacity onPress={this.onBackPress} style={styles.backButton}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.goBack();}} style={styles.backButton}>
                         <Image style={styles.btn_backImage}
                                source={require('../../../../src/assets/svg/arrow-back.svg')}/>
                     </TouchableOpacity>
@@ -217,7 +210,7 @@ export default class RoomDetailsReview extends Component {
                                 <View style={styles.listItemRhsWrapper}>
                                    <TouchableOpacity onPress={() => {
                                        this.setCancellationView(true);}}>
-                        <Text style={styles.rhs}>Show</Text></TouchableOpacity>
+                                       <Text style={styles.rhs}>Show</Text></TouchableOpacity>
                                 </View>
                             </View>
                 </ScrollView>

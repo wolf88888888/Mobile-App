@@ -21,12 +21,14 @@ class AvailableRoomsView extends Component {
         id: PropTypes.string,
         search: PropTypes.string,
         roomDetail: PropTypes.object,
-        navigate: PropTypes.func
+        navigate: PropTypes.func,
+        guests: PropTypes.number
     };
 
     static defaultProps = {
         id: '',
         search: '',
+        guests : 0
     };
 
     constructor(props) {
@@ -85,10 +87,9 @@ class AvailableRoomsView extends Component {
         );
     }
     onRoomPress = (roomDetail) => {
-        
-        
-        //console.log(this.props.roomDetail)
-        this.props.navigate('GuestInfoForm', {roomDetail : roomDetail});
+        //console.log(roomDetail)
+        //console.log("AD" + this.props.guests);
+        this.props.navigate('GuestInfoForm', {roomDetail : roomDetail, guests : this.props.guests});
     }
 }
 
