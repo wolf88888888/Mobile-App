@@ -79,9 +79,7 @@ class Property extends Component {
         this.state = {
             search: '',
             checkInDate: '',
-            checkInDateFormated: '',
             checkOutDate: '',
-            checkOutDateFormated: '',
             guests: 0,
             adults: 2,
             childrenBool: false,
@@ -92,20 +90,29 @@ class Property extends Component {
             listings2 : [],
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
+            //these state are for paramerters in urlForService
+            regionId: '',
+            currency: '',
+            checkInDateFormated: '',
+            checkOutDateFormated: '',
             roomsDummyData: [],
-            urlForService:''
+            urlForService:'',
         };
         const { params } = this.props.navigation.state;
-        this.state.searchedCity = params ? params.searchedCity : 'Amad';
+        this.state.searchedCity = params ? params.searchedCity : '';
         this.state.searchedCityId = params ? params.searchedCityId : 0;
         this.state.checkInDate = params ? params.checkInDate : '';
-        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
-        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.checkOutDate = params ? params.checkOutDate : '';
         this.state.guests = params ? params.guests : 0;
         this.state.children = params ? params.children : 0;
+
+        this.state.regionId = params ? params.regionId : [];
+        this.state.currency = params ? params.currency : [];
+        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
+        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
-        this.state.urlForService = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+
+        this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
     }
 
     componentWillMount(){
@@ -190,7 +197,6 @@ class Property extends Component {
         this.props.navigation.goBack();
     }
     gotoHotelDetailsPage = (item) =>{
-        console.log(item)
         this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
     }
 
@@ -320,8 +326,7 @@ class Property extends Component {
       }
 
       sendInitialWebsocketRequest() {
-        let query = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-        // let query = 'region=52612&currency=USD&startDate=01/06/2018&endDate=02/06/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
+        let query = this.state.urlForService;
         const msg = {
           query: query,
           uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'

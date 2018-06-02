@@ -43,7 +43,7 @@ class HotelDetailView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: 1,
+            position: 0,
             interval: null,
             dataSource: [],
         };

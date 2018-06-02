@@ -76,17 +76,19 @@ class Explore extends Component {
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.state = {
             search: '',
+            regionId:'52612',//use this state for region id.this state is for service parameter
+            currency: 'USD',//use this state for Currency.this state is for service parameter
             checkInDate: startDate.format('ddd, DD MMM').toString(),
-            checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
+            checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),//use this state for startDate.this state is for service parameter
             checkOutDate:  endDate.format('ddd, DD MMM').toString(),
-            checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
+            checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),//use this state for endDate.this state is for service parameter
             guests: 2,
             adults: 2,
-            children: 1,
+            children: 0,
             infants: 0,
             topHomes: [],
             listings : [],
-            roomsDummyData : [{ adults: 1, children: [] }],
+            roomsDummyData : [{ adults: 2, children: [] }],//use this state for room.this state is for service parameter
             childrenBool: false,
             modalVisible: false,
             cancellationView: false,
@@ -181,7 +183,21 @@ class Explore extends Component {
     }
 
     gotoSettings() {
-        this.props.navigation.navigate('FilterScreen');
+        this.props.navigation.navigate('FilterScreen', {
+            searchedCity: this.state.search, 
+            searchedCityId: 72, 
+            checkInDate : this.state.checkInDate, 
+            checkOutDate : this.state.checkOutDate, 
+            guests: this.state.guests, 
+            adults: this.state.adults,
+            children: this.state.children, 
+            //these props are for paramerters in the next class
+            regionId: this.state.regionId,
+            currency: this.state.currency,
+            checkOutDateFormated: this.state.checkOutDateFormated,
+            checkInDateFormated: this.state.checkInDateFormated, 
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+        });
     }
 
     gotoSearch() {
@@ -189,12 +205,15 @@ class Explore extends Component {
             searchedCity: this.state.search, 
             searchedCityId: 72, 
             checkInDate : this.state.checkInDate, 
-            checkInDateFormated: this.state.checkInDateFormated, 
             checkOutDate : this.state.checkOutDate, 
-            checkOutDateFormated: this.state.checkOutDateFormated, 
             guests: this.state.guests, 
             children: this.state.children, 
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+            //these props are for paramerters in the next class
+            regionId: this.state.regionId,
+            currency: this.state.currency,
+            checkOutDateFormated: this.state.checkOutDateFormated,
+            checkInDateFormated: this.state.checkInDateFormated, 
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
         });
         // if(this.state.childrenBool){
         //     this.setModalVisible(true);

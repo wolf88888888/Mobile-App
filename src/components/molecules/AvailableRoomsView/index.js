@@ -11,6 +11,7 @@ import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import styles from './styles';
 import { getHotelRooms } from '../../../utils/requester';
+import HotelDetails from '../../screens/HotelDetails';
 
 const RNViewPropTypes = ViewPropTypes || View.propTypes;
 const RNPropTypes = PropTypes || React.PropTypes;
@@ -22,7 +23,8 @@ class AvailableRoomsView extends Component {
         search: PropTypes.string,
         roomDetail: PropTypes.object,
         navigate: PropTypes.func,
-        guests: PropTypes.number
+        guests: PropTypes.number,
+        hotelDetails:PropTypes.object,
     };
 
     static defaultProps = {
@@ -76,7 +78,7 @@ class AvailableRoomsView extends Component {
                             cardMaxElevation={1.5}
                             cornerRadius={0}>
                             <Text style={styles.name}>{rowData.roomsResults[0].name+"("+rowData.roomsResults[0].mealType+")"}</Text>
-                            <Text style={styles.price}>{"1 night:$" + Number(((parseFloat(rowData.roomsResults[0].price) * 1.193)).toFixed(2)) + "(" + rowData.roomsResults[0].price + "LOC)"}</Text>
+                            <Text style={styles.price}>{"1 night:$" + Number(((parseFloat(rowData.roomsResults[0].price) * 1.193)).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text>
                             <TouchableOpacity onPress={this.onRoomPress.bind(this,rowData)}>
                                 <Text style={styles.book}>Book Now</Text>
                             </TouchableOpacity>
@@ -87,9 +89,7 @@ class AvailableRoomsView extends Component {
         );
     }
     onRoomPress = (roomDetail) => {
-        //console.log(roomDetail)
-        //console.log("AD" + this.props.guests);
-        this.props.navigate('GuestInfoForm', {roomDetail : roomDetail, guests : this.props.guests});
+        this.props.navigate('GuestInfoForm', {roomDetail : roomDetail, guests : this.props.guests,'price': Number(((parseFloat(roomDetail.roomsResults[0].price) * 1.193)).toFixed(2)), 'priceLOC': roomDetail.roomsResults[0].price, 'hotelDetails': this.props.hotelDetails});
     }
 }
 

@@ -32,13 +32,18 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
     const allHeaders = getHeaders(headers);
 
     const getParams = {
-        headers: getHeaders()
+        headers: {
+            'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        method: 'GET',
     };
 
     const postParams = {
         // headers: allHeaders,
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0ZGV2QGN5YmVyY2xvdWRzLmNvbSIsImV4cCI6MTUyODY4MzAyMX0.81vslduocOobeUWUfiuvYfVBvamUxP_9wnlWBzDYCyIORr2H_i6cnFeIpVwHiz0l9VYlieq8NqagTQXLgPIWIg',
+            'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`),
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
@@ -69,7 +74,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
 
     return fetch(endpoint, requestHeaders)
         .then((res) => {
-            console.log("ad"+res.error);
+            console.log("amd"+endpoint);
             if (!res.ok) {
                 return {
                     response: res.json().then((r) => {
@@ -130,6 +135,12 @@ export async function getMyConversations(searchTerm) {
     });
 }
 
+export async function getUserInfo() {
+    return sendRequest(`${host}users/me/info`, RequestMethod.GET).then(res => {
+      return res;
+    });
+  }
+
 export async function testBook(bookingObj) {
     return sendRequest(`${host}api/hotels/booking`, RequestMethod.POST, bookingObj).then(res => {
       return res;
@@ -144,3 +155,7 @@ export async function getHotelById(id, search) {
 export async function getHotelRooms(id, search) {
     return sendRequest(`${host}api/hotels/${id}/rooms${search}`, RequestMethod.GET).then(res => res);
 }
+
+export async function getMyHotelBookings(searchTerm, size = 10) {
+    return sendRequest(`${host}users/me/bookings${searchTerm !== null && searchTerm !== undefined ? `${searchTerm}&` : '?'}sort=id,desc&size=${size}`, RequestMethod.GET).then(res => res);
+  }

@@ -18,6 +18,7 @@ import styles from './styles';
 import HotelDetailView from '../../organisms/HotelDetailView';
 import AvailableRoomsView from '../../molecules/AvailableRoomsView'
 import { imgHost } from '../../../config';
+import { getHotelById } from '../../../utils/requester';
 
 class HotelDetails extends Component {
 
@@ -42,20 +43,26 @@ class HotelDetails extends Component {
 
         this.state = {
             hotel:{},
+            hotelFullDetails:{},
             dataSourcePreview: [],
             description:'',
             rooms:[],
             urlForService: '',
-            guests : 0
+            guests : 0,
+            mainAddress: '',
+            regionName: '',
+            countryName: '',
+            latitude: '',
+            longitude: '',
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
         this.state.urlForService = params ? params.urlForService : '';
         const hotelPhotos = [];
+        
         for (var i = 0; i < this.state.hotel.photos.length; i ++) {
-
-            hotelPhotos.push({url:imgHost+this.state.hotel.photos[i].url})
+            hotelPhotos.push({url:imgHost+this.state.hotel.photos[i]})
         }
 
         this.state.description = this.state.hotel.description;
@@ -68,6 +75,29 @@ class HotelDetails extends Component {
 
         this.state.dataSourcePreview = hotelPhotos;
     }
+
+    componentDidMount() {
+        getHotelById(this.state.hotel.id,'?'+this.state.urlForService)
+        .then(res => res.response.json())
+        // here you set the response in to json 
+        .then(parsed => {
+            // here you parse your json
+            // here you set you data from json into your variables
+            
+            this.setState({
+                hotelFullDetails : parsed,
+                mainAddress: parsed.additionalInfo.mainAddress,
+                regionName: parsed.region.regionName,
+                countryName: parsed.region.country.name,
+                latitude: parsed.latitude,
+                longitude: parsed.longitude,
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
 
     onClose() {
         this.props.navigation.goBack();
@@ -96,7 +126,7 @@ class HotelDetails extends Component {
                         rateExp = {""}
                         rateVal = {this.state.hotel.star}
                         reviewNum = {0}
-                        address = {'Dummy Address'}
+                        address = {this.state.mainAddress}
                         description = {this.state.description}
                         onBooking = {this.onBooking}
                         />
@@ -112,18 +142,19 @@ class HotelDetails extends Component {
                         navigate= {navigate}
                         search={'?'+this.state.urlForService}
                         onBooking={this.onBooking}
-                        guests={this.state.guests}/>
+                        guests={this.state.guests}
+                        hotelDetails={this.state.hotelFullDetails}/>
 
                     <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
 
-                     {/* <LocationView
-                        location={this.state.hotel.region.regionName + ", " + this.state.hotel.region.country.name}
+                     <LocationView
+                        location={this.state.regionName + ", " + this.state.countryName}
                         titleStyle={{fontSize: 17}}
-                        description={this.state.hotel.additionalInfo.mainAddress}
-                        lat={parseFloat(this.state.hotel.latitude)}
-                        lon={parseFloat(this.state.hotel.longitude)}
+                        description={this.state.mainAddress}
+                        lat={parseFloat(this.state.latitude)}
+                        lon={parseFloat(this.state.longitude)}
                         radius={200}/>
-                    <View style={{marginBottom:50}}/>                     */}
+                    <View style={{marginBottom:50}}/>                    
                 </View>
             </ScrollView>
             </View>

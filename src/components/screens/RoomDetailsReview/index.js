@@ -57,12 +57,17 @@ export default class RoomDetailsReview extends Component {
 
     componentDidMount() {
         const {params} = this.props.navigation.state
-        console.log(params.quoteId)
-        var newVal =
-            {"quoteId":params.quoteId,
-"rooms":[{"adults":[{"title":"Mr","firstName":"test","lastName":"test"}],"children":[]}],"currency":"USD"}
+            var value =
+            {
+                "quoteId": params.quoteId,
+                "rooms": [{
+                    "adults": params.guestRecord,
+                    "children": []
+                }],
+                "currency": "USD"
+            }
         
-        testBook(newVal)
+        testBook(value)
         .then(res => res.response.json())
         // here you set the response in to json 
         .then(parsed => {
@@ -121,7 +126,7 @@ export default class RoomDetailsReview extends Component {
                                 value={this.state.walletPassword}
                                 placeholder="Wallet password"
                             />
-                            <TouchableOpacity style={styles.confirmButton}>
+                            <TouchableOpacity style={styles.confirmButton} >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
                             </TouchableOpacity>
                         </View>
@@ -172,8 +177,8 @@ export default class RoomDetailsReview extends Component {
                                 <Image source={require('../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
                             </View>
                             <View style={styles.hotelInfoView}>
-                                <Text style={styles.hotelName}>{this.props.hotelName}</Text>
-                                <Text style={styles.hotelPlace}>{this.props.hotelAddress}</Text>
+                                <Text style={styles.hotelName}>{params.hotelDetails.name}</Text>
+                                <Text style={styles.hotelPlace}>{params.hotelDetails.additionalInfo.mainAddress}</Text>
                             </View>
                         </View>
                     </View>
@@ -200,7 +205,7 @@ export default class RoomDetailsReview extends Component {
                                     <Text style={styles.listItemText}>Guests</Text>
                                 </View>
                                 <View style={styles.listItemRhsWrapper}>
-                                   <Text style={styles.rhs}>{this.state.guests}</Text>
+                                   <Text style={styles.rhs}>2</Text>
                                 </View>
                             </View>
                             <View style={styles.listItem}>
@@ -219,11 +224,11 @@ export default class RoomDetailsReview extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.bold400]}>${this.props.priceInUserCurreny}</Text>
+                            <Text style={[styles.price, styles.bold400]}>${params.price}</Text>
                             <Text style={styles.period1}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.fontFuturaStd]}>{this.props.priceInLoc} LOC</Text>
+                            <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
                             <Text style={styles.period2}> for 1 nights</Text>
                         </View>
                     </View>
