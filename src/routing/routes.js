@@ -13,6 +13,7 @@ import NavTabBar from '../components/organisms/NavTabBar';
 import Profile from '../components/screens/Profile'
 import CreateWallet from '../components/screens/CreateWallet';
 import SaveWallet from '../components/screens/SaveWallet';
+import CongratsWallet from '../components/screens/CongratsWallet'
 
 
 export const LoginNavigator = StackNavigator(
@@ -23,7 +24,8 @@ export const LoginNavigator = StackNavigator(
         CreatePassword: { screen: CreatePassword },
         Terms: { screen: Terms },
         CreateWallet: { screen: CreateWallet },
-        SaveWallet: { screen: SaveWallet }
+        SaveWallet: { screen: SaveWallet },
+        CongratsWallet: { screen: CongratsWallet }
     },
     {
         initialRouteName: 'Welcome',

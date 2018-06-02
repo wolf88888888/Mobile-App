@@ -21,15 +21,29 @@ import { Wallet } from '../../../services/blockchain/wallet';
 
 class CreateWallet extends Component {
     static propTypes = {
-        // react-navigation
         navigation: PropTypes.shape({
-            navigate: PropTypes.func.isRequired
-        }).isRequired
+            navigate: PropTypes.func,
+            state: PropTypes.shape({
+                params: PropTypes.object //eslint-disable-line
+            })
+        })
     }
 
-    state = {
-        password: '',
-        confirmPassword: ''
+    static defaultProps = {
+        navigation: {
+            navigate: () => { },
+            state: {
+                params: {}
+            }
+        }
+    }
+    constructor(props) {
+        super(props);
+        this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.state = {
+            password: '',
+            confirmPassword: ''
+        };
     }
 
     onChangeHandler(property) {
@@ -39,16 +53,15 @@ class CreateWallet extends Component {
     }
 
     submitPassword() {
+        const { params } = this.props.navigation.state;
+
         try {
             setTimeout(() => {
                 Wallet.createFromPassword(this.state.password).then((wallet) => {
                     AsyncStorage.setItem('walletAddress', wallet.address);
                     AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
                     AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
-                    console.log(wallet.address);
-                    console.log(wallet.mnemonic);
-                    console.log(wallet.jsonFile);
-                    this.props.navigation.navigate('SaveWallet');
+                    this.props.navigation.navigate('SaveWallet', { ...params});
                 });
             }, 1000);
 
@@ -116,7 +129,7 @@ class CreateWallet extends Component {
                         <View style={styles.nextButtonView}>
                             <TouchableOpacity
                                 disabled={!validatePassword(password) || !validateConfirmPassword(password, confirmPassword)}
-                                onPress={() => navigate('SaveWallet', password)}
+                                onPress={() => this.submitPassword()}
                             >
                                 <View style={styles.nextButton}>
                                     <Text style={styles.buttonText}>
