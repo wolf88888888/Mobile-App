@@ -1,15 +1,15 @@
 import { paymentInfo } from './actionTypes';
 
-export function setCurrency(currency) {
+export function setCurrency(value) {
     return {
         type: paymentInfo.SET_CURRENCY,
-        currency
+        currency: value
     };
 }
 
-export function setLocRate(locRate) {
+export function setLocRate(value) {
     return {
         type: paymentInfo.SET_LOC_RATE,
-        locRate
+        locRate: value
     };
 }

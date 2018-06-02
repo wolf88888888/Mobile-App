@@ -38,9 +38,9 @@ export default class NavTabBar extends Component {
         loadInitialData: () => {}
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { currency } = this.props.paymentInfo;
-        this.props.loadInitialData({ currency });
+        await this.props.loadInitialData({ currency });
     }
 
     render() {

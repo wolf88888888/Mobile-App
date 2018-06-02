@@ -1,56 +1,11 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Image, StyleSheet, Text, View } from 'react-native';
+import { AsyncStorage, Image, Text, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getPropertyById } from '../../../utils/requester';
-
-
-// TODO: move styles in separate file
-const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: 180,
-        width: 165,
-        marginTop: 12,
-        backgroundColor: '#ffffff'
-    },
-    favoriteView: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        padding: 6,
-        zIndex: 1
-    },
-    favoriteText: {
-        color: '#fff',
-        fontSize: 18
-    },
-    locationText: {
-        fontSize: 8.5,
-        fontFamily: 'FuturaStd-Light',
-        padding: 5,
-        paddingBottom: 0
-    },
-    nameText: {
-        fontSize: 15.5,
-        fontFamily: 'FuturaStd-Light',
-        padding: 5,
-        paddingBottom: 0
-    },
-    reviewText: {
-        fontSize: 9,
-        fontFamily: 'FuturaStd-Light',
-        padding: 5,
-        paddingTop: 0
-    },
-    costText: {
-        fontSize: 10.5,
-        fontFamily: 'FuturaStd-Light',
-        padding: 5
-    }
-});
+import styles from './styles';
+import { toJS } from '../../../utils/toJS';
 
 // TODO: Separate component from container in the new containers dir
 // components dir should contain only stateless components
@@ -130,7 +85,6 @@ class SmallPropertyTile extends Component {
             photos = hotelPhotos.map(x => ({ thumbnail: `http://roomsxml.com${x.externalThumbnailUrl}` }));
             rating = star;
         }
-
         return (
             <View style={styles.container}>
                 <View style={styles.favoriteView}>
@@ -164,7 +118,7 @@ SmallPropertyTile.propTypes = {
     listing: PropTypes.object
 };
 
-export default connect(mapStateToProps)(SmallPropertyTile);
+export default connect(mapStateToProps)(toJS(SmallPropertyTile));
 
 function mapStateToProps(state) {
     const { paymentInfo } = state;

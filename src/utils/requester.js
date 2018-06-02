@@ -24,10 +24,10 @@ async function getHeaders(headers = null) {
     return headers;
 }
 
-async function sendRequest(endpoint, method, postObj = null, captchaToken = null, headers = {
-    'Accept': 'application/json',
+async function sendRequest(endpoint, method, postObj = null, captchaToken = null, headers = { // eslint-disable-line
+    Accept: 'application/json',
     'Content-Type': 'application/json',
-    'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b',
+    'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b'
 }, onLogOut) {
     const allHeaders = getHeaders(headers);
 
@@ -108,4 +108,18 @@ export function getTopHomes() {
 
 export async function getPropertyById(id) {
     return sendRequest(`${host}listings/${id}`, RequestMethod.GET).then(res => res.response.json());
+}
+
+export async function getRegionsBySearchParameter(param) {
+    return sendRequest(`${host}regions/search?query=${param}`, RequestMethod.GET).then(res => res.response.json());
+}
+
+export async function getCountriesWithListings() {
+    return sendRequest(`${host}countries?hasListings=true&size=10000&sort=name,asc`).then(res => res.response.json());
+}
+
+export async function getMyConversations(searchTerm) {
+    return sendRequest(`${host}users/me/conversations${searchTerm !== null && searchTerm !== undefined ? `${searchTerm}&` : '?'}sort=id,desc`, RequestMethod.GET).then(res => {
+        return res;
+    });
 }

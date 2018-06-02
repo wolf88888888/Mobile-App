@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Keyboard } from 'react-native';
+import { View, TouchableOpacity, Text, Keyboard } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
+
 import styles from './styles';
 
 const GoBack = (props) => {
@@ -18,7 +19,7 @@ const GoBack = (props) => {
 
     if (props.icon && props.onPress) {
         renderIcon = (
-            <TouchableOpacity onPress={() => { Keyboard.dismiss(); props.onPress() }}>{renderIcon}</TouchableOpacity>
+            <TouchableOpacity onPress={() => { Keyboard.dismiss(); props.onPress(); }}>{renderIcon}</TouchableOpacity>
         );
     }
 
