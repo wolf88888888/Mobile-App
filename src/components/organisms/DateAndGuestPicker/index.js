@@ -36,7 +36,7 @@ class DateAndGuestPicker extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={styles.pickerRow}>
+                <View style={showSearchButton ? styles.pickerRow : {display:'none'}}>
                     <View>
                         <TouchableOpacity
                             onPress={() => this.calendar.open()}
@@ -66,8 +66,7 @@ class DateAndGuestPicker extends Component {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={this.onSettings}
-                    >
+                        onPress={this.onSettings}>
                         <View style={styles.optionsPickerViewIncomplete}>
                             <Text style={styles.iconText}>
                                 <FontAwesome>{Icons.cog}</FontAwesome>
@@ -78,7 +77,7 @@ class DateAndGuestPicker extends Component {
 
                 <TouchableOpacity onPress={this.onSearch}>
                     <View style={showSearchButton ?  styles.searchButtonView : {height: 0}}>
-                        <Text style={styles.searchButtonText}>Search</Text>
+                        <Text style={showSearchButton ? styles.searchButtonText : {height: 0}}>Search</Text>
                     </View>
                 </TouchableOpacity>
                 <Calendar

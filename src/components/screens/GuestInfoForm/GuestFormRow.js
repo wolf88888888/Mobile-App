@@ -2,10 +2,14 @@ import React, {Component} from 'react';
 import {View, Text, TextInput,Picker,Item} from 'react-native';
 import styles from './styles';
 import RNPickerSelect from 'react-native-picker-select';
+import PropTypes from 'prop-types';
 
 export default class GuestFormRow extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        
+        this.handleGuestInfo = this.handleGuestInfo.bind(this);
+        
         this.state = {
             gender:[
                 {
@@ -18,22 +22,38 @@ export default class GuestFormRow extends Component {
                 }
             ],
             guest: {
-                genderRepresentation: '',
+                genderRepresentation: 'Mr',
                 firstName: '',
                 lastName: ''
-            }
+            },
+            guestRecord : {}
         }
     }
 
+    handleGuestInfo(){
+        // console.log(firstName)
+        this.setState(
+            {
+                guestRecord :{
+                    "title": this.state.guest.genderRepresentation,
+                    "firstName": this.state.guest.firstName,
+                    "lastName": this.state.guest.lastName
+                }
+            }
+        );
+        this.props.onProceedClick(this.props.itemIndex,this.state.guestRecord)
+    }
     componentDidMount() {
         this.setState({
             guest: this.props.guest
         });
     }
 
-    onValueChange = value => {
-        //if (value) this.setState({value})
-        this.setState({gender:value});
+    onValueChange = value => {     
+        this.setState({
+            gender:value,
+            genderRepresentation: value
+        });
       }
 
     render() {
@@ -60,7 +80,8 @@ export default class GuestFormRow extends Component {
                             onChangeText={(firstName) => {
                                 let guest = Object.assign([], this.state.guest);
                                 guest.firstName = firstName;
-                                this.setState({guest});
+                                this.setState({guest})
+                                this.handleGuestInfo();
                             }}
                             value={this.state.guest.firstName}
                             placeholder="First Name"
@@ -72,7 +93,8 @@ export default class GuestFormRow extends Component {
                             onChangeText={(lastName) => {
                                 let guest = Object.assign([], this.state.guest);
                                 guest.lastName = lastName;
-                                this.setState({guest});
+                                this.setState({guest})
+                                this.handleGuestInfo();
                             }}
                             value={this.state.guest.lastName}
                             placeholder="Last Name"
@@ -83,3 +105,6 @@ export default class GuestFormRow extends Component {
         )
     }
 }
+GuestFormRow.propTypes = {
+    gotoSearch: PropTypes.func.isRequired,
+};

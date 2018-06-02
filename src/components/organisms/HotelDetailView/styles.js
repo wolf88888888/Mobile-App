@@ -17,9 +17,9 @@ const styles = StyleSheet.create({
     topView: {
         backgroundColor: '#ffffff',
         marginTop:-20,
-        height:125,
         marginLeft:15,
         marginRight:15,
+        paddingBottom:10
     },
 
     topTitleText:{
@@ -41,6 +41,16 @@ const styles = StyleSheet.create({
         paddingLeft:10,
         paddingRight:10,
         color:'#898c8d',
+    },
+
+    addressText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize:10,
+        paddingTop:3,
+        paddingBottom:2,
+        paddingLeft:10,
+        paddingRight:10,
+        color:'#000',
     },
 
     lineStyle:{

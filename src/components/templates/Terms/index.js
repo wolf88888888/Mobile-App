@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { register, login } from '../../../utils/requester';
 import { domainPrefix } from '../../../config';
 
-// Will disable eslint on this file due to required refactoring
-/* eslint-disable */
 const Terms = (props) => {
     const { navigate, pop } = props.navigation;
     const { params } = props.navigation.state;

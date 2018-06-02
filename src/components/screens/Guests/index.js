@@ -34,16 +34,15 @@ class Guests extends Component {
         this.onClose = this.onClose.bind(this);
         this.onDone = this.onDone.bind(this);
         this.onPersonChange = this.onPersonChange.bind(this);
-        // this.onAdults = this.onAdults.bind(this);
-        // this.onChildren = this.onChildren.bind(this);
-        // this.onInfants = this.onInfants.bind(this);
         this.state = {
             adults:0,
+            childrenBool: false,
             children:0,
             infants:0,
         };
         const { params } = this.props.navigation.state;
         this.state.adults = params ? params.adults : 0;
+        this.state.childrenBool = params ? params.childrenBool : false;
         this.state.children = params ? params.children : 0;
         this.state.infants = params ? params.infants : 0;
     }
@@ -67,12 +66,12 @@ class Guests extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-
         return (
             <View style={styles.container}>
               <CloseButton onPress={this.onClose}/>
               <View style={styles.bodyRows}>
                 <GuestRow title={"Adults"} count={this.state.adults} type={"adults"} onChanged={this.onPersonChange}/>
+                {/* <TouchableOpacity onPress={this.changeValue.bind(this)}><Text style={styles.ChildText}>{this.state.childrenBool == false ? "No children" : "With children"}</Text></TouchableOpacity> */}
                 <GuestRow title={"Children"} subtitle={"Age 2-12"} count={this.state.children} type={"children"} onChanged={this.onPersonChange}/>
                 <GuestRow title={"Infants"} subtitle={"Under 2"} count={this.state.infants} type={"infants"} onChanged={this.onPersonChange}/>
               </View>
@@ -83,6 +82,23 @@ class Guests extends Component {
               </View>
             </View>
         );
+    }
+    changeValue(){
+        if(this.state.childrenBool){
+            this.setState(
+                {
+                    childrenBool: false,
+                }
+            );
+        }
+        else{
+            this.setState(
+                {
+                    childrenBool: true,
+                }
+            );
+        }
+        
     }
 }
 

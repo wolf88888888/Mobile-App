@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 
     title: {
         fontSize:20,
-        fontFamily: 'FuturaStd-Medium',
+        fontFamily: 'futura',
         justifyContent:'center',
         alignItems:'center',
         marginTop:25,

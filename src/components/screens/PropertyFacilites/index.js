@@ -10,8 +10,8 @@ import Image from 'react-native-remote-svg';
 import BackButton from '../../atoms/BackButton';
 
 import styles from './styles';
+const ds = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 != row2});
 
-const ds = new ListView.DataSource({rowHasChanged:(row1,row2)=> row1 != row2});
 
 class PropertyFacilites extends Component {
     static propTypes = {

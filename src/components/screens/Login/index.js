@@ -53,7 +53,7 @@ class Login extends Component {
                     AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                    this.props.navigation.navigate('App');
+                    this.props.navigation.navigate('MainScreen');
                 });
             } else {
                 res.response.then((response) => {
@@ -149,7 +149,7 @@ class Login extends Component {
     }
 
     onBackPress = () => {
-        this.props.navigation.navigate('EXPLORE');
+        this.props.navigation.goBack();
     }
 }
 

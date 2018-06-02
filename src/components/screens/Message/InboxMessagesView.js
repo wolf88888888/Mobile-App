@@ -37,13 +37,7 @@ export default function InboxMessagesView(props) {
                             <Text style={[styles.messageTitle, styles.discussion]}>
                                 {props.inboxMessage.userInfo.fullName} - Confirmed
                                     </Text>
-                            {/* <Text
-                                            style={[
-                                            styles.messageTitle, item.status == "Confirmed"
-                                                ? styles.discussion
-                                                : styles.review
-                                        ]}>{item.user}
-                                            - {item.status}</Text> */}
+                            
                             {/* To set section 2 it is divided in 3 part this one is part 1 where you can set name and status end*/}
                         </View>
                         <View style={[styles.rightView]}>
@@ -72,18 +66,6 @@ export default function InboxMessagesView(props) {
             <View style={styles.trBottomView}>
                 {/* This view is divided in 2 section this one in section 2 start*/}
                 <Text style={[styles.messageValues]}>{props.inboxMessage.lastMessage.message}</Text>
-                {/* <TouchableOpacity onPress={() => console.log('here')}> */}
-                    {/* This section is to set the button if the status in 'Review' start*/}
-                    {/* <View
-                        style={item.status === 'Review'
-                            ? styles.LogInButton
-                            : styles.LogInButtonHide}>
-                        <Text style={styles.buttonText}>
-                            Write Review
-                                    </Text>
-                    </View> */}
-                    {/* This section is to set the button if the status in 'Review' start*/}
-                {/* </TouchableOpacity> */}
                 {/* This view is divided in 2 section this one in section 2 end*/}
             </View>
         </View>

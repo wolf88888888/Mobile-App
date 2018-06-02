@@ -16,6 +16,7 @@ import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
+import UserMyTrips from '../components/screens/MyTrips/MyTrips';
 import Favourites from '../components/screens/Favorites';
 import Guests from '../components/screens/Guests';
 
@@ -30,8 +31,13 @@ import ReviewSend from '../components/screens/Booking/ReviewSend';
 import ReviewTrip from '../components/screens/Booking/ReviewTrip';
 import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
+import RoomDetailsReview from '../components/screens/RoomDetailsReview';
+import GuestInfoForm from '../components/screens/GuestInfoForm';
+
 import PropertyScreen from '../components/screens/Property';
+import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
+import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 
 export const LoginNavigator = StackNavigator(
     {
@@ -69,10 +75,15 @@ export const FullNavigator = StackNavigator(
     {
         MainScreen: { screen: MainNavigator },
         GuestsScreen: { screen: Guests },
+        RoomDetailsReview: { screen: RoomDetailsReview},
+        GuestInfoForm: { screen: GuestInfoForm},
         PropertyScreen: {screen: PropertyScreen},
+        HotelDetails:{ screen: HotelDetails},
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
+
+        UserMyTrips : { screen: UserMyTrips},
 
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },
@@ -80,6 +91,7 @@ export const FullNavigator = StackNavigator(
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
+        AvailableRoomsView: { screen: AvailableRoomsView},
     },
     {
         initialRouteName: 'MainScreen',

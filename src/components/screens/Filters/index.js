@@ -2,9 +2,19 @@ import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Image from 'react-native-remote-svg';
 import styles from './styles';
-
+import PropTypes from 'prop-types';
 
 export default class Filters extends Component {
+    static propTypes = {
+        navigation: PropTypes.shape({
+            navigate: PropTypes.func
+        }),
+    }
+    static defaultProps = {
+        navigation: {
+            navigate: () => {}
+        },
+    }
     constructor() {
         super();
         this.state = {
@@ -14,8 +24,10 @@ export default class Filters extends Component {
                 beds: 2,
                 bedrooms: 0,
                 bathrooms: 0
-            }
+            },
+            rooms : [{ adults: 2, children: [] }]
         }
+        
     }
 
     addCount(type) {
@@ -61,12 +73,18 @@ export default class Filters extends Component {
         }
     }
 
+    onBackPress = () => {
+        this.props.navigation.goBack();
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.closeView}>
-                    <Image source={require('../../../assets/close.svg')} style={styles.closeSvg}/>
-                </View>
+                <TouchableOpacity onPress={this.onBackPress}>
+                    <View style={styles.closeView}>
+                        <Image source={require('../../../assets/close.svg')} style={styles.closeSvg}/>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.header}>
                     <View style={styles.residenceView}>
                         <TouchableOpacity onPress={() => this.setState({isHotelSelected: false})} style={[styles.residence, !this.state.isHotelSelected? styles.selected: '']}>
@@ -91,7 +109,7 @@ export default class Filters extends Component {
                 </View>
                 <ScrollView>
                 <View style={{height: '100%',}}>
-                       <View style={styles.starRatingView}>
+                       {/* <View style={styles.starRatingView}>
                            <Text style={styles.starRatingText}>Star Rating</Text>
                            <View style={styles.starView}>
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 1? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 1})}>
@@ -115,17 +133,17 @@ export default class Filters extends Component {
                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
                                </TouchableOpacity>
                            </View>
-                       </View>
+                       </View> */}
 
-                       <View style={styles.pricingView}>
+                       {/* <View style={styles.pricingView}>
                            <Text style={styles.pricingText}>Pricing</Text>
-                       </View>
+                       </View> */}
 
-                       <View style={styles.pricingView}>
-                           <Text style={styles.pricingText}>Room & Beds</Text>
+                       <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                           <Text style={styles.pricingText}>Room</Text>
                        </View>
-                       <View style={styles.set}>
-                           <View style={[styles.group, styles.borderBottom]}>
+                       <View style={this.state.isHotelSelected ? styles.set : styles.emptyPricingView}>
+                           {/* <View style={[styles.group, styles.borderBottom]}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Beds</Text>
                                </View>
@@ -138,22 +156,22 @@ export default class Filters extends Component {
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
-                           </View>
-                           <View style={[styles.group, styles.borderBottom]}>
+                           </View> */}
+                           <View style={this.state.isHotelSelected ? [styles.group, styles.borderBottom]:styles.emptyPricingView}>
                                <View style={styles.type}>
-                                   <Text style={styles.typeText}>Bedrooms</Text>
+                                   <Text style={styles.typeText}>Rooms</Text>
                                </View>
                                <View style={styles.countView}>
-                                   <TouchableOpacity style={[styles.minusButton, this.state.count.bedrooms === 0? styles.opacity: '']} onPess={() => this.subtractCount(1)}>
+                                   <TouchableOpacity style={[styles.minusButton, this.state.count.bedrooms === 0? styles.opacity: '']} onPress={() => this.subtractCount(1)}>
                                        <Text style={styles.minusText}>-</Text>
                                    </TouchableOpacity>
                                    <Text style={styles.countText}>{this.state.count.bedrooms}</Text>
-                                   <TouchableOpacity style={styles.plusButton} onPess={() => this.addCount(1)}>
+                                   <TouchableOpacity style={styles.plusButton} onPress={() => this.addCount(1)}>
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
                            </View>
-                           <View style={styles.group}>
+                           {/* <View style={styles.group}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Bathrooms</Text>
                                </View>
@@ -166,19 +184,70 @@ export default class Filters extends Component {
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
-                           </View>
+                           </View> */}
                        </View>
                     </View>
                        
                 </ScrollView>
                 <View style={styles.bottomBar}>
-                    <TouchableOpacity style={styles.doneButton}>
-                        <Text style={styles.doneButtonText}>Show 345 Hotels</Text>
+                    <TouchableOpacity style={styles.doneButton} onPress={this.onSearchPress.bind(this)}>
+                        <Text style={styles.doneButtonText}>Show Hotels</Text>
                     </TouchableOpacity>
                 </View>
 
                 
             </View>
         )
+    }
+
+    onSearchPress(){
+        const { params } = this.props.navigation.state;
+
+        var countArray = []
+        var counts = {};
+        var arrayRooms = new Array(this.state.count.bedrooms);
+        if (params.adults < this.state.count.bedrooms){
+            alert('Adults are less than rooms selected');
+        }
+        else {
+            var j = 0;
+            while(params.adults != 0){
+                arrayRooms.push(
+                    j
+                );
+                params.adults -= 1
+                j += 1
+                if (j == this.state.count.bedrooms){
+                    j = 0
+                }
+            }
+            arrayRooms = arrayRooms.filter(function(n){ return n != undefined }); 
+            for (var i = 0; i < arrayRooms.length; i++) {
+                var num = arrayRooms[i];
+                counts[num] = counts[num] ? counts[num] + 1 : 1;
+            }
+            this.state.rooms = []
+            for (var k = 0; k < this.state.count.bedrooms; k++){
+                this.state.rooms.push(
+                    { adults: counts[k], children: [] }
+                )
+            }
+        }
+        
+        console.log(this.state.rooms);
+        this.props.navigation.navigate('PropertyScreen', {
+            searchedCity: params.search, 
+            searchedCityId: 72, 
+            checkInDate : params.checkInDate, 
+            checkOutDate : params.checkOutDate, 
+            guests: params.guests, 
+            children: params.children, 
+            //these props are for paramerters in the next class
+            regionId: params.regionId,
+            currency: params.currency,
+            checkOutDateFormated: params.checkOutDateFormated,
+            checkInDateFormated: params.checkInDateFormated, 
+            roomsDummyData: encodeURI(JSON.stringify(this.state.rooms))
+        });
     }
 }

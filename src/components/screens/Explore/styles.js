@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: 'column',
         alignItems: 'stretch',
         backgroundColor: '#f0f1f3'
@@ -14,6 +13,9 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingLeft: 17,
         paddingRight: 17
+    },
+    itemView:{
+        height: '83%'
     },
     sectionView: {
         width: '100%',
@@ -266,6 +268,7 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     fab: {
+        
         position: 'absolute',
         right: 18,
         bottom: 10,
@@ -297,6 +300,49 @@ const styles = StyleSheet.create({
     },
     bottomGap: {
         height: 50
+    },
+
+    //model styling
+    modalView: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    popup: {
+        backgroundColor: '#eee',
+        alignSelf: 'stretch',
+        marginHorizontal: 10,
+        borderRadius: 4,
+        padding: 15
+    },
+    labelCloseView: {
+        flexDirection: 'row'
+    },
+    walletPasswordLabel: {
+        fontFamily: 'futura',
+        fontSize: 18
+    },
+    closeButtonView: {
+        flex: 1,
+        alignItems: 'flex-end'
+    },
+    closeButtonSvg: {
+        height: 20,
+        width: 20
+    },
+    confirmButton: {
+        fontFamily: 'FuturaStd-Light',
+        backgroundColor: '#DA7B61',
+        padding: 15,
+        alignItems: 'center',
+        marginTop: 15,
+        borderRadius: 2
+    },
+    confirmButtonText: {
+        fontFamily: 'FuturaStd-Light',
+        color: '#fff',
+        fontSize: 16
     }
 });
 export default styles;
