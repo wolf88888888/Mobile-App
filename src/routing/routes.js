@@ -9,13 +9,15 @@ import CreatePassword from '../components/screens/CreatePassword';
 import Terms from '../components/templates/Terms';
 
 import Explore from '../components/screens/Explore';
+import Profile from '../components/screens/Profile'
+import CreateWallet from '../components/screens/CreateWallet';
+import SaveWallet from '../components/screens/SaveWallet';
+import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
-import Profile from '../components/screens/Profile';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
 import UserMyTrips from '../components/screens/MyTrips/MyTrips';
 import Favourites from '../components/screens/Favorites';
-
 import Guests from '../components/screens/Guests';
 
 import Property from '../components/screens/Property';
@@ -43,7 +45,10 @@ export const LoginNavigator = StackNavigator(
         Login: { screen: Login },
         CreateAccount: { screen: CreateAccount },
         CreatePassword: { screen: CreatePassword },
-        Terms: { screen: Terms }
+        Terms: { screen: Terms },
+        CreateWallet: { screen: CreateWallet },
+        SaveWallet: { screen: SaveWallet },
+        CongratsWallet: { screen: CongratsWallet }
     },
     {
         initialRouteName: 'Welcome',
