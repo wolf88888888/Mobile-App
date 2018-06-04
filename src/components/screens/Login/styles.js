@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 40
     },
     titleView: {
         display: 'flex',
@@ -52,7 +53,13 @@ const styles = StyleSheet.create({
     getStartedImage: {
         width: 400,
         height: 80
-    }
+    },
+    btn_backImage:{
+        height: 28,
+        width: 28,
+        marginTop: 44,
+        marginLeft: 16,
+      }
 });
 
 export default styles;

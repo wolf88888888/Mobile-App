@@ -8,16 +8,15 @@ import {
     TouchableWithoutFeedback,
     Keyboard
 } from 'react-native';
-// import Image from 'react-native-remote-svg';
+import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
-import GoBack from '../../atoms/GoBack';
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
 import { validateEmail, validatePassword } from '../../../utils/validation';
 import { login } from '../../../utils/requester';
-import GetStartedImage from '../../atoms/GetStartedImage';
 import styles from './styles';
+import SplashScreen from 'react-native-smart-splash-screen';
 
 
 class Login extends Component {
@@ -32,18 +31,29 @@ class Login extends Component {
         email: '',
         password: ''
     }
+    
+    componentDidMount() {
+        console.disableYellowBox = true;
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 850,
+            delay: 500
+        });
+    }
+
+    // TODO: Need a way to generate a Google ReCAPTCHA token
 
     onClickLogIn() {
         const { email, password } = this.state;
         const user = { email, password };
 
-        login(user).then((res) => {
+        login(user, null).then((res) => {
             if (res.success) {
                 res.response.json().then((data) => {
                     AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                    this.props.navigation.navigate('App');
+                    this.props.navigation.navigate('MainScreen');
                 });
             } else {
                 res.response.then((response) => {
@@ -73,13 +83,16 @@ class Login extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={Keyboard.dismiss}
-                accessible
+                accessible={false}
             >
                 <View style={styles.container}>
-                    <GoBack
-                        onPress={() => navigate('Welcome')}
-                        icon="arrowLeft"
-                    />
+                    <View style={styles.chatToolbar}>
+
+                        <TouchableOpacity onPress={this.onBackPress}>
+                            <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-white.png')} />
+                        </TouchableOpacity>
+
+                    </View>
 
                     <View style={styles.main}>
                         <View style={styles.titleView}>
@@ -108,6 +121,7 @@ class Login extends Component {
                                 onChangeText={this.onChangeHandler('password')}
                                 placeholder="Password"
                                 placeholderTextColor="#fff"
+
                             />
                         </View>
 
@@ -122,10 +136,20 @@ class Login extends Component {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <GetStartedImage />
+
+                    <View style={styles.lowOpacity}>
+                        <Image
+                            source={require('../../../assets/get-started-white-outline.svg')}
+                            style={styles.getStartedImage}
+                        />
+                    </View>
                 </View>
             </TouchableWithoutFeedback>
         );
+    }
+
+    onBackPress = () => {
+        this.props.navigation.goBack();
     }
 }
 

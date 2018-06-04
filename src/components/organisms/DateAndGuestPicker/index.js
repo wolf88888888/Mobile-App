@@ -9,12 +9,16 @@ import Calendar from '../../templates/Calendar';
 class DateAndGuestPicker extends Component {
     constructor(props) {
         super(props);
-
         this.onGuests = this.onGuests.bind(this);
         this.onSearch = this.onSearch.bind(this);
+        this.onSettings = this.onSettings.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() { 
+    }
+
+    onSettings(){
+        this.props.gotoSettings();
     }
 
     onGuests() {
@@ -27,12 +31,12 @@ class DateAndGuestPicker extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, adults, children, infants, onDatesSelect
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton
         } = this.props;
 
         return (
             <View style={styles.container}>
-                <View style={styles.pickerRow}>
+                <View style={showSearchButton ? styles.pickerRow : {display:'none'}}>
                     <View>
                         <TouchableOpacity
                             onPress={() => this.calendar.open()}
@@ -61,22 +65,25 @@ class DateAndGuestPicker extends Component {
                         </View>
                     </TouchableOpacity>
 
-                    <View style={styles.optionsPickerViewIncomplete}>
-                        <Text style={styles.iconText}>
-                            <FontAwesome>{Icons.cog}</FontAwesome>
-                        </Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={this.onSettings}>
+                        <View style={styles.optionsPickerViewIncomplete}>
+                            <Text style={styles.iconText}>
+                                <FontAwesome>{Icons.cog}</FontAwesome>
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity onPress={this.onSearch}>
-                    <View style={styles.searchButtonView}>
-                        <Text style={styles.searchButtonText}>Search</Text>
+                    <View style={showSearchButton ?  styles.searchButtonView : {height: 0}}>
+                        <Text style={showSearchButton ? styles.searchButtonText : {height: 0}}>Search</Text>
                     </View>
                 </TouchableOpacity>
                 <Calendar
                     startDate={checkInDate}
                     endDate={checkOutDate}
-                    format="ddd-DD-MMMM"
+                    format="ddd, DD MMM"
                     ref={(calendar) => { this.calendar = calendar; }}
                     onConfirm={onDatesSelect}
                 />
@@ -93,7 +100,9 @@ DateAndGuestPicker.propTypes = {
     children: PropTypes.number.isRequired,
     infants: PropTypes.number.isRequired,
     gotoSearch: PropTypes.func.isRequired,
-    gotoGuests: PropTypes.func.isRequired
+    gotoGuests: PropTypes.func.isRequired,
+    gotoSettings : PropTypes.func.isRequired,
+    showSearchButton : PropTypes.bool
 };
 
 export default DateAndGuestPicker;

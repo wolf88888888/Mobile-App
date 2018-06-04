@@ -4,57 +4,9 @@ import PropTypes from 'prop-types';
 import { register, login } from '../../../utils/requester';
 import { domainPrefix } from '../../../config';
 
-
-// TODO: Fix nested promise chains
-// TODO: Component styling to be kept as a separate file
-
-// Will disable eslint on this file due to required refactoring
-/* eslint-disable */
 const Terms = (props) => {
     const { navigate, pop } = props.navigation;
     const { params } = props.navigation.state;
-
-    const onClickAccept = async () => {
-        const user = { ...params };
-        console.log(user);
-        // TODO: Need a way to generate a Google ReCAPTCHA token
-
-        register(user, null).then((res) => {
-            if (res.success) {
-                console.log('~~~res:', res);
-                login(user, null).then((res) => {
-                    if (res.success) {
-                        res.response.json().then((data) => {
-                            AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
-                            // TODO: Get first name + last name from response included with Authorization token (Backend)
-                            AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                            navigate('App');
-                        });
-                    } else {
-                        res.response.then((res) => {
-                            const errors = res.errors;
-                            for (const key in errors) {
-                                if (typeof errors[key] !== 'function') {
-                                    console.log('Error logging in:', errors[key].message);
-                                    // TODO: give user feedback about having and error logging in
-                                }
-                            }
-                        });
-                    }
-                });
-            } else {
-                res.response.then((res) => {
-                    const errors = res.errors;
-                    for (const key in errors) {
-                        if (typeof errors[key] !== 'function') {
-                            console.log('Error registering new user:', errors[key].message);
-                            // TODO: give user feedback about having and error registering
-                        }
-                    }
-                });
-            }
-        });
-    };
 
     return (
         <View style={styles.container}>
@@ -69,7 +21,7 @@ const Terms = (props) => {
             <Text style={styles.paragraph}>I agree many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</Text>
 
             <View style={styles.buttonsView}>
-                <TouchableOpacity onPress={() => onClickAccept()}>
+                <TouchableOpacity onPress={() => navigate('CreateWallet', { ...params })}>
                     <View style={styles.acceptButtonView}>
                         <Text style={styles.acceptButtonText}>Accept</Text>
                     </View>

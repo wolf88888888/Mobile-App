@@ -7,9 +7,6 @@ import Image from 'react-native-remote-svg';
 import { validateEmail, validateName } from '../../../utils/validation';
 import GoBack from '../../atoms/GoBack';
 import SmartInput from '../../atoms/SmartInput';
-
-
-// TODO: move styles in a saparate file
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     },
 
     topTitleText:{
-        fontFamily: 'FuturaStd-Medium',
+        fontFamily: 'futura',
         fontSize:19,
         marginTop:5,
         marginLeft:10,
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     },
 
     smallTitle:{
-      fontFamily: 'FuturaStd-Medium',
+      fontFamily: 'futura',
       fontSize:12,
       marginTop:5,
       lineHeight: 20,

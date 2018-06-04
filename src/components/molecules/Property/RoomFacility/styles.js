@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     },
 
     title:{
-      fontFamily: 'FuturaStd-Medium',
+      fontFamily: 'futura',
       fontSize:17,
       color: '#000000',
       marginTop: 10,

@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
 
     title:{
-        fontFamily: 'FuturaStd-Medium',
+        fontFamily: 'futura',
         fontSize:16,
         marginLeft:20,
         marginBottom:10,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
 
     name:{
-        fontFamily: 'FuturaStd-Medium',
+        fontFamily: 'futura',
         fontSize:16,
         marginLeft:5,
         color: '#000000',

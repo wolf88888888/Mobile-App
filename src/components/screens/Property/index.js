@@ -1,189 +1,359 @@
-import React, { Component } from 'react';
-import {
-    Text,
-    View,
-    TouchableOpacity,ProgressBarAndroid,
-    Keyboard,ListView,Button,ScrollView,TextInput,Dimensions,FlatList
-  } from 'react-native';
-
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Image from 'react-native-remote-svg';
-import CardView from 'react-native-cardview';
-
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import LikeButton from '../../atoms/LikeButton';
-import FacilityView from '../../atoms/FacilityView';
-import RoomFacility from '../../molecules/Property/RoomFacility';
-import SleepingArrangements from '../../molecules/Property/SleepingArrangements';
-import CheckIn_OutView from '../../atoms/Property/CheckIn_OutView';
-import LocationView from '../../atoms/Property/LocationView';
-import RatingView from '../../molecules/Property/RatingView';
-import ContactHostView from '../../molecules/Property/ContactHostView';
-import Footer from '../../atoms/Footer';
-import SimilarHomes from '../../molecules/SimilarHomes';
-
+import SplashScreen from 'react-native-smart-splash-screen';
+import { withNavigation } from 'react-navigation';
+import SockJsClient from 'react-stomp';
+import { apiHost, imgHost } from '../../../config';
+import { getRegionsBySearchParameter, getTopHomes } from '../../../utils/requester';
+import SearchBar from '../../molecules/SearchBar';
+import SmallPropertyTile from '../../molecules/SmallPropertyTile';
+import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
 
-import PropertySummaryView from '../../molecules/Property/PropertySummaryView';
+var clientRef = '';
+var utf8 = require('utf8');
+var binaryToBase64 = require('binaryToBase64');
 
 class Property extends Component {
-
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
-        })
+        }),
+        search: PropTypes.string,
+        checkInDate: PropTypes.string,
+        checkOutDate: PropTypes.string,
+        topHomes: PropTypes.array, // eslint-disable-line
+        onDatesSelect: PropTypes.func,
+        onSearchChange: PropTypes.func,
+        onAutocompleteSelect: PropTypes.func,
+        autocomplete: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string
+        })),
+        load: PropTypes.func,
+        propertyType: PropTypes.oneOf('hotels', 'homes'),
+        searchedCity: PropTypes.string,
+        searchedCityId: PropTypes.number,
+        guests : PropTypes.number
     }
 
     static defaultProps = {
         navigation: {
             navigate: () => {}
-        }
+        },
+        load: () => {},
+        search: '',
+        checkInDate: '',
+        checkOutDate: '',
+        autocomplete: [],
+        onAutocompleteSelect: () => {},
+        topHomes: [],
+        propertyType: 'homes',
+        onDatesSelect: () => {},
+        onSearchChange: () => {},
+        searchedCity: 'Discover your next experience',
+        searchedCityId: 0,
+        guests : 0
     }
 
-    constructor(){
-        super();
-        this.onClose = this.onClose.bind(this);
-        this.onFacilityMore = this.onFacilityMore.bind(this);
-        this.onHouseRules = this.onHouseRules.bind(this);
-        this.onAdditionalPrice = this.onAdditionalPrice.bind(this);
-        this.onCheck = this.onCheck.bind(this);
-        this.onLike = this.onLike.bind(this);
+    constructor(props) {
+        super(props);
+        
+        console.disableYellowBox = true;
+        this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
+        this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.updateData = this.updateData.bind(this);
+        this.gotoGuests = this.gotoGuests.bind(this);
+        this.gotoSettings = this.gotoSettings.bind(this);
+        this.gotoSearch = this.gotoSearch.bind(this);
+        this.renderAutocomplete = this.renderAutocomplete.bind(this);
+        this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
+        this.onDatesSelect = this.onDatesSelect.bind(this);
+        this.onSearchHandler = this.onSearchHandler.bind(this);
         this.state = {
-        }
+            search: '',
+            checkInDate: '',
+            checkOutDate: '',
+            guests: 0,
+            adults: 2,
+            childrenBool: false,
+            children: 1,
+            infants: 0,
+            topHomes: [],
+            listings : [],
+            listings2 : [],
+            searchedCity: 'Discover your next experience',
+            searchedCityId: 0,
+            //these state are for paramerters in urlForService
+            regionId: '',
+            currency: '',
+            checkInDateFormated: '',
+            checkOutDateFormated: '',
+            roomsDummyData: [],
+            urlForService:'',
+        };
+        const { params } = this.props.navigation.state;
+        this.state.searchedCity = params ? params.searchedCity : '';
+        this.state.searchedCityId = params ? params.searchedCityId : 0;
+        this.state.checkInDate = params ? params.checkInDate : '';
+        this.state.checkOutDate = params ? params.checkOutDate : '';
+        this.state.guests = params ? params.guests : 0;
+        this.state.children = params ? params.children : 0;
+
+        this.state.regionId = params ? params.regionId : [];
+        this.state.currency = params ? params.currency : [];
+        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
+        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
+        this.state.roomsDummyData = params ? params.roomsDummyData : [];
+
+        this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
     }
 
-    onClose() {
-        this.props.navigation.goBack();
+    componentWillMount(){
+        //Remove Splash
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 0,
+        })
     }
 
-    onFacilityMore() {
-        this.props.navigation.navigate('PropertyFacilitesScreen');
+    componentDidMount() {
+        getTopHomes().then((topHomes) => {
+            const truncated = topHomes.content.slice(0, 4);
+            this.setState({ topHomes: truncated });
+        });
     }
 
-    onHouseRules() {
-        this.props.navigation.navigate('PropertyRulesScreen');
+    onChangeHandler(property) {
+        return (value) => {
+            this.setState({ [property]: value });
+        };
     }
 
-    onAdditionalPrice() {
-        this.props.navigation.navigate('PropertyPricesScreen');
+    onDatesSelect({ startDate, endDate }){
+        this.setState({
+            checkInDate : startDate,
+            checkOutDate : endDate,
+        });
     }
 
-    onCheck() {
-        this.props.navigation.navigate('ReviewHouseScreen');
+    onSearchHandler(value) {
+        this.onSearchChange(value);
     }
 
-    onLike(like) {
-        console.log("onLike");
+    onSearchChange(value){
+        setSearchValue({ value });
+        clearSelected();
+        getRegionsBySearchParameter(value).then((res) => {
+             setSearchRegions(res);
+             setAutocomplete(value);
+        });
     }
 
-    render() {
-        const { navigate } = this.props.navigation;
+    renderHomes() {
         return (
-            <View style={styles.container}>
-                <ScrollView style={styles.scrollView}>
-                    <View style={styles.topButtonContainer}>
-                        <WhiteBackButton onPress={this.onClose}/>
-                        <LikeButton like={false} onLike={this.onLike}/>
-                    </View>
-                    <View style={styles.body}>
-                        <PropertySummaryView
-                            logo = {require('../../../assets/temple/overview.jpg')}
-                            title = {'Garden Loft Apartment'}
-                            rateExp = {"Excellent"}
-                            rateVal = {4.1}
-                            reviewNum = {73}
-                            guests = {4} size = {85} bathroom = {1} bedroom = {1}
-                            description = {'In the historic quarter of Santo Spirito, on the left bank of the ricer Arno,studio apartment is perfect for those traveling alone or as a couple.To walk berween Santo Spirito,Pante Vecchio and Babali Gardens is a magical experience.'}
-                            space = {'On the third floor of a typical Florentine building, the apartment of an entrance with wardrobes and loft with double bed, the third floor of a typical Florentine building, the apartment of an entrance with wardrobes and loft with double bed, the third floor of a typical Florentine building, the apartment of an entrance with wardrobes and loft with double bed, the third floor of a typical Florentine building, the apartment of an entrance with wardrobes and loft with double bed'}
-                            />
+            <View style={styles.sectionView}>
+                <View style={styles.subtitleView}>
+                    <Text style={styles.subtitleText}>Popular Homes</Text>
+                </View>
 
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:0}]} />
-
-                        <RoomFacility
-                            facility0 = {require('../../../assets/Facilities/Homes/TV.svg')}
-                            facility1 = {require('../../../assets/Facilities/Homes/Fireplace.svg')}
-                            facility2 = {require('../../../assets/Facilities/Homes/Pool.svg')}
-                            facility3 = {require('../../../assets/Facilities/Homes/Air_Conditioning.svg')}
-                            facility4 = {require('../../../assets/Facilities/Homes/BathTub.svg')}
-                            more = {23}
-                            style = {styles.roomfacility}
-                            onFacilityMore = {this.onFacilityMore}/>
-
-                        <SleepingArrangements/>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-
-                        <CheckIn_OutView checkin={'2PM - 10PM'} checkout={'12PM (noon)'}/>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-
-                        <LocationView
-                            detail={"Jesse s home is located in Oia,South Aegean,Greece.The views from the terrace, the sun, being calm"}
-                            transpotation={"Geting around the island is possible either by bus transport, taxi or by rending a car or on ATV."}
-                            location={"Florence, Italy"}
-                            description={"The exact location will be provided after booking."}
-                            lat={43.769562}
-                            lon={11.255814}
-                            radius={200}/>
-
-                        <RatingView
-                            rateTotalVal={4.1}
-                            reviewNum={73}
-                            rateTitle0={"Value for money"} rateVal0={4.8}
-                            rateTitle1={"Communication"} rateVal1={4.6}
-                            rateTitle2={"Location"} rateVal2={4.5}
-                            rateTitle3={"Check In"} rateVal3={2.3}
-                            rateTitle4={"Cleanliness"} rateVal4={3.8}
-                            rateTitle5={"Accuracy"} rateVal5={1.6}
-                            avatar={require('../../../assets/temple/avatar.png')}
-                            name={"Jesse"}
-                            date={"October 2017"}
-                            clientRate={4.2}
-                            clientDescription={"The apartment was in a good location and we were able to park our car a 5 minute walk away for a fair price! The apartment was clean and had everything.The apartment was in a good location and we were ableto park our car a 5 minute walk away for a fair price!The apartment was clean and had everything.The apartment was in a good location and we were ableto park our car a 5 minute walk away for a fair price!"}/>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-
-                        <ContactHostView
-                            avatar={require('../../../assets/temple/avatar.png')}
-                            name={"Britney"}
-                            detail={"Oia, Greece • Joined in May 2011"}/>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-
-                        <View style={styles.etcContaner}>
-                            <Text style={styles.etcName}>House Rules</Text>
-                            <TouchableOpacity onPress={this.onHouseRules}>
-                                <Text style={styles.etcButton}>Read</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-
-                        <View style={styles.etcContaner}>
-                            <Text style={styles.etcName}>Cancellation Policy</Text>
-                            <TouchableOpacity onPress={this.onHouseRules}>
-                                <Text style={styles.etcButton}>Flexible</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-
-                        <View style={styles.etcContaner}>
-                            <Text style={styles.etcName}>Additional Prices</Text>
-                            <TouchableOpacity onPress={this.onAdditionalPrice}>
-                                <Text style={styles.etcButton}>Check</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
-                        <SimilarHomes/>
-                    </View>
-                </ScrollView>
-
-                <Footer info0={'$85'} unit0={'/ per night'} info1={'0.56 LOC'} unit1={'/ per night'} button={'Check Availability'} onClick={this.onCheck}/>
+                <View style={styles.tilesView}>
+                    { this.state.topHomes.map(listing => <SmallPropertyTile listingsType="homes" listing={listing} key={listing.id} />) }
+                </View>
             </View>
         );
     }
+
+    updateData(data) {
+        this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+    }
+
+    gotoGuests() {
+        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
+    }
+
+    gotoSettings() {
+        this.props.navigation.navigate('FilterScreen');
+    }
+
+    gotoSearch() {
+      this.props.navigation.navigate('PropertyScreen');
+    }
+
+    handleAutocompleteSelect(id, name) {
+        return () => {
+            this.props.onAutocompleteSelect(id, name);
+        };
+    }
+
+    onBackPress = () => {
+        this.props.navigation.goBack();
+    }
+    gotoHotelDetailsPage = (item) =>{
+        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
+    }
+
+    renderAutocomplete() {
+        return (
+            <ScrollView
+                contentContainerStyle={{ flex: 1 }}
+            >
+                {
+                    this.props.autocomplete.map(result => (
+                        <TouchableOpacity
+                            key={result.id}
+                            style={styles.autocompleteTextWrapper}
+                            onPress={this.handleAutocompleteSelect(result.id, result.name)}
+                        >
+                            <Text style={styles.autocompleteText} >{result.name}</Text>
+                        </TouchableOpacity>
+                    ))
+                }
+            </ScrollView>
+        );
+    }
+    render() {
+        const {
+            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
+        } = this.state;
+        
+        return (
+            <View style={styles.container}>
+
+                <TouchableOpacity onPress={this.onBackPress} style={styles.backButton}>
+                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/svg/arrow-back.svg')} />
+                </TouchableOpacity>
+
+                <View style={styles.searchAreaView}>
+                    <SearchBar
+                        autoCorrect={false}
+                        value={search}
+                        onChangeText={this.onSearchHandler}
+                        placeholder={searchedCity}
+                        placeholderTextColor="#bdbdbd"
+                        leftIcon="search"
+                    />
+                </View>
+                {!this.props.autocomplete.length && this.renderAutocomplete()}
+                <View style={styles.itemView}>
+                    <DateAndGuestPicker
+                            checkInDate={checkInDate}
+                            checkOutDate={checkOutDate}
+                            adults={guests}
+                            children={0} 
+                            guests = {0}
+                            infants={0}
+                            gotoGuests={this.gotoGuests}
+                            gotoSearch={this.gotoSearch}
+                            onDatesSelect={this.onDatesSelect}
+                            gotoSettings={this.gotoSettings}
+                            showSearchButton= {false}
+                        />
+
+
+                    <FlatList style={styles.flatList}
+                            data={this.state.listings2}
+                            renderItem={
+                                ({item}) => 
+                                <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
+                                <View style={styles.card}>
+                                <Image 
+                                source={{uri : imgHost + item.photos[0]}} 
+                                style={styles.popularHotelsImage}/>
+                                <TouchableOpacity style={styles.favoritesButton}>
+                                    <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
+                                </TouchableOpacity>
+                                
+                                        <View style={styles.cardContent}>
+                                            <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                                            <View style={styles.aboutPlaceView}>
+                                                <Text style={styles.placeReviewText}>Excellent </Text>
+                                                <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
+                                                <View style={styles.ratingIconsWrapper}>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                </View>
+                                                <Text style={styles.totalReviews}> 73 Reviews</Text>
+                                            </View>
+                                            <View style={styles.costView}>
+                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">${item.price}(LOC 1.2) </Text>
+                                                <Text style={styles.perNight}>per night</Text>
+                                            </View>
+                                        </View>
+                                
+                                </View>
+                                </TouchableOpacity>
+                            }
+                        />
+                </View>
+                
+                <SockJsClient 
+                    url={apiHost + 'handler'} 
+                    topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
+                    onMessage={this.handleReceiveSingleHotel} 
+                    ref={(client) => { clientRef = client }}
+                    onConnect={this.sendInitialWebsocketRequest.bind(this)}
+                    onDisconnect={this.disconnected.bind(this)}
+                    getRetryInterval={() => { return 3000; }}
+                    debug={true}
+                    />
+            </View>
+        );
+    }
+
+    //Search logic
+    handleReceiveSingleHotel(response) {
+        if (response.hasOwnProperty('allElements')) {
+            clientRef.disconnect();
+            if(this.state.listings.length > 0){
+                this.setState({
+                    listings2 : this.state.listings,
+                });
+            }
+        } else {
+            this.setState(prevState => ({
+                listings: [...prevState.listings, response]
+              }));
+        }
+      }
+
+      disconnected(){
+        this.setState({
+            listings2 : this.state.listings,
+        });
+        clientRef.disconnect();
+      }
+
+      sendInitialWebsocketRequest() {
+        let query = this.state.urlForService;
+        const msg = {
+          query: query,
+          uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'
+        };
+    
+        if (clientRef) {
+            clientRef.sendMessage(`/app/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
+        }
+        else{
+             //client ref is empty
+        }
+      }
 }
 
-export default Property;
+function SeparatorDot(props) {
+    return (
+        <View style={{height: props.height, width: props.width, alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{height: 3, width: 3, backgroundColor: '#000', borderRadius: 1.5}}></View>
+        </View>
+    )
+}
+
+
+export default withNavigation(Property);
+

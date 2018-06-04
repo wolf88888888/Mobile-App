@@ -1,35 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
-
-// TODO: move styles in saparate file
-const styles = StyleSheet.create({
-    leftIconView: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 50
-    },
-    leftIconText: {
-        color: '#5a5a5c',
-        fontSize: 20
-    },
-    container: {
-        display: 'flex',
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        height: 50
-    },
-    input: {
-        flex: 1,
-        marginLeft: -3,
-        marginRight: 20,
-        color: '#000',
-        fontSize: 17,
-        fontFamily: 'FuturaStd-Light'
-    }
-});
+import styles from './styles';
 
 
 class SearchBar extends Component {
@@ -81,7 +54,7 @@ class SearchBar extends Component {
 
                 <TextInput
                     ref={(i) => { this.input = i; }}
-                    underlineColorAndroid="#bdbdbd"
+                    underlineColorAndroid="#ffffff"
                     style={styles.input}
                     {...this.props}
                 />

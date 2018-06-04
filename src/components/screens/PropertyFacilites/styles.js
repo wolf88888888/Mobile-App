@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 
     title:{
         fontSize: 20,
-        fontFamily: 'FuturaStd-Medium',
+        fontFamily: 'futura',
         marginLeft: 20,
         marginTop: 10,
         color: '#000000'
