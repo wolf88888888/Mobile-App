@@ -265,7 +265,7 @@ class Explore extends Component {
                     transparent={true}
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-                        alert('Modal has been closed.');
+                        
                     }}>
                     <View style={styles.modalView}>
                         <View style={styles.popup}>

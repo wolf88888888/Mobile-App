@@ -6,6 +6,7 @@ import { domainPrefix,imgHost } from '../../../config';
 import Requester, { getMyHotelBookings,getUserInfo } from '../../../utils/requester';
 import moment from 'moment';
 import Dash from 'react-native-dash';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 
 class MyTrips extends Component {
@@ -70,7 +71,7 @@ class MyTrips extends Component {
                         <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-black.png')}/>
                     </TouchableOpacity>
                     
-                    <Text style={styles.title}>Your Trips</Text>
+                    <Text style={styles.title}>Upcoming Trips</Text>
                 
                 </View>
             
@@ -106,6 +107,8 @@ class MyTrips extends Component {
                                 <View style={styles.flatListTitleView}>
                               
                                     <Text style={styles.subtext}>
+                                        {(moment(item.arrival_date)).format('ddd, DD MMM').toString()}
+                                        {"   "}<FontAwesome>{Icons.longArrowRight}</FontAwesome>{"  "}
                                         {(moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString()}
                                     </Text>
                               
