@@ -26,7 +26,7 @@ class Profile extends Component {
             icon="arrowLeft"
             color="black"
         />
-            
+
         <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
             <View style={styles.cardBox}>
                 <Image

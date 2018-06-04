@@ -61,9 +61,10 @@ class LikeButton extends React.Component {
               <TouchableOpacity style={[styles.ButtonView, this.props.ButtonViewStyle]} onPress={this.onChangeState}>
                   {
                       this.state.like?
-                          <Image source={require('../../../assets/liked.svg')} style={[styles.ButtonImage, this.props.ButtonStyle]}/>
+                          <Image source={require('../../../assets/svg/liked.svg')} style={[styles.ButtonImage, this.props.ButtonStyle]}/>
                       :
-                          <Image source={require('../../../assets/like.svg')} style={styles.ButtonImage, this.props.ButtonStyle}/>
+                          <Image source={require('../../../assets/svg/like.svg')} style={styles.ButtonImage, this.props.ButtonStyle}/>
+
                   }
               </TouchableOpacity>
           </View>

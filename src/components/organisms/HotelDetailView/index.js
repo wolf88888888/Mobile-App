@@ -77,7 +77,7 @@ class HotelDetailView extends Component {
                     style={styles.logoImage}
                     dataSource={this.state.dataSource}
                     position={this.state.position}
-                    onPositionChanged={position => this.setState({ position })} 
+                    onPositionChanged={position => this.setState({ position })}
                     />
               <CardView style={styles.topView}
                   cardElevation={1.5}
@@ -102,8 +102,8 @@ class HotelDetailView extends Component {
                           value = {this.props.rateVal}
                           style = {{width:60, height:ratingHeight, paddingTop:0}}
                           starStyle={{width:ratingSize, height:ratingSize,}}
-                          emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/empty-star.svg')}/>}
-                          filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/empty-star-full.svg')}/>}/>
+                          emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/svg/empty-star.svg')}/>}
+                          filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/svg/empty-star-full.svg')}/>}/>
 
                       {this.props.reviewNum != 0 &&
                           (<Text style={[styles.rateText, {fontSize:ratingSize, height:ratingHeight, paddingTop:2, paddingLeft:0}]}>

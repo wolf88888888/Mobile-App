@@ -8,7 +8,7 @@ import styles from './styles';
 
 const SVGButton = (props) => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, props.style]}>
             <TouchableOpacity style={styles.ButtonView} onPress={props.onPress}>
               <Image source={props.image} style={styles.ButtonImage}/>
             </TouchableOpacity>
