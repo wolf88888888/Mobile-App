@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
         marginLeft: 6
       },
       senderImage:{
-        resizeMode : 'repeat',
         height: 50,
         width: 50,
         borderRadius: 25,
