@@ -91,7 +91,7 @@ class Explore extends Component {
     }
 
     onSearch() {
-        this.props.navigation.navigate('UserProfile');
+        this.props.navigation.navigate('EditUserProfile');
     }
 
     renderHomes() {

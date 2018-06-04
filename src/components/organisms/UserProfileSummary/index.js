@@ -21,27 +21,23 @@ const RNPropTypes = PropTypes || React.PropTypes;
 
 class UserProfileSummary extends Component {
     static propTypes = {
-        title: RNPropTypes.string.isRequired,
-        rateExp: RNPropTypes.string.isRequired,
-        rateVal: RNPropTypes.number.isRequired,
-        reviewNum: RNPropTypes.number.isRequired,
-        guests: RNPropTypes.number.isRequired,
-        size: RNPropTypes.number.isRequired,
-        bathroom: RNPropTypes.number.isRequired,
-        bedroom: RNPropTypes.number.isRequired,
+        username: RNPropTypes.string.isRequired,
+        place: RNPropTypes.string.isRequired,
+        member_date: RNPropTypes.string.isRequired,
+        reviews: RNPropTypes.number.isRequired,
+        references: RNPropTypes.number.isRequired,
+        isVerified: RNPropTypes.bool.isRequired,
         description: RNPropTypes.string.isRequired,
         space: RNPropTypes.string.isRequired,
     };
 
     static defaultProps = {
-        title: '',
-        rateExp: '',
-        rateVal: 0,
-        reviewNum: 0,
-        guests: 0,
-        size: 0,
-        bathroom: 0,
-        bedroom: 0,
+        username: '',
+        place: '',
+        member_date: '',
+        reviews: 0,
+        references: 0,
+        isVerified: false,
         description: '',
         space: '',
     };
@@ -55,42 +51,46 @@ class UserProfileSummary extends Component {
 
     render() {
         const ratingHeight = 12;
-        const ratingSize = 8;
+        const ratingSize = 10;
         return (
-          <View style={styles.container}>
-              <Image style={styles.logoImage} source={this.props.logo} />
-              <CardView style={styles.topView}
-                  cardElevation={1.5}
-                  cardMaxElevation={1.5}
-                  cornerRadius={0}>
-                  <Text style={styles.topTitleText}>
-                      {this.props.title}
-                  </Text>
-                  <View style={[styles.rateViewContainer, {height:ratingHeight}]}>
-                      <Text style={[styles.rateText, {
-                      fontSize:ratingSize, height:ratingHeight, paddingTop:2}]}>
-                          {this.props.rateExp} {this.props.rateVal}/5
-                      </Text>
-                      <Text style={[styles.rateText, {fontSize:ratingSize, height:ratingHeight, paddingTop:2, paddingLeft:0}]}>
-                          {this.props.reviewNum} Reviews
-                      </Text>
-                  </View>
-                  <View style={styles.lineStyle} />
-              </CardView>
+            <View style={styles.container}>
+                <Image style={styles.logoImage} source={this.props.logo} />
+                <CardView style={styles.topView}
+                    cardElevation={1.5}
+                    cardMaxElevation={1.5}
+                    cornerRadius={0}>
+                    <Text style={styles.topTitleText}>
+                        {this.props.username}
+                    </Text>
+                    <View style={[styles.infoViewContainer, {height:ratingHeight}]}>
+                        <Text style={[styles.infoText, {
+                            fontSize:ratingSize, height:ratingHeight, paddingTop:2}]}>
+                            {this.props.place} • Member since {this.props.member_date}
+                        </Text>
+                    </View>
+                    <View style={styles.rateViewContainer}>
+                        <View style={styles.reviewContainer}>
+                            <Text style={styles.highlightView}>{this.props.reviews}</Text><Text style={styles.subtitleText}>Reviews</Text>
+                        </View>
+                        <View style={styles.reviewContainer}>
+                            <Text style={styles.highlightView}>{this.props.references}</Text><Text style={styles.subtitleText}>References</Text>
+                        </View>
+                        <View style={styles.reviewContainer}>
+                            {
+                                this.props.isVerified?
+                                    <Image source={require("../../../assets/svg/check.svg")} style={styles.Verified}/>
+                                :
+                                    <Image source={require("../../../assets/svg/uncheck.svg")} style={styles.Verified}/>
+                            }
+                            <Text style={styles.subtitleText}>Verified</Text>
+                        </View>
+                    </View>
+                </CardView>
 
-              <View style={styles.descriptionView}>
-                  <Text style={styles.normalText}>{this.props.description}</Text>
-                  <Text style={styles.smallTitle}>The Space</Text>
-                  <ReadMoreView
-                      numberOfLines={3}
-                      onReady={this._handleTextReady}
-                      buttonStyle={styles.readmore}>
-                        <Text style={styles.spaceText}>
-                            {this.props.space}
-                       </Text>
-                  </ReadMoreView>
-              </View>
-          </View>
+                <View style={styles.descriptionView}>
+                    <Text style={styles.normalText}>{this.props.description}</Text>
+                </View>
+            </View>
         );
     }
 }

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     topView: {
         backgroundColor: '#ffffff',
         marginTop:-20,
-        height:125,
+        height:90,
         marginLeft:15,
         marginRight:15,
     },
@@ -31,16 +31,50 @@ const styles = StyleSheet.create({
         color:'#000000'
     },
 
-    rateViewContainer: {
+    infoViewContainer: {
         flexDirection: 'row',
     },
 
-    rateText:{
+    infoText:{
         fontFamily: 'FuturaStd-Light',
-        fontSize:9,
+        fontSize:10,
         paddingLeft:10,
         paddingRight:10,
-        color:'#898c8d',
+        color:'#000000',
+    },
+
+    rateViewContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin:10,
+    },
+
+    reviewContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    highlightView: {
+        backgroundColor:'#d97b61',
+        width:40,
+        height:25,
+        fontFamily: 'FuturaStd-Light',
+        fontSize:13,
+        textAlignVertical: "center",
+        textAlign: 'center',
+        color:'#FFF',
+    },
+
+    Verified: {
+        height:25,
+        width:25,
+    },
+
+    subtitleText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize:16,
+        color:'#000',
+        marginLeft:5
     },
 
     lineStyle:{
