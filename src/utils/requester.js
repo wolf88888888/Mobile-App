@@ -74,7 +74,6 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
 
     return fetch(endpoint, requestHeaders)
         .then((res) => {
-            console.log("amd"+endpoint);
             if (!res.ok) {
                 return {
                     response: res.json().then((r) => {

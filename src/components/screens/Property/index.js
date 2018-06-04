@@ -12,13 +12,9 @@ import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
 
-
-
-
 var clientRef = '';
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
-
 
 class Property extends Component {
     static propTypes = {
@@ -297,11 +293,13 @@ class Property extends Component {
                         />
                 </View>
                 
-                <SockJsClient url={apiHost + 'handler'} 
+                <SockJsClient 
+                    url={apiHost + 'handler'} 
                     topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
                     onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest.bind(this)}
+                    onDisconnect={this.disconnected.bind(this)}
                     getRetryInterval={() => { return 3000; }}
                     debug={true}
                     />
@@ -323,6 +321,13 @@ class Property extends Component {
                 listings: [...prevState.listings, response]
               }));
         }
+      }
+
+      disconnected(){
+        this.setState({
+            listings2 : this.state.listings,
+        });
+        clientRef.disconnect();
       }
 
       sendInitialWebsocketRequest() {
