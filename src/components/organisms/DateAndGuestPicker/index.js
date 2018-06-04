@@ -14,7 +14,7 @@ class DateAndGuestPicker extends Component {
         this.onSettings = this.onSettings.bind(this);
     }
 
-    componentDidMount() { 
+    componentDidMount() {
     }
 
     onSettings(){

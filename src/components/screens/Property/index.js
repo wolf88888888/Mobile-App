@@ -60,7 +60,6 @@ class Property extends Component {
 
     constructor(props) {
         super(props);
-        
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -219,7 +218,6 @@ class Property extends Component {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
         } = this.state;
-        
         return (
             <View style={styles.container}>
 
@@ -243,7 +241,7 @@ class Property extends Component {
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
                             adults={guests}
-                            children={0} 
+                            children={0}
                             guests = {0}
                             infants={0}
                             gotoGuests={this.gotoGuests}
@@ -266,18 +264,17 @@ class Property extends Component {
                                 <TouchableOpacity style={styles.favoritesButton}>
                                     <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
                                 </TouchableOpacity>
-                                
                                         <View style={styles.cardContent}>
                                             <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                             <View style={styles.aboutPlaceView}>
                                                 <Text style={styles.placeReviewText}>Excellent </Text>
                                                 <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
                                                 <View style={styles.ratingIconsWrapper}>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
                                                 </View>
                                                 <Text style={styles.totalReviews}> 73 Reviews</Text>
                                             </View>
@@ -286,13 +283,11 @@ class Property extends Component {
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>
-                                
                                 </View>
                                 </TouchableOpacity>
                             }
                         />
                 </View>
-                
                 <SockJsClient 
                     url={apiHost + 'handler'} 
                     topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
@@ -336,7 +331,6 @@ class Property extends Component {
           query: query,
           uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'
         };
-    
         if (clientRef) {
             clientRef.sendMessage(`/app/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
         }
@@ -356,4 +350,3 @@ function SeparatorDot(props) {
 
 
 export default withNavigation(Property);
-
