@@ -60,7 +60,6 @@ class Property extends Component {
 
     constructor(props) {
         super(props);
-
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -219,7 +218,6 @@ class Property extends Component {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
         } = this.state;
-
         return (
             <View style={styles.container}>
 
@@ -257,16 +255,15 @@ class Property extends Component {
                     <FlatList style={styles.flatList}
                             data={this.state.listings2}
                             renderItem={
-                                ({item}) =>
+                                ({item}) => 
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
                                 <View style={styles.card}>
-                                <Image
-                                source={{uri : imgHost + item.photos[0]}}
+                                <Image 
+                                source={{uri : imgHost + item.photos[0]}} 
                                 style={styles.popularHotelsImage}/>
                                 <TouchableOpacity style={styles.favoritesButton}>
                                     <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
                                 </TouchableOpacity>
-
                                         <View style={styles.cardContent}>
                                             <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                             <View style={styles.aboutPlaceView}>
@@ -286,17 +283,15 @@ class Property extends Component {
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>
-
                                 </View>
                                 </TouchableOpacity>
                             }
                         />
                 </View>
-
-                <SockJsClient
-                    url={apiHost + 'handler'}
+                <SockJsClient 
+                    url={apiHost + 'handler'} 
                     topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
-                    onMessage={this.handleReceiveSingleHotel}
+                    onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest.bind(this)}
                     onDisconnect={this.disconnected.bind(this)}
@@ -336,7 +331,6 @@ class Property extends Component {
           query: query,
           uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'
         };
-
         if (clientRef) {
             clientRef.sendMessage(`/app/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
         }
