@@ -52,7 +52,7 @@ class CongratsWallet extends Component {
                             />
                             <Text style={styles.bigTitle}>Congratulations!</Text>
                             <Text style={styles.subTitle}>Your wallet has been created</Text>
-                            <Button wrapStyle={{backgroundColor: '#223843', margin: 20}} onPress={() => navigate('EXPLORE')} text="Return to Home" />
+                            <Button wrapStyle={{backgroundColor: '#223843', margin: 20}} onPress={() => navigate('Login')} text="Go to Login" />
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
