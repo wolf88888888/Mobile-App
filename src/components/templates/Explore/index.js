@@ -1,97 +1,91 @@
-/* eslint-disable */
 import React, { Component } from 'react';
-import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import { getTopHomes } from '../../../utils/requester';
+import { withNavigation } from 'react-navigation';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import { withNavigation } from 'react-navigation';
-
-
-// TODO: move styles in separate file
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        backgroundColor: '#f0f1f3'
-    },
-    searchAreaView: {
-        width: '100%',
-        height: 105,
-        backgroundColor: '#273842',
-        paddingTop: 40,
-        paddingLeft: 17,
-        paddingRight: 17
-    },
-    sectionView: {
-        width: '100%',
-        paddingLeft: 17,
-        paddingRight: 17
-    },
-    subtitleView: {
-        width: '100%',
-        paddingTop: 18,
-        paddingBottom: 5,
-        borderBottomWidth: 0.5,
-        borderColor: '#d7d8d8'
-    },
-    subtitleText: {
-        fontSize: 16,
-        fontFamily: 'FuturaStd-Light'
-    },
-    tilesView: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between'
-    },
-    text: {
-        color: '#000'
-    }
-});
-
+import styles from './styles';
 
 class Explore extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
-        })
+        }),
+        search: PropTypes.string,
+        checkInDate: PropTypes.string,
+        checkOutDate: PropTypes.string,
+        topHomes: PropTypes.array, // eslint-disable-line
+        onDatesSelect: PropTypes.func,
+        onSearchChange: PropTypes.func,
+        onAutocompleteSelect: PropTypes.func,
+        autocomplete: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string
+        })),
+        load: PropTypes.func,
+        propertyType: PropTypes.oneOf('hotels', 'homes')
     }
 
     static defaultProps = {
         navigation: {
             navigate: () => {}
         },
+        load: () => {},
         search: '',
         checkInDate: '',
         checkOutDate: '',
-        guests: 0,
+        autocomplete: [],
+        onAutocompleteSelect: () => {},
         topHomes: [],
+        propertyType: 'homes',
         onDatesSelect: () => {},
         onSearchChange: () => {}
     }
+
     constructor(props) {
         super(props);
         this.onSearchHandler = this.onSearchHandler.bind(this);
-        this.onSearch = this.onSearch.bind(this);
+        this.updateData = this.updateData.bind(this);
+        this.gotoGuests = this.gotoGuests.bind(this);
+        this.gotoSearch = this.gotoSearch.bind(this);
+        this.renderAutocomplete = this.renderAutocomplete.bind(this);
+        this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
+        this.state = {
+            adults: 0,
+            children: 0,
+            infants: 0
+        };
     }
 
     componentDidMount() {
-        getTopHomes().then((topHomes) => {
-            const truncated = topHomes.content.slice(0, 4);
-            this.setState({ topHomes: truncated });
-        });
+        this.props.load(this.props.propertyType);
     }
 
     onSearchHandler(value) {
         this.props.onSearchChange(value);
     }
 
-    onSearch() {
-        this.props.navigation.navigate('EditUserProfile');
+    handleAutocompleteSelect(id, name) {
+        return () => {
+            this.props.onAutocompleteSelect(id, name);
+        };
+    }
+
+
+    updateData(data) {
+        console.log(data);
+        this.setState({ adults: data.adults, children: data.children, infants: data.infants });
+    }
+
+    gotoGuests() {
+        this.props.navigation.navigate('GuestsScreen', {
+            adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData: this.updateData
+        });
+    }
+
+    gotoSearch() {
+        this.props.navigation.navigate('PropertyScreen');
     }
 
     renderHomes() {
@@ -102,18 +96,42 @@ class Explore extends Component {
                 </View>
 
                 <View style={styles.tilesView}>
-                    { this.state.topHomes.map(listing => <SmallPropertyTile listingsType="homes" listing={listing} key={listing.id} />) }
+                    { this.props.topHomes.map(listing => <SmallPropertyTile listingsType="homes" listing={listing} key={listing.id} />) }
                 </View>
             </View>
         );
     }
 
-    // TODO: a renderHotels method does not exist yet because backend does not yet have an endpoint to request popular hotels
+
+
+    renderAutocomplete() {
+        return (
+            <ScrollView
+                contentContainerStyle={{ flex: 1 }}
+            >
+                {
+
+                    this.props.autocomplete.map(result => (
+                        <TouchableOpacity
+                            key={result.id}
+                            style={styles.autocompleteTextWrapper}
+                            onPress={this.handleAutocompleteSelect(result.id, result.name)}
+                        >
+                            <Text style={styles.autocompleteText} >{result.name}</Text>
+                        </TouchableOpacity>
+                    ))
+                }
+            </ScrollView>
+        );
+    }
 
     render() {
         const {
-             search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
+            search, checkInDate, checkOutDate, onDatesSelect, topHomes
         } = this.props;
+        const {
+            adults, children, infants
+        } = this.state;
 
         return (
             <View style={styles.container}>
@@ -127,16 +145,20 @@ class Explore extends Component {
                         leftIcon="search"
                     />
                 </View>
+                {!this.props.autocomplete.length && this.renderAutocomplete()}
 
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
                     <DateAndGuestPicker
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
-                        guests={guests}
+                        adults={adults}
+                        children={children}
+                        infants={infants}
+                        gotoGuests={this.gotoGuests}
+                        gotoSearch={this.gotoSearch}
                         onDatesSelect={onDatesSelect}
-                        onSearch={this.onSearch}
                     />
-                    { topHomes.length ? this.renderHomes() : null }
+                    { topHomes ? this.renderHomes() : null }
                 </ScrollView>
             </View>
         );

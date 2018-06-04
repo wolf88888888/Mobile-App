@@ -37,7 +37,7 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     dayText: {
-        fontFamily: 'FuturaStd',
+        fontFamily: 'FuturaStd-Light',
         fontSize: 18,
         fontWeight: '400',
         textAlign: 'center'

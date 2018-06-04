@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { payment } from '../common/reducers';
-import book from '../../components/screens/Explore/reducer';
+import explore from '../../components/screens/Explore/reducer';
 
 const rootReducer = combineReducers({
     paymentInfo: payment,
-    book
+    explore
 });
 
 export default rootReducer;

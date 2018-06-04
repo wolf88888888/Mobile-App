@@ -7,17 +7,36 @@ import Calendar from '../../templates/Calendar';
 
 
 class DateAndGuestPicker extends Component {
+    constructor(props) {
+        super(props);
+        this.onGuests = this.onGuests.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+        this.onSettings = this.onSettings.bind(this);
+    }
+
     componentDidMount() {
+    }
+
+    onSettings(){
+        this.props.gotoSettings();
+    }
+
+    onGuests() {
+        this.props.gotoGuests();
+    }
+
+    onSearch() {
+        this.props.gotoSearch();
     }
 
     render() {
         const {
-            checkInDate, checkOutDate, guests, onDatesSelect
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton
         } = this.props;
 
         return (
             <View style={styles.container}>
-                <View style={styles.pickerRow}>
+                <View style={showSearchButton ? styles.pickerRow : {display:'none'}}>
                     <View>
                         <TouchableOpacity
                             onPress={() => this.calendar.open()}
@@ -37,27 +56,34 @@ class DateAndGuestPicker extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={guests ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
-                        <Text style={styles.label}>Guests</Text>
-                        <Text style={styles.value}>{ guests || '-' }</Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={this.onGuests}
+                    >
+                        <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
+                            <Text style={styles.label}>Guests</Text>
+                            <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
+                        </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.optionsPickerViewIncomplete}>
-                        <Text style={styles.iconText}>
-                            <FontAwesome>{Icons.cog}</FontAwesome>
-                        </Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={this.onSettings}>
+                        <View style={styles.optionsPickerViewIncomplete}>
+                            <Text style={styles.iconText}>
+                                <FontAwesome>{Icons.cog}</FontAwesome>
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity onPress={this.props.onSearch}>
-                    <View style={styles.searchButtonView}>
-                        <Text style={styles.searchButtonText}>Search</Text>
+                <TouchableOpacity onPress={this.onSearch}>
+                    <View style={showSearchButton ?  styles.searchButtonView : {height: 0}}>
+                        <Text style={showSearchButton ? styles.searchButtonText : {height: 0}}>Search</Text>
                     </View>
                 </TouchableOpacity>
                 <Calendar
                     startDate={checkInDate}
                     endDate={checkOutDate}
-                    format="ddd-DD-MMMM"
+                    format="ddd, DD MMM"
                     ref={(calendar) => { this.calendar = calendar; }}
                     onConfirm={onDatesSelect}
                 />
@@ -69,8 +95,14 @@ class DateAndGuestPicker extends Component {
 DateAndGuestPicker.propTypes = {
     checkInDate: PropTypes.string.isRequired,
     checkOutDate: PropTypes.string.isRequired,
-    guests: PropTypes.number.isRequired,
-    onDatesSelect: PropTypes.func.isRequired
+    onDatesSelect: PropTypes.func.isRequired,
+    adults: PropTypes.number.isRequired,
+    children: PropTypes.number.isRequired,
+    infants: PropTypes.number.isRequired,
+    gotoSearch: PropTypes.func.isRequired,
+    gotoGuests: PropTypes.func.isRequired,
+    gotoSettings : PropTypes.func.isRequired,
+    showSearchButton : PropTypes.bool
 };
 
 export default DateAndGuestPicker;
