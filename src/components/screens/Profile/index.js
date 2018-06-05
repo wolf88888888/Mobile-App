@@ -53,10 +53,10 @@ class Profile extends Component {
             </TouchableOpacity>
 
             <View>
-                <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                <TouchableOpacity onPress={() => navigate('UserProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>View Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                <TouchableOpacity onPress={() => navigate('EditUserProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Edit Profile</Text>
                     <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-user.svg')} style={styles.navIcon} />
                 </TouchableOpacity>
