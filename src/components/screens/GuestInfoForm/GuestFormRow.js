@@ -56,6 +56,19 @@ export default class GuestFormRow extends Component {
         });
       }
 
+    textDone() {
+        this.setState(
+            {
+                guestRecord :{
+                    "title": this.state.guest.genderRepresentation,
+                    "firstName": this.state.guest.firstName,
+                    "lastName": this.state.guest.lastName
+                }
+            }
+        );
+        this.props.onTextDone(this.props.itemIndex,this.state.guestRecord);
+    }
+
     render() {
         return (
             <View style={styles.guestInfoWrapper} key={this.props.guest.key}>
@@ -69,8 +82,8 @@ export default class GuestFormRow extends Component {
                             itemStyle={{height:'100%',fontFamily: 'FuturaStd-Light',}}
                             onValueChange={this.onValueChange}>
   
-                            <Item label="Mr" value="Mr" />
-                            <Item label="Mrs" value="Mrs" />
+                                <Item label="Mr" value="Mr" />
+                                <Item label="Mrs" value="Mrs" />
                             </Picker>
                         </View>
                     </View>
@@ -83,6 +96,7 @@ export default class GuestFormRow extends Component {
                                 this.setState({guest})
                                 this.handleGuestInfo();
                             }}
+                            //onBlur={() => this.textDone()}
                             value={this.state.guest.firstName}
                             placeholder="First Name"
                         />
@@ -96,6 +110,7 @@ export default class GuestFormRow extends Component {
                                 this.setState({guest})
                                 this.handleGuestInfo();
                             }}
+                            //onBlur={() => this.textDone()}
                             value={this.state.guest.lastName}
                             placeholder="Last Name"
                         />
@@ -106,5 +121,5 @@ export default class GuestFormRow extends Component {
     }
 }
 GuestFormRow.propTypes = {
-    gotoSearch: PropTypes.func.isRequired,
+    onTextDone: PropTypes.func.isRequired,
 };

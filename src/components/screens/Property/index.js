@@ -172,14 +172,23 @@ class Property extends Component {
     }
 
     gotoGuests() {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
         this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
         this.props.navigation.navigate('FilterScreen');
     }
 
     gotoSearch() {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
       this.props.navigation.navigate('PropertyScreen');
     }
 
@@ -190,6 +199,9 @@ class Property extends Component {
     }
 
     onBackPress = () => {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
         this.props.navigation.goBack();
     }
     gotoHotelDetailsPage = (item) =>{
@@ -309,8 +321,7 @@ class Property extends Component {
 
     //Search logic
     handleReceiveSingleHotel(response) {
-        if (response.hasOwnProperty('allElements')) {
-            clientRef.disconnect();
+        if (response.hasOwnProperty('allElements')) {            
             if(this.state.listings.length > 0){
                 this.setState({
                     listings2 : this.state.listings,
