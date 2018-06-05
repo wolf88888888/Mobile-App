@@ -96,6 +96,7 @@ export const FullNavigator = StackNavigator(
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
         AvailableRoomsView: { screen: AvailableRoomsView},
+
         UserProfile: { screen: UserProfile },
         EditUserProfile: { screen: EditUserProfile },
         UpdateProfileInfo: { screen: UpdateProfileInfo },
