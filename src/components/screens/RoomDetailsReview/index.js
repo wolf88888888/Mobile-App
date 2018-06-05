@@ -66,12 +66,12 @@ export default class RoomDetailsReview extends Component {
                 }],
                 "currency": "USD"
             }
+        console.log(value);
         
         testBook(value)
         .then(res => res.response.json())
         // here you set the response in to json 
         .then(parsed => {
-            console.log('sanan here is res')
             // here you parse your json
             // here you set you data from json into your variables
 
