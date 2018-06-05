@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 export default class GuestInfoForm extends Component {
     constructor(props) {
         super(props);
-
+        //console.log(props.navigation.state.params.guests);
         this.onProceedClick = this.onProceedClick.bind(this);
         // Save guests array for dynamic form generation
         this.state = {
@@ -18,7 +18,6 @@ export default class GuestInfoForm extends Component {
     }
 
     onProceedClick(key, value){
-        console.log(key)
         this.state.guestRecord[key] = value;
         this.setState(
             {
@@ -29,18 +28,21 @@ export default class GuestInfoForm extends Component {
     // Keys for flatlist
     _keyExtractor = (item, index) => item.key;
 
-    render() {
-        const {params} = this.props.navigation.state
-
-        for (var i = 0; i < params.guests; i++){
+    componentDidMount(){
+        console.disableYellowBox = true
+        for (var i = 0; i < this.props.navigation.state.params.guests; i++){
             this.state.arr.push({
-                key: 0,
+                key: i,
                 genderRepresentation: 'Mr',
                 firstName: '',
                 lastName: ''
-            });
+                }
+            );
         }
-        console.disableYellowBox = true
+    }
+
+    render() {
+        const {params} = this.props.navigation.state
         return (
             <View style={styles.container}>
                     <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
@@ -67,6 +69,7 @@ export default class GuestInfoForm extends Component {
                                 renderItem={({ item, index }) => (
                                     <GuestFormRow guest={item}
                                     itemIndex={index}
+                                    onTextDone={this.onProceedClick}
                                     onProceedClick={this.onProceedClick}/>
                                 )}
                             />
