@@ -3,6 +3,8 @@ package com.mobileapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
+import com.Traviskn.*;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -28,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new RNCardViewPackage(),
           new MainReactPackage(),
+            new RNUUIDGeneratorPackage(),
           new RCTSplashScreenPackage(),    //register Module
           new MapsPackage()
       );
