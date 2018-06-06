@@ -1,4 +1,4 @@
 {
     "javascript.implicitProjectConfig.experimentalDecorators": true,
-    "eslint.enable": false
+    "eslint.enable": true
 }

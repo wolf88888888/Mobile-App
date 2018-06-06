@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+const { width } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
     container: {
@@ -343,6 +344,18 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light',
         color: '#fff',
         fontSize: 16
-    }
+    },
+    autocompleteText: {
+        fontFamily: 'FuturaStd-Light'
+    },
+    autocompleteTextWrapper: {
+        backgroundColor: '#ffffff',
+        width: width - 34,
+        justifyContent: 'center',
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 17,
+        paddingRight: 17
+    },
 });
 export default styles;

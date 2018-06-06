@@ -123,7 +123,9 @@ export async function getPropertyById(id) {
 }
 
 export async function getRegionsBySearchParameter(param) {
-    return sendRequest(`${host}regions/search?query=${param}`, RequestMethod.GET).then(res => res.response.json());
+    return sendRequest(`${host}regions/search?query=${param}`, RequestMethod.GET).then(res => {
+        return res;
+    });
 }
 
 export async function getCountriesWithListings() {
