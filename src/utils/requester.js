@@ -16,6 +16,7 @@ async function getHeaders(headers = null) {
         const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
         if (value !== null) {
             headers.Authorization = value;
+            console.log(value);
         }
     } catch (error) {
         console.log('Error getting headers:', error);
@@ -78,6 +79,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
             if (!res.ok) {
                 return {
                     response: res.json().then((r) => {
+                        console.log(res);
                         if (r.errors && r.errors.ExpiredJwt) {
                             AsyncStorage.multiRemove([`${domainPrefix}.auth.lockchain`, `${domainPrefix}.auth.username`]);
                             if (onLogOut) onLogOut();
@@ -122,7 +124,9 @@ export async function getPropertyById(id) {
 }
 
 export async function getRegionsBySearchParameter(param) {
-    return sendRequest(`${host}regions/search?query=${param}`, RequestMethod.GET).then(res => res.response.json());
+    return sendRequest(`${host}regions/search?query=${param}`, RequestMethod.GET).then(res => {
+        return res;
+    });
 }
 
 export async function getCountriesWithListings() {

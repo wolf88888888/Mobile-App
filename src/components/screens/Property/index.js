@@ -11,10 +11,12 @@ import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
+import UUIDGenerator from 'react-native-uuid-generator';
 
 var clientRef = '';
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
+let uid = '';
 
 class Property extends Component {
     static propTypes = {
@@ -60,6 +62,11 @@ class Property extends Component {
 
     constructor(props) {
         super(props);
+
+        UUIDGenerator.getRandomUUID((uuid) => {
+            uid = uuid;
+        });
+      
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -197,7 +204,7 @@ class Property extends Component {
         };
     }
 
-    onBackPress = () => {
+    onBackPress(){
         this.props.navigation.goBack();
     }
     gotoHotelDetailsPage = (item) =>{
@@ -299,12 +306,13 @@ class Property extends Component {
                 </View>
                 <SockJsClient 
                     url={apiHost + 'handler'} 
-                    topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
+                    topics={[`/topic/all/${uid}${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
                     onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest.bind(this)}
                     onDisconnect={this.disconnected.bind(this)}
                     getRetryInterval={() => { return 3000; }}
+                    autoReconnect={false}
                     debug={true}
                     autoReconnect={false}
                     />
@@ -331,7 +339,7 @@ class Property extends Component {
         this.setState({
             listings2 : this.state.listings,
         });
-        if (clientRef) {
+        if(clientRef){
             clientRef.disconnect();
         }
       }
@@ -340,10 +348,10 @@ class Property extends Component {
         let query = this.state.urlForService;
         const msg = {
           query: query,
-          uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'
+          uuid: uid
         };
         if (clientRef) {
-            clientRef.sendMessage(`/app/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
+            clientRef.sendMessage(`/app/all/${uid}${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
         }
         else{
              //client ref is empty
