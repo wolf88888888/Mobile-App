@@ -38,6 +38,9 @@ import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
+import UserProfile from '../components/screens/UserProfile';
+import EditUserProfile from '../components/screens/EditUserProfile';
+import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -92,6 +95,10 @@ export const FullNavigator = StackNavigator(
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
         AvailableRoomsView: { screen: AvailableRoomsView},
+
+        UserProfile: { screen: UserProfile },
+        EditUserProfile: { screen: EditUserProfile },
+        UpdateProfileInfo: { screen: UpdateProfileInfo },
     },
     {
         initialRouteName: 'MainScreen',

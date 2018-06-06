@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },
 
     info0: {
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Medium',
         color: '#000000',
         fontSize: 16,
         lineHeight:20,
