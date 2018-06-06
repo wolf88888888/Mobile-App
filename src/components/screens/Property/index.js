@@ -198,9 +198,6 @@ class Property extends Component {
     }
 
     onBackPress = () => {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
         this.props.navigation.goBack();
     }
     gotoHotelDetailsPage = (item) =>{
@@ -233,7 +230,7 @@ class Property extends Component {
         return (
             <View style={styles.container}>
 
-                <TouchableOpacity onPress={this.onBackPress} style={styles.backButton}>
+                <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/svg/arrow-back.svg')} />
                 </TouchableOpacity>
 
@@ -309,6 +306,7 @@ class Property extends Component {
                     onDisconnect={this.disconnected.bind(this)}
                     getRetryInterval={() => { return 3000; }}
                     debug={true}
+                    autoReconnect={false}
                     />
             </View>
         );
@@ -333,7 +331,9 @@ class Property extends Component {
         this.setState({
             listings2 : this.state.listings,
         });
-        clientRef.disconnect();
+        if (clientRef) {
+            clientRef.disconnect();
+        }
       }
 
       sendInitialWebsocketRequest() {
