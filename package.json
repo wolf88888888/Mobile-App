@@ -46,6 +46,7 @@
     "react-native-picker-select": "^3.0.1",
     "react-native-remote-svg": "^1.1.1",
     "react-native-smart-splash-screen": "git://github.com/rgdalessandro/react-native-smart-splash-screen.git#a803be27fececa72f446cb16b4b2d2dd6c5c09e4",
+    "react-native-uuid-generator": "^4.0.0",
     "react-navigation": "^1.5.12",
     "react-redux": "^5.0.7",
     "react-stomp": "^3.2.0",
