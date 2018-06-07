@@ -30,12 +30,77 @@ class EditUserProfile extends Component {
 
     constructor(props) {
         super(props);
+
+        this.onGender = this.onGender.bind(this);
+        this.onBirthDate = this.onBirthDate.bind(this);
+        this.onEmail = this.onEmail.bind(this);
+        this.onPhone = this.onPhone.bind(this);
+        this.onGovernmentID = this.onGovernmentID.bind(this);
+        this.onLocation = this.onLocation.bind(this);
+        this.onSchool = this.onSchool.bind(this);
+        this.onWork = this.onWork.bind(this);
         this.onLanguage = this.onLanguage.bind(this);
         this.state = {
         }
     }
 
     componentDidMount() {
+    }
+
+    onGender() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Gender" },
+        );
+    }
+
+    onBirthDate() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Birth Date" },
+        );
+    }
+
+    onEmail() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Email" },
+        );
+    }
+
+    onPhone() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Phone" },
+        );
+    }
+
+    onGovernmentID() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Government ID" },
+        );
+    }
+
+    onLocation() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Location" },
+        );
+    }
+
+    onSchool() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"School" },
+        );
+    }
+
+    onWork() {
+        this.props.navigation.navigate(
+            'UpdateProfileInfo',
+            { title:"Work" },
+        );
     }
 
     onLanguage() {
@@ -83,27 +148,31 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeAction
                             title="Gender"
-                            onPress={()=>{console.log("test test")}}/>
+                            onPress={this.onGender}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
                             title="Birth date"
-                            info ="15/02/1988"/>
+                            info ="15/02/1988"
+                            onPress={this.onBirthDate}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
                             title="Email Address"
-                            info ="veselina@gmail.com"/>
+                            info ="veselina@gmail.com"
+                            onPress={this.onEmail}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
                             title="Phone"
-                            info ="+359 88 788 99 88"/>
+                            info ="+359 88 788 99 88"
+                            onPress={this.onPhone}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
                             title="Government ID"
-                            info ="Provide"/>
+                            info ="Provide"
+                            onPress={this.onGovernmentID}/>
                         <View style={[styles.lineStyle, {marginLeft:0, marginRight:0, marginTop:0, marginBottom:15}]} />
 
                         <View style={styles.subtitleContainer}>
@@ -112,17 +181,18 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title="Location"
-                            info ="Plovdiv, Bulgaria"/>
+                            info ="Plovdiv, Bulgaria"
+                            onPress={this.onLocation}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeAction
                             title="School"
-                            onPress={()=>{}}/>
+                            onPress={this.onSchool}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeAction
                             title="Work"
-                            onPress={()=>{}}/>
+                            onPress={this.onWork}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeAction
