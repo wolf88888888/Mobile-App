@@ -90,6 +90,7 @@ class MyTrips extends Component {
         )
     }
     onStartExploring = () =>{
+        this.props.navigation.navigate('UserMyTrips');
     }
     onBackPress = () => {
         this.props.navigation.navigate('EXPLORE');

@@ -6,27 +6,43 @@ import styles from './styles';
 import PropTypes from 'prop-types';
 
 export default class GuestInfoForm extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        //console.log(props.navigation.state.params.guests);
+        this.onProceedClick = this.onProceedClick.bind(this);
         // Save guests array for dynamic form generation
         this.state = {
-            arr : []
+            arr : [],
+            guestRecord : [{}]
         };
+    }
+
+    onProceedClick(key, value){
+        this.state.guestRecord[key] = value;
+        this.setState(
+            {
+                guestRecord : this.state.guestRecord
+            }
+        );
     }
     // Keys for flatlist
     _keyExtractor = (item, index) => item.key;
 
-    render() {
-        const {params} = this.props.navigation.state
-        for (var i = 0; i < params.guests; i++){
+    componentDidMount(){
+        console.disableYellowBox = true
+        for (var i = 0; i < this.props.navigation.state.params.guests; i++){
             this.state.arr.push({
-                key: 0,
+                key: i,
                 genderRepresentation: 'Mr',
                 firstName: '',
                 lastName: ''
-            });
+                }
+            );
         }
-        console.disableYellowBox = true
+    }
+
+    render() {
+        const {params} = this.props.navigation.state
         return (
             <View style={styles.container}>
                     <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
@@ -41,8 +57,8 @@ export default class GuestInfoForm extends Component {
                                 <Image source={require('../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
                             </View>
                             <View style={styles.hotelInfoView}>
-                                <Text style={styles.hotelName}>{this.props.hotelName}</Text>
-                                <Text style={styles.hotelPlace}>{this.props.hotelAddress}</Text>
+                                <Text style={styles.hotelName}>{params.hotelDetails.name}</Text>
+                                <Text style={styles.hotelPlace}>{params.hotelDetails.additionalInfo.mainAddress}</Text>
                             </View>
                         </View>
                         <View style={styles.form}>
@@ -51,7 +67,10 @@ export default class GuestInfoForm extends Component {
                                 data={this.state.arr}
                                 keyExtractor={this._keyExtractor}
                                 renderItem={({ item, index }) => (
-                                    <GuestFormRow guest={item}/>
+                                    <GuestFormRow guest={item}
+                                    itemIndex={index}
+                                    onTextDone={this.onProceedClick}
+                                    onProceedClick={this.onProceedClick}/>
                                 )}
                             />
                         </View>
@@ -61,11 +80,11 @@ export default class GuestInfoForm extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.bold400]}>${this.props.priceInUserCurreny}</Text>
+                            <Text style={[styles.price, styles.bold400]}>${params.price}</Text>
                             <Text style={styles.period1}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.fontFuturaStd]}>{this.props.priceInLoc} LOC</Text>
+                            <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
                             <Text style={styles.period2}> for 1 nights</Text>
                         </View>
                     </View>
@@ -80,8 +99,8 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state
-        this.props.navigation.navigate('RoomDetailsReview', {'quoteId':params.roomDetail.quoteId,'guests': this.props.guestsArray.length});
-        
+        console.log(params.roomDetail.quoteId);
+        this.props.navigation.navigate('RoomDetailsReview', {'quoteId': params.roomDetail.quoteId,'guests': this.props.guestsArray.length, 'hotelDetails': params.hotelDetails, 'price': params.price, 'priceLOC': params.priceLOC, 'guestRecord': this.state.guestRecord});
     }
 }
 

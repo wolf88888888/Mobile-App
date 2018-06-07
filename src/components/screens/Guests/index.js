@@ -71,9 +71,9 @@ class Guests extends Component {
               <CloseButton onPress={this.onClose}/>
               <View style={styles.bodyRows}>
                 <GuestRow title={"Adults"} count={this.state.adults} type={"adults"} onChanged={this.onPersonChange}/>
-                <TouchableOpacity onPress={this.changeValue.bind(this)}><Text style={styles.ChildText}>{this.state.childrenBool == false ? "No children" : "With children"}</Text></TouchableOpacity>
-                {/* <GuestRow title={"Children"} subtitle={"Age 2-12"} count={this.state.children} type={"children"} onChanged={this.onPersonChange}/>
-                <GuestRow title={"Infants"} subtitle={"Under 2"} count={this.state.infants} type={"infants"} onChanged={this.onPersonChange}/> */}
+                {/* <TouchableOpacity onPress={this.changeValue.bind(this)}><Text style={styles.ChildText}>{this.state.childrenBool == false ? "No children" : "With children"}</Text></TouchableOpacity> */}
+                <GuestRow title={"Children"} subtitle={"Age 2-12"} count={this.state.children} type={"children"} onChanged={this.onPersonChange}/>
+                <GuestRow title={"Infants"} subtitle={"Under 2"} count={this.state.infants} type={"infants"} onChanged={this.onPersonChange}/>
               </View>
               <View style={styles.bottomView}>
                 <TouchableOpacity style={styles.doneButtonView} onPress={this.onDone}>

@@ -15,6 +15,11 @@ const styles = StyleSheet.create({
         height: 210,
         marginTop: 30
     },
+    hotelImage: {
+        marginBottom: 10,
+        marginTop: 10,
+        height: 150,
+    },
     title: {
         fontFamily: 'futura',
         fontSize: 24,
@@ -24,15 +29,20 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         fontFamily: 'futura',
-        fontSize: 19,
+        fontSize: 16,
         marginRight: 10,
         color: '#1f2427'
     },
     subtext: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 16,
+        fontSize: 12,
         marginTop: 8,
         color: '#767b7d'
+    },
+    hoteltext: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 12,
+        color: '#000'
     },
     buttonExplore: {
         backgroundColor: '#cc8068',
@@ -58,28 +68,33 @@ const styles = StyleSheet.create({
         marginLeft: 6
       },
       senderImage:{
-        height: 58,
-        width: 58,
+        height: 50,
+        width: 50,
+        borderRadius: 25,
+        borderColor: 'white',
+        borderWidth: 1,
         position: 'absolute',
-        top: -20,
-        left: 30
       },
       flatList:{
-        marginLeft: 14,
-        marginRight: 18
+        width : '100%',
     },
     List:{
         marginLeft: 4
    
     },
     img_round:{
-        height:75,
-        width: 75,
-        borderRadius: 40,
+        margin: 10,
+        height:50,
+        width: 50,
+        borderRadius: 25,
         backgroundColor:'#cc8068',
-        lineHeight: 0,
-        alignItems: 'center'
-
+        flexDirection : 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    img_round_text:{
+        color : 'white',
+        textAlign: 'center'
     },
     innertext:{
         color: '#fff',
@@ -96,8 +111,12 @@ const styles = StyleSheet.create({
     },
     imageViewWrapper: {
         position: 'relative',
-    }
-
+    },
+    flatListMainView : {width: '100%', flex: 1, flexDirection: 'row'},
+    flatListDataView : {width: '75%',},
+    flatListTitleView : {marginTop: 8},
+    flatListBottomView : {flex: 1, flexDirection: 'row'},
+    flatListUserProfileView : {height: 50, width:50, position: "absolute", bottom: 5, right: 5}
 });
 
 export default styles;

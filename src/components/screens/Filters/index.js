@@ -2,9 +2,19 @@ import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Image from 'react-native-remote-svg';
 import styles from './styles';
-
+import PropTypes from 'prop-types';
 
 export default class Filters extends Component {
+    static propTypes = {
+        navigation: PropTypes.shape({
+            navigate: PropTypes.func
+        }),
+    }
+    static defaultProps = {
+        navigation: {
+            navigate: () => {}
+        },
+    }
     constructor() {
         super();
         this.state = {
@@ -14,8 +24,10 @@ export default class Filters extends Component {
                 beds: 2,
                 bedrooms: 0,
                 bathrooms: 0
-            }
+            },
+            rooms : [{ adults: 2, children: [] }]
         }
+        
     }
 
     addCount(type) {
@@ -61,13 +73,18 @@ export default class Filters extends Component {
         }
     }
 
+    onBackPress = () => {
+        this.props.navigation.goBack();
+    }
 
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.closeView}>
-                    <Image source={require('../../../assets/close.svg')} style={styles.closeSvg}/>
-                </View>
+                <TouchableOpacity onPress={this.onBackPress}>
+                    <View style={styles.closeView}>
+                        <Image source={require('../../../assets/close.svg')} style={styles.closeSvg}/>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.header}>
                     <View style={styles.residenceView}>
                         <TouchableOpacity onPress={() => this.setState({isHotelSelected: false})} style={[styles.residence, !this.state.isHotelSelected? styles.selected: '']}>
@@ -173,7 +190,7 @@ export default class Filters extends Component {
                        
                 </ScrollView>
                 <View style={styles.bottomBar}>
-                    <TouchableOpacity style={styles.doneButton}>
+                    <TouchableOpacity style={styles.doneButton} onPress={this.onSearchPress.bind(this)}>
                         <Text style={styles.doneButtonText}>Show Hotels</Text>
                     </TouchableOpacity>
                 </View>
@@ -181,5 +198,56 @@ export default class Filters extends Component {
                 
             </View>
         )
+    }
+
+    onSearchPress(){
+        const { params } = this.props.navigation.state;
+
+        var countArray = []
+        var counts = {};
+        var arrayRooms = new Array(this.state.count.bedrooms);
+        if (params.adults < this.state.count.bedrooms){
+            alert('Adults are less than rooms selected');
+        }
+        else {
+            var j = 0;
+            while(params.adults != 0){
+                arrayRooms.push(
+                    j
+                );
+                params.adults -= 1
+                j += 1
+                if (j == this.state.count.bedrooms){
+                    j = 0
+                }
+            }
+            arrayRooms = arrayRooms.filter(function(n){ return n != undefined }); 
+            for (var i = 0; i < arrayRooms.length; i++) {
+                var num = arrayRooms[i];
+                counts[num] = counts[num] ? counts[num] + 1 : 1;
+            }
+            this.state.rooms = []
+            for (var k = 0; k < this.state.count.bedrooms; k++){
+                this.state.rooms.push(
+                    { adults: counts[k], children: [] }
+                )
+            }
+        }
+        
+        console.log(this.state.rooms);
+        this.props.navigation.navigate('PropertyScreen', {
+            searchedCity: params.search, 
+            searchedCityId: 72, 
+            checkInDate : params.checkInDate, 
+            checkOutDate : params.checkOutDate, 
+            guests: params.guests, 
+            children: params.children, 
+            //these props are for paramerters in the next class
+            regionId: params.regionId,
+            currency: params.currency,
+            checkOutDateFormated: params.checkOutDateFormated,
+            checkInDateFormated: params.checkInDateFormated, 
+            roomsDummyData: encodeURI(JSON.stringify(this.state.rooms))
+        });
     }
 }

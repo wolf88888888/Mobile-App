@@ -36,8 +36,8 @@ class StarRatings extends Component {
                 width: 16,
                 height:16,
             },
-        emptyStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/empty-star.svg')}/>,
-        filledStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/empty-star-full.svg')}/>,
+        emptyStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/svg/empty-star.svg')}/>,
+        filledStarImage: <Image style={{width:16, height:16}} source={require('../../../assets/svg/empty-star-full.svg')}/>,
     };
 
     constructor(props) {

@@ -9,8 +9,11 @@ import CreatePassword from '../components/screens/CreatePassword';
 import Terms from '../components/templates/Terms';
 
 import Explore from '../components/screens/Explore';
+import Profile from '../components/screens/Profile'
+import CreateWallet from '../components/screens/CreateWallet';
+import SaveWallet from '../components/screens/SaveWallet';
+import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
-import Profile from '../components/screens/Profile';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
 import UserMyTrips from '../components/screens/MyTrips/MyTrips';
@@ -19,6 +22,7 @@ import Favourites from '../components/screens/Favorites';
 //import WishlistSettings from '../components/screens/Favorites/WishlistSettings';
 
 import Notifications from '../components/screens/Notifications';
+
 import Guests from '../components/screens/Guests';
 
 import Property from '../components/screens/Property';
@@ -41,6 +45,9 @@ import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
+import UserProfile from '../components/screens/UserProfile';
+import EditUserProfile from '../components/screens/EditUserProfile';
+import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -48,7 +55,10 @@ export const LoginNavigator = StackNavigator(
         Login: { screen: Login },
         CreateAccount: { screen: CreateAccount },
         CreatePassword: { screen: CreatePassword },
-        Terms: { screen: Terms }
+        Terms: { screen: Terms },
+        CreateWallet: { screen: CreateWallet },
+        SaveWallet: { screen: SaveWallet },
+        CongratsWallet: { screen: CongratsWallet }
     },
     {
         initialRouteName: 'Welcome',
@@ -94,7 +104,12 @@ export const FullNavigator = StackNavigator(
         FilterScreen: { screen: Filters },
         AvailableRoomsView: { screen: AvailableRoomsView},
 
-         Notifications: { screen: Notifications },
+        Notifications: { screen: Notifications },
+
+        UserProfile: { screen: UserProfile },
+        EditUserProfile: { screen: EditUserProfile },
+        UpdateProfileInfo: { screen: UpdateProfileInfo },
+
     },
     {
         initialRouteName: 'MainScreen',

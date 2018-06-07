@@ -11,14 +11,12 @@ import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
-
-
-
+import UUIDGenerator from 'react-native-uuid-generator';
 
 var clientRef = '';
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
-
+let uid = '';
 
 class Property extends Component {
     static propTypes = {
@@ -64,7 +62,11 @@ class Property extends Component {
 
     constructor(props) {
         super(props);
-        
+
+        UUIDGenerator.getRandomUUID((uuid) => {
+            uid = uuid;
+        });
+      
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -79,9 +81,7 @@ class Property extends Component {
         this.state = {
             search: '',
             checkInDate: '',
-            checkInDateFormated: '',
             checkOutDate: '',
-            checkOutDateFormated: '',
             guests: 0,
             adults: 2,
             childrenBool: false,
@@ -92,20 +92,29 @@ class Property extends Component {
             listings2 : [],
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
+            //these state are for paramerters in urlForService
+            regionId: '',
+            currency: '',
+            checkInDateFormated: '',
+            checkOutDateFormated: '',
             roomsDummyData: [],
-            urlForService:''
+            urlForService:'',
         };
         const { params } = this.props.navigation.state;
-        this.state.searchedCity = params ? params.searchedCity : 'Amad';
+        this.state.searchedCity = params ? params.searchedCity : '';
         this.state.searchedCityId = params ? params.searchedCityId : 0;
         this.state.checkInDate = params ? params.checkInDate : '';
-        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
-        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.checkOutDate = params ? params.checkOutDate : '';
         this.state.guests = params ? params.guests : 0;
         this.state.children = params ? params.children : 0;
+
+        this.state.regionId = params ? params.regionId : [];
+        this.state.currency = params ? params.currency : [];
+        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
+        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
-        this.state.urlForService = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+
+        this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
     }
 
     componentWillMount(){
@@ -169,14 +178,23 @@ class Property extends Component {
     }
 
     gotoGuests() {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
         this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
         this.props.navigation.navigate('FilterScreen');
     }
 
     gotoSearch() {
+        if (clientRef) {
+            clientRef.disconnect();
+        }
       this.props.navigation.navigate('PropertyScreen');
     }
 
@@ -186,11 +204,10 @@ class Property extends Component {
         };
     }
 
-    onBackPress = () => {
+    onBackPress(){
         this.props.navigation.goBack();
     }
     gotoHotelDetailsPage = (item) =>{
-        console.log(item)
         this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
     }
 
@@ -217,11 +234,10 @@ class Property extends Component {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
         } = this.state;
-        
         return (
             <View style={styles.container}>
 
-                <TouchableOpacity onPress={this.onBackPress} style={styles.backButton}>
+                <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/svg/arrow-back.svg')} />
                 </TouchableOpacity>
 
@@ -241,7 +257,7 @@ class Property extends Component {
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
                             adults={guests}
-                            children={0} 
+                            children={0}
                             guests = {0}
                             infants={0}
                             gotoGuests={this.gotoGuests}
@@ -264,18 +280,17 @@ class Property extends Component {
                                 <TouchableOpacity style={styles.favoritesButton}>
                                     <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
                                 </TouchableOpacity>
-                                
                                         <View style={styles.cardContent}>
                                             <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                             <View style={styles.aboutPlaceView}>
                                                 <Text style={styles.placeReviewText}>Excellent </Text>
                                                 <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
                                                 <View style={styles.ratingIconsWrapper}>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
                                                 </View>
                                                 <Text style={styles.totalReviews}> 73 Reviews</Text>
                                             </View>
@@ -284,19 +299,20 @@ class Property extends Component {
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>
-                                
                                 </View>
                                 </TouchableOpacity>
                             }
                         />
                 </View>
-                
-                <SockJsClient url={apiHost + 'handler'} 
-                    topics={[`/topic/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
+                <SockJsClient 
+                    url={apiHost + 'handler'} 
+                    topics={[`/topic/all/${uid}${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
                     onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest.bind(this)}
+                    onDisconnect={this.disconnected.bind(this)}
                     getRetryInterval={() => { return 3000; }}
+                    autoReconnect={false}
                     debug={true}
                     />
             </View>
@@ -305,8 +321,7 @@ class Property extends Component {
 
     //Search logic
     handleReceiveSingleHotel(response) {
-        if (response.hasOwnProperty('allElements')) {
-            clientRef.disconnect();
+        if (response.hasOwnProperty('allElements')) {            
             if(this.state.listings.length > 0){
                 this.setState({
                     listings2 : this.state.listings,
@@ -319,16 +334,23 @@ class Property extends Component {
         }
       }
 
+      disconnected(){
+        this.setState({
+            listings2 : this.state.listings,
+        });
+        if(clientRef){
+            clientRef.disconnect();
+        }
+      }
+
       sendInitialWebsocketRequest() {
-        let query = 'region=52612&currency=USD&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-        // let query = 'region=52612&currency=USD&startDate=01/06/2018&endDate=02/06/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
+        let query = this.state.urlForService;
         const msg = {
           query: query,
-          uuid: '6f2dffa5-1aaa-4df9-a8b6-d64d111df60f'
+          uuid: uid
         };
-    
         if (clientRef) {
-            clientRef.sendMessage(`/app/all/6f2dffa5-1aaa-4df9-a8b6-d64d111df60f${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
+            clientRef.sendMessage(`/app/all/${uid}${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
         }
         else{
              //client ref is empty
@@ -346,4 +368,3 @@ function SeparatorDot(props) {
 
 
 export default withNavigation(Property);
-
