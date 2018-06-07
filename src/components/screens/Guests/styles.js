@@ -17,7 +17,11 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
     },
-
+    ChildText:{
+        fontFamily: 'futura',
+        fontSize: 17,
+        marginLeft: 15,
+    },
     doneButtonView: {
         flex: 1,
         flexDirection: 'column',

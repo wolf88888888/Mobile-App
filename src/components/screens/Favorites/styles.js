@@ -1,3 +1,4 @@
+
 import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
@@ -8,40 +9,60 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     placeholderImageView: {
-        marginTop: 40,
-        marginBottom: 15
+        marginTop: 10
     },
     placeholderImage: {
-        width: 195,
-        height: 195,
-        marginTop: 30
+        width: 300,
+        height: 210,
+        marginTop: 20
     },
     title: {
-        color: '#1f2427',
         fontFamily: 'futura',
         fontSize: 24,
-        textAlign: 'center',
-        width: '90%'
+        color: '#1f2427',
+        marginLeft: 14,
+        marginTop: 30
+    },
+    subtitle: {
+        fontFamily: 'futura',
+        fontSize: 19,
+        marginRight: 10,
+        color: '#1f2427'
     },
     subtext: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 16,
-        marginTop: 20,
-        width: '80%',
-        color: '#767b7d',
-        textAlign: 'center'
+        marginTop: 8,
+        color: '#767b7d'
     },
-    buttonDiscover: {
-        backgroundColor: '#d87a61',
-        paddingHorizontal: 10,
+    buttonExplore: {
+        backgroundColor: '#cc8068',
+        paddingHorizontal: 60,
         paddingVertical: 15,
-        marginTop: 30
+        marginTop: 90
     },
-    discoverBtnText: {
+    exploreBtnText: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 18,
         color: '#fff'
+    },
+    btn_backImage:{
+        height: 28,
+        width: 28,
+        marginTop: 44,
+        marginLeft: 16
+    },
+    flatList:{
+        marginRight: 18
+    },
+    Listcontainer:{
+        marginBottom: 30
+    },
+    chatToolbar: {
+        alignSelf: 'flex-start',
+        marginBottom: 30
     }
+
 });
 
 export default styles;

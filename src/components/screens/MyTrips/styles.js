@@ -18,11 +18,14 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'futura',
         fontSize: 24,
-        color: '#1f2427'
+        color: '#1f2427',
+        marginLeft: 14,
+        marginTop: 30
     },
-        subtitle: {
+    subtitle: {
         fontFamily: 'futura',
         fontSize: 19,
+        marginRight: 10,
         color: '#1f2427'
     },
     subtext: {
@@ -46,29 +49,53 @@ const styles = StyleSheet.create({
         height: 28,
         width: 28,
         marginTop: 44,
-        marginLeft: 16,
+        marginLeft: 16
       },
     btn_ImageNumber:{
         height: 58,
         width: 58,
         marginTop: 34,
-        marginLeft: 6,
+        marginLeft: 6
       },
       senderImage:{
         height: 58,
         width: 58,
-        marginTop: 4,
-        marginLeft: 16,
+        position: 'absolute',
+        top: -20,
+        left: 30
       },
       flatList:{
         marginLeft: 14,
         marginRight: 18
     },
+    List:{
+        marginLeft: 4
+   
+    },
     img_round:{
-        height: 58,
-        width: 58,
-        borderRadius: 30,
-        backgroundColor:'#cc8068'
+        height:75,
+        width: 75,
+        borderRadius: 40,
+        backgroundColor:'#cc8068',
+        lineHeight: 0,
+        alignItems: 'center'
+
+    },
+    innertext:{
+        color: '#fff',
+        fontSize: 30,
+        marginTop: 5
+    },
+    Listcontainer:{
+        marginBottom: 30
+       // marginTop :30
+    },
+    chatToolbar: {
+        alignSelf: 'flex-start',
+        marginBottom: 30
+    },
+    imageViewWrapper: {
+        position: 'relative',
     }
 
 });

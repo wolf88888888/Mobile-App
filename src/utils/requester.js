@@ -38,7 +38,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
     const postParams = {
         // headers: allHeaders,
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0ZGV2QGN5YmVyY2xvdWRzLmNvbSIsImV4cCI6MTUyODQ0Nzg0Nn0.cEd9pR9Rv2DKbiQi0g9YSU7u63voFB7b4Ox-Ui8nXWcpkCMswGK1JK8uiLpTUaBJIdpQjSxPw6ThoqUP8g_Tjw',
+            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0ZGV2QGN5YmVyY2xvdWRzLmNvbSIsImV4cCI6MTUyODY4MzAyMX0.81vslduocOobeUWUfiuvYfVBvamUxP_9wnlWBzDYCyIORr2H_i6cnFeIpVwHiz0l9VYlieq8NqagTQXLgPIWIg',
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
@@ -69,6 +69,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
 
     return fetch(endpoint, requestHeaders)
         .then((res) => {
+            console.log("ad"+res.error);
             if (!res.ok) {
                 return {
                     response: res.json().then((r) => {

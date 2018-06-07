@@ -61,6 +61,7 @@ export default class Filters extends Component {
         }
     }
 
+
     render() {
         return (
             <View style={styles.container}>
@@ -91,7 +92,7 @@ export default class Filters extends Component {
                 </View>
                 <ScrollView>
                 <View style={{height: '100%',}}>
-                       <View style={styles.starRatingView}>
+                       {/* <View style={styles.starRatingView}>
                            <Text style={styles.starRatingText}>Star Rating</Text>
                            <View style={styles.starView}>
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 1? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 1})}>
@@ -115,17 +116,17 @@ export default class Filters extends Component {
                                    <Image source={require('../../../assets/empty-star.svg')} style={styles.star}/>
                                </TouchableOpacity>
                            </View>
-                       </View>
+                       </View> */}
 
-                       <View style={styles.pricingView}>
+                       {/* <View style={styles.pricingView}>
                            <Text style={styles.pricingText}>Pricing</Text>
-                       </View>
+                       </View> */}
 
-                       <View style={styles.pricingView}>
-                           <Text style={styles.pricingText}>Room & Beds</Text>
+                       <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                           <Text style={styles.pricingText}>Room</Text>
                        </View>
-                       <View style={styles.set}>
-                           <View style={[styles.group, styles.borderBottom]}>
+                       <View style={this.state.isHotelSelected ? styles.set : styles.emptyPricingView}>
+                           {/* <View style={[styles.group, styles.borderBottom]}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Beds</Text>
                                </View>
@@ -138,22 +139,22 @@ export default class Filters extends Component {
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
-                           </View>
-                           <View style={[styles.group, styles.borderBottom]}>
+                           </View> */}
+                           <View style={this.state.isHotelSelected ? [styles.group, styles.borderBottom]:styles.emptyPricingView}>
                                <View style={styles.type}>
-                                   <Text style={styles.typeText}>Bedrooms</Text>
+                                   <Text style={styles.typeText}>Rooms</Text>
                                </View>
                                <View style={styles.countView}>
-                                   <TouchableOpacity style={[styles.minusButton, this.state.count.bedrooms === 0? styles.opacity: '']} onPess={() => this.subtractCount(1)}>
+                                   <TouchableOpacity style={[styles.minusButton, this.state.count.bedrooms === 0? styles.opacity: '']} onPress={() => this.subtractCount(1)}>
                                        <Text style={styles.minusText}>-</Text>
                                    </TouchableOpacity>
                                    <Text style={styles.countText}>{this.state.count.bedrooms}</Text>
-                                   <TouchableOpacity style={styles.plusButton} onPess={() => this.addCount(1)}>
+                                   <TouchableOpacity style={styles.plusButton} onPress={() => this.addCount(1)}>
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
                            </View>
-                           <View style={styles.group}>
+                           {/* <View style={styles.group}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Bathrooms</Text>
                                </View>
@@ -166,14 +167,14 @@ export default class Filters extends Component {
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
-                           </View>
+                           </View> */}
                        </View>
                     </View>
                        
                 </ScrollView>
                 <View style={styles.bottomBar}>
                     <TouchableOpacity style={styles.doneButton}>
-                        <Text style={styles.doneButtonText}>Show 345 Hotels</Text>
+                        <Text style={styles.doneButtonText}>Show Hotels</Text>
                     </TouchableOpacity>
                 </View>
 

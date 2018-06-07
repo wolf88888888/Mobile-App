@@ -29,37 +29,25 @@ class MyTrips extends Component {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
-                 
-                   <View style={styles.chatToolbar}>
-                                    <TouchableOpacity onPress={this.onBackPress}>
-                                        <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-white.png')}/>
-                                    </TouchableOpacity>
-
-                                    <Text style={styles.title}>Your Trip</Text>
-                                   
-                                  
-                     </View>
-
-
-                
-            <View>
-               <FlatList style={styles.flatList}
+               <View style={styles.chatToolbar}>
+                                <TouchableOpacity onPress={this.onBackPress}>
+                                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-white.png')}/>
+                                </TouchableOpacity>
+                               <Text style={styles.title}>Your Trip</Text>
+                 </View>
+            
+                <FlatList style={styles.flatList}
                 data="none"
                 renderItem={
-                    ({item}) =>
-                        <View style={styles.Listcontainer} >
+                    ({item}) =>       
+                        <View>
                             <View style={{flex: 1, flexDirection: 'row'}}>
-                                <View style={styles.img_round}><Text style={styles.innertext}>25</Text><Text style={{color:'#fff'}}>jan</Text></View>
-                                               
-                                <View style={styles.flatList}> 
+                                <View style={styles.img_round}><Text style={{alignItems: 'center'}}>26</Text></View>                                                
+                                <View> 
                                     <View>
                                         <Text style={styles.subtext}>2:00pm</Text>
                                         <Text style={styles.subtitle}>Check into Garden Loft Apartment</Text> 
                                     </View>
-
-
-                                    <View style={styles.imageViewWrapper}>
-
                                     <View style={styles.placeholderImageView}>
                                         <Image
                                             style={styles.placeholderImage}
@@ -76,16 +64,12 @@ class MyTrips extends Component {
                                            <Image style={styles.senderImage} source={require('../../../../src/assets/icons/senderImages.png')}/>
                                         </View>
                                     </View>
-                                    </View>
-
                                 </View>
                             </View>
                         </View> 
 
                         }
                     />
-            </View>
-               
             </View>
         )
     }

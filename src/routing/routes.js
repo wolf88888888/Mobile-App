@@ -13,8 +13,12 @@ import NavTabBar from '../components/organisms/NavTabBar/container';
 import Profile from '../components/screens/Profile';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
+import UserMyTrips from '../components/screens/MyTrips/MyTrips';
 import Favourites from '../components/screens/Favorites';
 
+//import WishlistSettings from '../components/screens/Favorites/WishlistSettings';
+
+import Notifications from '../components/screens/Notifications';
 import Guests from '../components/screens/Guests';
 
 import Property from '../components/screens/Property';
@@ -30,6 +34,8 @@ import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
 import RoomDetailsReview from '../components/screens/RoomDetailsReview';
 import GuestInfoForm from '../components/screens/GuestInfoForm';
+
+
 
 import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
@@ -55,7 +61,8 @@ export const MainNavigator = TabNavigator(
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
         MY_TRIPS: { screen: MyTrips },
-        FAVORITES: { screen: Favourites },
+        FAVORITES: { screen: Favourites},
+
         EXPLORE: { screen: Explore }
     },
     {
@@ -77,6 +84,8 @@ export const FullNavigator = StackNavigator(
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
 
+        UserMyTrips : { screen: UserMyTrips},
+
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },
         ReviewSendScreen: { screen: ReviewSend },
@@ -84,9 +93,11 @@ export const FullNavigator = StackNavigator(
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
         AvailableRoomsView: { screen: AvailableRoomsView},
+
+         Notifications: { screen: Notifications },
     },
     {
-        initialRouteName: 'HotelDetails',
+        initialRouteName: 'MainScreen',
         headerMode: 'none'
     }
 );
@@ -94,7 +105,7 @@ export const FullNavigator = StackNavigator(
 export const AppNavigator = SwitchNavigator(
     {
         AppLoading,
-        Login: LoginNavigator,
+        Login: MainNavigator,
         App: FullNavigator
     },
     {

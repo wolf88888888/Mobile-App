@@ -114,6 +114,10 @@ export default styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#c6c6c6'
     },
+    emptyPricingView: {
+        height : 0,
+        width : 0
+    },
     pricingText: {
         fontSize: 18,
         fontWeight: 'bold'

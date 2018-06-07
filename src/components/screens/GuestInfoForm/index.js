@@ -10,7 +10,7 @@ export default class GuestInfoForm extends Component {
         super();
         // Save guests array for dynamic form generation
         this.state = {
-            
+            arr : []
         };
     }
     // Keys for flatlist
@@ -18,11 +18,18 @@ export default class GuestInfoForm extends Component {
 
     render() {
         const {params} = this.props.navigation.state
-
+        for (var i = 0; i < params.guests; i++){
+            this.state.arr.push({
+                key: 0,
+                genderRepresentation: 'Mr',
+                firstName: '',
+                lastName: ''
+            });
+        }
         console.disableYellowBox = true
         return (
             <View style={styles.container}>
-                    <TouchableOpacity onPress={this.onBackPress} style={styles.backButton}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
                         <Image style={styles.btn_backImage}
                                source={require('../../../../src/assets/svg/arrow-back.svg')}/>
                     </TouchableOpacity>
@@ -41,7 +48,7 @@ export default class GuestInfoForm extends Component {
                         <View style={styles.form}>
                             <FlatList
                                 style={styles.flatList}
-                                data={this.props.guests}
+                                data={this.state.arr}
                                 keyExtractor={this._keyExtractor}
                                 renderItem={({ item, index }) => (
                                     <GuestFormRow guest={item}/>
@@ -73,7 +80,7 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state
-        this.props.navigation.navigate('RoomDetailsReview', {'quoteId':params.roomDetail.quoteId,'guests': this.props.guests.length});
+        this.props.navigation.navigate('RoomDetailsReview', {'quoteId':params.roomDetail.quoteId,'guests': this.props.guestsArray.length});
         
     }
 }
@@ -85,16 +92,11 @@ GuestInfoForm.defaultProps = {
     priceInLoc : 49.3,
     quoteId: '249357191-0',
     roomDetail:{},
-    guests: [
+    guests : 0,
+    guestsArray: [
         {
             key: 0,
             genderRepresentation: 'Mr',
-            firstName: '',
-            lastName: ''
-        },
-        {
-            key: 1,
-            genderRepresentation: 'Mrs',
             firstName: '',
             lastName: ''
         },
@@ -107,5 +109,6 @@ GuestInfoForm.propTypes = {
     priceInUserCurreny : PropTypes.number,
     priceInLoc : PropTypes.number,
     quoteId: PropTypes.string,
-    roomDetail: PropTypes.object
+    roomDetail: PropTypes.object,
+    guests : PropTypes.number
   };

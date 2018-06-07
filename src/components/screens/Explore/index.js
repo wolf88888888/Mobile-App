@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, Picker, Item } from 'react-native';
 import PropTypes from 'prop-types';
 import { getTopHomes } from '../../../utils/requester';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -14,7 +14,6 @@ import SockJsClient from 'react-stomp';
 import { apiHost, domainPrefix, imgHost } from '../../../config';
 import moment from 'moment';
 import Calendar from '../../templates/Calendar'
-
 import { getRegionsBySearchParameter, getCountriesWithListings } from '../../../utils/requester';
 
 var clientRef = '';
@@ -78,13 +77,45 @@ class Explore extends Component {
         this.state = {
             search: '',
             checkInDate: startDate.format('ddd, DD MMM').toString(),
+            checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
             checkOutDate:  endDate.format('ddd, DD MMM').toString(),
+            checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
             guests: 2,
             adults: 2,
             children: 1,
             infants: 0,
             topHomes: [],
             listings : [],
+            roomsDummyData : [{ adults: 1, children: [] }],
+            childrenBool: false,
+            modalVisible: false,
+            cancellationView: false,
+            childCount:[
+                {
+                    key : 0,
+                    value:'1'
+                },
+                {
+                    key : 1,
+                    value:'2'
+                },
+                {
+                    key : 1,
+                    value:'3'
+                },
+                {
+                    key : 1,
+                    value:'4'
+                },
+                {
+                    key : 1,
+                    value:'5'
+                },
+                {
+                    key : 1,
+                    value:'6'
+                }
+            ],
         };
     }
 
@@ -112,9 +143,12 @@ class Explore extends Component {
     }
 
     onDatesSelect({ startDate, endDate }){
+        var year = (new Date()).getFullYear();
         this.setState({
             checkInDate : startDate,
             checkOutDate : endDate,
+            checkInDateFormated : moment(startDate).format('DD/MM/').toString()+year,
+            checkOutDateFormated : moment(endDate).format('DD/MM/').toString()+year,
         });
     }
 
@@ -139,11 +173,11 @@ class Explore extends Component {
     }
 
     updateData(data) {
-      this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+        this.setState({ adults: data.adults, children: data.children, infants: data.infants, guests : data.adults + data.children + data.infants, childrenBool: data.childrenBool});
     }
 
     gotoGuests() {
-        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData});
+        this.props.navigation.navigate('GuestsScreen', {guests : this.state.guests, adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
@@ -151,8 +185,20 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-      this.props.navigation.navigate('PropertyScreen', {searchedCity: this.state.search, searchedCityId: 72, checkInDate : this.state.checkInDate, checkOutDate : this.state.checkOutDate, guests: this.state.guests});
-    }
+        this.props.navigation.navigate('PropertyScreen', {
+            searchedCity: this.state.search, 
+            searchedCityId: 72, 
+            checkInDate : this.state.checkInDate, 
+            checkInDateFormated: this.state.checkInDateFormated, 
+            checkOutDate : this.state.checkOutDate, 
+            checkOutDateFormated: this.state.checkOutDateFormated, 
+            guests: this.state.guests, 
+            children: this.state.children, 
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+        });
+       
+    }    
+
 
     handleAutocompleteSelect(id, name) {
         return () => {
@@ -180,16 +226,62 @@ class Explore extends Component {
         );
     }
 
+    onValueChange = value => {     
+        this.setState({childCount:value});
+    }
+
   
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
         } = this.state;
-
-        var data = 'region=52612&currency=USD&startDate=27/05/2018&endDate=28/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D';
-
         return (
             <View style={styles.container}>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        alert('Modal has been closed.');
+                    }}>
+                    <View style={styles.modalView}>
+                        <View style={styles.popup}>
+                            <View style={styles.labelCloseView}>
+                                <Text style={styles.walletPasswordLabel}>Children</Text>
+                                <View  style={styles.closeButtonView}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setCancellationView(!this.state.cancellationView);
+                                        }}>
+                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')}/>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={{flexDirection: 'row', height: '20%'}}>
+                                <Text style={{fontFamily: 'FuturaStd-Light', marginTop: 15}}>Room 1</Text>
+                                <Picker 
+                                    selectedValue={this.state.childCount} 
+                                    style={{height: '100%', width: '60%', marginLeft: 40}}
+                                    itemStyle={{height:'100%',fontFamily: 'FuturaStd-Light', fontSize: 12}}
+                                    onValueChange={this.onValueChange}
+                                    >
+                                        <Item label="No Children" value="noChildren" />
+                                        <Item label="1" value="1" />
+                                        <Item label="2" value="2" />
+                                        <Item label="3" value="3" />
+                                        <Item label="4" value="4" />
+                                        <Item label="5" value="5" />
+                                        <Item label="6" value="6" />
+                                </Picker>
+                            </View>
+                            <TouchableOpacity style={styles.confirmButton} onPress={() => {
+                                            this.setCancellationView(!this.state.cancellationView);
+                                        }}>
+                                <Text style={styles.confirmButtonText}>Confirm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
 
                 <View style={styles.searchAreaView}>
                     <SearchBar
@@ -201,23 +293,24 @@ class Explore extends Component {
                     />
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
-                <DateAndGuestPicker
-                        checkInDate={checkInDate}
-                        checkOutDate={checkOutDate}
-                        adults={adults}
-                        children={children}
-                       
-                        guests = {guests + children}
-                        infants={infants}
-                        gotoGuests={this.gotoGuests}
-                        gotoSearch={this.gotoSearch}
-                        onDatesSelect={this.onDatesSelect}
-                        gotoSettings={this.gotoSettings}
-                        showSearchButton= {true}
-                    />
-                <TouchableOpacity onPress={this.gotoSearch} style={styles.fab}>
-                    <Text style={styles.fabText}>LOC/EUR 0.56</Text>
-                </TouchableOpacity>
+                <View style={styles.itemView}>
+                    <DateAndGuestPicker
+                            checkInDate={checkInDate}
+                            checkOutDate={checkOutDate}
+                            adults={guests}
+                            children={0}
+                            guests = {0}
+                            infants={0}
+                            gotoGuests={this.gotoGuests}
+                            gotoSearch={this.gotoSearch}
+                            onDatesSelect={this.onDatesSelect}
+                            gotoSettings={this.gotoSettings}
+                            showSearchButton= {true}
+                        />
+                    <TouchableOpacity onPress={this.gotoSearch} style={styles.fab}>
+                        <Text style={styles.fabText}>LOC/EUR 0.56</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -230,9 +323,18 @@ class Explore extends Component {
             this.setState(prevState => ({
                 listings: [...prevState.listings, response]
               }));
-            console.log(response);
         }
       }
+
+      // Control Modal Visibility
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
+
+    setCancellationView(visible) {
+        this.setState({modalVisible: false})
+        this.setState({cancellationView: visible});
+    }
 }
 
 function SeparatorDot(props) {
