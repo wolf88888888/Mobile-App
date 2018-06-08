@@ -316,6 +316,7 @@ class Property extends Component {
                     getRetryInterval={() => { return 3000; }}
                     autoReconnect={false}
                     debug={true}
+                    autoReconnect={false}
                     />
             </View>
         );
