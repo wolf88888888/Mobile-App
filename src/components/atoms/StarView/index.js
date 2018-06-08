@@ -46,7 +46,7 @@ class StarView extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this._handleNextProps(nextProps);
+        //this._handleNextProps(nextProps);
     }
 
     /* 渲染组件 */
