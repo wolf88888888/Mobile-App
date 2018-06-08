@@ -207,7 +207,9 @@ class Property extends Component {
     onBackPress(){
         this.props.navigation.goBack();
     }
+    
     gotoHotelDetailsPage = (item) =>{
+        console.log(item);
         this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
     }
 
