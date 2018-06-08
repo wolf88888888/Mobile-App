@@ -16,7 +16,6 @@ async function getHeaders(headers = null) {
         const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
         if (value !== null) {
             headers.Authorization = value;
-            console.log(value);
         }
     } catch (error) {
         console.log('Error getting headers:', error);
@@ -130,7 +129,9 @@ export async function getRegionsBySearchParameter(param) {
 }
 
 export async function getCountriesWithListings() {
-    return sendRequest(`${host}countries?hasListings=true&size=10000&sort=name,asc`).then(res => res.response.json());
+    return sendRequest(`${host}countries?hasListings=true&size=10000&sort=name,asc`).then(res => {
+        return res;
+    });
 }
 
 export async function getMyConversations(searchTerm) {
@@ -162,4 +163,15 @@ export async function getHotelRooms(id, search) {
 
 export async function getMyHotelBookings(searchTerm, size = 10) {
     return sendRequest(`${host}users/me/bookings${searchTerm !== null && searchTerm !== undefined ? `${searchTerm}&` : '?'}sort=id,desc&size=${size}`, RequestMethod.GET).then(res => res);
-  }
+}
+
+export async function getCancellationFees(bookingId) {
+    return sendRequest(`${host}api/hotels/booking/${bookingId}/cancellationFee`, RequestMethod.GET).then(res => {
+      return res;
+    });
+}
+export async function getCurrentlyLoggedUserJsonFile() {
+    return sendRequest(`${host}users/me/jsonFile`, RequestMethod.GET).then(res => {
+        return res;
+    });
+}

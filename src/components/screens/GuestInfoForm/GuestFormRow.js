@@ -31,7 +31,6 @@ export default class GuestFormRow extends Component {
     }
 
     handleGuestInfo(){
-        // console.log(firstName)
         this.setState(
             {
                 guestRecord :{
@@ -90,28 +89,15 @@ export default class GuestFormRow extends Component {
                     <View style={styles.firstNameFlex}>
                         <TextInput
                             style={[styles.formField, styles.spaceRight]}
-                            onChangeText={(firstName) => {
-                                let guest = Object.assign([], this.state.guest);
-                                guest.firstName = firstName;
-                                this.setState({guest})
-                                this.handleGuestInfo();
-                            }}
+                            onChangeText={(text) => this.props.onFirstNameChange(this.props.itemIndex,text)}
                             //onBlur={() => this.textDone()}
-                            value={this.state.guest.firstName}
                             placeholder="First Name"
                         />
                     </View>
                     <View style={styles.lastNameFlex}>
                         <TextInput
                             style={styles.formField}
-                            onChangeText={(lastName) => {
-                                let guest = Object.assign([], this.state.guest);
-                                guest.lastName = lastName;
-                                this.setState({guest})
-                                this.handleGuestInfo();
-                            }}
-                            //onBlur={() => this.textDone()}
-                            value={this.state.guest.lastName}
+                            onChangeText={(text) => this.props.onLastNameChange(this.props.itemIndex,text)}
                             placeholder="Last Name"
                         />
                     </View>
@@ -121,5 +107,6 @@ export default class GuestFormRow extends Component {
     }
 }
 GuestFormRow.propTypes = {
-    onTextDone: PropTypes.func.isRequired,
+    onFirstNameChange: PropTypes.func.isRequired,
+    onLastNameChange: PropTypes.func.isRequired,
 };
