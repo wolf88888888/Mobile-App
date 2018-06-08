@@ -25,7 +25,7 @@ async function getHeaders(headers = null) {
 }
 
 async function sendRequest(endpoint, method, postObj = null, captchaToken = null, headers = { // eslint-disable-line
-    Accept: 'application/json',
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
     'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b'
 }, onLogOut) {
@@ -45,7 +45,8 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
         headers: {
             'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`),
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b'
           },
         method: 'POST',
         body: JSON.stringify(postObj)
