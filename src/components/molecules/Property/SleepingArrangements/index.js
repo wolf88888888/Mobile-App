@@ -39,7 +39,7 @@ class SleepingArrangements extends Component {
                     horizontal={true}
                     renderRow={(rowData) =>
                         <View style={styles.item}>
-                            <Image source={require('../../../../assets/Beds/Double.svg')} style={{height:25, marginTop:5}}/>
+                            <Image source={require('../../../../assets/Beds/Double.png')} style={{height:25, marginTop:5}}/>
                             <Text style={styles.room}>
                                 {rowData.room}
                             </Text>

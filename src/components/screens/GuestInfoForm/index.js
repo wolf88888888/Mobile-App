@@ -133,7 +133,7 @@ export default class GuestInfoForm extends Component {
             <View style={styles.container}>
                     <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
                         <Image style={styles.btn_backImage}
-                               source={require('../../../../src/assets/svg/arrow-back.svg')}/>
+                               source={require('../../../../src/assets/png/arrow-back.png')}/>
                     </TouchableOpacity>
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 1 OF 2</Text>

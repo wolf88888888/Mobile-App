@@ -198,7 +198,7 @@ export default class RoomDetailsReview extends Component {
                                             this.props.navigation.goBack(); //eslint-disable-line
                                         }}
                                     >
-                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')} />
+                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -236,7 +236,7 @@ export default class RoomDetailsReview extends Component {
                                             this.setCancellationView(!this.state.cancellationView);
                                         }}
                                     >
-                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')} />
+                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -258,7 +258,7 @@ export default class RoomDetailsReview extends Component {
                     <TouchableOpacity onPress={() => { this.props.navigation.goBack(); }} style={styles.backButton}>
                         <Image
                             style={styles.btn_backImage}
-                            source={require('../../../../src/assets/svg/arrow-back.svg')}
+                            source={require('../../../../src/assets/png/arrow-back.png')}
                         />
                     </TouchableOpacity>
                     <View style={styles.content}>

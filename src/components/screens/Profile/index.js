@@ -58,15 +58,15 @@ class Profile extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('EditUserProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Edit Profile</Text>
-                    <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-user.svg')} style={styles.navIcon} />
+                    <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-user.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Notifications</Text>
-                    <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-bell.svg')} style={styles.navIcon} />
+                    <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-bell.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Payment Methods</Text>
-                    <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-payment.svg')} style={styles.navIcon} />
+                    <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-payment.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Currency</Text>
@@ -74,7 +74,7 @@ class Profile extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Switch to Hosting</Text>
-                    <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-switch.svg')} style={styles.navIcon} />
+                    <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));

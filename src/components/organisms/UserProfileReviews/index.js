@@ -59,8 +59,8 @@ class UserProfileReviews extends Component {
                             value = {this.props.clientRate}
                             style = {styles.rating}
                             starStyle={{width:9, height:9,}}
-                            emptyStarImage={<Image style={styles.rateImage} source={require('../../../assets/svg/empty-star.svg')}/>}
-                            filledStarImage={<Image style={styles.rateImage} source={require('../../../assets/svg/empty-star-full.svg')}/>}/>
+                            emptyStarImage={<Image style={styles.rateImage} source={require('../../../assets/png/empty-star.png')}/>}
+                            filledStarImage={<Image style={styles.rateImage} source={require('../../../assets/png/empty-star-full.png')}/>}/>
                     </View>
                 </View>
                 <ReadMoreView

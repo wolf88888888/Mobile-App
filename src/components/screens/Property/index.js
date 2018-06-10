@@ -240,7 +240,7 @@ class Property extends Component {
             <View style={styles.container}>
 
                 <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
-                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/svg/arrow-back.svg')} />
+                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
                 </TouchableOpacity>
 
                 <View style={styles.searchAreaView}>
@@ -280,7 +280,7 @@ class Property extends Component {
                                 source={{uri : imgHost + item.photos[0]}} 
                                 style={styles.popularHotelsImage}/>
                                 <TouchableOpacity style={styles.favoritesButton}>
-                                    <Image source={require('../../../assets/svg/heart.svg')} style={styles.favoriteIcon}/>
+                                    <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
                                 </TouchableOpacity>
                                         <View style={styles.cardContent}>
                                             <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
@@ -288,11 +288,11 @@ class Property extends Component {
                                                 <Text style={styles.placeReviewText}>Excellent </Text>
                                                 <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
                                                 <View style={styles.ratingIconsWrapper}>
-                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/svg/empty-star.svg')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                                 </View>
                                                 <Text style={styles.totalReviews}> 73 Reviews</Text>
                                             </View>

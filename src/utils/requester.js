@@ -111,7 +111,9 @@ export async function getCurrencyRates() {
 }
 
 export async function getLocRateInUserSelectedCurrency(userSelectedCurrency) {
-    return fetch(`https://api.coinmarketcap.com/v1/ticker/lockchain/?convert=${userSelectedCurrency}`).then(res => res.json());
+    return fetch(`https://api.coinmarketcap.com/v1/ticker/lockchain/?convert=${userSelectedCurrency}`).then(res => {
+        return res;
+    });
 }
 
 export function getTopHomes() {
