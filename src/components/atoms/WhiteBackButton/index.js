@@ -8,7 +8,7 @@ import styles from './styles';
 
 const WhiteBackButton = (props) => {
     return (
-        <SVGButton style={styles.WhiteBackButton} image={require('../../../assets/svg/arrow-back-white.svg')} onPress={props.onPress}/>
+        <SVGButton style={styles.WhiteBackButton} image={require('../../../assets/png/arrow-back-white.png')} onPress={props.onPress}/>
     );
 }
 

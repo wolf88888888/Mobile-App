@@ -4,6 +4,9 @@ import Image from 'react-native-remote-svg';
 import GuestFormRow from './GuestFormRow';
 import styles from './styles';
 import PropTypes from 'prop-types';
+import thunk from 'redux-thunk';
+
+var testingArray = [{}];
 
 export default class GuestInfoForm extends Component {
     constructor(props) {
@@ -13,17 +16,100 @@ export default class GuestInfoForm extends Component {
         // Save guests array for dynamic form generation
         this.state = {
             arr : [],
-            guestRecord : [{}]
+            guestRecordArray : [{}],
+            guest: {
+                title: 'Mr',
+                firstName: '',
+                lastName: ''
+            },
+            guestRecord : {},
+            testGuestArray : [{}]
         };
     }
 
     onProceedClick(key, value){
-        this.state.guestRecord[key] = value;
-        this.setState(
-            {
-                guestRecord : this.state.guestRecord
-            }
-        );
+        console.log(value);
+        // this.state.guestRecord[key] = value;
+        // this.setState(
+        //     {
+        //         guestRecord : this.state.guestRecord
+        //     }
+        // );
+        // console.log(this.state.guestRecord);
+    }
+
+    handleFirstName(key,text){
+        this.state.guest.firstName = text;
+        var fname = this.state.guest;
+        testingArray[key] = fname;
+
+        console.log(testingArray);
+
+        // this.state.testGuestArray[key] = this.state.guest;
+        // this.setState(
+        //     {
+        //         testGuestArray : this.state.testGuestArray
+        //     }
+        // );
+        // let guest = Object.assign([], this.state.guest);
+        // guest.firstName = text;
+        // this.setState({guest})
+        // this.state.guestRecord[key] = value;
+        // this.setState(
+        //     {
+        //         guestRecord : this.state.guestRecord
+        //     }
+        // );
+    }
+
+    handleLastName(key,text){
+        this.state.guest.lastName = text;
+        var fname = this.state.guest;
+        testingArray[key] = fname;
+        console.log(testingArray);
+        //testingArray[key] = this.state.guest;
+
+        // this.state.testGuestArray[key] = this.state.guest;
+        // this.setState(
+        //     {
+        //         testGuestArray : this.state.testGuestArray
+        //     }
+        // );
+        // let guest = Object.assign([], this.state.guest);
+        // guest.lastName = text;
+        // this.setState({guest})
+        // this.state.guestRecord[key] = value;
+        // this.setState(
+        //     {
+        //         guestRecord : this.state.guestRecord
+        //     }
+        // );
+    }
+
+    guestInfo(index, isFirstName, isLastName){
+        if(isFirstName){
+            this.state.guestRecord[index].firstName = this.state.guest.firstName;
+            this.setState(
+                {
+                    guestRecord : this.state.guestRecord
+                }
+            );
+            console.log("Guestoona");
+        }
+        else{
+            console.log("Guestoonafuck");
+        }
+        // console.log(firstName)
+        // this.setState(
+        //     {
+        //         guestRecord :{
+        //             "title": "Sexy Beast",
+        //             "firstName": this.state.guest.firstName,
+        //             "lastName": this.state.guest.lastName
+        //         }
+        //     }
+        // );
+        
     }
     // Keys for flatlist
     _keyExtractor = (item, index) => item.key;
@@ -47,7 +133,7 @@ export default class GuestInfoForm extends Component {
             <View style={styles.container}>
                     <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
                         <Image style={styles.btn_backImage}
-                               source={require('../../../../src/assets/svg/arrow-back.svg')}/>
+                               source={require('../../../../src/assets/png/arrow-back.png')}/>
                     </TouchableOpacity>
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 1 OF 2</Text>
@@ -67,10 +153,12 @@ export default class GuestInfoForm extends Component {
                                 data={this.state.arr}
                                 keyExtractor={this._keyExtractor}
                                 renderItem={({ item, index }) => (
-                                    <GuestFormRow guest={item}
-                                    itemIndex={index}
-                                    onTextDone={this.onProceedClick}
-                                    onProceedClick={this.onProceedClick}/>
+                                    <GuestFormRow 
+                                        guest={item}
+                                        itemIndex={index}
+                                        onFirstNameChange={(key, text) => this.handleFirstName(index, text)}
+                                        onLastNameChange={(key, text) => this.handleLastName(index, text)}
+                                    />
                                 )}
                             />
                         </View>
@@ -99,8 +187,8 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state
-        console.log(params.roomDetail.quoteId);
-        this.props.navigation.navigate('RoomDetailsReview', {'quoteId': params.roomDetail.quoteId,'guests': this.props.guestsArray.length, 'hotelDetails': params.hotelDetails, 'price': params.price, 'priceLOC': params.priceLOC, 'guestRecord': this.state.guestRecord});
+        console.log(testingArray);
+        this.props.navigation.navigate('RoomDetailsReview', {'roomDetails' : params.roomDetail, 'quoteId': params.roomDetail.quoteId,'guests': testingArray.length, 'hotelDetails': params.hotelDetails, 'price': params.price, 'priceLOC': params.priceLOC, 'guestRecord': testingArray});
     }
 }
 

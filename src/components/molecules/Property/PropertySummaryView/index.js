@@ -81,8 +81,8 @@ class PropertySummaryView extends Component {
                           value = {this.props.rateVal}
                           style = {{width:60, height:ratingHeight, paddingTop:0}}
                           starStyle={{width:ratingSize, height:ratingSize,}}
-                          emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../../assets/empty-star.svg')}/>}
-                          filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../../assets/empty-star-full.svg')}/>}/>
+                          emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../../assets/empty-star.png')}/>}
+                          filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../../assets/empty-star-full.png')}/>}/>
 
                       <Text style={[styles.rateText, {fontSize:ratingSize, height:ratingHeight, paddingTop:2, paddingLeft:0}]}>
                           {this.props.reviewNum} Reviews

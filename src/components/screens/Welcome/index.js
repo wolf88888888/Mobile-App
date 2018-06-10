@@ -10,7 +10,7 @@ import Image from 'react-native-remote-svg';
 import GoBack from '../../atoms/GoBack';
 import Button from '../../atoms/Button';
 
-import SplashPNG from '../../../assets/svg/locktrip_logo.svg';
+import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import styles from './styles';
 import GetStartedImage from '../../atoms/GetStartedImage';
 
@@ -54,3 +54,26 @@ const Welcome = ({
 Welcome.propTypes = propTypes;
 
 export default Welcome;
+
+// import PropTypes from 'prop-types';
+// import React, {Component} from 'react';
+// import {
+//     Text,
+//     View,
+//     BackHandler
+// } from 'react-native';
+// export default class Welcome extends Component{
+//     render() {
+//         return (
+//           <View>
+//             <Text>
+//               If you like React on the web, you'll like React Native.
+//             </Text>
+//             <Text>
+//               You just use native components like 'View' and 'Text',
+//               instead of web components like 'div' and 'span'.
+//             </Text>
+//           </View>
+//         );
+//       }
+// };

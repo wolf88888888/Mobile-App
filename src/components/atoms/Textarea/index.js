@@ -12,7 +12,7 @@ import styles from './styles';
 
 class Textarea extends PureComponent<Props, State> {
     static propTypes = {
-        containerStyle: View.propTypes.style,
+        containerStyle: ViewPropTypes.style,
         value: PropTypes.number,
         maxLength: PropTypes.number,
         onPress: (text: string) => {},
@@ -61,4 +61,4 @@ class Textarea extends PureComponent<Props, State> {
     }
 }
 
-export default Textarea
+export default Textarea;

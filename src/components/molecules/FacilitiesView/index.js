@@ -40,11 +40,11 @@ class FacilitiesView extends Component {
             <View style={styles.container}>
                 <Text style={styles.title}>Room Faility</Text>
                 <View style={styles.facilities}>
-                    <FacilityView image={require('../../../assets/Facilities/Homes/BathTub.svg')}/>
-                    <FacilityView image={require('../../../assets/Facilities/Homes/TV.svg')}/>
-                    <FacilityView image={require('../../../assets/Facilities/Homes/Fireplace.svg')}/>
-                    <FacilityView image={require('../../../assets/Facilities/Homes/Pool.svg')}/>
-                    <FacilityView image={require('../../../assets/Facilities/Homes/Air_Conditioning.svg')}/>
+                    <FacilityView image={require('../../../assets/Facilities/Homes/BathTub.png')}/>
+                    <FacilityView image={require('../../../assets/Facilities/Homes/TV.png')}/>
+                    <FacilityView image={require('../../../assets/Facilities/Homes/Fireplace.png')}/>
+                    <FacilityView image={require('../../../assets/Facilities/Homes/Pool.png')}/>
+                    <FacilityView image={require('../../../assets/Facilities/Homes/Air_Conditioning.png')}/>
                     <FacilityView more={this.state.more} isMore={true} onPress={this.onFacilityMore}/>
                 </View>
             </View>
