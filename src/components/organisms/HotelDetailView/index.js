@@ -102,8 +102,8 @@ class HotelDetailView extends Component {
                           value = {this.props.rateVal}
                           style = {{width:60, height:ratingHeight, paddingTop:0}}
                           starStyle={{width:ratingSize, height:ratingSize,}}
-                          emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/svg/empty-star.svg')}/>}
-                          filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/svg/empty-star-full.svg')}/>}/>
+                          emptyStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/png/empty-star.png')}/>}
+                          filledStarImage={<Image style={{width:ratingSize, height:ratingSize,}} source={require('../../../assets/png/empty-star-full.png')}/>}/>
 
                       {this.props.reviewNum != 0 &&
                           (<Text style={[styles.rateText, {fontSize:ratingSize, height:ratingHeight, paddingTop:2, paddingLeft:0}]}>

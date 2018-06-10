@@ -114,8 +114,8 @@ class RatingView extends Component {
                             value = {this.props.clientRate}
                             style = {styles.rating}
                             starStyle={{width:9, height:9,}}
-                            emptyStarImage={<Image style={styles.rateImage} source={require('../../../../assets/empty-star.svg')}/>}
-                            filledStarImage={<Image style={styles.rateImage} source={require('../../../../assets/empty-star-full.svg')}/>}/>
+                            emptyStarImage={<Image style={styles.rateImage} source={require('../../../../assets/empty-star.png')}/>}
+                            filledStarImage={<Image style={styles.rateImage} source={require('../../../../assets/empty-star-full.png')}/>}/>
                     </View>
                 </View>
                 <ReadMoreView

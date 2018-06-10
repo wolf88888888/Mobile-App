@@ -38,11 +38,11 @@ class PropertyDetailsView extends Component {
         const ratingSize = 8;
         return (
             <View style={styles.container}>
-                <DetailView image={require('../../../../assets/svg/home.svg')} detail={'Entire Home'}/>
-                <DetailView image={require('../../../../assets/svg/guests.svg')} detail={'Guest ×' + this.props.guests}/>
-                <DetailView image={require('../../../../assets/svg/size.svg')} detail={this.props.size + ' m'} supText={'2'}/>
-                <DetailView image={require('../../../../assets/svg/bathroom.svg')} detail={this.props.bathroom + ' Bathroom'}/>
-                <DetailView image={require('../../../../assets/svg/bedroom.svg')} detail={this.props.bedroom + ' Bedroom'}/>
+                <DetailView image={require('../../../../assets/png/home.png')} detail={'Entire Home'}/>
+                <DetailView image={require('../../../../assets/png/guests.png')} detail={'Guest ×' + this.props.guests}/>
+                <DetailView image={require('../../../../assets/png/size.png')} detail={this.props.size + ' m'} supText={'2'}/>
+                <DetailView image={require('../../../../assets/png/bathroom.png')} detail={this.props.bathroom + ' Bathroom'}/>
+                <DetailView image={require('../../../../assets/png/bedroom.png')} detail={this.props.bedroom + ' Bedroom'}/>
             </View>
         );
     }

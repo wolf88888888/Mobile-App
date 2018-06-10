@@ -73,8 +73,8 @@ class SimilarHomes extends Component {
                                     value = {4.2}
                                     style = {{width:60, height:15, paddingTop:2, marginLeft:5}}
                                     starStyle={{width:9, height:9,}}
-                                    emptyStarImage={<Image style={{width:9, height:9,}} source={require('../../../assets/empty-star.svg')}/>}
-                                    filledStarImage={<Image style={{width:9, height:9,}} source={require('../../../assets/empty-star-full.svg')}/>}/>
+                                    emptyStarImage={<Image style={{width:9, height:9,}} source={require('../../../assets/empty-star.png')}/>}
+                                    filledStarImage={<Image style={{width:9, height:9,}} source={require('../../../assets/empty-star-full.png')}/>}/>
 
                                 <Text style={[styles.rateText, {height:15, paddingTop:2}]}>
                                     73 Reviews

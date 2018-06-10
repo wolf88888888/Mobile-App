@@ -8,7 +8,7 @@ import styles from './styles';
 
 const CloseButton = (props) => {
     return (
-        <SVGButton style={styles.CloseButton} image={require('../../../assets/close.svg')} onPress={props.onPress}/>
+        <SVGButton style={styles.CloseButton} image={require('../../../assets/close.png')} onPress={props.onPress}/>
     );
 }
 

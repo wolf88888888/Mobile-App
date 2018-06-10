@@ -13,12 +13,12 @@
 // export const PUBLIC_URL = 'https://dev.lockchain.co/';
 
 // Staging server
-export const apiHost = 'https://alpha.locktrip.com/api/';
+export const apiHost = 'https://staging.locktrip.com/api/';
 export const imgHost = 'https://static.locktrip.com/';
-export const basePath = 'https://alpha.locktrip.com/';
+export const basePath = 'https://staging.locktrip.com/';
 export const routerPrefix = '.';
 export const domainPrefix = 'rc';
-export const PUBLIC_URL = 'https://alpha.locktrip.com/';
+export const PUBLIC_URL = 'https://staging.locktrip.com/';
 
 export const Config = {
     'WEB3_HTTP_PROVIDER': 'https://ropsten.infura.io/LOSOOn6ZHnkHG23tu6Ak',
