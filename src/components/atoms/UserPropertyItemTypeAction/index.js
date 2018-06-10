@@ -16,7 +16,7 @@ const defaulProps = {
 const UserPropertyItemTypeAction = (props) => (
     <TouchableOpacity style={[styles.container, props.style]} onPress={props.onPress}>
         <Text style={styles.title}>{props.title}</Text>
-        <Image source={require("../../../assets/svg/arrow-circled.svg")} style={styles.avatar}/>
+        <Image source={require("../../../assets/png/arrow-circled.png")} style={styles.avatar}/>
     </TouchableOpacity>
 );
 

@@ -12,7 +12,7 @@ import styles from './styles';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import HostInfo from '../../../atoms/Property/HostInfo';
 import Footer from '../../../atoms/Footer';
-import Textarea from '../../../atoms/Textarea';
+//import Textarea from '../../../atoms/Textarea';
 
 class ReviewSend extends Component {
     static propTypes = {
@@ -49,7 +49,7 @@ class ReviewSend extends Component {
         const { navigate } = this.props.navigation;
 
         return (
-            <View style={styles.container}>
+            <View style={styles.container}> 
                 <BackButton onPress={this.onClose}/>
                 <ReviewTitle
                     text="Send your message to your host"
@@ -61,14 +61,14 @@ class ReviewSend extends Component {
                         avatar={require('../../../../assets/temple/avatar.png')}
                         pageNumber="Britney"
                         text="Cia,Greece"/>
-                    <Textarea
+                    {/* <Textarea
                         containerStyle={styles.textareaContainer}
                         style={styles.textarea}
                         onChangeText={(text) => this.setState({text})}
                         defaultValue={this.state.text}
                         placeholder={this.state.placeholder}
                         placeholderTextColor={'#c7c7c7'}
-                        underlineColorAndroid={'transparent'}
+                        underlineColorAndroid={'transparent'} */}
                     />
                 </View>
                 <Footer style={styles.footer} button={'Next'} onClick={this.onNext}/>

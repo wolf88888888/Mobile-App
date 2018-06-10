@@ -20,7 +20,7 @@ import UserMyTrips from '../components/screens/MyTrips/MyTrips';
 import Favourites from '../components/screens/Favorites';
 import Guests from '../components/screens/Guests';
 
-import Property from '../components/screens/Property';
+// import Property from '../components/screens/Property';
 import PropertyFacilites from '../components/screens/PropertyFacilites';
 import PropertyRules from '../components/screens/PropertyRules';
 import PropertyPrices from '../components/screens/PropertyPrices';
@@ -90,7 +90,7 @@ export const FullNavigator = StackNavigator(
 
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },
-        ReviewSendScreen: { screen: ReviewSend },
+        ReviewSendScreen: { screen: ReviewSend },//issue needs debugging by developer of this screen
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },

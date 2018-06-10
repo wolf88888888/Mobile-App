@@ -121,7 +121,7 @@ class EditUserProfile extends Component {
                         <Text style={styles.title}>Edit Profile</Text>
                     </View>
                     <TouchableOpacity style={styles.cameraContainer} >
-                        <Image style={styles.cameraButton} source={require('../../../assets/svg/camera.svg')}/>
+                        <Image style={styles.cameraButton} source={require('../../../assets/png/camera.png')}/>
                     </TouchableOpacity>
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} style={{width: '100%'}}>
