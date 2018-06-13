@@ -39,6 +39,7 @@ import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
+import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 
@@ -99,6 +100,7 @@ export const FullNavigator = StackNavigator(
         UserProfile: { screen: UserProfile },
         EditUserProfile: { screen: EditUserProfile },
         UpdateProfileInfo: { screen: UpdateProfileInfo },
+        SimpleUserProfile: {screen: SimpleUserProfile}
     },
     {
         initialRouteName: 'MainScreen',

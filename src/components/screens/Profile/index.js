@@ -53,7 +53,7 @@ class Profile extends Component {
             </TouchableOpacity>
 
             <View>
-                <TouchableOpacity onPress={() => navigate('UserProfile')} style={styles.navItem}>
+                <TouchableOpacity onPress={() => navigate('SimpleUserProfile')} style={styles.navItem}>
                     <Text style={styles.navItemText}>View Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('EditUserProfile')} style={styles.navItem}>

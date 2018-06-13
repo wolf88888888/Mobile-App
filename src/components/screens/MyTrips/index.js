@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles';
-
+import DialogProgress from 'react-native-dialog-progress'
+import Requester, { getMyHotelBookings } from '../../../utils/requester';
 
 class MyTrips extends Component {
     static propTypes = {
@@ -44,7 +45,30 @@ class MyTrips extends Component {
         )
     }
     onStartExploring = () =>{
-        this.props.navigation.navigate('UserMyTrips');
+        const options = {
+            title:"",
+            message:"Loading Message...",
+            isCancelable:true
+        };
+        DialogProgress.show(options);
+
+        //Here we will load trips
+        getMyHotelBookings()
+        .then(res => res.response.json())
+        .then(parsed => {
+            DialogProgress.hide();
+            if (parsed.content.length > 0) {
+                this.props.navigation.navigate('UserMyTrips', {trips:parsed.content});
+            }
+            else {
+                this.props.navigation.navigate('EXPLORE');
+            }
+        })
+        .catch(err => {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot get My Trips Info, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            console.log(err);
+        });
     }
 }
 

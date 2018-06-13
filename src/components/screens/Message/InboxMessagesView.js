@@ -10,6 +10,7 @@ import moment from 'moment';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import styles from './inboxStyle';
+import { imgHost } from '../../../config.js'
 
 TimeAgo.locale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -24,7 +25,7 @@ export default function InboxMessagesView(props) {
                 <View style={styles.trImgView}>
                     {/* To set section 1 it is divided in 3 part this one is part 1 where you can set images start*/}
                     <Image
-                        source={{ uri: 'https://static.locktrip.com/' + props.inboxMessage.userInfo.image }}
+                        source={{ uri: imgHost + props.inboxMessage.userInfo.image }}
                         style={[styles.trAvatar]}
                         resizeMode={"cover"} />
                     {/* To set section 1 it is divided in 2 part this one is part 1 where you can set images end*/}
@@ -35,9 +36,9 @@ export default function InboxMessagesView(props) {
                         <View style={[styles.leftView]}>
                             {/* To set section 2 it is divided in 3 part this one is part 1 where you can set name and status start*/}
                             <Text style={[styles.messageTitle, styles.discussion]}>
-                                {props.inboxMessage.userInfo.fullName} - Confirmed
-                                    </Text>
-                            
+                                {props.inboxMessage.userInfo.fullName}
+                            </Text>
+
                             {/* To set section 2 it is divided in 3 part this one is part 1 where you can set name and status end*/}
                         </View>
                         <View style={[styles.rightView]}>
@@ -46,9 +47,7 @@ export default function InboxMessagesView(props) {
                             {/* To set section 2 it is divided in 3 part this one is part 2 where you can set time end*/}
                         </View>
                         <View style={[styles.lastView]}>
-                            {/* To set section 2 it is divided in 3 part this one is part 3 where you can set status start*/}
                             <View style={[styles.statusView]}></View>
-                            {/* To set section 2 it is divided in 3 part this one is part 3 where you can set status end*/}
                         </View>
                     </View>
                     <Text
@@ -58,10 +57,7 @@ export default function InboxMessagesView(props) {
                                 marginTop: 5
                             }
                         ]}>{props.inboxMessage.lastMessage.createdAt}</Text>
-                    <Text style={[styles.messageSubTitle]}>Garden Loft Apartment</Text>
-                    {/* To set section 2 it is divided in 2 part this one is part 2 where you can set Name, Date, Status .etc end*/}
                 </View>
-                {/* This view is divided in 2 section this one in section 1 end*/}
             </View>
             <View style={styles.trBottomView}>
                 {/* This view is divided in 2 section this one in section 2 start*/}
@@ -69,7 +65,7 @@ export default function InboxMessagesView(props) {
                 {/* This view is divided in 2 section this one in section 2 end*/}
             </View>
         </View>
-    );        
+    );
 }
 
 InboxMessagesView.propTypes = {

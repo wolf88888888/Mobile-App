@@ -5,7 +5,7 @@ import Switch from 'react-native-customisable-switch';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 import { validateEmail, validateName } from '../../../utils/validation';
-import GoBack from '../../atoms/GoBack';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 const styles = StyleSheet.create({
     container: {
@@ -128,14 +128,11 @@ class CreateAccount extends Component {
         const {
             firstName, lastName, email, userWantsPromo, checkZIndex
         } = this.state;
-        const { navigate } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
 
         return (
             <View style={styles.container}>
-                <GoBack
-                    onPress={() => navigate('Welcome')}
-                    icon="arrowLeft"
-                />
+                <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                 <View style={styles.main}>
                     <View style={styles.titleView}><Text style={styles.titleText}>Create Account</Text></View>

@@ -10,24 +10,36 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
     },
     titleView: {
         display: 'flex',
         width: '100%',
-        marginTop: 16,
-        marginLeft: 36,
+        marginTop: 0,
+        marginLeft: 20,
         marginBottom: 2
     },
     titleText: {
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 21,
         color: '#fff',
-        fontSize: 22,
-        fontFamily: 'FuturaStd-Light'
+        marginTop: 15
+    },
+    titleText1: {
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 21,
+        color: '#fff',
+        marginTop: 0
+    },
+    titleText2: {
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 21,
+        color: '#fff',
+        marginTop: 15
     },
     infoText: {
-        color: '#fff',
-        fontSize: 13.3,
         fontFamily: 'FuturaStd-Light',
+        fontSize: 12.5,
+        color: '#fff',
         margin: 20,
         lineHeight: 20
     },
@@ -42,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         width: '100%',
         paddingRight: 18,
-        marginTop: 36
+        marginTop: 0
     },
     buttonText: {
         color: '#fff',
@@ -58,7 +70,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40,
+        marginTop: 20,
         paddingLeft: 2,
         paddingBottom: 2
     }

@@ -9,3 +9,7 @@ include ':react-native-cardview'
 project(':react-native-cardview').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-cardview/android')
 include ':react-native-maps'
 project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/lib/android')
+include ':react-native-toast'
+project(':react-native-toast').projectDir = new File(settingsDir, '../node_modules/@remobile/react-native-toast/android')
+include ':react-native-dialog-progress'
+project(':react-native-dialog-progress').projectDir = new File(settingsDir, '../node_modules/react-native-dialog-progress/android')
