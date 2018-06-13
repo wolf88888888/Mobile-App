@@ -18,6 +18,7 @@ import { domainPrefix } from '../../../config';
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { register, login } from '../../../utils/requester';
+import { imgHost } from '../../../config';
 
 
 class SaveWallet extends Component {
@@ -53,15 +54,15 @@ class SaveWallet extends Component {
         const { params } = this.props.navigation.state;
         const {navigate} = this.props.navigation;
         let user = params;
-        user['image'] = "https://staging.locktrip.com/images/default.png";
+        user['image'] = imgHost + "images/default.png";
         user['jsonFile'] = this.state.walletJson;
         user['locAddress'] = this.state.walletAddress;
 
         console.log(user);
-        
+
         register(user, null).then((res) => {
             if (res.success) {
-                console.log(res); 
+                console.log(res);
                 navigate('CongratsWallet')
                 // login(user, null).then((res) => {
                 //     if (res.success) {
@@ -70,7 +71,7 @@ class SaveWallet extends Component {
                 //             // TODO: Get first name + last name from response included with Authorization token (Backend)
                 //             AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
                 //         });
-                        
+
                 //     }
                 // });
             }
@@ -99,7 +100,7 @@ class SaveWallet extends Component {
                             <View>
                                 <Text style={styles.infoText}>
                                     Your mnemonic recovery keywords are a way for you to backup the access to your wallet. You should print them on a piece of paper and store them in a safe place.
-                            </Text>
+                                </Text>
                             </View>
 
                                 {walletMnemonic.split(' ').map(function (value) {

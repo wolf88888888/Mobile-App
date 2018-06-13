@@ -4,7 +4,7 @@ import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import { validatePassword, validateConfirmPassword } from '../../../utils/validation';
-import GoBack from '../../atoms/GoBack';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 
 const styles = StyleSheet.create({
@@ -119,15 +119,12 @@ class CreatePassword extends Component {
 
     render() {
         const { password, confirmPassword } = this.state;
-        const { navigate } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
         const { params } = this.props.navigation.state;
 
         return (
             <View style={styles.container}>
-                <GoBack
-                    onPress={() => navigate('CreateAccount')}
-                    icon="arrowLeft"
-                />
+                <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                 <View style={styles.main}>
                     <View style={styles.titleView}><Text style={styles.titleText}>Create Password</Text></View>

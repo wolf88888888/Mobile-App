@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Image, StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import styles from './styles';
-import { getMyHotelBookings, getUserInfo } from '../../../utils/requester';
+import DialogProgress from 'react-native-dialog-progress'
+import Requester, { getMyHotelBookings, getUserInfo } from '../../../utils/requester';
 import { domainPrefix,imgHost } from '../../../config';
 import moment from 'moment';
 import Dash from 'react-native-dash';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-
 
 class MyTrips extends Component {
     static propTypes = {
@@ -169,7 +169,31 @@ class MyTrips extends Component {
         )
     }
     onStartExploring = () =>{
-        this.props.navigation.navigate('EXPLORE');
+        const options = {
+            title:"",
+            message:"Loading Message...",
+            isCancelable:true
+        };
+        DialogProgress.show(options);
+
+        //Here we will load trips
+        getMyHotelBookings()
+        .then(res => res.response.json())
+        .then(parsed => {
+            DialogProgress.hide();
+            if (parsed.content.length > 0) {
+                this.props.navigation.navigate('UserMyTrips', {trips:parsed.content});
+            }
+            else {
+                this.props.navigation.navigate('EXPLORE');
+            }
+        })
+        .catch(err => {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot get My Trips Info, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            console.log(err);
+        });
+        //this.props.navigation.navigate('EXPLORE');
     }
 }
 

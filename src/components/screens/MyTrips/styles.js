@@ -3,7 +3,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#eee',
+        backgroundColor: '#f0f1f3',
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
@@ -11,9 +11,9 @@ const styles = StyleSheet.create({
         marginTop: 40
     },
     placeholderImage: {
-        width: 210,
-        height: 210,
-        marginTop: 30
+        width: 135,
+        height: 135,
+        marginTop: 75
     },
     hotelImage: {
         marginBottom: 10,
@@ -21,23 +21,29 @@ const styles = StyleSheet.create({
         height: 150,
     },
     title: {
-        fontFamily: 'futura',
-        fontSize: 24,
-        color: '#1f2427',
-        marginLeft: 14,
-        marginTop: 30
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 22,
+        color: '#000',
+        marginLeft: 20,
+        marginTop: 10
     },
     subtitle: {
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Light',
         fontSize: 16,
         marginRight: 10,
-        color: '#1f2427'
+        color: '#000'
     },
     subtext: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 12,
-        marginTop: 8,
-        color: '#767b7d'
+        fontSize: 15,
+        marginTop: 5,
+        color: '#000'
+    },
+    subtext1: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 13,
+        marginTop: 5,
+        color: '#000'
     },
     hoteltext: {
         fontFamily: 'FuturaStd-Light',
@@ -45,14 +51,14 @@ const styles = StyleSheet.create({
         color: '#000'
     },
     buttonExplore: {
-        backgroundColor: '#cc8068',
-        paddingHorizontal: 60,
-        paddingVertical: 15,
+        backgroundColor: '#D87A61',
+        paddingHorizontal: 70,
+        paddingVertical: 12.5,
         marginTop: 90
     },
     exploreBtnText: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 18,
+        fontSize: 17,
         color: '#fff'
     },
     btn_backImage:{
@@ -79,11 +85,13 @@ const styles = StyleSheet.create({
         width : '100%',
     },
     img_round:{
-        margin: 10,
-        height:50,
-        width: 50,
-        borderRadius: 25,
-        backgroundColor:'#cc8068',
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 5,
+        height:47,
+        width: 47,
+        borderRadius: 23.5,
+        backgroundColor:'#D87A61',
         flexDirection : 'row',
         alignItems: 'center',
         justifyContent: 'center'
@@ -109,8 +117,8 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     flatListMainView : {width: '100%', flex: 1, flexDirection: 'row'},
-    flatListDataView : {width: '75%',},
-    flatListTitleView : {marginTop: 8},
+    flatListDataView : {flex: 1, marginRight:15},
+    flatListTitleView : {marginTop: 0},
     flatListBottomView : {flex: 1, flexDirection: 'row'},
     flatListUserProfileView : {height: 50, width:50, position: "absolute", bottom: 5, right: 5}
 
