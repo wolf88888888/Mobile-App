@@ -25,7 +25,7 @@ const Welcome = ({
 }) => (
     <View style={styles.container}>
         <GoBack icon="times" onPress={BackHandler.exitApp} />
-        <Image source={SplashPNG} style={styles.splashImage} />
+        <Image source={SplashPNG} resizeMode='contain' style={styles.splashImage} />
         <Text style={styles.titleText}>Welcome</Text>
         <View style={styles.buttonCollectionWrap}>
             <Button
