@@ -58,7 +58,7 @@ export default class RoomDetailsReview extends Component {
             rooms:[{
                 adults: params.guestRecord
                 ,"children":[]}],
-                "currency":"USD"}
+                "currency":"USD"};
 
         testBook(value)
             .then(res => res.response.json())
@@ -164,7 +164,6 @@ export default class RoomDetailsReview extends Component {
                       }, 2000);
                 })
                 .catch((err) => {
-                    console.log('maddy');
                     console.log(err); //eslint-disable-line
                 });
             })

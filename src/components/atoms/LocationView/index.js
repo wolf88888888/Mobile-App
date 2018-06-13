@@ -65,7 +65,7 @@ class LocationView extends Component {
                                 <Text style={styles.description}>{this.props.description}</Text>
                             </View>
                         </View>
-                        {/* <MapView
+                        <MapView
                             style={styles.map}
                             region={{
                               latitude: this.props.lat,
@@ -80,7 +80,7 @@ class LocationView extends Component {
                                     strokeColor = { 'rgba(162,197,191,0.5)' }
                                     fillColor = { 'rgba(162,197,191,0.5)' }
                             />
-                        </MapView> */}
+                        </MapView>
                     </View>
                 </CardView>
             </View>
