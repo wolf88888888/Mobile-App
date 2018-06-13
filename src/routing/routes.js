@@ -16,7 +16,7 @@ import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
-import UserMyTrips from '../components/screens/MyTrips/MyTrips';
+import UserMyTrips from '../components/screens/MyTrips/UserMyTrips';
 import Favourites from '../components/screens/Favorites';
 import Guests from '../components/screens/Guests';
 

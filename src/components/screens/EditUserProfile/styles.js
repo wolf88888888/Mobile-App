@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         width: avatarWidth,
         height: avatarHeight,
+        resizeMode:'contain'
     },
 
     lineStyle:{
