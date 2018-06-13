@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width } = Dimensions.get('screen');
+const dimensionWindows = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
@@ -8,8 +9,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f1f3'
     },
     searchAreaView: {
-        width: '100%',
-        height: 105,
+        width: '68%',
+       // height: 105,
         backgroundColor: '#f0f1f3',
         paddingTop: 40,
         paddingLeft: 17,
@@ -356,6 +357,28 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingLeft: 17,
         paddingRight: 17
+    },
+    SearchAndPickerwarp:{
+        display: 'flex',
+        flexDirection: 'row'
+    },
+    pickerWrap:{
+        width: '32%',
+        paddingTop: 40,
+        paddingRight: 17,
+        alignSelf: 'flex-start',
+        justifyContent: 'flex-end',  
+        alignItems: 'flex-start'
+    },
+    picker:{
+       width: '100%'
+    },
+    map: {
+        zIndex: -1,
+        marginTop:-65,
+        alignSelf: 'stretch',
+        width: dimensionWindows.width,
+        height: dimensionWindows.width * 5 / 8,
     },
 });
 export default styles;

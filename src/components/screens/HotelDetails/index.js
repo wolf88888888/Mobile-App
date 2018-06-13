@@ -52,8 +52,8 @@ class HotelDetails extends Component {
             mainAddress: '',
             regionName: '',
             countryName: '',
-            latitude: '',
-            longitude: '',
+            latitude: '37.78825',
+            longitude: '-122.4324',
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
