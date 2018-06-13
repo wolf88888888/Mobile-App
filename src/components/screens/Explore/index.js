@@ -2,13 +2,14 @@ import { withNavigation } from 'react-navigation';
 import React, { Component } from 'react';
 import moment from 'moment';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image, Picker } from 'react-native';
 import PropTypes from 'prop-types';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
-import { getRegionsBySearchParameter, getTopHomes } from '../../../utils/requester';
+import MapView from 'react-native-maps';
+import { getRegionsBySearchParameter, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
 
 class Explore extends Component {
     static propTypes = {
@@ -53,7 +54,10 @@ class Explore extends Component {
             infants: 0,
             topHomes: [],
             roomsDummyData: [{ adults: 2, children: [] }],
-            childrenBool: false
+            childrenBool: false,
+            locPrice : 0,
+            language: "EUR",
+            locRates: []
         };
     }
 
@@ -66,9 +70,17 @@ class Explore extends Component {
     }
 
     componentDidMount() {
+        console.disableYellowBox = true
         getTopHomes().then((topHomes) => {
             const truncated = topHomes.content.slice(0, 4);
             this.setState({ topHomes: truncated });
+        });
+        
+        getLocRate()
+        .then((json) => {
+            this.setState({locRates: json[0], locPrice: json[0].price_eur});
+        }).catch(err => {
+            console.log(err);
         });
     }
 
@@ -83,8 +95,8 @@ class Explore extends Component {
         this.setState({
             checkInDate: startDate,
             checkOutDate: endDate,
-            checkInDateFormated: moment(startDate).format('DD/MM/').toString() + year,
-            checkOutDateFormated: moment(endDate).format('DD/MM/').toString() + year
+            checkInDateFormated: (moment(startDate, 'ddd, DD MMM').format('DD/MM/').toString()) + year,
+            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM').format('DD/MM/').toString()) + year
         });
     }
 
@@ -103,6 +115,7 @@ class Explore extends Component {
 
     onValueChange = (value) => {
         console.log(value);
+        console.log(this.state.loc)
     }
 
     updateData(data) {
@@ -136,10 +149,10 @@ class Explore extends Component {
             adults: this.state.adults,
             children: this.state.children,
             regionId: this.state.regionId,
-            currency: this.state.currency,
+            currency: this.state.language,
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
         });
     }
 
@@ -152,11 +165,29 @@ class Explore extends Component {
             guests: this.state.guests,
             children: this.state.children,
             regionId: this.state.regionId,
-            currency: this.state.currency,
+            currency: this.state.language,
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
         });
+    }
+
+    spinnerValueChange(value){
+        this.setState({language: value});
+        if(value == "EUR"){
+            this.setState({locPrice: this.state.locRates.price_eur})
+        }
+        else if(value == "USD"){
+            this.setState({locPrice: this.state.locRates.price_usd})
+        }
+        else if(value == "GBP"){
+            getLocRateInUserSelectedCurrency('GBP')
+            .then((json) => {
+                this.setState({locPrice: json[0].price_gbp});
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     }
 
     handleAutocompleteSelect(id, name) {
@@ -212,18 +243,46 @@ class Explore extends Component {
         return (
             <View style={styles.container}>
 
-                <View style={styles.searchAreaView}>
-                    <SearchBar
-                        autoCorrect={false}
-                        value={this.state.search}
-                        onChangeText={this.onSearchHandler}
-                        placeholder="Discover your next experience"
-                        placeholderTextColor="#bdbdbd"
-                        leftIcon="search"
-                    />
-                </View>
-                {this.renderAutocomplete()}              
+                <View style={styles.SearchAndPickerwarp}>
+
+                    <View style={styles.searchAreaView}>
+                        <SearchBar
+                            autoCorrect={false}
+                            value={this.state.search}
+                            onChangeText={this.onSearchHandler}
+                            placeholder="Discover your next experience"
+                            placeholderTextColor="#bdbdbd"
+                            leftIcon="search"
+                        />
+                    </View>
+                    <View style={styles.pickerWrap}>    
+                        <Picker style={styles.picker}
+                            selectedValue={this.state.language}
+                            onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>                          
+                            <Picker.Item label="EUR" value="EUR" />
+                            <Picker.Item label="USD" value="USD" />
+                            <Picker.Item label="GBP" value="GBP" />
+                        </Picker>
+                    </View> 
+                </View> 
+                {this.renderAutocomplete()}
                 <View style={styles.itemView}>
+                    {/* <MapView
+                        style={styles.map}
+                        region={{
+                          latitude: 37.78825,
+                          longitude: -122.4324,
+                          latitudeDelta: 0.005,
+                          longitudeDelta: 0.005,
+                    }}>
+                    <MapView.Circle
+                        center={{latitude: 37.78825, longitude: -122.4324}}
+                        radius = { 5000 }
+                        strokeWidth = { 1 }
+                        strokeColor = { 'rgba(162,197,191,0.5)' }
+                        fillColor = { 'rgba(162,197,191,0.5)' }
+                        />
+                    </MapView> */}
                     <DateAndGuestPicker
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
@@ -238,7 +297,7 @@ class Explore extends Component {
                         showSearchButton={true}//eslint-disable-line
                     />
                     <TouchableOpacity onPress={this.gotoSearch} style={styles.fab}>
-                        <Text style={styles.fabText}>LOC/EUR 0.56</Text>
+                        <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice).toFixed(2)}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

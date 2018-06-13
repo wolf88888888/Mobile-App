@@ -99,6 +99,8 @@ class Property extends Component {
             checkOutDateFormated: '',
             roomsDummyData: [],
             urlForService:'',
+            isLoading: true,
+            noResultsFound: false
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -115,6 +117,7 @@ class Property extends Component {
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
 
         this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        console.log(this.state.urlForService);
     }
 
     componentWillMount(){
@@ -141,6 +144,7 @@ class Property extends Component {
 
     onDatesSelect({ startDate, endDate }){
         this.setState({
+            search : 'fuck',
             checkInDate : startDate,
             checkOutDate : endDate,
         });
@@ -209,7 +213,9 @@ class Property extends Component {
     }
     
     gotoHotelDetailsPage = (item) =>{
-        console.log(item);
+        if (clientRef) {
+            clientRef.disconnect();
+        }
         this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
     }
 
@@ -232,6 +238,29 @@ class Property extends Component {
             </ScrollView>
         );
     }
+
+    renderLoader(){
+        return(
+            <View style={{ flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginBottom: 10}}>
+                <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
+            </View>
+        );
+    }
+
+    renderInfoTv(){
+        return(
+            <View style={{ flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginBottom: 10}}>
+                <Text style={{width: '100%', height: 35, fontSize: 20, textAlign: 'center'}}>No Results Found</Text>
+            </View>
+        );
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
@@ -254,6 +283,9 @@ class Property extends Component {
                     />
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
+                {this.state.isLoading && this.renderLoader()}
+                {this.state.noResultsFound && this.renderInfoTv()}
+
                 <View style={styles.itemView}>
                     <DateAndGuestPicker
                             checkInDate={checkInDate}
@@ -271,7 +303,7 @@ class Property extends Component {
 
 
                     <FlatList style={styles.flatList}
-                            data={this.state.listings2}
+                            data={this.state.listings}
                             renderItem={
                                 ({item}) => 
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
@@ -312,11 +344,9 @@ class Property extends Component {
                     onMessage={this.handleReceiveSingleHotel} 
                     ref={(client) => { clientRef = client }}
                     onConnect={this.sendInitialWebsocketRequest.bind(this)}
-                    onDisconnect={this.disconnected.bind(this)}
                     getRetryInterval={() => { return 3000; }}
-                    autoReconnect={false}
+                    autoReconnect={true}
                     debug={true}
-                    autoReconnect={false}
                     />
             </View>
         );
@@ -324,13 +354,20 @@ class Property extends Component {
 
     //Search logic
     handleReceiveSingleHotel(response) {
-        if (response.hasOwnProperty('allElements')) {            
+        console.log('4');
+        if (response.hasOwnProperty('allElements')) { 
+            this.setState({
+                isLoading: false,
+            });        
             if(this.state.listings.length > 0){
                 this.setState({
                     listings2 : this.state.listings,
                 });
             }
-        } else {
+            if(response.totalElements == 0){
+                this.setState({noResultsFound: true})
+            }
+        } else { 
             this.setState(prevState => ({
                 listings: [...prevState.listings, response]
               }));
@@ -339,6 +376,7 @@ class Property extends Component {
 
       disconnected(){
         this.setState({
+            isLoading: false,
             listings2 : this.state.listings,
         });
         if(clientRef){
@@ -347,15 +385,21 @@ class Property extends Component {
       }
 
       sendInitialWebsocketRequest() {
+          console.log('1');
         let query = this.state.urlForService;
         const msg = {
           query: query,
           uuid: uid
         };
+        this.setState({
+            isLoading: true,
+        });  
         if (clientRef) {
+            console.log('2');
             clientRef.sendMessage(`/app/all/${uid}${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
         }
         else{
+            console.log('3');
              //client ref is empty
         }
       }

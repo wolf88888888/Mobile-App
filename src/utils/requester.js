@@ -110,9 +110,15 @@ export async function getCurrencyRates() {
     return sendRequest(`${host}rates`, RequestMethod.GET).then(res => res.response.json());
 }
 
+export async function getLocRate() {
+    return fetch('https://api.coinmarketcap.com/v1/ticker/lockchain/?convert=EUR').then(res => {
+        return res.json();
+    });
+}
+
 export async function getLocRateInUserSelectedCurrency(userSelectedCurrency) {
     return fetch(`https://api.coinmarketcap.com/v1/ticker/lockchain/?convert=${userSelectedCurrency}`).then(res => {
-        return res;
+        return res.json();
     });
 }
 

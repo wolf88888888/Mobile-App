@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity } from 'react-native';
 import styles from './styles';
 import { domainPrefix,imgHost } from '../../../config';
-import Requester, { getMyHotelBookings,getUserInfo } from '../../../utils/requester';
+import { getMyHotelBookings,getUserInfo } from '../../../utils/requester';
 import moment from 'moment';
 import Dash from 'react-native-dash';
 import BackButton from '../../atoms/BackButton';
