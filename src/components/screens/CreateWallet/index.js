@@ -11,7 +11,7 @@ import {
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
-import GoBack from '../../atoms/GoBack';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
 import { validatePassword, validateConfirmPassword } from '../../../utils/validation';
@@ -58,6 +58,7 @@ class CreateWallet extends Component {
         try {
             setTimeout(() => {
                 Wallet.createFromPassword(this.state.password).then((wallet) => {
+                    console.log(wallet);
                     AsyncStorage.setItem('walletAddress', wallet.address);
                     AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
                     AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
@@ -72,7 +73,7 @@ class CreateWallet extends Component {
 
     render() {
         const { password, confirmPassword } = this.state;
-        const { navigate } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
 
         return (
             <TouchableWithoutFeedback
@@ -80,10 +81,7 @@ class CreateWallet extends Component {
                 accessible={true}
             >
                 <View style={styles.container}>
-                    <GoBack
-                        onPress={() => navigate('Welcome')}
-                        icon="arrowLeft"
-                    />
+                    <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                     <View style={styles.main}>
                         <View style={styles.titleView}>
@@ -96,7 +94,7 @@ class CreateWallet extends Component {
                             </Text>
                         </View>
 
-                        <View style={styles.titleView}><Text style={styles.titleText}>Please create your LOC wallet</Text></View>
+                        <View style={styles.titleView}><Text style={styles.titleText1}>Please create your LOC wallet</Text></View>
 
                         <View style={styles.inputView}>
                             <SmartInput
@@ -111,7 +109,7 @@ class CreateWallet extends Component {
                             />
                         </View>
 
-                        <View style={styles.titleView}><Text style={styles.titleText}>Please confirm your LOC wallet</Text></View>
+                        <View style={styles.titleView}><Text style={styles.titleText2}>Please confirm your LOC wallet</Text></View>
 
                         <View style={styles.inputView}>
                             <SmartInput

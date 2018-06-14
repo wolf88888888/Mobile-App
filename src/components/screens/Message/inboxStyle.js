@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         marginHorizontal: 15,
+        backgroundColor: '#f0f1f3',
     },
 
     mainMenu:{
@@ -14,7 +15,6 @@ const styles = StyleSheet.create({
 
     InboxView: {
         flex: 1,
-        backgroundColor: '#f0f1f3',
     },
 
     tr:{
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
         paddingBottom: 25,
         borderBottomWidth: 0.5,
         borderBottomColor: '#ccc',
-        paddingRight: 10,
+        marginLeft: 5,
+        marginRight: 5,
     },
     trTopView:{
         flex: 1,
@@ -37,13 +38,13 @@ const styles = StyleSheet.create({
         width: '18%',
     },
     trAvatar:{
-        height: 50,
-        width: 50,
-        borderRadius: 25,
+        height: 45,
+        width: 45,
+        borderRadius: 22.5,
     },
 
     messageBox:{
-       width: '82%',
+        flex:1,
     },
 
     trBottomView:{
@@ -55,28 +56,36 @@ const styles = StyleSheet.create({
     },
 
     messageTitle:{
-        fontFamily: 'futura',
-        fontSize: 16,
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 15,
        // color: '#DA7B61',
         letterSpacing: 1,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        fontWeight: '200',
     },
 
     messageSubTitle:{
         fontFamily: 'FuturaStd-Light',
-        fontSize: 14,
-        fontWeight: '200',
-        lineHeight: 15,
+        fontSize: 12,
+        fontWeight: '100',
+        lineHeight: 13,
         letterSpacing: 1,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        color:'#000'
     },
     messageValues:{
         fontFamily: 'FuturaStd-Light',
-        fontSize: 14,
-        lineHeight: 18,
+        fontSize:12,
+        color: '#000',
+        width:'100%',
+        flex: 1,
+        lineHeight: 20,
         letterSpacing: 1,
         backgroundColor: 'transparent',
-        color: '#555759'
+        justifyContent: 'space-around',
+        alignItems:'flex-end',
+        marginLeft: 5,
+        marginRight: 5,
     },
 
     review:{
@@ -84,20 +93,21 @@ const styles = StyleSheet.create({
     },
 
     discussion:{
-        color: '#cc8068',
+        color: '#DA7B61',
     },
 
     heading: {
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 20,
         color: '#000',
-        marginBottom: 10,
-        color:'#222'
+        marginTop: 10,
+        marginBottom: 5,
+        color:'#000'
     },
     subHeading:{
         fontFamily: 'FuturaStd-Light',
         fontSize: 12,
-        color:'#222'
+        color:'#000'
     },
     topText:{
         marginHorizontal: 20,
@@ -140,31 +150,48 @@ const styles = StyleSheet.create({
           flexDirection: 'row',
       },
       leftView:{
-        width: '65%',
+        flex:1
       },
       rightView:{
-        width: '30%',
+         marginRight:5,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       },
+
       messageTimeTitle:{
           fontFamily: 'FuturaStd-Light',
-          fontSize: 14
+          fontSize: 12
       },
       lastView:{
-        width: '5%',
-        justifyContent: 'center'
+          marginTop:5
       },
       statusView:{
-          width: 10,
-          height: 10,
-          borderRadius: 10 / 2,
-          backgroundColor: '#cc8068',
+          width: 8,
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: '#D87A61',
       },
       backButton:{
           marginTop: 45,
           marginLeft: 15,
           marginBottom: 0
-        }
+      },
+
+    rateText: {
+        marginTop: 10
+    },
+
+    normalText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 13,
+        lineHeight: 20,
+        marginTop: 10,
+    },
+
+    readmore: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 12,
+        marginTop: -2,
+    },
 });
 export default styles;
