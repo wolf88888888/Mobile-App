@@ -60,11 +60,11 @@ class Profile extends Component {
                     <Text style={styles.navItemText}>Edit Profile</Text>
                     <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-user.svg')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                <TouchableOpacity onPress={() => navigate('Notifications')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Notifications</Text>
                     <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-bell.svg')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                <TouchableOpacity onPress={() => navigate('PaymentMethods')} style={styles.navItem}>
                     <Text style={styles.navItemText}>Payment Methods</Text>
                     <Image resizeMode="stretch" source={require('../../../assets/svg/Profile/icon-payment.svg')} style={styles.navIcon} />
                 </TouchableOpacity>
