@@ -150,8 +150,12 @@ class EditUserProfile extends Component {
 
         let imageAvatar = '';
         if (this.state.image != '') {
-            imageAvatar ={uri:imgHost+this.state.image}
-            console.log("image path: " + imgHost+this.state.image);
+            if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
+                imageAvatar = {uri:'https://staging.locktrip.com/images/default.png'};
+            }
+            else {
+                imageAvatar ={uri:imgHost+this.state.image}
+            }
         }
 
         let location = '';

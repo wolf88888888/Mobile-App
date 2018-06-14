@@ -7,19 +7,20 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    ToastAndroid
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
-import GoBack from '../../atoms/GoBack';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { register, login } from '../../../utils/requester';
 import { imgHost } from '../../../config';
-
+import DialogProgress from 'react-native-dialog-progress'
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -54,13 +55,22 @@ class SaveWallet extends Component {
         const { params } = this.props.navigation.state;
         const {navigate} = this.props.navigation;
         let user = params;
-        user['image'] = imgHost + "images/default.png";
+        user['image'] = "https://staging.locktrip.com/images/default.png";
         user['jsonFile'] = this.state.walletJson;
         user['locAddress'] = this.state.walletAddress;
 
         console.log(user);
 
-        register(user, null).then((res) => {
+        const options = {
+            title:"",
+            message:"Registering...",
+            isCancelable:false
+        };
+        DialogProgress.show(options);
+
+        register(user, null)
+        .then((res) => {
+            DialogProgress.hide();
             if (res.success) {
                 console.log(res);
                 navigate('CongratsWallet')
@@ -74,12 +84,27 @@ class SaveWallet extends Component {
 
                 //     }
                 // });
+            } else {
+                res.response.then((response) => {
+                    const { errors } = response;
+                    Object.keys(errors).forEach((key) => {
+                        if (typeof key !== 'function') {
+                            ToastAndroid.showWithGravityAndOffset(errors[key].message, ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 100);
+                            console.log('Error logging in:', errors[key].message);
+                        }
+                    });
+                });
             }
+        })
+        .catch(err => {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot register user, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            console.log(err);
         });
     };
 
     render() {
-        const { navigate } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
         const { walletMnemonic } = this.state;
         let i = 0;
         return (
@@ -87,10 +112,7 @@ class SaveWallet extends Component {
                 <TouchableWithoutFeedback
                 >
                     <View style={styles.container}>
-                        <GoBack
-                            onPress={() => navigate('Welcome')}
-                            icon="arrowLeft"
-                        />
+                        <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                         <View style={styles.main}>
                             <View style={styles.titleView}>

@@ -131,7 +131,7 @@ class CreatePassword extends Component {
 
                     <Text style={styles.finePrintText}>
                     Your password must be 8 or more characters long. Do not use any common passwords, repetition or sequences.
-                    Try making it longer or adding symbols, like !, # or %.
+                    Try making it longer or adding latin letter and number, adding symbols, like !, # or %.
                     </Text>
 
                     <View style={styles.inputView}>
