@@ -6,7 +6,8 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
+    ToastAndroid
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -18,6 +19,7 @@ import { validatePassword, validateConfirmPassword } from '../../../utils/valida
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Wallet } from '../../../services/blockchain/wallet';
+import DialogProgress from 'react-native-dialog-progress'
 
 class CreateWallet extends Component {
     static propTypes = {
@@ -53,20 +55,36 @@ class CreateWallet extends Component {
     }
 
     submitPassword() {
+        const options = {
+            title:"Creating Wallet...",
+            message:"We are creating your wallet through the Ethereum network. Please be patient. This process can take up to 2-3 minutes due to the advanced security procedure involved.",
+            isCancelable:false
+        };
+        DialogProgress.show(options);
+
         const { params } = this.props.navigation.state;
 
         try {
             setTimeout(() => {
-                Wallet.createFromPassword(this.state.password).then((wallet) => {
+                Wallet.createFromPassword(this.state.password)
+                .then((wallet) => {
+                    DialogProgress.hide();
                     console.log(wallet);
                     AsyncStorage.setItem('walletAddress', wallet.address);
                     AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
                     AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
                     this.props.navigation.navigate('SaveWallet', { ...params});
+                })
+                .catch(err => {
+                    DialogProgress.hide();
+                    ToastAndroid.showWithGravityAndOffset('Cannot create wallet, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+                    console.log(err);
                 });
-            }, 1000);
+            }, 500);
 
         } catch (error) {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot create wallet, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
             console.log(error);
         }
     }
