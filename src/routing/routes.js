@@ -10,9 +10,9 @@ import Terms from '../components/templates/Terms';
 
 import Explore from '../components/screens/Explore';
 import Profile from '../components/screens/Profile'
-//import CreateWallet from '../components/screens/CreateWallet';
-//import SaveWallet from '../components/screens/SaveWallet';
-//import CongratsWallet from '../components/screens/CongratsWallet'
+import CreateWallet from '../components/screens/CreateWallet';
+import SaveWallet from '../components/screens/SaveWallet';
+import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
@@ -64,9 +64,9 @@ export const LoginNavigator = StackNavigator(
         CreateAccount: { screen: CreateAccount },
         CreatePassword: { screen: CreatePassword },
         Terms: { screen: Terms },
-       // CreateWallet: { screen: CreateWallet },
-       // SaveWallet: { screen: SaveWallet },
-      //  CongratsWallet: { screen: CongratsWallet }
+        CreateWallet: { screen: CreateWallet },
+        SaveWallet: { screen: SaveWallet },
+        CongratsWallet: { screen: CongratsWallet }
     },
     {
         initialRouteName: 'Welcome',
@@ -136,7 +136,7 @@ export const FullNavigator = StackNavigator(
 export const AppNavigator = SwitchNavigator(
     {
         AppLoading,
-        Login: MainNavigator,
+        Login: LoginNavigator,
         App: FullNavigator
     },
     {
