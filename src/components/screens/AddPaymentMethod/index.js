@@ -42,7 +42,7 @@ class AddPaymentMethod extends Component {
                 <TouchableOpacity style={styles.navItem} onPress={() => navigate('CreditCard')}>
                     <View style={styles.listItem}>
                         <View>
-                           <Image source={require('../../../../src/assets/svg/credit-card.svg')} style={styles.arrowSvg}/>
+                           <Image style={styles.arrowSvg} source={require('../../../../src/assets/svg/credit-card.svg')}/>
                         </View>
                         <Text style={styles.listItemText}>Credit Card</Text>
                     </View>

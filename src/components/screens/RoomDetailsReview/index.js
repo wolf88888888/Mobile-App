@@ -1,132 +1,216 @@
-import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, FlatList, Modal, TextInput} from 'react-native';
-import Image from 'react-native-remote-svg';
-import styles from './styles';
+import React, { Component } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Modal, TextInput, AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Requester, { testBook } from '../../../utils/requester';
+import Image from 'react-native-remote-svg';
+import styles from './styles';
+import { testBook,getCancellationFees,getCurrentlyLoggedUserJsonFile } from '../../../utils/requester';
+import {HotelReservation} from '../../../services/blockchain/hotelReservation';
 
 export default class RoomDetailsReview extends Component {
-    
     constructor() {
         super();
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            links: [
-                {
-                    key: 0,
-                    name: 'Room Type',
-                    rhs: 'Standard Room'
-                },
-                {
-                    key: 1,
-                    name: 'Dates',
-                    rhs: '25 Jan - 26 Jan'
-                },
-                {
-                    key: 2,
-                    name: 'Guests',
-                    rhs: '2 guests'
-                },
-                {
-                    key: 3,
-                    name: 'Cancellation Fees',
-                    rhs: 'Show'
-                }
-            ],
+            // links: [
+            //     {
+            //         key: 0,
+            //         name: 'Room Type',
+            //         rhs: 'Standard Room'
+            //     },
+            //     {
+            //         key: 1,
+            //         name: 'Dates',
+            //         rhs: '25 Jan - 26 Jan'
+            //     },
+            //     {
+            //         key: 2,
+            //         name: 'Guests',
+            //         rhs: '2 guests'
+            //     },
+            //     {
+            //         key: 3,
+            //         name: 'Cancellation Fees',
+            //         rhs: 'Show'
+            //     }
+            // ],
             modalVisible: false,
             cancellationView: false,
             walletPassword: '',
-            bookingDetail:[],
+            password : '',
+            // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
-            creationDate:'',
-            cancellationLOCPrice: '',
+            creationDate: '',
+            // cancellationLOCPrice: '',
             cancellationPrice: '',
-            
-        }
+            bookingId : '',
+            hotelBooking : '',
+            booking : '',
+            data : ''
+        };
+    }
+
+    componentDidMount() {
+        const { params } = this.props.navigation.state //eslint-disable-line
+        const value = {
+            quoteId: params.quoteId,
+            rooms:[{
+                adults: params.guestRecord
+                ,"children":[]}],
+                "currency":"USD"};
+
+        testBook(value)
+            .then(res => res.response.json())
+            .then((parsed) => {
+                console.log(parsed);
+                const bookingId = parsed.preparedBookingId;
+                const hotelBooking = parsed.booking.hotelBooking[0];
+                const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
+                const endDate = moment(parsed.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                this.setState({
+                    // bookingDetail: parsed,
+                    roomName: parsed.booking.hotelBooking[0].room.roomType.text,
+                    arrivalDate: endDate.format('DD MMM'),
+                    creationDate: startDate.format('DD MMM'),
+                    cancellationPrice: parsed.fiatPrice,
+                    bookingId : bookingId,
+                    hotelBooking : hotelBooking,
+                    booking: value,
+                    data: parsed
+                    // cancellationLOCPrice: parsed.locPrice,
+                });
+            })
+            .catch((err) => {
+                console.log(err); //eslint-disable-line
+            });
     }
 
     // Control Modal Visibility
     setModalVisible(visible) {
-        this.setState({modalVisible: visible});
+        this.setState({ modalVisible: visible });
     }
 
     setCancellationView(visible) {
-        this.setState({cancellationView: visible});
+        this.setState({ cancellationView: visible });
     }
 
-    componentDidMount() {
-        const {params} = this.props.navigation.state
-            var value =
-            {
-                "quoteId": params.quoteId,
-                "rooms": [{
-                    "adults": params.guestRecord,
-                    "children": []
-                }],
-                "currency": "USD"
-            }
-        console.log(value);
-        
-        testBook(value)
-        .then(res => res.response.json())
-        // here you set the response in to json 
-        .then(parsed => {
-            // here you parse your json
-            // here you set you data from json into your variables
+    tokensToWei(tokens) {
+        let index = tokens.indexOf('.');
+        let trailingZeroes = 0;
+        let wei = '';
+        if (index === -1) {
+          trailingZeroes = 18;
+        } else {
+          trailingZeroes = 18 - (tokens.length - 1 - index);
+        }
+    
+        wei = tokens.replace(/[.,]/g, '');
+        if (trailingZeroes >= 0) {
+          wei = wei + '0'.repeat(trailingZeroes);
+        } else {
+          wei = wei.substring(0, index + 18);
+        }
+    
+        return wei;
+      }
 
-            const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
-            const endDate = moment(parsed.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
-            this.setState({
-                bookingDetail : parsed,
-                roomName: parsed.booking.hotelBooking[0].room.roomType.text,
-                arrivalDate: endDate.format('DD MMM'),
-                creationDate: startDate.format('DD MMM'),
-                cancellationPrice: parsed.fiatPrice,
-                cancellationLOCPrice: parsed.locPrice,
+    handleSubmit(){
+        console.log('HandleSubmit Called')
+        //const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
+        getCancellationFees(this.state.bookingId)
+            .then(res => res.response.json())
+            // here you set the response in to json
+            .then((json) => {
+                const password = this.state.password;
+                const preparedBookingId = this.state.bookingId;
+                const booking = this.state.hotelBooking;
+                const startDate = moment(booking.arrivalDate, 'YYYY-MM-DD');
+                const endDate = moment(booking.arrivalDate, 'YYYY-MM-DD').add(booking.nights, 'days');
+                const hotelId = booking.hotelId;
+                const roomId = this.state.booking.quoteId;
+                const cancellationFees = json;
+                const daysBeforeStartOfRefund = [];
+                const refundPercentages = [];
+                const wei = (this.tokensToWei(this.state.data.locPrice.toString()));
+                const numberOfTravelers = 2;
+
+                getCurrentlyLoggedUserJsonFile()
+                .then(res => res.response.json())
+                // here you set the response in to json
+                .then((json) => {
+                    setTimeout(() => {
+                        HotelReservation.createReservation(
+                            json.jsonFile,
+                            password,
+                            preparedBookingId.toString(),
+                            wei,
+                            startDate.unix().toString(),
+                            endDate.unix().toString(),
+                            daysBeforeStartOfRefund,
+                            refundPercentages,
+                            hotelId,
+                            roomId,
+                            numberOfTravelers.toString()
+                          ).then(transaction => {
+                              console.log('b');
+                            // const bookingConfirmObj = {
+                            //   bookingId: preparedBookingId,
+                            //   transactionHash: transaction.hash
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                      }, 2000);
+                })
+                .catch((err) => {
+                    console.log(err); //eslint-disable-line
+                });
+            })
+            .catch((err) => {
+                console.log(err); //eslint-disable-line
             });
-        })
-        .catch(err => {
-            console.log(err);
-        });
     }
-
 
     // Keys for flatlist
-    _keyExtractor = (item, index) => item.key;
+    _keyExtractor = (item, index) => item.key; //eslint-disable-line
 
     render() {
-        const {params} = this.props.navigation.state
-        
+        const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
                 <Modal
                     animationType="fade"
-                    transparent={true}
+                    transparent={true}//eslint-disable-line
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-                        alert('Modal has been closed.');
-                    }}>
+
+                    }}
+                >
                     <View style={styles.modalView}>
                         <View style={styles.popup}>
                             <View style={styles.labelCloseView}>
                                 <Text style={styles.walletPasswordLabel}>Enter your wallet password</Text>
-                                <View  style={styles.closeButtonView}>
+                                <View style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.navigation.goBack();
-                                        }}>
-                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')}/>
+                                            this.props.navigation.goBack(); //eslint-disable-line
+                                        }}
+                                    >
+                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
                             <TextInput
                                 style={styles.walletPasswordInput}
-                                onChangeText={(walletPassword) => this.setState({walletPassword})}
-                                value={this.state.walletPassword}
+                                onChangeText={walletPassword => this.setState({ password : walletPassword })}
+                                value={this.state.password}
                                 placeholder="Wallet password"
                             />
-                            <TouchableOpacity style={styles.confirmButton} >
+                            <TouchableOpacity 
+                                style={styles.confirmButton} 
+                                onPress={this.handleSubmit}
+                            >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
                             </TouchableOpacity>
                         </View>
@@ -135,28 +219,33 @@ export default class RoomDetailsReview extends Component {
                 {/* Cancellation Fee Button View start */}
                 <Modal
                     animationType="fade"
-                    transparent={true}
+                    transparent={true}//eslint-disable-line
                     visible={this.state.cancellationView}
                     onRequestClose={() => {
-                        alert('Modal has been closed.');
-                    }}>
+
+                    }}
+                >
                     <View style={styles.modalView}>
                         <View style={styles.popup}>
                             <View style={styles.labelCloseView}>
                                 <Text style={styles.walletPasswordLabel}>Cancellation Fee</Text>
-                                <View  style={styles.closeButtonView}>
+                                <View style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
                                             this.setCancellationView(!this.state.cancellationView);
-                                        }}>
-                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/svg/close.svg')}/>
+                                        }}
+                                    >
+                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <Text style={{fontFamily: 'FuturaStd-Light',}}>USD {this.state.cancellationPrice} - ({this.state.cancellationPrice}LOC)</Text>
-                            <TouchableOpacity style={styles.confirmButton} onPress={() => {
-                                            this.setCancellationView(!this.state.cancellationView);
-                                        }}>
+                            <Text style={{ fontFamily: 'FuturaStd-Light' }}>USD {this.state.cancellationPrice} - ({this.state.cancellationPrice}LOC)</Text>
+                            <TouchableOpacity
+                                style={styles.confirmButton}
+                                onPress={() => {
+                                    this.setCancellationView(!this.state.cancellationView);
+                                }}
+                            >
                                 <Text style={styles.confirmButtonText}>Hide</Text>
                             </TouchableOpacity>
                         </View>
@@ -164,10 +253,12 @@ export default class RoomDetailsReview extends Component {
                 </Modal>
                 {/* Cancellation Fee Button View end */}
                 <ScrollView >
-                    {/*Back Button*/}
-                    <TouchableOpacity onPress={() => {this.props.navigation.goBack();}} style={styles.backButton}>
-                        <Image style={styles.btn_backImage}
-                               source={require('../../../../src/assets/svg/arrow-back.svg')}/>
+                    {/* Back Button */}
+                    <TouchableOpacity onPress={() => { this.props.navigation.goBack(); }} style={styles.backButton}>
+                        <Image
+                            style={styles.btn_backImage}
+                            source={require('../../../../src/assets/png/arrow-back.png')}
+                        />
                     </TouchableOpacity>
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 2 OF 2</Text>
@@ -182,45 +273,46 @@ export default class RoomDetailsReview extends Component {
                             </View>
                         </View>
                     </View>
-                    {/*Button list displayed using flat list*/}
-                    
-                            <View style={styles.listItem}>
-                                <View style={styles.listItemNameWrapper}>
-                                    <Text style={styles.listItemText}>Room Type</Text>
-                                </View>
-                                <View style={styles.listItemRhsWrapper}>
-                                   <Text style={styles.rhs}>{this.state.roomName}</Text>
-                                </View>
-                            </View>
-                            <View style={styles.listItem}>
-                                <View style={styles.listItemNameWrapper}>
-                                    <Text style={styles.listItemText}>Dates</Text>
-                                </View>
-                                <View style={styles.listItemRhsWrapper}>
-                                   <Text style={styles.rhs}>{this.state.creationDate} - {this.state.arrivalDate}</Text>
-                                </View>
-                            </View>
-                            <View style={styles.listItem}>
-                                <View style={styles.listItemNameWrapper}>
-                                    <Text style={styles.listItemText}>Guests</Text>
-                                </View>
-                                <View style={styles.listItemRhsWrapper}>
-                                   <Text style={styles.rhs}>2</Text>
-                                </View>
-                            </View>
-                            <View style={styles.listItem}>
-                                <View style={styles.listItemNameWrapper}>
-                                    <Text style={styles.listItemText}>Cancellation Fees</Text>
-                                </View>
-                                <View style={styles.listItemRhsWrapper}>
-                                   <TouchableOpacity onPress={() => {
-                                       this.setCancellationView(true);}}>
-                                       <Text style={styles.rhs}>Show</Text></TouchableOpacity>
-                                </View>
-                            </View>
+                    {/* Button list displayed using flat list */}
+                    <View style={styles.listItem}>
+                        <View style={styles.listItemNameWrapper}>
+                            <Text style={styles.listItemText}>Room Type</Text>
+                        </View>
+                        <View style={styles.listItemRhsWrapper}>
+                            <Text style={styles.rhs}>{this.state.roomName}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.listItem}>
+                        <View style={styles.listItemNameWrapper}>
+                            <Text style={styles.listItemText}>Dates</Text>
+                        </View>
+                        <View style={styles.listItemRhsWrapper}>
+                            <Text style={styles.rhs}>{this.state.creationDate} - {this.state.arrivalDate}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.listItem}>
+                        <View style={styles.listItemNameWrapper}>
+                            <Text style={styles.listItemText}>Guests</Text>
+                        </View>
+                        <View style={styles.listItemRhsWrapper}>
+                            <Text style={styles.rhs}>2</Text>
+                        </View>
+                    </View>
+                    <View style={styles.listItem}>
+                        <View style={styles.listItemNameWrapper}>
+                            <Text style={styles.listItemText}>Cancellation Fees</Text>
+                        </View>
+                        <View style={styles.listItemRhsWrapper}>
+                            <TouchableOpacity
+                                onPress={() => { this.setCancellationView(true); }}
+                            >
+                                <Text style={styles.rhs}>Show</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </ScrollView>
 
-                {/*Bottom Bar*/}
+                {/* Bottom Bar */}
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
@@ -233,23 +325,26 @@ export default class RoomDetailsReview extends Component {
                         </View>
                     </View>
                     <View style={styles.payButtonView}>
-                        <TouchableOpacity style={styles.payButton}  onPress={() => {
-                            this.setModalVisible(true);
-                        }}>
+                        <TouchableOpacity
+                            style={styles.payButton}
+                            onPress={() => {
+                                this.setModalVisible(true);
+                            }}
+                        >
                             <Text style={styles.confirmPayText}>Confirm and Pay</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
-        )
+        );
     }
 }
 
 RoomDetailsReview.defaultProps = {
     hotelName: 'Inner Test Hotel',
     hotelAddress: 'Inner Kensington road',
-    priceInUserCurreny : 500.14,
-    priceInLoc : 49.3,
+    priceInUserCurreny: 500.14,
+    priceInLoc: 49.3,
     guests: [
         {
             key: 0,
@@ -269,24 +364,24 @@ RoomDetailsReview.defaultProps = {
             firstName: '',
             lastName: ''
         }
-    ],
-    testBookParameter: {
-        "quoteId":"249357191-0",
-            "rooms":[{
-                "adults":[{
-                        "title":"Mr","firstName":"test","lastName":"test"
-                    },{
-                        "title":"Mr","firstName":"test","lastName":"test"}
-                ],"children":[]
-            }],
-            "currency":"USD"
-    }
-}
+    ]
+    // testBookParameter: {
+    //     "quoteId":"249357191-0",
+    //         "rooms":[{
+    //             "adults":[{
+    //                     "title":"Mr","firstName":"test","lastName":"test"
+    //                 },{
+    //                     "title":"Mr","firstName":"test","lastName":"test"}
+    //             ],"children":[]
+    //         }],
+    //         "currency":"USD"
+    // }
+};
 
 RoomDetailsReview.propTypes = {
-    hotelName: PropTypes.string,
-    hotelAddress: PropTypes.string,
-    priceInUserCurreny : PropTypes.number,
-    priceInLoc : PropTypes.number,
-    guests : PropTypes.array,
-  };
+    hotelName: PropTypes.string, //eslint-disable-line
+    hotelAddress: PropTypes.string,//eslint-disable-line
+    priceInUserCurreny: PropTypes.number,//eslint-disable-line
+    priceInLoc : PropTypes.number,//eslint-disable-line
+    guests : PropTypes.array,//eslint-disable-line
+};

@@ -233,7 +233,7 @@ export default class Calendar extends Component {
                         >
                             <Image
                                 style={styles.closeIcon}
-                                source={require('../../../assets/svg/close.svg')}
+                                source={require('../../../assets/png/close.png')}
                                 resizeMode="contain"
                             />
                         </TouchableHighlight>

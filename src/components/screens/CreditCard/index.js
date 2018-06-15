@@ -7,6 +7,8 @@ import Image from 'react-native-remote-svg';
 import { validateEmail, validateName } from '../../../utils/validation';
 import GoBack from '../../atoms/GoBack';
 import SmartInput from '../../atoms/SmartInput';
+import { SaveCard } from '../../../utils/requester';
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -146,14 +148,38 @@ class CreditCard extends Component {
     }
 
     onChangeHandler(property) {
+        //console.log('property>>>>>>>>>>>>>>wwwwwwwwww',property)
         return (value) => {
             this.setState({ [property]: value });
+            console.log('property>>>>>>>>>>>>>>',value)
         };
+    }
+     onClickSave() {
+        console.log('hi')
+        const { CardHolder, CardNumber,MY,CVV } = this.state;
+        const user = {CardHolder, CardNumber,MY,CVV};
+
+        SaveCard(user, null).then((res) => {
+            if (res.success) {
+                res.response.json().then((data) => {
+
+                });
+            } else {
+                res.response.then((response) => {
+                    const { errors } = response;
+                    Object.keys(errors).forEach((key) => {
+                        if (typeof key !== 'function') {
+                            console.log('Error saving card:', errors[key].message);
+                        }
+                    });
+                });
+            }
+        });
     }
 
     render() {
         const {
-            CardHolder,CardNumber, MY, CVV, checkZIndex
+            CardHolder,CardNumber, MY, CVV
         } = this.state;
         const { navigate } = this.props.navigation;
 
@@ -200,7 +226,7 @@ class CreditCard extends Component {
                                     keyboardType="numeric"
                                     autoCorrect={false}
                                     autoCapitalize="none"
-                                    
+                                    maxLength={4}
                                     placeholder="M/Y"
                                     placeholderTextColor="#fff" 
                                     onChangeText={this.onChangeHandler('MY')}           
@@ -225,9 +251,14 @@ class CreditCard extends Component {
                     <View style={styles.nextButtonView}>
                        
                             <View style={styles.nextButton}>
-                                <Text style={styles.buttonText}>
-                                    <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                </Text>
+                                <TouchableOpacity
+                                    disabled={!CardHolder ||!CardNumber || !CVV || !MY}
+                                    onPress={() => this.onClickSave()}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        <FontAwesome>{Icons.arrowRight}</FontAwesome>
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                     
                     </View>

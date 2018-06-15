@@ -78,9 +78,9 @@ class UserProfileSummary extends Component {
                         <View style={styles.reviewContainer}>
                             {
                                 this.props.isVerified?
-                                    <Image source={require("../../../assets/svg/check.svg")} style={styles.Verified}/>
+                                    <Image source={require("../../../assets/png/check.png")} style={styles.Verified}/>
                                 :
-                                    <Image source={require("../../../assets/svg/uncheck.svg")} style={styles.Verified}/>
+                                    <Image source={require("../../../assets/png/uncheck.png")} style={styles.Verified}/>
                             }
                             <Text style={styles.subtitleText}>Verified</Text>
                         </View>

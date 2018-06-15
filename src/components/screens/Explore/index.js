@@ -2,13 +2,14 @@ import { withNavigation } from 'react-navigation';
 import React, { Component } from 'react';
 import moment from 'moment';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView,Image, Text, View, TouchableOpacity,Picker} from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image, Picker } from 'react-native';
 import PropTypes from 'prop-types';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
-import { getRegionsBySearchParameter, getTopHomes } from '../../../utils/requester';
+import MapView from 'react-native-maps';
+import { getRegionsBySearchParameter, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
 
 class Explore extends Component {
     static propTypes = {
@@ -53,7 +54,10 @@ class Explore extends Component {
             infants: 0,
             topHomes: [],
             roomsDummyData: [{ adults: 2, children: [] }],
-            childrenBool: false
+            childrenBool: false,
+            locPrice : 0,
+            language: "EUR",
+            locRates: []
         };
     }
 
@@ -66,9 +70,17 @@ class Explore extends Component {
     }
 
     componentDidMount() {
+        console.disableYellowBox = true
         getTopHomes().then((topHomes) => {
             const truncated = topHomes.content.slice(0, 4);
             this.setState({ topHomes: truncated });
+        });
+        
+        getLocRate()
+        .then((json) => {
+            this.setState({locRates: json[0], locPrice: json[0].price_eur});
+        }).catch(err => {
+            console.log(err);
         });
     }
 
@@ -83,8 +95,8 @@ class Explore extends Component {
         this.setState({
             checkInDate: startDate,
             checkOutDate: endDate,
-            checkInDateFormated: moment(startDate).format('DD/MM/').toString() + year,
-            checkOutDateFormated: moment(endDate).format('DD/MM/').toString() + year
+            checkInDateFormated: (moment(startDate, 'ddd, DD MMM').format('DD/MM/').toString()) + year,
+            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM').format('DD/MM/').toString()) + year
         });
     }
 
@@ -103,6 +115,7 @@ class Explore extends Component {
 
     onValueChange = (value) => {
         console.log(value);
+        console.log(this.state.loc)
     }
 
     updateData(data) {
@@ -136,10 +149,10 @@ class Explore extends Component {
             adults: this.state.adults,
             children: this.state.children,
             regionId: this.state.regionId,
-            currency: this.state.currency,
+            currency: this.state.language,
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
         });
     }
 
@@ -152,12 +165,30 @@ class Explore extends Component {
             guests: this.state.guests,
             children: this.state.children,
             regionId: this.state.regionId,
-            currency: this.state.currency,
+            currency: this.state.language,
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
+            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
         });
 
+    }
+
+    spinnerValueChange(value){
+        this.setState({language: value});
+        if(value == "EUR"){
+            this.setState({locPrice: this.state.locRates.price_eur})
+        }
+        else if(value == "USD"){
+            this.setState({locPrice: this.state.locRates.price_usd})
+        }
+        else if(value == "GBP"){
+            getLocRateInUserSelectedCurrency('GBP')
+            .then((json) => {
+                this.setState({locPrice: json[0].price_gbp});
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     }
 
     handleAutocompleteSelect(id, name) {
@@ -234,7 +265,6 @@ class Explore extends Component {
                                   <Picker.Item label="EUR" value="EUR" />
                                   <Picker.Item label="USD" value="USD" />
                                   <Picker.Item label="GBP" value="GBP" />
-
                                 </Picker>
                         </View> 
 
@@ -255,9 +285,6 @@ class Explore extends Component {
                             gotoSettings={this.gotoSettings}
                             showSearchButton= {true}
                         />
-                 
-                   {/* </View>*/}
-
      
                 <View>
 
@@ -292,13 +319,8 @@ class Explore extends Component {
 
                         <View style={styles.catWrapper}>
 
-
-
                                 <View style={styles.placeholderImageViewCard}>
-
-                               
                                     <Image source={require('../../../../src/assets/svg/heart.svg')} style={styles.arrowSvg}/>
-                      
 
                                     <Image
                                         style={styles.placeholderImage}
@@ -326,7 +348,7 @@ class Explore extends Component {
                                         source={require('../../../assets/apartment.png')}
                                     />
 
-                                     <View>
+                                    <View>
                                         <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>                                           
                                     </View>
                                     <View>
@@ -458,8 +480,7 @@ class Explore extends Component {
                         <TouchableOpacity style={styles.fab} onPress={this.gotoSearch}>
                             <Text style={styles.fabText}>LOC/EUR 0.56</Text>
                         </TouchableOpacity>
-                  
-
+  
             </View>
         );
     }

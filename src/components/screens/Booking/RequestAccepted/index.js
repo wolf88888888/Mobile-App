@@ -49,7 +49,7 @@ class RequestAccepted extends Component {
           <BackButton onPress={this.onClose}/>
 
           <View style={styles.topAlert}>
-              <Image style={styles.logo} source={require('../../../../assets/svg/accepted.svg')}/>
+              <Image style={styles.logo} source={require('../../../../assets/png/accepted.png')}/>
               <Text style={styles.title}>
                   Request Accepted
               </Text>
