@@ -72,7 +72,8 @@ class LocationView extends Component {
                               longitude: this.props.lon,
                               latitudeDelta: 0.005,
                               longitudeDelta: 0.005,
-                            }}>
+                            }}
+                            debug={true}>
                             <MapView.Circle
                                     center={{latitude: this.props.lat, longitude: this.props.lon}}
                                     radius = { this.props.radius }

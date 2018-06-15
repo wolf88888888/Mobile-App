@@ -18,6 +18,18 @@ import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
 import UserMyTrips from '../components/screens/MyTrips/UserMyTrips';
 import Favourites from '../components/screens/Favorites';
+
+//import WishlistSettings from '../components/screens/Favorites/WishlistSettings';
+
+import Notifications from '../components/screens/Notifications';
+
+import CreditCard from '../components/screens/CreditCard';
+import CreditCardFilled from '../components/screens/CreditCard';
+
+import PaymentMethods from '../components/screens/PaymentMethods';
+
+import AddPaymentMethod from '../components/screens/AddPaymentMethod';
+
 import Guests from '../components/screens/Guests';
 
 // import Property from '../components/screens/Property';
@@ -33,6 +45,8 @@ import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
 import RoomDetailsReview from '../components/screens/RoomDetailsReview';
 import GuestInfoForm from '../components/screens/GuestInfoForm';
+
+
 
 import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
@@ -65,7 +79,8 @@ export const MainNavigator = TabNavigator(
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
         MY_TRIPS: { screen: MyTrips },
-        FAVORITES: { screen: Favourites },
+        FAVORITES: { screen: Favourites},
+
         EXPLORE: { screen: Explore }
     },
     {
@@ -96,6 +111,16 @@ export const FullNavigator = StackNavigator(
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
         AvailableRoomsView: { screen: AvailableRoomsView},
+
+        Notifications: { screen: Notifications},
+
+        CreditCard :  { screen: CreditCard},
+
+        CreditCardFilled : { screen: CreditCardFilled},
+
+        PaymentMethods :{ screen:PaymentMethods},
+
+        AddPaymentMethod :{screen:AddPaymentMethod},
 
         UserProfile: { screen: UserProfile },
         EditUserProfile: { screen: EditUserProfile },

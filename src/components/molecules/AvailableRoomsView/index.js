@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 import { getHotelRooms } from '../../../utils/requester';
 import HotelDetails from '../../screens/HotelDetails';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Icon from 'react-native-fontawesome';
 
 const RNViewPropTypes = ViewPropTypes || View.propTypes;
 const RNPropTypes = PropTypes || React.PropTypes;
@@ -25,6 +27,8 @@ class AvailableRoomsView extends Component {
         navigate: PropTypes.func,
         guests: PropTypes.number,
         hotelDetails:PropTypes.object,
+        currencyIcon: PropTypes.object,
+        locRate: PropTypes.number
     };
 
     static defaultProps = {
@@ -78,7 +82,8 @@ class AvailableRoomsView extends Component {
                             cardMaxElevation={1.5}
                             cornerRadius={0}>
                             <Text style={styles.name}>{rowData.roomsResults[0].name+"("+rowData.roomsResults[0].mealType+")"}</Text>
-                            <Text style={styles.price}>{"1 night:$" + Number(((parseFloat(rowData.roomsResults[0].price) * 1.193)).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text>
+                            <Text style={styles.price}>1 night: <FontAwesome>{this.props.currencyIcon} {Number(((parseFloat(rowData.roomsResults[0].price) * this.props.locRate)).toFixed(2))} {rowData.roomsResults[0].price} LOC</FontAwesome></Text>
+                            {/* <Text style={styles.price}>{"1 night:" + Number(((parseFloat(rowData.roomsResults[0].price))).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text> */}
                             <TouchableOpacity onPress={this.onRoomPress.bind(this,rowData)}>
                                 <Text style={styles.book}>Book Now</Text>
                             </TouchableOpacity>
