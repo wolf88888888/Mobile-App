@@ -120,7 +120,6 @@ class HotelDetails extends Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                
                 <View style={styles.topButtonContainer}>
                     <WhiteBackButton onPress={this.onClose}/>
                 </View>

@@ -43,6 +43,7 @@
     "react-native-dash": "0.0.8",
     "react-native-fontawesome": "^5.7.0",
     "react-native-iphone-x-helper": "^1.0.2",
+    "react-native-keyboard-aware-scroll-view": "^0.4.0",
     "react-native-maps": "^0.21.0",
     "react-native-picker-select": "^3.0.1",
     "react-native-remote-svg": "^1.1.1",
@@ -50,7 +51,9 @@
     "react-native-uuid-generator": "^4.0.0",
     "react-navigation": "^1.5.12",
     "react-redux": "^5.0.7",
+    "react-simple-dropdown": "^3.2.0",
     "react-stomp": "^3.2.0",
+    "react-switch": "^2.3.2",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
@@ -59,7 +62,6 @@
     "sockjs-client": "^1.1.4",
     "stompjs": "^2.3.3",
     "stream": "0.0.2",
-    "utf8": "^3.0.0",
-    "react-native-keyboard-aware-scroll-view": "^0.4.0"
+    "utf8": "^3.0.0"
   }
 }

@@ -9,7 +9,7 @@ import Dash from 'react-native-dash';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 
-class MyTrips extends Component {
+class UserMyTrips extends Component {
     
     static propTypes = {
         navigation: PropTypes.shape({
@@ -152,4 +152,4 @@ class MyTrips extends Component {
 }
 
 
-export default MyTrips;
+export default UserMyTrips;

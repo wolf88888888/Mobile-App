@@ -71,10 +71,10 @@ class Inbox extends Component {
                 </TouchableOpacity>
 
                 <View style={[styles.topText]}>
-                {/* Top Text Start */}
+             
                     <Text style={[styles.heading]}>Inbox</Text>
                     <Text style={styles.subHeading}>You have 3 unread messages</Text>
-                {/* Top Text end */}
+              
                 </View>
                 <FlatList data={this.state.inboxMessages} // Data source
                 // List Start
