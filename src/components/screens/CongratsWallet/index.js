@@ -32,7 +32,7 @@ class CongratsWallet extends Component {
             navigate: () => {}
         }
     }
-    
+
     constructor(props) {
         super(props)
     }
@@ -40,23 +40,20 @@ class CongratsWallet extends Component {
     render() {
         const { navigate } = this.props.navigation;
         return (
-            <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-                <TouchableWithoutFeedback
-                >
-                    <View style={styles.container}>
-
-                        <View style={styles.main}>
-                            <Image
-                                source={require('../../../assets/walletCongrats.png')}
-                                style={styles.walletCongratsImage}
-                            />
-                            <Text style={styles.bigTitle}>Congratulations!</Text>
-                            <Text style={styles.subTitle}>Your wallet has been created</Text>
-                            <Button wrapStyle={{backgroundColor: '#223843', margin: 20}} onPress={() => navigate('Login')} text="Go to Login" />
+            <TouchableWithoutFeedback>
+                <View style={styles.container}>
+                    <View style={styles.main}>
+                        <Image
+                            source={require('../../../assets/walletCongrats.png')}
+                            style={styles.walletCongratsImage} />
+                        <Text style={styles.bigTitle}>Congratulations!</Text>
+                        <Text style={styles.subTitle}>Your wallet has been created</Text>
+                        <View style={styles.gotoButtonContainer}>
+                            <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={() => navigate('Login')} text="Go to Login" />
                         </View>
                     </View>
-                </TouchableWithoutFeedback>
-            </ScrollView>
+                </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
