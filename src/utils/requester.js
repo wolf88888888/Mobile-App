@@ -105,7 +105,9 @@ export async function register(userObj, captchaToken) {
 export async function login(userObj) {
     return sendRequest(`${host}login`, RequestMethod.POST, userObj).then(res => res);
 }
-
+export async function SaveCard(creditcardObj) {
+    return sendRequest(`${host}SaveCard`, RequestMethod.POST, creditcardObj).then(res => res);
+}
 export async function getCurrencyRates() {
     return sendRequest(`${host}rates`, RequestMethod.GET).then(res => res.response.json());
 }
