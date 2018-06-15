@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     placeholderImageView: {
-        marginTop: 20
+        marginTop: 40
     },
     placeholderImage: {
-        width: 250,
+        width: 210,
         height: 210,
         marginTop: 30
     },
@@ -78,10 +78,6 @@ const styles = StyleSheet.create({
       flatList:{
         width : '100%',
     },
-    List:{
-        marginLeft: 4
-   
-    },
     img_round:{
         margin: 10,
         height:50,
@@ -117,6 +113,7 @@ const styles = StyleSheet.create({
     flatListTitleView : {marginTop: 8},
     flatListBottomView : {flex: 1, flexDirection: 'row'},
     flatListUserProfileView : {height: 50, width:50, position: "absolute", bottom: 5, right: 5}
+
 });
 
 export default styles;

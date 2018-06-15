@@ -303,14 +303,14 @@ class Explore extends Component {
                                 <View style={styles.placeholderImageView}>
                                     <Image
                                         style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        source={require('../../../assets/home_images/hotels.png')}
                                     />
                                 </View>
 
                                 <View style={styles.placeholderImageView}>
                                     <Image
                                         style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        source={require('../../../assets/home_images/homes.png')}
                                     />
                                 </View>
 
@@ -330,11 +330,11 @@ class Explore extends Component {
 
                                     <Image
                                         style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        source={require('../../../assets/home_images/london.png')}
                                     />
 
                                     <View>
-                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>LONDOND .<Text  style={styles.hotelLoc}> ENGLAND </Text></Text>                                           
                                     </View>
                                     <View>
                                        <Text style={styles.hotelName}>Green Life Beach Resort</Text>                                           
@@ -351,14 +351,14 @@ class Explore extends Component {
                                 <View style={styles.placeholderImageViewCard}>
                                     <Image
                                         style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        source={require('../../../assets/home_images/italy.png')}
                                     />
 
                                     <View>
-                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>FLORENCE .<Text  style={styles.hotelLoc}> ITALY </Text></Text>                                           
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>                                           
+                                       <Text style={styles.hotelName}>Apolonia Resort</Text>                                           
                                     </View> 
                                     <View>
                                        <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
@@ -377,14 +377,14 @@ class Explore extends Component {
 
                                     <Image
                                         style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        source={require('../../../assets/home_images/rome.png')}
                                     />
 
                                      <View>
-                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>ROME .<Text  style={styles.hotelLoc}> ITALY </Text></Text>                                           
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>                                           
+                                       <Text style={styles.hotelName}>Paradise HOTEL</Text>                                           
                                     </View> 
                                     <View>
                                        <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
@@ -398,14 +398,14 @@ class Explore extends Component {
                                 <View style={styles.placeholderImageViewCard}>
                                     <Image
                                         style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        source={require('../../../assets/home_images/paris.png')}
                                     />
 
                                      <View>
-                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>PARIS .<Text  style={styles.hotelLoc}> FRANCE </Text></Text>                                           
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>                                           
+                                       <Text style={styles.hotelName}>Green Garden Aparthotel</Text>                                           
                                     </View> 
                                     <View>
                                        <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
@@ -432,19 +432,10 @@ class Explore extends Component {
                         <View style={styles.catWrapper}> 
                                 <View style={styles.placeholderImageView}>
                                     <Image
-                                        style={styles.placeholderImage}
-                                        source={require('../../../assets/apartment.png')}
+                                        style={{marginTop: 10, alignSelf: 'flex-start', flex: 1, width:'100%'}}
+                                        source={require('../../../assets/home_images/top.png')}
                                     />
                                 </View>
-
-                                <View style={styles.placeholderImageView}>
-                                    <Image
-                                        style={styles.placeholderImage}
-                                        source={require('../../../assets/temple/overview.jpg')}
-                                    />
-                                </View>
-
-
                         </View>
 
 
