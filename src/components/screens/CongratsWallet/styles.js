@@ -11,26 +11,34 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
     },
     walletCongratsImage: {
-        maxWidth: '55%',
-        maxHeight: '30%',
-        marginTop: 50,
-        marginBottom: 30
+        width: 150,
+        height: 150,
+        marginTop: 140,
     },
     bigTitle: {
-        fontSize: 30,
-        color: '#FFF',
         fontFamily: 'FuturaStd-Light',
-        margin: 10
+        fontSize: 28,
+        color: '#FFF',
+        marginTop: 13
     },
     subTitle: {
-        fontSize: 25,
+        fontSize: 20,
         color: '#FFF',
         fontFamily: 'FuturaStd-Light',
-        margin: 10
-    }
+        marginTop: 5
+    },
+
+    gotoButtonContainer: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 80
+    },
 });
 
 export default styles;

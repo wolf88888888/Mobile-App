@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
     },
     splashImage: {
         width: 200,
-        height: 80
+        height: 80,
+        resizeMode:'contain'
     },
     buttonCollectionWrap: {
         display: 'flex',

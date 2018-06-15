@@ -2,7 +2,7 @@ import { withNavigation } from 'react-navigation';
 import React, { Component } from 'react';
 import moment from 'moment';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView, Text, View, TouchableOpacity, Image, Picker } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image, Picker, AsyncStorage} from 'react-native';
 import PropTypes from 'prop-types';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
@@ -59,7 +59,7 @@ class Explore extends Component {
             locPrice : 0,
             language: "EUR",
             locRates: [],
-            currencyIcon: Icons.euro 
+            currencyIcon: Icons.euro
         };
     }
 
@@ -77,10 +77,14 @@ class Explore extends Component {
             const truncated = topHomes.content.slice(0, 4);
             this.setState({ topHomes: truncated });
         });
-        
+
         getLocRate()
         .then((json) => {
             this.setState({locRates: json[0], locPrice: json[0].price_eur});
+            AsyncStorage.setItem('currentCurrency', "EUR");
+            AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
+
+            console.log("currencyLocPrice" + json[0].price_eur);
         }).catch(err => {
             console.log(err);
         });
@@ -159,7 +163,7 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-        
+
         this.props.navigation.navigate('PropertyScreen', {
             searchedCity: this.state.search,
             searchedCityId: 72,
@@ -181,16 +185,21 @@ class Explore extends Component {
     spinnerValueChange(value){
         this.setState({language: value});
         if(value == "EUR"){
-            console.log("EUR");
-            this.setState({locPrice: this.state.locRates.price_eur, currencyIcon: Icons.euro})
+            AsyncStorage.setItem('currentCurrency', "EUR");
+            AsyncStorage.setItem('currencyLocPrice', this.state.locRates.price_eur);
+            this.setState({locPrice: this.state.locRates.price_eur})
         }
         else if(value == "USD"){
-            this.setState({locPrice: this.state.locRates.price_usd, currencyIcon: Icons.usd})
+            AsyncStorage.setItem('currentCurrency', "USD");
+            AsyncStorage.setItem('currencyLocPrice', this.state.locRates.price_usd);
+            this.setState({locPrice: this.state.locRates.price_usd})
         }
         else if(value == "GBP"){
             getLocRateInUserSelectedCurrency('GBP')
             .then((json) => {
-                this.setState({locPrice: json[0].price_gbp, currencyIcon: Icons.gbp});
+                AsyncStorage.setItem('currentCurrency', "GBP");
+                AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
+                this.setState({locPrice: json[0].price_gbp});
             }).catch(err => {
                 console.log(err);
             });
@@ -245,12 +254,12 @@ class Explore extends Component {
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect 
+            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
         } = this.state;
         return (
 
             <View style={styles.container}>
-            
+
                 <View style={styles.SearchAndPickerwarp}>
                         <View style={styles.searchAreaView}>
                             <SearchBar
@@ -261,21 +270,20 @@ class Explore extends Component {
                                 placeholderTextColor="#bdbdbd"
                                 leftIcon="search"
                             />
-                            
+
                         </View>
                         <View style={styles.pickerWrap}>
-                        
+
                                 <Picker style={styles.picker}
                                   selectedValue={this.state.language}
-                                  onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>                         
+                                  onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
                                   <Picker.Item label="EUR" value="EUR" />
                                   <Picker.Item label="USD" value="USD" />
                                   <Picker.Item label="GBP" value="GBP" />
                                 </Picker>
-                        </View> 
-
-                   </View> 
-                {this.renderAutocomplete()}              
+                        </View>
+                   </View>
+                {this.renderAutocomplete()}
                 <View style={styles.itemView}>
                 <ScrollView>
                     <DateAndGuestPicker
@@ -291,7 +299,7 @@ class Explore extends Component {
                             gotoSettings={this.gotoSettings}
                             showSearchButton= {true}
                         />
-     
+
                 <View>
 
                     <View style={styles.homeCat}>
@@ -299,7 +307,7 @@ class Explore extends Component {
                                 <Text style={styles.catTitle}>Discover</Text>
                         </View>
 
-                        <View style={styles.catWrapper}> 
+                        <View style={styles.catWrapper}>
                                 <View style={styles.placeholderImageView}>
                                     <Image
                                         style={styles.placeholderImage}
@@ -334,16 +342,16 @@ class Explore extends Component {
                                     />
 
                                     <View>
-                                        <Text style={styles.hotelLoc}>LONDOND .<Text  style={styles.hotelLoc}> ENGLAND </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>LONDOND .<Text  style={styles.hotelLoc}> ENGLAND </Text></Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>                                           
-                                    </View> 
-                                    <View>
-                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
+                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>                                           
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
                                     </View>
 
                                 </View>
@@ -361,10 +369,10 @@ class Explore extends Component {
                                        <Text style={styles.hotelName}>Apolonia Resort</Text>                                           
                                     </View> 
                                     <View>
-                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>                                           
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
                                     </View>
 
                                 </View>
@@ -372,7 +380,7 @@ class Explore extends Component {
                         <View style={styles.catWrapper}>
 
                                 <View style={styles.placeholderImageViewCard}>
-                               
+
                                     <Image source={require('../../../../src/assets/svg/heart.svg')} style={styles.arrowSvg}/>
 
                                     <Image
@@ -387,10 +395,10 @@ class Explore extends Component {
                                        <Text style={styles.hotelName}>Paradise HOTEL</Text>                                           
                                     </View> 
                                     <View>
-                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>                                           
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
                                     </View>
 
                                 </View>
@@ -408,10 +416,10 @@ class Explore extends Component {
                                        <Text style={styles.hotelName}>Green Garden Aparthotel</Text>                                           
                                     </View> 
                                     <View>
-                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>                                           
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>                                           
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
                                     </View>
 
                                 </View>
@@ -429,7 +437,7 @@ class Explore extends Component {
                                 <Text style={styles.catTitle}>Top Destinations</Text>
                         </View>
 
-                        <View style={styles.catWrapper}> 
+                        <View style={styles.catWrapper}>
                                 <View style={styles.placeholderImageView}>
                                     <Image
                                         style={{marginTop: 10, alignSelf: 'flex-start', flex: 1, width:'100%'}}
@@ -440,7 +448,7 @@ class Explore extends Component {
 
 
                         <View style= {styles.bottomWrapper}>
-                           <Text style={styles.subtitle}>Host on Lockchain </Text>  
+                           <Text style={styles.subtitle}>Host on Lockchain </Text>
                            <Text style={styles.title}>Easily list your home or hotel on
                             Lockchain and start earning money</Text>
 
@@ -456,9 +464,9 @@ class Explore extends Component {
                         </View>
                     </View>
 
-                    
 
-   
+
+
                     <View style={styles.footerImageWrap}>
                                     {/*<Image
                                         style={styles.footerImage}
@@ -471,13 +479,13 @@ class Explore extends Component {
 
                     </View>
 
-                   
+
                     </ScrollView>
                     </View>
                         <TouchableOpacity style={styles.fab} onPress={this.gotoSearch}>
                             <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice).toFixed(2)}</Text>
                         </TouchableOpacity>
-  
+
             </View>
         );
     }

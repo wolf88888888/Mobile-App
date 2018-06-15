@@ -16,7 +16,7 @@ import Profile from '../components/screens/Profile'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
 import MyTrips from '../components/screens/MyTrips';
-import UserMyTrips from '../components/screens/MyTrips/MyTrips';
+import UserMyTrips from '../components/screens/MyTrips/UserMyTrips';
 import Favourites from '../components/screens/Favorites';
 
 //import WishlistSettings from '../components/screens/Favorites/WishlistSettings';
@@ -53,6 +53,7 @@ import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
+import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 
@@ -112,7 +113,7 @@ export const FullNavigator = StackNavigator(
         AvailableRoomsView: { screen: AvailableRoomsView},
 
         Notifications: { screen: Notifications},
-       
+
         CreditCard :  { screen: CreditCard},
 
         CreditCardFilled : { screen: CreditCardFilled},
@@ -120,11 +121,11 @@ export const FullNavigator = StackNavigator(
         PaymentMethods :{ screen:PaymentMethods},
 
         AddPaymentMethod :{screen:AddPaymentMethod},
-       
+
         UserProfile: { screen: UserProfile },
         EditUserProfile: { screen: EditUserProfile },
         UpdateProfileInfo: { screen: UpdateProfileInfo },
-
+        SimpleUserProfile: {screen: SimpleUserProfile}
     },
     {
         initialRouteName: 'MainScreen',

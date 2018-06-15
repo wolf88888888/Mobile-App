@@ -7,7 +7,8 @@ import {
     View,
     Image,
     ScrollView,
-    FlatList
+    FlatList,
+    ToastAndroid
 } from 'react-native';
 import FontAwesome, {Icons} from 'react-native-fontawesome';
 import {imgHost} from '../../../config'
@@ -17,6 +18,8 @@ import {ListView} from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen';
 import {getMyConversations, approveMessage, declineMessage} from '../../../utils/requester';
 import InboxMessagesView from './InboxMessagesView';
+import BackButton from '../../atoms/BackButton';
+import DialogProgress from 'react-native-dialog-progress'
 
 // You will find all component related to style in this class
 import styles from './inboxStyle';
@@ -38,19 +41,25 @@ class Inbox extends Component {
 
     componentDidMount() {
         // here is the method to load all chats related to this id = 68
+        const options = {
+            title:"",
+            message:"Loading Message...",
+            isCancelable:true
+        };
+
+        DialogProgress.show(options);
         getMyConversations()
         .then(res => res.response.json())
-        // here you set the response in to json 
+        // here you set the response in to json
         .then(parsed => {
-            // here you parse your json
-            // let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
-            // messageDate to set your date
-            // here you set you data from json into your variables
+            DialogProgress.hide();
             this.setState({
                 inboxMessages : parsed.content,
             });
         })
         .catch(err => {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot get messages, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
             console.log(err);
         });
     }
@@ -61,34 +70,28 @@ class Inbox extends Component {
             <View style={styles.InboxView}>
             {/* Main Container Start */}
 
-                <TouchableOpacity onPress={this.onBackPress} style={styles.backButton}>
-                {/* Back Button Start */}
-                        {/* Back Button Icon */}
-                        <Image
-                            style={styles.btn_backImage}
-                            source={require('../../../../src/assets/icons/icon-back-black.png')}/> 
-                {/* Back Button End */}
-                </TouchableOpacity>
-
-                <View style={[styles.topText]}>
-             
-                    <Text style={[styles.heading]}>Inbox</Text>
-                    <Text style={styles.subHeading}>You have 3 unread messages</Text>
-              
-                </View>
-                <FlatList data={this.state.inboxMessages} // Data source
-                // List Start
-                    renderItem={({item}) => (
-                    <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat')}>
-                        {/* Press to go on chat screen start*/}
-                            <InboxMessagesView
-                                inboxMessage={item}>
-                            </InboxMessagesView>
-                        {/* Press to go on chat screen end*/}
-                    </TouchableOpacity>
-                )
-                // List End
-                }/>
+                <BackButton onPress={this.onBackPress}/>
+                <ScrollView>
+                    <View style={[styles.topText]}>
+                    {/* Top Text Start */}
+                        <Text style={[styles.heading]}>Inbox</Text>
+                        <Text style={styles.subHeading}>You have {this.state.inboxMessages.length} unread messages</Text>
+                    {/* Top Text end */}
+                    </View>
+                    <FlatList data={this.state.inboxMessages} // Data source
+                    // List Start
+                        renderItem={({item, index}) => (
+                        <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat')}>
+                            {/* Press to go on chat screen start*/}
+                                <InboxMessagesView
+                                    inboxMessage={item}>
+                                </InboxMessagesView>
+                            {/* Press to go on chat screen end*/}
+                        </TouchableOpacity>
+                    )
+                    // List End
+                    }/>
+                </ScrollView>
 
             {/* Main Container End */}
             </View>
@@ -97,12 +100,12 @@ class Inbox extends Component {
 
     // to go back on the previous screen use this function start
     onBackPress = () => {
-        
+
         this
             .props
             .navigation
             .navigate('PROFILE');
     }
-    // to go back on the previous screen use this function end 
+    // to go back on the previous screen use this function end
 }
 export default Inbox;

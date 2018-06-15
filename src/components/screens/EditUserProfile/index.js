@@ -12,6 +12,8 @@ import UserProfileHomes from '../../organisms/UserProfileHomes'
 import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo'
 import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction'
 import Footer from '../../atoms/Footer';
+import { getUserInfo } from '../../../utils/requester';
+import { imgHost } from '../../../config.js'
 import styles from './styles';
 
 class EditUserProfile extends Component {
@@ -30,6 +32,20 @@ class EditUserProfile extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            birthday:'',
+            city:{},
+            country:{},
+            email:'',
+            firstName:'',
+            lastName:'',
+            gender:'',
+            image:'',
+            locAddress:'',
+            phoneNumber:'',
+            preferredCurrency:{},
+            preferredLanguage:''
+        }
 
         this.onGender = this.onGender.bind(this);
         this.onBirthDate = this.onBirthDate.bind(this);
@@ -40,11 +56,30 @@ class EditUserProfile extends Component {
         this.onSchool = this.onSchool.bind(this);
         this.onWork = this.onWork.bind(this);
         this.onLanguage = this.onLanguage.bind(this);
-        this.state = {
-        }
     }
 
     componentDidMount() {
+        getUserInfo()
+        .then(res => res.response.json())
+        .then(parsedResp => {
+            this.setState({
+                birthday : parsedResp.birthday == null? '': parsedResp.birthday,
+                city : parsedResp.city == null? '': parsedResp.city,
+                country : parsedResp.country == null? parsedResp.countries[0]: parsedResp.country,
+                email : parsedResp.email == null? '': parsedResp.email,
+                firstName : parsedResp.firstName == null? '': parsedResp.firstName,
+                lastName : parsedResp.lastName == null? '': parsedResp.lastName,
+                gender : parsedResp.gender == null? '': parsedResp.gender,
+                image : parsedResp.image == null? '': parsedResp.image,
+                locAddress : parsedResp.locAddress == null? '': parsedResp.locAddress,
+                phoneNumber : parsedResp.phoneNumber == null? '': parsedResp.phoneNumber,
+                preferredCurrency: parsedResp.preferredCurrency == null? parsedResp.currencies[0] : parsedResp.preferredCurrency,
+                preferredLanguage: parsedResp.preferredLanguage == null? 'English': parsedResp.preferredLanguage,
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     onGender() {
@@ -112,7 +147,25 @@ class EditUserProfile extends Component {
 
     render() {
         const { navigate, goBack } = this.props.navigation;
-        // const { locAddress } = this.props.userInfo;
+
+        let imageAvatar = '';
+        if (this.state.image != '') {
+            if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
+                imageAvatar = {uri:'https://staging.locktrip.com/images/default.png'};
+            }
+            else {
+                imageAvatar ={uri:imgHost+this.state.image}
+            }
+        }
+
+        let location = '';
+        if (this.state.city == '') {
+            location = this.state.country.name;
+        }
+        else {
+            location = this.state.city.name + " " + this.state.country.name;
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.topContainer}>
@@ -126,10 +179,16 @@ class EditUserProfile extends Component {
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} style={{width: '100%'}}>
                     <View style={styles.body}>
-                        <Image style={styles.avatar} source={require('../../../assets/temple/user_profile_avatar.png')} />
+                    {
+                        imageAvatar == '' ?
+                            <Image style={styles.avatar} source={require('../../../assets/temple/user_profile_avatar.png')} />
+                        :
+                            <Image style={styles.avatar} source={imageAvatar} />
+                    }
+
                         <View style={[styles.lineStyle, {marginLeft:0, marginRight:0, marginTop:0, marginBottom:15}]} />
                         <View style={styles.nameContainer}>
-                            <Text style={styles.nameText}>Vaselina Poryazova</Text>
+                            <Text style={styles.nameText}>{this.state.firstName} {this.state.lastName}</Text>
                             <TouchableOpacity>
                                 <Text style={styles.editButton}>Edit Name</Text>
                             </TouchableOpacity>
@@ -147,31 +206,31 @@ class EditUserProfile extends Component {
                         </View>
 
                         <UserPropertyItemTypeAction
-                            title="Gender"
+                            title = "Gender"
                             onPress={this.onGender}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
-                            title="Birth date"
-                            info ="15/02/1988"
+                            title = "Birth date"
+                            info = {this.state.birthday}
                             onPress={this.onBirthDate}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
-                            title="Email Address"
-                            info ="veselina@gmail.com"
+                            title = "Email Address"
+                            info = {this.state.email}
                             onPress={this.onEmail}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
-                            title="Phone"
-                            info ="+359 88 788 99 88"
+                            title = "Phone"
+                            info = {this.state.phoneNumber}
                             onPress={this.onPhone}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
-                            title="Government ID"
-                            info ="Provide"
+                            title = "Government ID"
+                            info = "Provide"
                             onPress={this.onGovernmentID}/>
                         <View style={[styles.lineStyle, {marginLeft:0, marginRight:0, marginTop:0, marginBottom:15}]} />
 
@@ -180,8 +239,8 @@ class EditUserProfile extends Component {
                         </View>
 
                         <UserPropertyItemTypeInfo
-                            title="Location"
-                            info ="Plovdiv, Bulgaria"
+                            title = "Location"
+                            info = {location}
                             onPress={this.onLocation}/>
                         <View style={styles.lineStyle} />
 

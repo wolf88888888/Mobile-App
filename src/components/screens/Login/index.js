@@ -6,17 +6,19 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
+    ToastAndroid
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
-import { validateEmail, validatePassword } from '../../../utils/validation';
+import { validateEmail, validatePassword, validatePassword1 } from '../../../utils/validation';
 import { login } from '../../../utils/requester';
 import styles from './styles';
 import SplashScreen from 'react-native-smart-splash-screen';
+import DialogProgress from 'react-native-dialog-progress'
 
 
 class Login extends Component {
@@ -31,7 +33,7 @@ class Login extends Component {
         email: '',
         password: ''
     }
-    
+
     componentDidMount() {
         console.disableYellowBox = true;
         SplashScreen.close({
@@ -47,7 +49,15 @@ class Login extends Component {
         const { email, password } = this.state;
         const user = { email, password };
 
+        const options = {
+            title:"",
+            message:"Login...",
+            isCancelable:false
+        };
+        DialogProgress.show(options);
+
         login(user, null).then((res) => {
+            DialogProgress.hide();
             if (res.success) {
                 res.response.json().then((data) => {
                     AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
@@ -60,12 +70,18 @@ class Login extends Component {
                     const { errors } = response;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
+                            ToastAndroid.showWithGravityAndOffset(errors[key].message, ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 100);
                             console.log('Error logging in:', errors[key].message);
                             // TODO: give user feedback about having and error logging in
                         }
                     });
                 });
             }
+        })
+        .catch(err => {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot login, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            console.log(err);
         });
     }
 
@@ -126,7 +142,7 @@ class Login extends Component {
                         </View>
 
                         <TouchableOpacity
-                            disabled={!validateEmail(email) || !validatePassword(password)}
+                            disabled={!validateEmail(email) || !validatePassword1(password)}
                             onPress={() => this.onClickLogIn()}
                         >
                             <View style={styles.LogInButton}>

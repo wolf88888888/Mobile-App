@@ -7,18 +7,20 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    ToastAndroid
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
-import GoBack from '../../atoms/GoBack';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { register, login } from '../../../utils/requester';
-
+import { imgHost } from '../../../config';
+import DialogProgress from 'react-native-dialog-progress'
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -58,10 +60,19 @@ class SaveWallet extends Component {
         user['locAddress'] = this.state.walletAddress;
 
         console.log(user);
-        
-        register(user, null).then((res) => {
+
+        const options = {
+            title:"",
+            message:"Registering...",
+            isCancelable:false
+        };
+        DialogProgress.show(options);
+
+        register(user, null)
+        .then((res) => {
+            DialogProgress.hide();
             if (res.success) {
-                console.log(res); 
+                console.log(res);
                 navigate('CongratsWallet')
                 // login(user, null).then((res) => {
                 //     if (res.success) {
@@ -70,26 +81,37 @@ class SaveWallet extends Component {
                 //             // TODO: Get first name + last name from response included with Authorization token (Backend)
                 //             AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
                 //         });
-                        
+
                 //     }
                 // });
+            } else {
+                res.response.then((response) => {
+                    const { errors } = response;
+                    Object.keys(errors).forEach((key) => {
+                        if (typeof key !== 'function') {
+                            ToastAndroid.showWithGravityAndOffset(errors[key].message, ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 100);
+                            console.log('Error logging in:', errors[key].message);
+                        }
+                    });
+                });
             }
+        })
+        .catch(err => {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot register user, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            console.log(err);
         });
     };
 
     render() {
-        const { navigate } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
         const { walletMnemonic } = this.state;
         let i = 0;
         return (
             <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-                <TouchableWithoutFeedback
-                >
+                <TouchableWithoutFeedback>
                     <View style={styles.container}>
-                        <GoBack
-                            onPress={() => navigate('Welcome')}
-                            icon="arrowLeft"
-                        />
+                        <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                         <View style={styles.main}>
                             <View style={styles.titleView}>
@@ -99,7 +121,7 @@ class SaveWallet extends Component {
                             <View>
                                 <Text style={styles.infoText}>
                                     Your mnemonic recovery keywords are a way for you to backup the access to your wallet. You should print them on a piece of paper and store them in a safe place.
-                            </Text>
+                                </Text>
                             </View>
 
                                 {walletMnemonic.split(' ').map(function (value) {
@@ -113,8 +135,7 @@ class SaveWallet extends Component {
 
                             <View style={styles.nextButtonView}>
                                 <TouchableOpacity
-                                    onPress={() => this.onClickAccept()}
-                                >
+                                    onPress={() => this.onClickAccept()}>
                                     <View style={styles.nextButton}>
                                         <Text style={styles.buttonText}>
                                             <FontAwesome>{Icons.arrowRight}</FontAwesome>

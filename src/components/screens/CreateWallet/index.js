@@ -6,18 +6,20 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
+    ToastAndroid
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
 
-import GoBack from '../../atoms/GoBack';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
-import { validatePassword, validateConfirmPassword } from '../../../utils/validation';
+import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Wallet } from '../../../services/blockchain/wallet';
+import DialogProgress from 'react-native-dialog-progress'
 
 class CreateWallet extends Component {
     static propTypes = {
@@ -53,26 +55,62 @@ class CreateWallet extends Component {
     }
 
     submitPassword() {
+        console.log();
+        if (this.state.password.length < 8) {
+            ToastAndroid.showWithGravityAndOffset('Password should be at least 8 symbols.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        if (!hasLetterAndNumber(this.state.password)) {
+            ToastAndroid.showWithGravityAndOffset('Password must contain both latin letters and digits.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        if (!hasSymbol(this.state.password)) {
+            ToastAndroid.showWithGravityAndOffset('Password must contain symbols, like !, # or %..', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+
+        if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
+            ToastAndroid.showWithGravityAndOffset('Passwords are not matched, Please input correctly.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+
+        const options = {
+            title:"Creating Wallet...",
+            message:"We are creating your wallet through the Ethereum network. Please be patient. This process can take up to 2-3 minutes due to the advanced security procedure involved.",
+            isCancelable:false
+        };
+        DialogProgress.show(options);
+
         const { params } = this.props.navigation.state;
 
         try {
             setTimeout(() => {
-                Wallet.createFromPassword(this.state.password).then((wallet) => {
+                Wallet.createFromPassword(this.state.password)
+                .then((wallet) => {
+                    DialogProgress.hide();
+                    console.log(wallet);
                     AsyncStorage.setItem('walletAddress', wallet.address);
                     AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
                     AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
                     this.props.navigation.navigate('SaveWallet', { ...params});
+                })
+                .catch(err => {
+                    DialogProgress.hide();
+                    ToastAndroid.showWithGravityAndOffset('Cannot create wallet, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+                    console.log(err);
                 });
-            }, 1000);
+            }, 500);
 
         } catch (error) {
+            DialogProgress.hide();
+            ToastAndroid.showWithGravityAndOffset('Cannot create wallet, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
             console.log(error);
         }
     }
 
     render() {
         const { password, confirmPassword } = this.state;
-        const { navigate } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
 
         return (
             <TouchableWithoutFeedback
@@ -80,10 +118,7 @@ class CreateWallet extends Component {
                 accessible={true}
             >
                 <View style={styles.container}>
-                    <GoBack
-                        onPress={() => navigate('Welcome')}
-                        icon="arrowLeft"
-                    />
+                    <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                     <View style={styles.main}>
                         <View style={styles.titleView}>
@@ -96,7 +131,7 @@ class CreateWallet extends Component {
                             </Text>
                         </View>
 
-                        <View style={styles.titleView}><Text style={styles.titleText}>Please create your LOC wallet</Text></View>
+                        <View style={styles.titleView}><Text style={styles.titleText1}>Please create your LOC wallet</Text></View>
 
                         <View style={styles.inputView}>
                             <SmartInput
@@ -111,7 +146,7 @@ class CreateWallet extends Component {
                             />
                         </View>
 
-                        <View style={styles.titleView}><Text style={styles.titleText}>Please confirm your LOC wallet</Text></View>
+                        <View style={styles.titleView}><Text style={styles.titleText2}>Please confirm your LOC wallet</Text></View>
 
                         <View style={styles.inputView}>
                             <SmartInput
@@ -128,7 +163,6 @@ class CreateWallet extends Component {
 
                         <View style={styles.nextButtonView}>
                             <TouchableOpacity
-                                disabled={!validatePassword(password) || !validateConfirmPassword(password, confirmPassword)}
                                 onPress={() => this.submitPassword()}
                             >
                                 <View style={styles.nextButton}>

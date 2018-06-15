@@ -44,13 +44,14 @@ const styles = StyleSheet.create({
     },
 
     cameraContainer: {
-        marginTop: 15,
+        marginTop: 25,
         marginRight: 18
     },
 
     cameraButton: {
         width: 30,
         height: 30,
+        resizeMode:"contain"
     },
 
     body: {
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         width: avatarWidth,
         height: avatarHeight,
+        resizeMode:'contain'
     },
 
     lineStyle:{
