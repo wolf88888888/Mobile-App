@@ -8,6 +8,7 @@ import BackButton from '../../atoms/BackButton';
 import { getUserInfo } from '../../../utils/requester';
 import { Wallet } from '../../../services/blockchain/wallet';
 import styles from './styles';
+import { domainPrefix } from '../../../config';
 
 class Profile extends Component {
   constructor(props) {
@@ -15,46 +16,80 @@ class Profile extends Component {
     this.state = {
         info: {},
         walletAddress: '',
-        balance:0
+        locBalance:0,
+        currentCurrency:'EUR',
+        currencyLocPrice:0
     }
   }
 
-  componentDidMount() {
-      getUserInfo()
-      .then(res => res.response.json())
-      .then(parsedResp => {
-          this.setState({
-              info: parsedResp,
-              walletAddress : parsedResp.locAddress == null? '': parsedResp.locAddress,
-          });
+    componentDidMount() {
+        AsyncStorage.getItem('currentCurrency', (err, result) => {
+            if (result) {
+                console.log("currentCurrencycurrentCurrency " + result);
+                this.setState({ currentCurrency: result});
+            }
+            if (err) console.error(`Error currencyLocPrice: ${err}`);
+        });
 
-          console.log(parsedResp.locAddress);
-          if (parsedResp.locAddress != null && parsedResp.locAddress != '') {
+        AsyncStorage.getItem('currencyLocPrice', (err, result) => {
+            console.log("currencyLocPricecurrencyLocPrice " + result);
+            if (result) {
+                this.setState({ currencyLocPrice: result});
+            }
+            if (err) console.error(`Error currencyLocPrice: ${err}`);
+        });
 
-            Wallet.getBalance(0x6774563a87464b4d2fe6cef2078d7a9b394e1a21).then(x => {
-                const ethBalance = x / (Math.pow(10, 18));
-                console.log("ethBalance");
-                console.log(ethBalance);
-                Wallet.getTokenBalance(0x6774563a87464b4d2fe6cef2078d7a9b394e1a21).then(y => {
-                    const locBalance = y / (Math.pow(10, 18));
-                    console.log("locBalance");
-                    console.log(locBalance);
-                    // const { firstName, lastName, phoneNumber, email, locAddress } = res;
-                    // this.props.dispatch(setIsLogged(true));
-                    // this.props.dispatch(setUserInfo(firstName, lastName, phoneNumber, email, locAddress, ethBalance, locBalance));
-                });
+        getUserInfo()
+        .then(res => res.response.json())
+        .then(parsedResp => {
+            this.setState({
+                info: parsedResp,
+                walletAddress : parsedResp.locAddress == null? '': parsedResp.locAddress,
             });
-          }
-      })
-      .catch(err => {
-          console.log(err);
-      });
 
-
-  }
+            console.log(parsedResp.locAddress);
+            if (parsedResp.locAddress != null && parsedResp.locAddress != '') {
+                console.log("start ");
+                // Wallet.getBalance(parsedResp.locAddress).then(x => {
+                //     const ethBalance = x / (Math.pow(10, 18));
+                //     //var json = JSON.stringify(myObj);
+                //     console.log("ethBalance");
+                //     // console.log(bigNumberToString(x, 10));
+                //     console.log(ethBalance);
+                // });
+                Wallet.getTokenBalance(parsedResp.locAddress).then(y => {
+                    const locBalance = y / (Math.pow(10, 18));
+                    this.setState({locBalance: locBalance});
+                });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    componentDidCatch(errorString, errorInfo) {
+        console.log("componentDidCatch");
+    }
 
   render() {
       const { navigate } = this.props.navigation;
+      const {currentCurrency, currencyLocPrice, locBalance, walletAddress} = this.state;
+
+      console.log("currency: " + currentCurrency);
+      console.log("locPrice: " + currencyLocPrice);
+      let price = locBalance * currencyLocPrice;
+      var displayPrice = '';
+      if (currentCurrency == "EUR") {
+          displayPrice = '€';
+      }
+      else if (currentCurrency == "USD") {
+          displayPrice = '$';
+      }
+      else if (currentCurrency == "GDP") {
+          displayPrice = '£';
+      }
+      displayPrice += price.toFixed(2);
+
       return (
           <View style={styles.container}>
               <View style={styles.titleConatiner}>
@@ -67,11 +102,11 @@ class Profile extends Component {
                         source={require('../../../assets/splash.png')}
                         style={styles.logo} />
                     <View style={{width: '100%'}}>
-                        <Text style={styles.walletAddres}>{this.state.walletAddress}</Text>
+                        <Text style={styles.walletAddres}>{walletAddress}</Text>
                     </View>
                     <Text style={styles.balanceLabel}>Current Balance</Text>
                     <View style={{width: '100%'}}>
-                        <Text style={styles.balanceText}>5412.00 LOC / $24129</Text>
+                        <Text style={styles.balanceText}>{locBalance.toFixed(2)} LOC / {displayPrice}</Text>
                     </View>
                     <Image
                         source={require('../../../assets/splash.png')}
