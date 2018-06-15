@@ -15,7 +15,7 @@ import { autobind } from 'core-decorators';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import { domainPrefix } from '../../../config';
-import { validatePassword, validateConfirmPassword } from '../../../utils/validation';
+import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Wallet } from '../../../services/blockchain/wallet';
@@ -55,6 +55,25 @@ class CreateWallet extends Component {
     }
 
     submitPassword() {
+        console.log();
+        if (this.state.password.length < 8) {
+            ToastAndroid.showWithGravityAndOffset('Password should be at least 8 symbols.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        if (!hasLetterAndNumber(this.state.password)) {
+            ToastAndroid.showWithGravityAndOffset('Password must contain both latin letters and digits.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        if (!hasSymbol(this.state.password)) {
+            ToastAndroid.showWithGravityAndOffset('Password must contain symbols, like !, # or %..', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+
+        if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
+            ToastAndroid.showWithGravityAndOffset('Passwords are not matched, Please input correctly.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+
         const options = {
             title:"Creating Wallet...",
             message:"We are creating your wallet through the Ethereum network. Please be patient. This process can take up to 2-3 minutes due to the advanced security procedure involved.",
@@ -144,7 +163,6 @@ class CreateWallet extends Component {
 
                         <View style={styles.nextButtonView}>
                             <TouchableOpacity
-                                disabled={!validatePassword(password) || !validateConfirmPassword(password, confirmPassword)}
                                 onPress={() => this.submitPassword()}
                             >
                                 <View style={styles.nextButton}>

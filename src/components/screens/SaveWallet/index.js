@@ -109,8 +109,7 @@ class SaveWallet extends Component {
         let i = 0;
         return (
             <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-                <TouchableWithoutFeedback
-                >
+                <TouchableWithoutFeedback>
                     <View style={styles.container}>
                         <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
@@ -136,8 +135,7 @@ class SaveWallet extends Component {
 
                             <View style={styles.nextButtonView}>
                                 <TouchableOpacity
-                                    onPress={() => this.onClickAccept()}
-                                >
+                                    onPress={() => this.onClickAccept()}>
                                     <View style={styles.nextButton}>
                                         <Text style={styles.buttonText}>
                                             <FontAwesome>{Icons.arrowRight}</FontAwesome>
