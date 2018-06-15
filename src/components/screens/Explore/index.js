@@ -181,6 +181,7 @@ class Explore extends Component {
     spinnerValueChange(value){
         this.setState({language: value});
         if(value == "EUR"){
+            console.log("EUR");
             this.setState({locPrice: this.state.locRates.price_eur, currencyIcon: Icons.euro})
         }
         else if(value == "USD"){
@@ -266,7 +267,7 @@ class Explore extends Component {
                         
                                 <Picker style={styles.picker}
                                   selectedValue={this.state.language}
-                                  onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>                          
+                                  onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>                         
                                   <Picker.Item label="EUR" value="EUR" />
                                   <Picker.Item label="USD" value="USD" />
                                   <Picker.Item label="GBP" value="GBP" />
@@ -483,7 +484,7 @@ class Explore extends Component {
                     </ScrollView>
                     </View>
                         <TouchableOpacity style={styles.fab} onPress={this.gotoSearch}>
-                            <Text style={styles.fabText}>LOC/EUR 0.56</Text>
+                            <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice).toFixed(2)}</Text>
                         </TouchableOpacity>
   
             </View>
