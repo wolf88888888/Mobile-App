@@ -8,9 +8,9 @@ import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
-import MapView from 'react-native-maps';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { getRegionsBySearchParameter, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
-import { domainPrefix } from '../../../config';
+import Icon from 'react-native-fontawesome';
 
 class Explore extends Component {
     static propTypes = {
@@ -58,7 +58,8 @@ class Explore extends Component {
             childrenBool: false,
             locPrice : 0,
             language: "EUR",
-            locRates: []
+            locRates: [],
+            currencyIcon: Icons.euro
         };
     }
 
@@ -162,6 +163,7 @@ class Explore extends Component {
     }
 
     gotoSearch() {
+
         this.props.navigation.navigate('PropertyScreen', {
             searchedCity: this.state.search,
             searchedCityId: 72,
@@ -174,7 +176,10 @@ class Explore extends Component {
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
             roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+            locRate : this.state.locPrice,
+            currencyIcon: this.state.currencyIcon
         });
+
     }
 
     spinnerValueChange(value){
@@ -252,65 +257,244 @@ class Explore extends Component {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
         } = this.state;
         return (
+
             <View style={styles.container}>
 
                 <View style={styles.SearchAndPickerwarp}>
+                        <View style={styles.searchAreaView}>
+                            <SearchBar
+                                autoCorrect={false}
+                                value={this.state.search}
+                                onChangeText={this.onSearchHandler}
+                                placeholder="Discover your next experience"
+                                placeholderTextColor="#bdbdbd"
+                                leftIcon="search"
+                            />
 
-                    <View style={styles.searchAreaView}>
-                        <SearchBar
-                            autoCorrect={false}
-                            value={this.state.search}
-                            onChangeText={this.onSearchHandler}
-                            placeholder="Discover your next experience"
-                            placeholderTextColor="#bdbdbd"
-                            leftIcon="search"
-                        />
-                    </View>
-                    <View style={styles.pickerWrap}>
-                        <Picker style={styles.picker}
-                            selectedValue={this.state.language}
-                            onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
-                            <Picker.Item label="EUR" value="EUR" />
-                            <Picker.Item label="USD" value="USD" />
-                            <Picker.Item label="GBP" value="GBP" />
-                        </Picker>
-                    </View>
-                </View>
+                        </View>
+                        <View style={styles.pickerWrap}>
+
+                                <Picker style={styles.picker}
+                                  selectedValue={this.state.language}
+                                  onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
+                                  <Picker.Item label="EUR" value="EUR" />
+                                  <Picker.Item label="USD" value="USD" />
+                                  <Picker.Item label="GBP" value="GBP" />
+                                </Picker>
+                        </View>
+                   </View>
                 {this.renderAutocomplete()}
                 <View style={styles.itemView}>
-                    {/* <MapView
-                        style={styles.map}
-                        region={{
-                          latitude: 37.78825,
-                          longitude: -122.4324,
-                          latitudeDelta: 0.005,
-                          longitudeDelta: 0.005,
-                    }}>
-                    <MapView.Circle
-                        center={{latitude: 37.78825, longitude: -122.4324}}
-                        radius = { 5000 }
-                        strokeWidth = { 1 }
-                        strokeColor = { 'rgba(162,197,191,0.5)' }
-                        fillColor = { 'rgba(162,197,191,0.5)' }
-                        />
-                    </MapView> */}
+                <ScrollView>
                     <DateAndGuestPicker
-                        checkInDate={checkInDate}
-                        checkOutDate={checkOutDate}
-                        adults={guests}
-                        children={0}//eslint-disable-line
-                        guests={0}
-                        infants={0}
-                        gotoGuests={this.gotoGuests}
-                        gotoSearch={this.gotoSearch}
-                        onDatesSelect={this.onDatesSelect}
-                        gotoSettings={this.gotoSettings}
-                        showSearchButton={true}//eslint-disable-line
-                    />
-                    <TouchableOpacity onPress={this.gotoSearch} style={styles.fab}>
-                        <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice).toFixed(2)}</Text>
-                    </TouchableOpacity>
-                </View>
+                            checkInDate={checkInDate}
+                            checkOutDate={checkOutDate}
+                            adults={guests}
+                            children={0}
+                            guests = {0}
+                            infants={0}
+                            gotoGuests={this.gotoGuests}
+                            gotoSearch={this.gotoSearch}
+                            onDatesSelect={this.onDatesSelect}
+                            gotoSettings={this.gotoSettings}
+                            showSearchButton= {true}
+                        />
+
+                <View>
+
+                    <View style={styles.homeCat}>
+                         <View>
+                                <Text style={styles.catTitle}>Discover</Text>
+                        </View>
+
+                        <View style={styles.catWrapper}>
+                                <View style={styles.placeholderImageView}>
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+                                </View>
+
+                                <View style={styles.placeholderImageView}>
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+                                </View>
+
+
+                        </View>
+                    </View>
+
+                    <View style={styles.homeCat}>
+                         <View>
+                                <Text style={styles.catTitle}>Popular Hotels</Text>
+                        </View>
+
+                        <View style={styles.catWrapper}>
+
+                                <View style={styles.placeholderImageViewCard}>
+                                    <Image source={require('../../../../src/assets/svg/heart.svg')} style={styles.arrowSvg}/>
+
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+
+                                    <View>
+                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
+                                    </View>
+
+                                </View>
+
+                                <View style={styles.placeholderImageViewCard}>
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+
+                                    <View>
+                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
+                                    </View>
+
+                                </View>
+                        </View>
+                        <View style={styles.catWrapper}>
+
+                                <View style={styles.placeholderImageViewCard}>
+
+                                    <Image source={require('../../../../src/assets/svg/heart.svg')} style={styles.arrowSvg}/>
+
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+
+                                     <View>
+                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
+                                    </View>
+
+                                </View>
+
+                                <View style={styles.placeholderImageViewCard}>
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+
+                                     <View>
+                                        <Text style={styles.hotelLoc}>London .<Text  style={styles.hotelLoc}> England </Text></Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelName}>Green Life Beach Resort</Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
+                                    </View>
+                                    <View>
+                                       <Text style={styles.hotelPrice}>$350 (LOC 1.2) per night</Text>
+                                    </View>
+
+                                </View>
+                        </View>
+                    </View>
+
+                <TouchableOpacity>
+                    <View style={styles.searchButtonView}>
+                        <Text style={styles.searchButtonText}>Show All</Text>
+                    </View>
+                </TouchableOpacity>
+
+                <View style={styles.homeCat}>
+                         <View>
+                                <Text style={styles.catTitle}>Top Destinations</Text>
+                        </View>
+
+                        <View style={styles.catWrapper}>
+                                <View style={styles.placeholderImageView}>
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/apartment.png')}
+                                    />
+                                </View>
+
+                                <View style={styles.placeholderImageView}>
+                                    <Image
+                                        style={styles.placeholderImage}
+                                        source={require('../../../assets/temple/overview.jpg')}
+                                    />
+                                </View>
+
+
+                        </View>
+
+
+                        <View style= {styles.bottomWrapper}>
+                           <Text style={styles.subtitle}>Host on Lockchain </Text>
+                           <Text style={styles.title}>Easily list your home or hotel on
+                            Lockchain and start earning money</Text>
+
+
+
+                        </View>
+                        <View style= {styles.bottomWrapper}>
+                                <TouchableOpacity>
+                                <View style={styles.getStartedButton}>
+                                    <Text style={styles.searchButtonText}>Get Started</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+
+
+
+                    <View style={styles.footerImageWrap}>
+                                    {/*<Image
+                                        style={styles.footerImage}
+                                        source={require('../../../assets/vector.svg')}
+                                    />*/}
+                                    <Image source={require('../../../../src/assets/vector.png')} style={styles.footerImage}/>
+                    </View>
+
+                    <View style={styles.blank}></View>
+
+                    </View>
+
+
+                    </ScrollView>
+                    </View>
+                        <TouchableOpacity style={styles.fab} onPress={this.gotoSearch}>
+                            <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice).toFixed(2)}</Text>
+                        </TouchableOpacity>
+
             </View>
         );
     }

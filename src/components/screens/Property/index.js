@@ -12,6 +12,7 @@ import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 var clientRef = '';
 var utf8 = require('utf8');
@@ -100,7 +101,9 @@ class Property extends Component {
             roomsDummyData: [],
             urlForService:'',
             isLoading: true,
-            noResultsFound: false
+            noResultsFound: false,
+            locRate: 0,
+            currencyIcon : ''
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -115,9 +118,10 @@ class Property extends Component {
         this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
         this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
+        this.state.locRate = params ? params.locRate : 0;
+        this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
 
         this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-        console.log(this.state.urlForService);
     }
 
     componentWillMount(){
@@ -216,7 +220,7 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService});
+        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
     }
 
     renderAutocomplete() {
@@ -261,10 +265,22 @@ class Property extends Component {
         );
     }
 
+    renderLog(){
+        return(
+            <View style={{ flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginBottom: 10}}>
+                
+            </View>
+        );
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
         } = this.state;
+        const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
 
@@ -305,9 +321,10 @@ class Property extends Component {
                     <FlatList style={styles.flatList}
                             data={this.state.listings}
                             renderItem={
-                                ({item}) => 
+                                ({item}) =>
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
                                 <View style={styles.card}>
+                                {console.log(item)}
                                 <Image 
                                 source={{uri : imgHost + item.photos[0]}} 
                                 style={styles.popularHotelsImage}/>
@@ -317,7 +334,7 @@ class Property extends Component {
                                         <View style={styles.cardContent}>
                                             <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                             <View style={styles.aboutPlaceView}>
-                                                <Text style={styles.placeReviewText}>Excellent </Text>
+                                                <Text style={styles.placeReviewText}>Excellent</Text>
                                                 <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
                                                 <View style={styles.ratingIconsWrapper}>
                                                     <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
@@ -326,10 +343,10 @@ class Property extends Component {
                                                     <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                                     <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                                 </View>
-                                                <Text style={styles.totalReviews}> 73 Reviews</Text>
+                                                <Text style={styles.totalReviews}>73 Reviews</Text>
                                             </View>
                                             <View style={styles.costView}>
-                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">${item.price}(LOC 1.2) </Text>
+                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{params ? params.currencyIcon: Icons.euro}</FontAwesome> {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>

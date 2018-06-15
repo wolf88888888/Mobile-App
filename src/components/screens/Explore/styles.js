@@ -6,7 +6,10 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         alignItems: 'stretch',
-        backgroundColor: '#f0f1f3'
+        backgroundColor: '#f0f1f3',
+        height:'100%',
+        position:'relative',
+        paddingBottom: 10
     },
     searchAreaView: {
         width: '68%',
@@ -16,8 +19,165 @@ const styles = StyleSheet.create({
         paddingLeft: 17,
         paddingRight: 17
     },
+    blank:{
+        height: 70,
+        backgroundColor: '#fff'
+    },
+    SearchAndPickerwarp:{
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom:10
+    },
+    bottomWrapper:{
+     marginTop:20,
+      flex: 1,
+     justifyContent: 'center', 
+     alignItems: 'center'
+    },
+    getStartedButton:
+    {
+       // width: '100%',
+       //  backgroundColor: '#DA7B61',
+       //  marginTop: 10,
+       //  marginBottom: 10,
+
+     },
+
+    pickerWrap:{
+        width: '32%',
+        paddingTop: 40,
+        paddingRight: 17,
+        alignSelf: 'flex-start',
+        justifyContent: 'flex-end',  
+        alignItems: 'flex-start'
+    },
+    picker:{
+       width: '100%'
+    },
+     placeholderImageView: {
+        marginTop: 10,
+        alignSelf: 'flex-start',
+        flex: 1
+    },
+    footerImageWrap: {
+        justifyContent: 'center', 
+        alignItems: 'center',
+        flex: 1
+    },
+    footerImage: {
+        width: '100%'
+    },
+    hotelLoc: {
+        fontSize: 14,
+        fontFamily: 'FuturaStd-Light',
+        paddingLeft: 5,
+        marginTop: 5
+    },
+    hotelName: {
+        fontSize: 18,
+        fontFamily: 'FuturaStd-Light',
+        paddingLeft: 5
+    }, 
+    hotelRating: {
+        fontSize: 12,
+        color: '#ccc',
+        fontFamily: 'FuturaStd-Light',
+        paddingLeft: 5
+    },
+    hotelPrice: {
+        fontSize: 14,
+        fontFamily: 'FuturaStd-Light',
+        paddingLeft: 5,
+        marginTop: 10,
+        paddingBottom: 10
+    },
+     placeholderImageViewCard: {
+        alignSelf: 'flex-start',
+        flex: 1,
+        backgroundColor : '#fff',
+        shadowColor: '#858585',
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowRadius: 2,
+        shadowOpacity: 0.5,
+        position: 'relative',
+        marginRight: 10
+
+    },
+    arrowSvg: {
+        height: 20,
+        width: 20,
+        backgroundColor: "blue",
+        position: "absolute",
+        right: 20,
+        top: 10
+    },
+    placeholderImage: {
+        width: 156,
+        height: 120,
+        marginRight: 10
+        //  margin:20,
+        //  padding:20,
+        // marginTop: 20
+    },
     itemView:{
         height: '83%'
+    },
+    catWrapper:{
+        flex: 1,
+        flexDirection:'row',
+        //justifyContent:'flex-start',
+        //alignItems: 'flex-start',
+        paddingTop: 10,
+        paddingLeft: 17,
+        paddingRight: 17,
+        //alignContent: 'flex-start',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    catRow: {
+        flex:1,
+        flexDirection:'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
+        width: '50%'
+    },
+    homeCat: {
+
+    }, 
+    catTitle: {
+        justifyContent:'flex-start',
+        fontSize: 24,
+        paddingLeft: 17,
+        fontFamily: 'FuturaStd-Light',
+        paddingTop: 10
+    },
+    searchButtonView: {
+        width: '90%',
+        backgroundColor: '#DA7B61',
+        alignItems: 'center',
+        flex: 1,
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 17,
+        marginRight: 17
+    },
+    searchButtonText: {
+        color: '#fff',
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 17,
+        padding: 14
+    },
+    title: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 24,
+        color: '#1f2427',
+        marginLeft: 14,
+        marginTop: 30,
+        textAlign: "center"
     },
     sectionView: {
         width: '100%',
@@ -42,6 +202,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'space-between'
     },
+
     text: {
         color: '#000'
     },
@@ -263,14 +424,15 @@ const styles = StyleSheet.create({
         marginHorizontal: 30
     },
     getStartedButton: {
-        paddingVertical: 14,
+        paddingVertical: 0,
         paddingHorizontal: 50,
         alignItems: 'center',
         backgroundColor: '#cc8068',
-        marginTop: 15
+        marginTop: 15,
+        marginBottom: 15
     },
     fab: {
-        
+
         position: 'absolute',
         right: 18,
         bottom: 10,
