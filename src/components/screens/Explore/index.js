@@ -8,8 +8,9 @@ import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
-import MapView from 'react-native-maps';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { getRegionsBySearchParameter, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
+import Icon from 'react-native-fontawesome';
 
 class Explore extends Component {
     static propTypes = {
@@ -57,7 +58,8 @@ class Explore extends Component {
             childrenBool: false,
             locPrice : 0,
             language: "EUR",
-            locRates: []
+            locRates: [],
+            currencyIcon: Icons.euro 
         };
     }
 
@@ -157,6 +159,7 @@ class Explore extends Component {
     }
 
     gotoSearch() {
+        
         this.props.navigation.navigate('PropertyScreen', {
             searchedCity: this.state.search,
             searchedCityId: 72,
@@ -169,21 +172,23 @@ class Explore extends Component {
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
             roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+            locRate : this.state.locPrice,
+            currencyIcon: this.state.currencyIcon
         });
     }
 
     spinnerValueChange(value){
         this.setState({language: value});
         if(value == "EUR"){
-            this.setState({locPrice: this.state.locRates.price_eur})
+            this.setState({locPrice: this.state.locRates.price_eur, currencyIcon: Icons.euro})
         }
         else if(value == "USD"){
-            this.setState({locPrice: this.state.locRates.price_usd})
+            this.setState({locPrice: this.state.locRates.price_usd, currencyIcon: Icons.usd})
         }
         else if(value == "GBP"){
             getLocRateInUserSelectedCurrency('GBP')
             .then((json) => {
-                this.setState({locPrice: json[0].price_gbp});
+                this.setState({locPrice: json[0].price_gbp, currencyIcon: Icons.gbp});
             }).catch(err => {
                 console.log(err);
             });

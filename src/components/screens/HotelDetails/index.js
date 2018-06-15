@@ -19,6 +19,8 @@ import HotelDetailView from '../../organisms/HotelDetailView';
 import AvailableRoomsView from '../../molecules/AvailableRoomsView'
 import { imgHost } from '../../../config';
 import { getHotelById } from '../../../utils/requester';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Icon from 'react-native-fontawesome';
 
 class HotelDetails extends Component {
 
@@ -52,13 +54,17 @@ class HotelDetails extends Component {
             mainAddress: '',
             regionName: '',
             countryName: '',
-            latitude: '37.78825',
-            longitude: '-122.4324',
+            latitude: 37.78825,
+            longitude: -122.4324,
+            locRate: 0,
+            currencyIcon: ''
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
         this.state.urlForService = params ? params.urlForService : '';
+        this.state.locRate = params ? params.locRate : '';
+        this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
         const hotelPhotos = [];
         
         for (var i = 0; i < this.state.hotel.photos.length; i ++) {
@@ -83,14 +89,13 @@ class HotelDetails extends Component {
         .then(parsed => {
             // here you parse your json
             // here you set you data from json into your variables
-            
             this.setState({
                 hotelFullDetails : parsed,
                 mainAddress: parsed.additionalInfo.mainAddress,
                 regionName: parsed.region.regionName,
                 countryName: parsed.region.country.name,
-                latitude: parsed.latitude,
-                longitude: parsed.longitude,
+                latitude: parsed.lat,
+                longitude: parsed.lon,
             });
         })
         .catch(err => {
@@ -143,7 +148,9 @@ class HotelDetails extends Component {
                         search={'?'+this.state.urlForService}
                         onBooking={this.onBooking}
                         guests={this.state.guests}
-                        hotelDetails={this.state.hotelFullDetails}/>
+                        hotelDetails={this.state.hotelFullDetails}
+                        currencyIcon={this.state.currencyIcon}
+                        locRate={this.state.locRate}/>
 
                     <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
 
