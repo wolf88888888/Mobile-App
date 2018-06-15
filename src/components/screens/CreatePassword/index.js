@@ -1,88 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    ToastAndroid
+} from 'react-native';
 import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
-import { validatePassword, validateConfirmPassword } from '../../../utils/validation';
+import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#DA7B61'
-    },
-    main: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    titleView: {
-        display: 'flex',
-        width: '100%',
-        marginTop: 16,
-        marginLeft: 36,
-        marginBottom: 16
-    },
-    titleText: {
-        color: '#fff',
-        fontSize: 22,
-        fontFamily: 'FuturaStd-Light'
-    },
-    finePrintText: {
-        color: '#fff',
-        fontSize: 13,
-        fontFamily: 'FuturaStd-Light',
-        margin: 10,
-        marginBottom: 15
-    },
-    inputView: {
-        width: '100%',
-        margin: 11.5,
-        paddingLeft: 18,
-        paddingRight: 18
-    },
-    subTitleView: {
-        display: 'flex',
-        width: '100%',
-        marginTop: 16,
-        marginLeft: 36
-    },
-    nextButtonView: {
-        display: 'flex',
-        alignItems: 'flex-end',
-        width: '100%',
-        paddingRight: 18,
-        marginTop: 36
-    },
-    nextButton: {
-        height: 50,
-        width: 50,
-        backgroundColor: '#273842',
-        borderRadius: 25,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40,
-        paddingLeft: 2,
-        paddingBottom: 2
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 17
-    },
-    lowOpacity: {
-        opacity: 0.3
-    },
-    getStartedImage: {
-        width: 400,
-        height: 80
-    }
-});
-
+import styles from './styles';
 
 class CreatePassword extends Component {
     static propTypes = {
@@ -105,6 +34,7 @@ class CreatePassword extends Component {
     constructor(props) {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.onCreatePassword = this.onCreatePassword.bind(this);
         this.state = {
             password: '',
             confirmPassword: ''
@@ -117,6 +47,31 @@ class CreatePassword extends Component {
         };
     }
 
+    onCreatePassword() {
+
+        if (this.state.password.length < 8) {
+            ToastAndroid.showWithGravityAndOffset('Password should be at least 8 symbols.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        if (!hasLetterAndNumber(this.state.password)) {
+            ToastAndroid.showWithGravityAndOffset('Password must contain both latin letters and digits.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        if (!hasSymbol(this.state.password)) {
+            ToastAndroid.showWithGravityAndOffset('Password must contain symbols, like !, # or %..', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+
+        if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
+            ToastAndroid.showWithGravityAndOffset('Passwords are not matched, Please input correctly.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            return;
+        }
+        const { params } = this.props.navigation.state;
+        const { password, confirmPassword } = this.state;
+
+        this.props.navigation.navigate('Terms', { ...params, password })
+    }
+
     render() {
         const { password, confirmPassword } = this.state;
         const { navigate, goBack } = this.props.navigation;
@@ -125,6 +80,13 @@ class CreatePassword extends Component {
         return (
             <View style={styles.container}>
                 <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
+
+                <View style={styles.lowOpacity}>
+                    <Image
+                        source={require('../../../assets/get-started-white-outline.png')}
+                        style={styles.getStartedImage}
+                    />
+                </View>
 
                 <View style={styles.main}>
                     <View style={styles.titleView}><Text style={styles.titleText}>Create Password</Text></View>
@@ -164,9 +126,7 @@ class CreatePassword extends Component {
 
                     <View style={styles.nextButtonView}>
                         <TouchableOpacity
-                            disabled={!validatePassword(password) || !validateConfirmPassword(password, confirmPassword)}
-                            onPress={() => navigate('Terms', { ...params, password })}
-                        >
+                            onPress={this.onCreatePassword}>
                             <View style={styles.nextButton}>
                                 <Text style={styles.buttonText}>
                                     <FontAwesome>{Icons.arrowRight}</FontAwesome>
@@ -174,13 +134,6 @@ class CreatePassword extends Component {
                             </View>
                         </TouchableOpacity>
                     </View>
-                </View>
-
-                <View style={styles.lowOpacity}>
-                    <Image
-                        source={require('../../../assets/get-started-white-outline.png')}
-                        style={styles.getStartedImage}
-                    />
                 </View>
             </View>
         );

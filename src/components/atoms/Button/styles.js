@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     buttonWrap: {
-        height: 50,
-        borderRadius: 25,
+        height: 48,
+        borderRadius: 24,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         color: '#fff',
-        fontSize: 17,
+        fontSize: 16,
         fontFamily: 'FuturaStd-Light'
     }
 });

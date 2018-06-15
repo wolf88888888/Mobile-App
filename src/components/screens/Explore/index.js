@@ -2,7 +2,7 @@ import { withNavigation } from 'react-navigation';
 import React, { Component } from 'react';
 import moment from 'moment';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView, Text, View, TouchableOpacity, Image, Picker } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image, Picker, AsyncStorage} from 'react-native';
 import PropTypes from 'prop-types';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
@@ -10,6 +10,7 @@ import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
 import MapView from 'react-native-maps';
 import { getRegionsBySearchParameter, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
+import { domainPrefix } from '../../../config';
 
 class Explore extends Component {
     static propTypes = {
@@ -75,10 +76,14 @@ class Explore extends Component {
             const truncated = topHomes.content.slice(0, 4);
             this.setState({ topHomes: truncated });
         });
-        
+
         getLocRate()
         .then((json) => {
             this.setState({locRates: json[0], locPrice: json[0].price_eur});
+            AsyncStorage.setItem('currentCurrency', "EUR");
+            AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
+
+            console.log("currencyLocPrice" + json[0].price_eur);
         }).catch(err => {
             console.log(err);
         });
@@ -175,14 +180,20 @@ class Explore extends Component {
     spinnerValueChange(value){
         this.setState({language: value});
         if(value == "EUR"){
+            AsyncStorage.setItem('currentCurrency', "EUR");
+            AsyncStorage.setItem('currencyLocPrice', this.state.locRates.price_eur);
             this.setState({locPrice: this.state.locRates.price_eur})
         }
         else if(value == "USD"){
+            AsyncStorage.setItem('currentCurrency', "USD");
+            AsyncStorage.setItem('currencyLocPrice', this.state.locRates.price_usd);
             this.setState({locPrice: this.state.locRates.price_usd})
         }
         else if(value == "GBP"){
             getLocRateInUserSelectedCurrency('GBP')
             .then((json) => {
+                AsyncStorage.setItem('currentCurrency', "GBP");
+                AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
                 this.setState({locPrice: json[0].price_gbp});
             }).catch(err => {
                 console.log(err);
@@ -238,7 +249,7 @@ class Explore extends Component {
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect 
+            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
         } = this.state;
         return (
             <View style={styles.container}>
@@ -255,16 +266,16 @@ class Explore extends Component {
                             leftIcon="search"
                         />
                     </View>
-                    <View style={styles.pickerWrap}>    
+                    <View style={styles.pickerWrap}>
                         <Picker style={styles.picker}
                             selectedValue={this.state.language}
-                            onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>                          
+                            onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
                             <Picker.Item label="EUR" value="EUR" />
                             <Picker.Item label="USD" value="USD" />
                             <Picker.Item label="GBP" value="GBP" />
                         </Picker>
-                    </View> 
-                </View> 
+                    </View>
+                </View>
                 {this.renderAutocomplete()}
                 <View style={styles.itemView}>
                     {/* <MapView
