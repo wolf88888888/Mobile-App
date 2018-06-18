@@ -6,8 +6,7 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard,
-    ToastAndroid
+    Keyboard
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -19,14 +18,15 @@ import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbo
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Wallet } from '../../../services/blockchain/wallet';
-import DialogProgress from 'react-native-dialog-progress'
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import Toast from 'react-native-simple-toast';
 
 class CreateWallet extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func,
             state: PropTypes.shape({
-                params: PropTypes.object //eslint-disable-line
+                params: PropTypes.object
             })
         })
     }
@@ -35,7 +35,7 @@ class CreateWallet extends Component {
         navigation: {
             navigate: () => { },
             state: {
-                params: {}
+                params: {},
             }
         }
     }
@@ -44,7 +44,8 @@ class CreateWallet extends Component {
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.state = {
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            showProgress: false
         };
     }
 
@@ -57,29 +58,24 @@ class CreateWallet extends Component {
     submitPassword() {
         console.log();
         if (this.state.password.length < 8) {
-            ToastAndroid.showWithGravityAndOffset('Password should be at least 8 symbols.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
             return;
         }
         if (!hasLetterAndNumber(this.state.password)) {
-            ToastAndroid.showWithGravityAndOffset('Password must contain both latin letters and digits.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Password must contain both latin letters and digits.', Toast.SHORT, Toast.BOTTOM);
             return;
         }
         if (!hasSymbol(this.state.password)) {
-            ToastAndroid.showWithGravityAndOffset('Password must contain symbols, like !, # or %..', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Password must contain symbols, like !, # or %..', Toast.SHORT, Toast.BOTTOM);
             return;
         }
 
         if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
-            ToastAndroid.showWithGravityAndOffset('Passwords are not matched, Please input correctly.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Passwords are not matched, Please input correctly.', Toast.SHORT, Toast.BOTTOM);
             return;
         }
 
-        const options = {
-            title:"Creating Wallet...",
-            message:"We are creating your wallet through the Ethereum network. Please be patient. This process can take up to 2-3 minutes due to the advanced security procedure involved.",
-            isCancelable:false
-        };
-        DialogProgress.show(options);
+        this.setState({ showProgress: true });
 
         const { params } = this.props.navigation.state;
 
@@ -87,7 +83,7 @@ class CreateWallet extends Component {
             setTimeout(() => {
                 Wallet.createFromPassword(this.state.password)
                 .then((wallet) => {
-                    DialogProgress.hide();
+                    this.setState({ showProgress: false });
                     console.log(wallet);
                     AsyncStorage.setItem('walletAddress', wallet.address);
                     AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
@@ -95,15 +91,15 @@ class CreateWallet extends Component {
                     this.props.navigation.navigate('SaveWallet', { ...params});
                 })
                 .catch(err => {
-                    DialogProgress.hide();
-                    ToastAndroid.showWithGravityAndOffset('Cannot create wallet, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+                    this.setState({ showProgress: false });
+                    Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
                     console.log(err);
                 });
             }, 500);
 
         } catch (error) {
-            DialogProgress.hide();
-            ToastAndroid.showWithGravityAndOffset('Cannot create wallet, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(error);
         }
     }
@@ -173,6 +169,14 @@ class CreateWallet extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+
+                    <ProgressDialog
+                       visible={this.state.showProgress}
+                       title="Creating Wallet..."
+                       message="We are creating your wallet through the Ethereum network. Please be patient. This process can take up to 2-3 minutes due to the advanced security procedure involved."
+                       animationType="slide"
+                       activityIndicatorSize="large"
+                       activityIndicatorColor="black"/>
                 </View>
             </TouchableWithoutFeedback>
         );

@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     splashImage: {
         width: 200,
         height: 80,
+        marginTop: 100,
         resizeMode:'contain'
     },
     buttonCollectionWrap: {

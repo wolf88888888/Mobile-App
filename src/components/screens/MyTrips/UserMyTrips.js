@@ -8,7 +8,6 @@ import moment from 'moment';
 import Dash from 'react-native-dash';
 import BackButton from '../../atoms/BackButton';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import DialogProgress from 'react-native-dialog-progress'
 
 class UserMyTrips extends Component {
 

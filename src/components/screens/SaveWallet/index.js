@@ -7,8 +7,7 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView,
-    ToastAndroid
+    ScrollView
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -20,7 +19,8 @@ import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { register, login } from '../../../utils/requester';
 import { imgHost } from '../../../config';
-import DialogProgress from 'react-native-dialog-progress'
+// import DialogProgress from 'react-native-dialog-progress'
+import Toast from 'react-native-simple-toast';
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -66,11 +66,11 @@ class SaveWallet extends Component {
             message:"Registering...",
             isCancelable:false
         };
-        DialogProgress.show(options);
+        // DialogProgress.show(options);
 
         register(user, null)
         .then((res) => {
-            DialogProgress.hide();
+            // DialogProgress.hide();
             if (res.success) {
                 console.log(res);
                 navigate('CongratsWallet')
@@ -89,7 +89,7 @@ class SaveWallet extends Component {
                     const { errors } = response;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            ToastAndroid.showWithGravityAndOffset(errors[key].message, ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 100);
+                            Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
                             console.log('Error logging in:', errors[key].message);
                         }
                     });
@@ -97,8 +97,8 @@ class SaveWallet extends Component {
             }
         })
         .catch(err => {
-            DialogProgress.hide();
-            ToastAndroid.showWithGravityAndOffset('Cannot register user, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            // DialogProgress.hide();
+            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(err);
         });
     };
