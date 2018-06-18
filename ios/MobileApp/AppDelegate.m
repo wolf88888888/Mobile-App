@@ -12,6 +12,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "RCTSplashScreen.h" //import interface
+@import GoogleMaps;
 
 @implementation AppDelegate
 
@@ -25,7 +26,7 @@
                                                       moduleName:@"MobileApp"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
-  
+  [GMSServices provideAPIKey:@"AIzaSyDqHNX83ZkYeqikdpHP4QKpOVbKAX4Vtts"];
   //[RCTSplashScreen open:rootView];
   [RCTSplashScreen open:rootView withImageNamed:@"splash"]; // activate splashscreen, imagename from LaunchScreen.xib
   

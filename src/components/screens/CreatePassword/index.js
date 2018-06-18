@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    TouchableOpacity,
-    ToastAndroid
+    TouchableOpacity
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
@@ -12,6 +11,7 @@ import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbo
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import styles from './styles';
+import Toast from 'react-native-simple-toast';
 
 class CreatePassword extends Component {
     static propTypes = {
@@ -50,20 +50,20 @@ class CreatePassword extends Component {
     onCreatePassword() {
 
         if (this.state.password.length < 8) {
-            ToastAndroid.showWithGravityAndOffset('Password should be at least 8 symbols.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
             return;
         }
         if (!hasLetterAndNumber(this.state.password)) {
-            ToastAndroid.showWithGravityAndOffset('Password must contain both latin letters and digits.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Password must contain both latin letters and digits.', Toast.SHORT, Toast.BOTTOM);
             return;
         }
         if (!hasSymbol(this.state.password)) {
-            ToastAndroid.showWithGravityAndOffset('Password must contain symbols, like !, # or %..', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Password must contain symbols, like !, # or %..', Toast.SHORT, Toast.BOTTOM);
             return;
         }
 
         if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
-            ToastAndroid.showWithGravityAndOffset('Passwords are not matched, Please input correctly.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            Toast.showWithGravity('Passwords are not matched, Please input correctly', Toast.SHORT, Toast.BOTTOM);
             return;
         }
         const { params } = this.props.navigation.state;

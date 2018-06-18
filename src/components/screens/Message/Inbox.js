@@ -7,8 +7,7 @@ import {
     View,
     Image,
     ScrollView,
-    FlatList,
-    ToastAndroid
+    FlatList
 } from 'react-native';
 import FontAwesome, {Icons} from 'react-native-fontawesome';
 import {imgHost} from '../../../config'
@@ -19,7 +18,8 @@ import SplashScreen from 'react-native-smart-splash-screen';
 import {getMyConversations, approveMessage, declineMessage} from '../../../utils/requester';
 import InboxMessagesView from './InboxMessagesView';
 import BackButton from '../../atoms/BackButton';
-import DialogProgress from 'react-native-dialog-progress'
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import Toast from 'react-native-simple-toast';
 
 // You will find all component related to style in this class
 import styles from './inboxStyle';
@@ -35,31 +35,25 @@ class Inbox extends Component {
             seed: 1,
             error: null,
             refreshing: false,
-            inboxMessages : []
+            inboxMessages : [],
+            showProgress: false
           };
     }
 
     componentDidMount() {
-        // here is the method to load all chats related to this id = 68
-        const options = {
-            title:"",
-            message:"Loading Message...",
-            isCancelable:true
-        };
-
-        DialogProgress.show(options);
+        this.setState({ showProgress: true });
         getMyConversations()
         .then(res => res.response.json())
         // here you set the response in to json
         .then(parsed => {
-            DialogProgress.hide();
+            this.setState({ showProgress: false });
             this.setState({
                 inboxMessages : parsed.content,
             });
         })
         .catch(err => {
-            DialogProgress.hide();
-            ToastAndroid.showWithGravityAndOffset('Cannot get messages, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(err);
         });
     }
@@ -94,6 +88,14 @@ class Inbox extends Component {
                 </ScrollView>
 
             {/* Main Container End */}
+
+                <ProgressDialog
+                   visible={this.state.showProgress}
+                   title=""
+                   message="Loading Message..."
+                   animationType="slide"
+                   activityIndicatorSize="large"
+                   activityIndicatorColor="black"/>
             </View>
         );
     }
