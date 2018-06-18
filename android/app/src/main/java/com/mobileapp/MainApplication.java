@@ -13,7 +13,6 @@ import com.facebook.soloader.SoLoader;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;    //import package
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.dialogprogress.DialogProgressPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,8 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new RNUUIDGeneratorPackage(),
           new RCTSplashScreenPackage(),    //register Module
-          new MapsPackage(),
-          new DialogProgressPackage()
+          new MapsPackage()
       );
     }
 
