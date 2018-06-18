@@ -6,8 +6,7 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard,
-    ToastAndroid
+    Keyboard
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -18,8 +17,8 @@ import { validateEmail, validatePassword, validatePassword1 } from '../../../uti
 import { login } from '../../../utils/requester';
 import styles from './styles';
 import SplashScreen from 'react-native-smart-splash-screen';
-import DialogProgress from 'react-native-dialog-progress'
-
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import Toast from 'react-native-simple-toast';
 
 class Login extends Component {
     static propTypes = {
@@ -31,7 +30,8 @@ class Login extends Component {
 
     state = {
         email: '',
-        password: ''
+        password: '',
+        showProgress: false
     }
 
     componentDidMount() {
@@ -46,18 +46,15 @@ class Login extends Component {
     // TODO: Need a way to generate a Google ReCAPTCHA token
 
     onClickLogIn() {
+    // Toast.showWithGravity('Cannot login, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+    // return;
         const { email, password } = this.state;
         const user = { email, password };
 
-        const options = {
-            title:"",
-            message:"Login...",
-            isCancelable:false
-        };
-        DialogProgress.show(options);
+        this.setState({ showProgress: true });
 
         login(user, null).then((res) => {
-            DialogProgress.hide();
+            this.setState({ showProgress: false });
             if (res.success) {
                 res.response.json().then((data) => {
                     AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
@@ -70,17 +67,16 @@ class Login extends Component {
                     const { errors } = response;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            ToastAndroid.showWithGravityAndOffset(errors[key].message, ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 100);
-                            console.log('Error logging in:', errors[key].message);
-                            // TODO: give user feedback about having and error logging in
+                            Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
+                            console.log('Error logging in  :', errors[key].message);
                         }
                     });
                 });
             }
         })
         .catch(err => {
-            DialogProgress.hide();
-            ToastAndroid.showWithGravityAndOffset('Cannot login, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot login, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(err);
         });
     }
@@ -159,6 +155,14 @@ class Login extends Component {
                             style={styles.getStartedImage}
                         />
                     </View>
+
+                    <ProgressDialog
+                       visible={this.state.showProgress}
+                       title=""
+                       message="Login..."
+                       animationType="slide"
+                       activityIndicatorSize="large"
+                       activityIndicatorColor="black"/>
                 </View>
             </TouchableWithoutFeedback>
         );
