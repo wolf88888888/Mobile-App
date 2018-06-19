@@ -148,7 +148,6 @@ class Explore extends Component {
     gotoSettings() {
         this.props.navigation.navigate('FilterScreen', {
             searchedCity: this.state.search,
-            searchedCityId: 72,
             checkInDate: this.state.checkInDate,
             checkOutDate: this.state.checkOutDate,
             guests: this.state.guests,
@@ -163,10 +162,8 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-
         this.props.navigation.navigate('PropertyScreen', {
             searchedCity: this.state.search,
-            searchedCityId: 72,
             checkInDate: this.state.checkInDate,
             checkOutDate: this.state.checkOutDate,
             guests: this.state.guests,
@@ -179,7 +176,6 @@ class Explore extends Component {
             locRate : this.state.locPrice,
             currencyIcon: this.state.currencyIcon
         });
-
     }
 
     spinnerValueChange(value){
@@ -363,11 +359,11 @@ class Explore extends Component {
                                     />
 
                                     <View>
-                                        <Text style={styles.hotelLoc}>FLORENCE .<Text  style={styles.hotelLoc}> ITALY </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>FLORENCE .<Text  style={styles.hotelLoc}> ITALY </Text></Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Apolonia Resort</Text>                                           
-                                    </View> 
+                                       <Text style={styles.hotelName}>Apolonia Resort</Text>
+                                    </View>
                                     <View>
                                        <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
                                     </View>
@@ -389,11 +385,11 @@ class Explore extends Component {
                                     />
 
                                      <View>
-                                        <Text style={styles.hotelLoc}>ROME .<Text  style={styles.hotelLoc}> ITALY </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>ROME .<Text  style={styles.hotelLoc}> ITALY </Text></Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Paradise HOTEL</Text>                                           
-                                    </View> 
+                                       <Text style={styles.hotelName}>Paradise HOTEL</Text>
+                                    </View>
                                     <View>
                                        <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
                                     </View>
@@ -410,11 +406,11 @@ class Explore extends Component {
                                     />
 
                                      <View>
-                                        <Text style={styles.hotelLoc}>PARIS .<Text  style={styles.hotelLoc}> FRANCE </Text></Text>                                           
+                                        <Text style={styles.hotelLoc}>PARIS .<Text  style={styles.hotelLoc}> FRANCE </Text></Text>
                                     </View>
                                     <View>
-                                       <Text style={styles.hotelName}>Green Garden Aparthotel</Text>                                           
-                                    </View> 
+                                       <Text style={styles.hotelName}>Green Garden Aparthotel</Text>
+                                    </View>
                                     <View>
                                        <Text style={styles.hotelRating}>Exellent 4.1/5 review </Text>
                                     </View>
