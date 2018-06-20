@@ -54,7 +54,9 @@ class Property extends Component {
             locRate: 0,
             currencyIcon : '',
             isLoading: true,
-            isAvailable: false
+            isAvailable: false,
+            email:'',
+            token:''
         };
 
         const { params } = this.props.navigation.state;
@@ -73,7 +75,7 @@ class Property extends Component {
         this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
 
         //this.state.urlForService = PUBLIC_URL + 'hotels/listings?' + 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-        this.state.urlForService = 'https://alpha.locktrip.com/mobile/search?' + 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated +'&rooms='+this.state.roomsDummyData;
+        this.state.urlForService = 'https://Google.com';//'https://alpha.locktrip.com/mobile/search?' + 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated +'&rooms='+this.state.roomsDummyData;
         // this.state.urlForService = 'https://alpha.locktrip.com/mobile/hotels/listings?region=52612&currency=GBP&startDate=20/06/2018&endDate=21/06/2018&&rooms=%5B%7B"adults":2,"children":%5B%5D%7D%5D';
     }
 
@@ -90,10 +92,10 @@ class Property extends Component {
         this.state.urlForService = 'https://alpha.locktrip.com/mobile/search?'
             + 'region='+this.state.regionId+'&currency='+this.state.currency
             +'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated
-            +'&rooms='+this.state.roomsDummyData;
+            +'&rooms='+this.state.roomsDummyData
             +'&authEmail='+email+'&authToken='+authToken;
 
-        this.setState({isAvailable: true});
+        this.setState({isAvailable: true, email: email, token:authToken});
     }
 
     onLoad(data) {
@@ -133,7 +135,7 @@ class Property extends Component {
 
     render() {
         const { navigate, goBack } = this.props.navigation;
-        const { isLoading, isAvailable } = this.state;
+        const { isLoading, isAvailable, email, token, urlForService } = this.state;
         return (
             <View style={styles.container}>
                 <BackButton onPress={() => goBack()}/>
