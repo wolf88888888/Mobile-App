@@ -15,8 +15,8 @@ export default class Filters extends Component {
             navigate: () => {}
         },
     }
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isHotelSelected: false,
             selectedRating: 4,
@@ -27,7 +27,9 @@ export default class Filters extends Component {
             },
             rooms : [{ adults: 2, children: [] }]
         }
-        
+        const { params } = this.props.navigation.state
+        this.state.isHotelSelected = params.isHotelSelected
+        this.state.count = params.count
     }
 
     addCount(type) {
@@ -75,6 +77,7 @@ export default class Filters extends Component {
 
     onBackPress = () => {
         this.props.navigation.goBack();
+        this.props.navigation.state.params.updateFilter(this.state);
     }
 
     render() {
@@ -189,11 +192,11 @@ export default class Filters extends Component {
                     </View>
                        
                 </ScrollView>
-                <View style={styles.bottomBar}>
+                {/* <View style={styles.bottomBar}>
                     <TouchableOpacity style={styles.doneButton} onPress={this.onSearchPress.bind(this)}>
                         <Text style={styles.doneButtonText}>Show Hotels</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 
             </View>
