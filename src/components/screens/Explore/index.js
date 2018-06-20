@@ -1,15 +1,18 @@
 import { withNavigation } from 'react-navigation';
 import React, { Component } from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView, Text, View, TouchableOpacity, Image, Picker, AsyncStorage} from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image, Picker, StyleSheet, AsyncStorage} from 'react-native';
 import PropTypes from 'prop-types';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
+import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { getRegionsBySearchParameter, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
+import { domainPrefix } from '../../../config';
+import { getUserInfo, getRegionsBySearchParameter, getCountriesWithListings, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
 import Icon from 'react-native-fontawesome';
 
 class Explore extends Component {
@@ -33,6 +36,8 @@ class Explore extends Component {
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
+        this.updateFilter = this.updateFilter.bind(this);
+        this.getCountryValues = this.getCountryValues.bind(this);
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
@@ -41,6 +46,9 @@ class Explore extends Component {
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.state = {
+            isHotelSelected: true,
+            countryId: 0,
+            countries: [],
             cities: [],
             search: '',
             regionId: '',
@@ -55,15 +63,31 @@ class Explore extends Component {
             infants: 0,
             topHomes: [],
             roomsDummyData: [{ adults: 2, children: [] }],
+            count: {
+                beds: 2,
+                bedrooms: 0,
+                bathrooms: 0
+            },
             childrenBool: false,
             locPrice : 0,
             language: "EUR",
             locRates: [],
-            currencyIcon: Icons.euro
+            currencyIcon: Icons.euro,
+            email: '',
+            token: ''
         };
+        this.getCountryValues();
     }
 
-    componentWillMount() {
+    async componentWillMount() {
+        const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
+        const email_value = await AsyncStorage.getItem(`${domainPrefix}.auth.username`);
+        
+        this.setState({
+            token: token_value,
+            email : email_value,
+        });
+            
         SplashScreen.close({
             animationType: SplashScreen.animationType.scale,
             duration: 0,
@@ -119,6 +143,18 @@ class Explore extends Component {
         }
     }
 
+    getCountryValues() {
+        getCountriesWithListings().then(res => res.response.json()).then((json) => {
+            countryArr = []
+            json.content.map((item, i) => {
+                countryArr.push({ 'label': item.name, 'value': item.id })
+            })
+            this.setState({
+                countries: countryArr
+            })
+        })
+    }
+
     onValueChange = (value) => {
         console.log(value);
         console.log(this.state.loc)
@@ -131,6 +167,13 @@ class Explore extends Component {
             infants: data.infants,
             guests: data.adults + data.children + data.infants,
             childrenBool: data.childrenBool
+        });
+    }
+
+    updateFilter(data){
+        this.setState({
+            isHotelSelected: data.isHotelSelected,
+            count: data.count
         });
     }
 
@@ -147,6 +190,9 @@ class Explore extends Component {
 
     gotoSettings() {
         this.props.navigation.navigate('FilterScreen', {
+            isHotelSelected: this.state.isHotelSelected,
+            count: this.state.count,
+            updateFilter: this.updateFilter,
             searchedCity: this.state.search,
             searchedCityId: 72,
             checkInDate: this.state.checkInDate,
@@ -171,13 +217,17 @@ class Explore extends Component {
             checkOutDate: this.state.checkOutDate,
             guests: this.state.guests,
             children: this.state.children,
+            countryId: this.state.countryId,
             regionId: this.state.regionId,
+            isHotelSelected: this.state.isHotelSelected,
             currency: this.state.language,
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
             roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
             locRate : this.state.locPrice,
-            currencyIcon: this.state.currencyIcon
+            currencyIcon: this.state.currencyIcon,
+            email: this.state.email,
+            token: this.state.token
         });
 
     }
@@ -254,24 +304,44 @@ class Explore extends Component {
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect
+            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, countries
         } = this.state;
         return (
 
             <View style={styles.container}>
 
                 <View style={styles.SearchAndPickerwarp}>
-                        <View style={styles.searchAreaView}>
-                            <SearchBar
-                                autoCorrect={false}
-                                value={this.state.search}
-                                onChangeText={this.onSearchHandler}
-                                placeholder="Discover your next experience"
-                                placeholderTextColor="#bdbdbd"
-                                leftIcon="search"
-                            />
+                        {this.state.isHotelSelected &&
+                            <View style={styles.searchAreaView}>
+                                <SearchBar
+                                    autoCorrect={false}
+                                    value={this.state.search}
+                                    onChangeText={this.onSearchHandler}
+                                    placeholder="Discover your next experience"
+                                    placeholderTextColor="#bdbdbd"
+                                    leftIcon="search"
+                                />
 
-                        </View>
+                            </View>
+                        }
+                        {!this.state.isHotelSelected && countries.length > 0 &&
+                            <View style={styles.searchAreaView}>
+                                <RNPickerSelect
+                                    items={countries}
+                                    placeholder={{
+                                        label: 'Choose a location',
+                                        value: 0,
+                                    }}
+                                    onValueChange={(value) => {
+                                        this.setState({
+                                            countryId: value,
+                                        });
+                                    }}
+                                    value={this.state.countryId}
+                                    style={{ ...pickerSelectStyles }}
+                                />
+                            </View>
+                        }
                         <View style={styles.pickerWrap}>
 
                                 <Picker style={styles.picker}
@@ -490,5 +560,19 @@ class Explore extends Component {
         );
     }
 }
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        backgroundColor: 'white',
+        color: 'black',
+    },
+});
 
 export default withNavigation(Explore);
