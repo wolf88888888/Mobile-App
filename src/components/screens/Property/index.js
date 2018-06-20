@@ -110,8 +110,10 @@ class Property extends Component {
             currencyIcon : '',
             isHotelSelected: false,
             webViewUrl: '',
-            email: '',
-            token: ''
+            isLoading: true,
+            isAvailable: false,
+            email:'',
+            token:''
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -132,9 +134,9 @@ class Property extends Component {
         this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
         this.state.email = params? params.email : '';
         this.state.token = params? params.token : '';
-
+      
         this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-
+        
         this.generateSearchUrl()
     }
 
@@ -319,6 +321,8 @@ class Property extends Component {
             document.querySelector('.hotel-info').style.width = '100%'
             document.querySelector('.hotel-chekin').style.width = '100%';
         `;
+        const { navigate, goBack } = this.props.navigation;
+        const { isLoading, isAvailable, email, token, urlForService } = this.state;
         return (
             <View style={styles.container}>
                 
