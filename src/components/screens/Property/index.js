@@ -126,7 +126,7 @@ class Property extends Component {
         this.state.isHotelSelected = params? params.isHotelSelected : false;
         this.state.countryId = params ? params.countryId : 0;
         this.state.regionId = params ? params.regionId : 0;
-        this.state.currency = params ? params.currency : [];
+        this.state.currency = params ? params.currency : 'USD';
         this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
         this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
@@ -138,6 +138,8 @@ class Property extends Component {
         this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
         
         this.generateSearchUrl()
+
+        console.log('Received Params', params)
     }
 
     componentWillMount(){
@@ -305,7 +307,7 @@ class Property extends Component {
             paramUrl = baseHotelUrl
             paramUrl += this.state.urlForService
         }
-        paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20')
+        paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20') + '&currency=' + this.state.currency
         this.state.webViewUrl = paramUrl
     }
 
