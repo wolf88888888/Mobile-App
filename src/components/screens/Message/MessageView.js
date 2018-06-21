@@ -9,6 +9,7 @@ import Image from 'react-native-remote-svg';
 import moment from 'moment';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import { imgHost } from '../../../config.js'
 import styles from './styles';
 
 TimeAgo.locale(en);
@@ -16,19 +17,30 @@ const timeAgo = new TimeAgo('en-US');
 
 export default function MessageView(props) {
     const messageCreatedAt = moment(props.message.createdAt, 'DD/MM/YYYY HH:mm:ss');
-    if (props.isCurrentUser) {
+    console.log("messageCreatedAt: " + messageCreatedAt);
+    console.log("messageCreatedAt1: " + moment().add('-1', 'days'));
+
+    let imageAvatar = 'https://staging.locktrip.com/images/default.png';
+    if (props.message.sender.image != '') {
+        if (props.message.sender.image == 'https://staging.locktrip.com/images/default.png' || props.message.sender.image == 'images/default.png') {
+            imageAvatar = {uri:'https://staging.locktrip.com/images/default.png'};
+        }
+        else {
+            imageAvatar ={uri:imgHost+props.message.sender.image}
+        }
+    }
+
+    if (!props.isCurrentUser) {
             return (
                 // here is the sender view return
                 <View style={styles.rowStyle}>
-                    <View style={styles.rowStyle}>
-                        {/* here we set the sender image */}
-                        <Image style={styles.imageStyle}source={{ uri: props.message.sender.image }}/>
-                        <View style={styles.viewStyle}>
-                            {/* here we set the sender message text */}
-                            <Text style={styles.listChild}>{props.message.message}</Text>
-                            {/* here we set sender date or time of this message */}
-                            <Text style={styles.listChild}>{messageCreatedAt < moment().add('-1', 'days') ? messageCreatedAt.format('HH:mm') : timeAgo.format(new Date(messageCreatedAt))}</Text>
-                        </View>
+                    {/* here we set the sender image */}
+                    <Image style={styles.imageStyle} source={imageAvatar}/>
+                    <View style={styles.viewStyle}>
+                        {/* here we set the sender message text */}
+                        <Text style={styles.listChild}>{props.message.message}</Text>
+                        {/* here we set sender date or time of this message */}
+                        <Text style={styles.listChild}>{messageCreatedAt > moment().add('-1', 'days') ? messageCreatedAt.format('HH:mm') : messageCreatedAt.format('DD MMM, HH:mm')}</Text>
                     </View>
                 </View>
             );
@@ -41,15 +53,15 @@ export default function MessageView(props) {
                         {/* here we set the receiver message text */}
                         <Text style={styles.listChildSender}>{props.message.message}</Text>
                         {/* here we set receiver date or time of this message */}
-                        <Text style={styles.listChildSender}>{messageCreatedAt < moment().add('-1', 'days') ? messageCreatedAt.format('HH:mm') : timeAgo.format(new Date(messageCreatedAt))}</Text>
+                        <Text style={styles.listChildSender}>{messageCreatedAt < moment().add('-1', 'days') ? messageCreatedAt.format('HH:mm') : messageCreatedAt.format('DD MMM, HH:mm')}</Text>
                     </View>
                     {/* here we set the receiver image */}
                     <Image style={styles.imageStyleSender}
-                        source={{ uri: props.message.recipient.image }} />
+                        source={imageAvatar} />
                 </View>
             );
         }
-        
+
 }
 
 MessageView.propTypes = {

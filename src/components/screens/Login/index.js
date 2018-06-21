@@ -67,8 +67,9 @@ class Login extends Component {
                     const { errors } = response;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
+                            // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
                             console.log('Error logging in  :', errors[key].message);
+                            alert(errors[key].message);
                         }
                     });
                 });
@@ -76,7 +77,7 @@ class Login extends Component {
         })
         .catch(err => {
             this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot login, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            alert('Cannot login, Please check network connection.');
             console.log(err);
         });
     }
