@@ -44,7 +44,7 @@ const dummyHotel = {
     "city": null,
     "region": null,
     "descriptions": []
-  };
+  };;
 const roomsDummyData = [{ adults: 2, children: [] }]; //Hard coded adults and children
 const urlForService = 'region=52612&currency=GBP&startDate=21/06/2018&endDate=23/06/2018&rooms='+encodeURI(JSON.stringify(roomsDummyData)); //Here we are creating a url with all these hard coded values which will work for 21-23june 2018
 
