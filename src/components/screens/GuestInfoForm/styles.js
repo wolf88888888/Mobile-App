@@ -10,9 +10,10 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     btn_backImage:{
-        height: 50,
-        width: 50,
-        marginTop: 24
+        width: 24,
+        height: 24,
+        marginTop: 40,
+        marginLeft: 18,
     },
     steps: {
         fontFamily: 'FuturaStd-Light',
@@ -123,20 +124,20 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     genderFlex: {
-        flex: 0.2
+        flex: 0.26
     },
     firstNameFlex: {
-        flex: 0.4
+        flex: 0.37
     },
     lastNameFlex: {
-        flex: 0.4
+        flex: 0.37
     },
     gender: {
         height: 50,
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
-        alignSelf: 'stretch',
+        alignSelf: 'auto',
         shadowColor: '#858585',
         shadowOffset: {
             width: 0,
