@@ -15,7 +15,7 @@ import { domainPrefix } from '../../../config';
 import { getUserInfo, getRegionsBySearchParameter, getCountriesWithListings, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
 import Icon from 'react-native-fontawesome';
 
-const shouldBeNative = true; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
 //Bellow are details of hardcoded hotel
 const dummyHotel = {
