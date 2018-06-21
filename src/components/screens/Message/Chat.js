@@ -13,10 +13,12 @@ import {
 import { domainPrefix } from '../../../config';
 import Image from 'react-native-remote-svg';
 // import ImagePicker from 'react-native-image-picker';
-// import Requester, { getCurrencyRates, sendMessage, getChatMessages, getMyHeaders } from '../../../utils/requester';
+import { getMyConversations } from '../../../utils/requester';
 import styles from './styles';
 import moment from 'moment';
 import BackButton from '../../atoms/BackButton';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import Toast from 'react-native-simple-toast';
 
 //import Message View for chat
 import MessageView from './MessageView';
@@ -42,75 +44,79 @@ class Chat extends Component {
 
     constructor(props) {
         super(props);
+        console.log(props.navigation.state.params);
         this.state = {
-            loading: false,
-            data: [],
-            page: 1,
-            seed: 1,
-            error: null,
-            refreshing: false,
+            showProgress: false,
             messages : [],
-            name : '',
-          };
+            username : '',
+        };
     }
 
-    componentDidMount() {
-        // here is the method to load all chats related to this id = 68
-        // getChatMessages(68)
-        // .then(res => res.response.json())
-        // // here you set the response in to json
-        // .then(parsed => {
-        //     // here you parse your json
-        //     let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
-        //     // messageDate to set your date
-        //     // here you set you data from json into your variables
-        //     this.setState({
-        //         messages : parsed.content,
-        //         name : parsed.content[0].recipient.fullName
-        //     });
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        // });
+    async componentDidMount() {
+        const {params} = this.props.navigation.state;
+        this.state.username = await AsyncStorage.getItem(`${domainPrefix}.auth.username`)
+        //here is the method to load all chats related to this id = 68
+
+        this.setState({ showProgress: true });
+        getMyConversations("/"+params.id+"?page=0")
+        .then(res => res.response.json())
+        // here you set the response in to json
+        .then(parsed => {
+            // here you parse your json
+            //let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
+            // messageDate to set your date
+            // here you set you data from json into your variables
+            this.setState({ showProgress: false });
+            console.log(parsed);
+            this.setState({
+                showProgress: false,
+                messages : parsed.content,
+            });
+        })
+        .catch(err => {
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            console.log(err);
+        });
     }
 
-
+    renderInfo() {
+        return (
+            <View style={styles.infoView}>
+                <Text style={styles.requestTitle}>Garden Left Apartment</Text>
+                <View style={styles.dateWrapper}>
+                    <Text style={styles.dateText}>Thu 25 Jan - Sat 27 Jan</Text>
+                    <SeparatorDot height={17} width={15}/>
+                    <Text style={styles.dateText}>2 guests</Text>
+                    <SeparatorDot height={17} width={15}/>
+                    <Text style={styles.price}>$615 </Text>
+                </View>
+                {/* This view contain 2 buttons Approve and Decline start */}
+                <View style={styles.requestButtonView}>
+                    <TouchableOpacity style={styles.btn_requestapproveView}>
+                        <Text style={styles.btn_requestapprove}>Approve</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn_requestdeclineView}>
+                        <Text style={styles.btn_requestdecline}>Decline</Text>
+                    </TouchableOpacity>
+                </View>
+                {/* This view contain 2 buttons Approve and Decline end */}
+            </View>
+        );
+        //return null;
+    }
 
     render() {
-        const { navigate } = this.props.navigation;
+        const { params } = this.props.navigation.state;
+        const { navigate, goBack } = this.props.navigation;
         return (
             <KeyboardAvoidingView style={styles.container} behavior={(Platform.OS === 'ios') ? 'padding' : null} enabled>
-                <View style={styles.chatToolbar}>
-                {/* back button is define here start*/}
-                <TouchableOpacity onPress={this.onBackPress} style={{marginTop: 45, marginLeft: 15, marginBottom: 0}}>
-                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
-                </TouchableOpacity>
-                {/* back button is define here end*/}
-                </View>
 
-                <BackButton onPress={this.onBackPress}/>
-
+                <BackButton  onPress={() => goBack()}/>
                 {/* Here is the top section view where all the details are related to the receiver start*/}
                 <View style={styles.requestView}>
-                    <Text style={styles.requestTo}>{this.state.name}</Text>
-                    <Text style={styles.requestTitle}>Garden Left Apartment</Text>
-                    <View style={styles.dateWrapper}>
-                        <Text style={styles.dateText}>Thu 25 Jan - Sat 27 Jan</Text>
-                        <SeparatorDot height={25} width={15}/>
-                        <Text style={styles.dateText}>2 guests</Text>
-                        <SeparatorDot height={26} width={15}/>
-                        <Text style={styles.price}>$615 </Text>
-                    </View>
-                    {/* This view contain 2 buttons Approve and Decline start */}
-                    <View style={styles.requestButtonView}>
-                        <TouchableOpacity style={styles.btn_requestapproveView}>
-                            <Text style={styles.btn_requestapprove}>Approve</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btn_requestdeclineView}>
-                            <Text style={styles.btn_requestdecline}>Decline</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {/* This view contain 2 buttons Approve and Decline end */}
+                    <Text style={styles.requestTo}>Conversation with {params.userInfo.fullName}</Text>
+                    {false && this.renderInfo()}
                 </View>
                 {/* Here is the top section view where all the details are related to the receiver end*/}
 
@@ -121,7 +127,7 @@ class Chat extends Component {
                         (
                             <MessageView
                                 isCurrentUser = {item.currentUserSender}
-                                sender={item.sender.email === AsyncStorage.getItem(`${domainPrefix}.auth.username`)}
+                                sender={item.sender.email === this.state.username}
                                 message={item}>
                             </MessageView>
 
@@ -145,6 +151,14 @@ class Chat extends Component {
                     </TouchableOpacity>
                 </View>
                 {/* This section contain the bottom area where you can write your message and send image from gallery or camera end */}
+
+                <ProgressDialog
+                   visible={this.state.showProgress}
+                   title=""
+                   message="Loading..."
+                   animationType="slide"
+                   activityIndicatorSize="large"
+                   activityIndicatorColor="black"/>
             </KeyboardAvoidingView>// Ending Main View
         );
     }
@@ -160,9 +174,6 @@ class Chat extends Component {
         // ImagePicker.launchImageLibrary({}, (response) => {
         // // Same code as in above section!
         // });
-    }
-    onBackPress = () => {
-        this.props.navigation.navigate('MESSAGES');
     }
 
     sendMessage = () => {
@@ -181,7 +192,7 @@ class Chat extends Component {
 function SeparatorDot(props) {
     return (
         <View style={{height: props.height, width: props.width, alignItems: 'center', justifyContent: 'center'}}>
-            <View style={{height: 3, width: 3, backgroundColor: '#000', borderRadius: 1.5}}></View>
+            <View style={{height: 3, width: 3, backgroundColor: '#1f2427', borderRadius: 1.5}}></View>
         </View>
     )
 }

@@ -3,43 +3,44 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        resizeMode: 'stretch',
         backgroundColor: '#f0f1f3',
       },
       chatToolbar: {
       },
       requestView:{
-        marginTop: 30,
-        height: 180,
-        borderBottomWidth: 1,
-        borderBottomColor: '#e1e1e1',
-        marginBottom: 20,
+          marginBottom: 15,
+          marginTop:10,
+          borderBottomWidth: 1,
+          borderBottomColor: '#e1e1e1',
+      },
+      infoView: {
+          height: 125,
       },
       requestTo:{
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 20,
         marginTop: 10,
-        marginLeft: 16,
+        marginLeft: 15,
         color: '#1f2427'
       },
       requestTitle:{
         fontFamily: 'FuturaStd-Light',
         fontSize: 13,
-        marginTop: 10,
-        marginLeft: 16,
+        marginTop: 5,
+        marginLeft: 15,
         color: '#1f2427'
       },
       requestDate:{
         fontFamily: 'FuturaStd-Light',
         fontSize: 13,
-        marginTop: 5,
+        marginTop: 10,
         marginLeft: 16,
         color: '#1f2427'
       },
       requestButtonView:{
         marginTop: 0,
-        marginLeft: 24,
-        marginRight: 24,
+        marginLeft: 15,
+        marginRight: 15,
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
       btn_requestapproveView:{
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#cc8068',
+        backgroundColor: '#D87A61',
         borderRadius: 2,
         marginRight: 15,
       },
@@ -56,8 +57,8 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light',
         fontSize: 16,
         color: '#ffffff',
-        paddingTop: 14,
-        paddingBottom: 14,
+        paddingTop: 12.5,
+        paddingBottom: 12.5,
       },
       btn_requestdeclineView:{
         flex: 1,
@@ -110,10 +111,12 @@ const styles = StyleSheet.create({
       },
       listChild: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 13,
+        fontSize: 11,
+        lineHeight: 18,
         padding: 5,
-        margin: 10,
-        color: '#1f2427'
+        marginLeft: 10,
+        marginRight: 10,
+        color: '#000'
       },
       rowStyleSender: {
         flex: 1,
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
         borderBottomRightRadius: 3,
         borderBottomLeftRadius: 15,
-        backgroundColor: '#cc8068',
+        backgroundColor: '#D87A61',
         borderColor: 'white'
       },
       listChildSender: {
@@ -187,19 +190,19 @@ const styles = StyleSheet.create({
       },
       dateWrapper: {
         flexDirection: 'row',
-        marginLeft: 16
+        marginLeft: 15,
       },
       dateText: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 13,
-        marginTop: 5,
+        marginTop: 0,
         color: '#1f2427'
       },
       price: {
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 13,
-        marginTop: 5,
+        marginTop: 0,
         color: '#1f2427',
-        fontWeight: '300'
       }
 });
 

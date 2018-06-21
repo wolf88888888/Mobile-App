@@ -37,29 +37,27 @@ class Inbox extends Component {
             refreshing: false,
             inboxMessages : [],
             showProgress: false,
-            isLoaded: false,
         };
     }
 
     componentDidMount() {
-        if (!isLoaded) {
-            this.setState({ showProgress: true });
-            getMyConversations()
-            .then(res => res.response.json())
-            // here you set the response in to json
-            .then(parsed => {
-                this.setState({ showProgress: false });
-                this.setState({
-                    inboxMessages : parsed.content,
-                });
-                isLoaded = true;
-            })
-            .catch(err => {
-                this.setState({ showProgress: false });
-                Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-                console.log(err);
+        this.setState({ showProgress: true });
+        getMyConversations()
+        .then(res => res.response.json())
+        // here you set the response in to json
+        .then(parsed => {
+            this.setState({ showProgress: false });
+            this.setState({
+                inboxMessages : parsed.content,
             });
-        }
+            console.log("message");
+            console.log(parsed.content);
+        })
+        .catch(err => {
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            console.log(err);
+        });
     }
 
     render() {
@@ -79,7 +77,7 @@ class Inbox extends Component {
                     <FlatList data={this.state.inboxMessages} // Data source
                     // List Start
                         renderItem={({item, index}) => (
-                        <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat')}>
+                        <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat', item)}>
                             {/* Press to go on chat screen start*/}
                                 <InboxMessagesView
                                     inboxMessage={item}>

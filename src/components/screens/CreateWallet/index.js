@@ -79,7 +79,6 @@ class CreateWallet extends Component {
 
         this.setState({ showProgress: true });
 
-
         try {
             setTimeout(() => {
                 Wallet.createFromPassword(this.state.password)
