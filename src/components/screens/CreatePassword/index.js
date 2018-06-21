@@ -48,7 +48,6 @@ class CreatePassword extends Component {
     }
 
     onCreatePassword() {
-
         if (this.state.password.length < 8) {
             Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
             return;
@@ -69,7 +68,7 @@ class CreatePassword extends Component {
         const { params } = this.props.navigation.state;
         const { password, confirmPassword } = this.state;
 
-        this.props.navigation.navigate('Terms', { ...params, password })
+        this.props.navigation.navigate('Terms', { ...params, password, isFB:false })
     }
 
     render() {

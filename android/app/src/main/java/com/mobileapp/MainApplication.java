@@ -14,10 +14,20 @@ import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;    //import
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.facebook.appevents.AppEventsLogger;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
+  protected static CallbackManager getCallbackManager() {
+    return mCallbackManager;
+  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -32,7 +42,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new RNUUIDGeneratorPackage(),
           new RCTSplashScreenPackage(),    //register Module
-          new MapsPackage()
+          new MapsPackage(),
+          new FBSDKPackage(mCallbackManager)
       );
     }
 
