@@ -100,8 +100,8 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     iconText: {
-        color: '#000',
-        fontSize: 28
+        width: '55%',
+        height:'55%',
     },
     searchButtonView: {
         width: '100%',

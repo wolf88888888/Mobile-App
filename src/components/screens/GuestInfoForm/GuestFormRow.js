@@ -92,6 +92,7 @@ export default class GuestFormRow extends Component {
                             onChangeText={(text) => this.props.onFirstNameChange(this.props.itemIndex,text)}
                             //onBlur={() => this.textDone()}
                             placeholder="First Name"
+                            underlineColorAndroid="#fff"
                         />
                     </View>
                     <View style={styles.lastNameFlex}>
@@ -99,6 +100,7 @@ export default class GuestFormRow extends Component {
                             style={styles.formField}
                             onChangeText={(text) => this.props.onLastNameChange(this.props.itemIndex,text)}
                             placeholder="Last Name"
+                            underlineColorAndroid="#fff"
                         />
                     </View>
                 </View>

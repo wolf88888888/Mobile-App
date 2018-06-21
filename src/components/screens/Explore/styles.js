@@ -34,14 +34,16 @@ const styles = StyleSheet.create({
      justifyContent: 'center', 
      alignItems: 'center'
     },
-    getStartedButton:
+    getStartedButtonView:
     {
-       // width: '100%',
-       //  backgroundColor: '#DA7B61',
-       //  marginTop: 10,
-       //  marginBottom: 10,
+        width: '50%',
+        backgroundColor: '#DA7B61',
+        marginTop: 10,
+        marginBottom: 10,
+        paddingVertical: 0,
+        alignItems: 'center',
 
-     },
+    },
 
     pickerWrap:{
         width: '32%',
@@ -542,5 +544,34 @@ const styles = StyleSheet.create({
         width: dimensionWindows.width,
         height: dimensionWindows.width * 5 / 8,
     },
+    scrollViewContent : {
+        flexGrow: 1, padding:16, paddingVertical: 10,
+    },
+    scrollViewContentMain:{
+      padding:0,
+      margin:0
+    },
+    scrollViewTitles:{fontWeight: '400',fontFamily: 'FuturaStd-Light',fontSize: 20,color: '#1f2427',top: 2},
+    viewDiscover: {width:'100%', height:120,  flexDirection: 'row'},
+    divider : {
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight:0,
+        marginLeft:0,
+        borderRadius: 1,
+        borderBottomColor: '#d9d9d9',
+        borderBottomWidth: 2,
+        opacity: 0.5
+    },
+
+    imageViewDiscoverLeft: {height: '100%', flex:1, marginRight: 4},
+    imageViewDiscoverRight: {height: '100%', flex:1, marginLeft: 4},
+    viewPopularHotels: {marginTop:10, width:'100%', height:110, flexDirection: 'row'},
+    subViewPopularHotelsLeft: {flex:1, backgroundColor:'white',marginRight: 4},
+    subViewPopularHotelsRight : {flex:1, backgroundColor:'white',marginLeft: 4},
+    imageViewPopularHotels: {height: 120, width:'100%'},
+    bottomView: {flexDirection: 'column', justifyContent: 'space-between',alignItems: 'center'},
+    bottomViewText: {margin:10,height: 50, width:'60%'},
+    bottomViewBanner: {marginTop:10,height: 80, width:'100%',}
 });
 export default styles;
