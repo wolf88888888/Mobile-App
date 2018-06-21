@@ -12,11 +12,11 @@ import {
 } from 'react-native';
 import { domainPrefix } from '../../../config';
 import Image from 'react-native-remote-svg';
-import ImagePicker from 'react-native-image-picker';
-import Requester, { getCurrencyRates, sendMessage, getChatMessages, getMyHeaders } from '../../../utils/requester';
+// import ImagePicker from 'react-native-image-picker';
+// import Requester, { getCurrencyRates, sendMessage, getChatMessages, getMyHeaders } from '../../../utils/requester';
 import styles from './styles';
-import SplashScreen from 'react-native-smart-splash-screen';
 import moment from 'moment';
+import BackButton from '../../atoms/BackButton';
 
 //import Message View for chat
 import MessageView from './MessageView';
@@ -26,7 +26,6 @@ class Chat extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func,
-            
         })
     }
 
@@ -39,11 +38,6 @@ class Chat extends Component {
     componentWillMount(){
         // Remove Splash
         console.disableYellowBox = true;
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 0,
-            delay: 0
-        });
     }
 
     constructor(props) {
@@ -62,24 +56,24 @@ class Chat extends Component {
 
     componentDidMount() {
         // here is the method to load all chats related to this id = 68
-        getChatMessages(68)
-        .then(res => res.response.json())
-        // here you set the response in to json 
-        .then(parsed => {
-            // here you parse your json
-            let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
-            // messageDate to set your date
-            // here you set you data from json into your variables
-            this.setState({
-                messages : parsed.content,
-                name : parsed.content[0].recipient.fullName
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        // getChatMessages(68)
+        // .then(res => res.response.json())
+        // // here you set the response in to json
+        // .then(parsed => {
+        //     // here you parse your json
+        //     let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
+        //     // messageDate to set your date
+        //     // here you set you data from json into your variables
+        //     this.setState({
+        //         messages : parsed.content,
+        //         name : parsed.content[0].recipient.fullName
+        //     });
+        // })
+        // .catch(err => {
+        //     console.log(err);
+        // });
     }
-    
+
 
 
     render() {
@@ -93,6 +87,8 @@ class Chat extends Component {
                 </TouchableOpacity>
                 {/* back button is define here end*/}
                 </View>
+
+                <BackButton onPress={this.onBackPress}/>
 
                 {/* Here is the top section view where all the details are related to the receiver start*/}
                 <View style={styles.requestView}>
@@ -128,7 +124,7 @@ class Chat extends Component {
                                 sender={item.sender.email === AsyncStorage.getItem(`${domainPrefix}.auth.username`)}
                                 message={item}>
                             </MessageView>
-                        
+
                         )
                     }
                 />
@@ -137,7 +133,7 @@ class Chat extends Component {
                 {/* This section contain the bottom area where you can write your message and send image from gallery or camera start */}
                 <View style={styles.footerView}>{/* Footer View for sending message etc */}
                     <TextInput style={styles.footerInputText}
-                        underlineColorAndroid="rgba(0,0,0,0)"  
+                        underlineColorAndroid="rgba(0,0,0,0)"
                         placeholder="Write message"/>
                         {/* camera button is here */}
                     <TouchableOpacity onPress={this.onCameraPress}>
@@ -155,22 +151,22 @@ class Chat extends Component {
 
     // Methods
     onCameraPress = () => {
-        ImagePicker.launchCamera({}, (response) => {
-        // Same code as in above section!
-        });
+        // ImagePicker.launchCamera({}, (response) => {
+        // // Same code as in above section!
+        // });
     }
 
     onGalleryPress = () => {
-        ImagePicker.launchImageLibrary({}, (response) => {
-        // Same code as in above section!
-        });
+        // ImagePicker.launchImageLibrary({}, (response) => {
+        // // Same code as in above section!
+        // });
     }
     onBackPress = () => {
         this.props.navigation.navigate('MESSAGES');
     }
 
     sendMessage = () => {
-        
+
         sendMessage('Abhi',597)
         .then(response => {
             console.log(response)

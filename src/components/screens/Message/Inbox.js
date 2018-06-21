@@ -36,26 +36,30 @@ class Inbox extends Component {
             error: null,
             refreshing: false,
             inboxMessages : [],
-            showProgress: false
-          };
+            showProgress: false,
+            isLoaded: false,
+        };
     }
 
     componentDidMount() {
-        this.setState({ showProgress: true });
-        getMyConversations()
-        .then(res => res.response.json())
-        // here you set the response in to json
-        .then(parsed => {
-            this.setState({ showProgress: false });
-            this.setState({
-                inboxMessages : parsed.content,
+        if (!isLoaded) {
+            this.setState({ showProgress: true });
+            getMyConversations()
+            .then(res => res.response.json())
+            // here you set the response in to json
+            .then(parsed => {
+                this.setState({ showProgress: false });
+                this.setState({
+                    inboxMessages : parsed.content,
+                });
+                isLoaded = true;
+            })
+            .catch(err => {
+                this.setState({ showProgress: false });
+                Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                console.log(err);
             });
-        })
-        .catch(err => {
-            this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-            console.log(err);
-        });
+        }
     }
 
     render() {
