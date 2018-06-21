@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
@@ -68,9 +68,8 @@ class DateAndGuestPicker extends Component {
                     <TouchableOpacity
                         onPress={this.onSettings}>
                         <View style={styles.optionsPickerViewIncomplete}>
-                            <Text style={styles.iconText}>
-                                <FontAwesome>{Icons.cog}</FontAwesome>
-                            </Text>
+                            <Image style={styles.iconText} resizeMode='contain'
+                                source={require('../../../assets/icons/settings.png')}/>
                         </View>
                     </TouchableOpacity>
                 </View>
