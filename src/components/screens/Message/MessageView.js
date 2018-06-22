@@ -17,8 +17,6 @@ const timeAgo = new TimeAgo('en-US');
 
 export default function MessageView(props) {
     const messageCreatedAt = moment(props.message.createdAt, 'DD/MM/YYYY HH:mm:ss');
-    console.log("messageCreatedAt: " + messageCreatedAt);
-    console.log("messageCreatedAt1: " + moment().add('-1', 'days'));
 
     let imageAvatar = 'https://staging.locktrip.com/images/default.png';
     if (props.message.sender.image != '') {

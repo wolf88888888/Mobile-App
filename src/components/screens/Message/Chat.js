@@ -13,7 +13,7 @@ import {
 import { domainPrefix } from '../../../config';
 import Image from 'react-native-remote-svg';
 // import ImagePicker from 'react-native-image-picker';
-import { getMyConversations } from '../../../utils/requester';
+import { getMyConversations, sendMessage } from '../../../utils/requester';
 import styles from './styles';
 import moment from 'moment';
 import BackButton from '../../atoms/BackButton';
@@ -45,32 +45,66 @@ class Chat extends Component {
     constructor(props) {
         super(props);
         console.log(props.navigation.state.params);
+        this.sendMessage = this.sendMessage.bind(this);
+
         this.state = {
             showProgress: false,
             messages : [],
             username : '',
+            text: '',
         };
     }
 
     async componentDidMount() {
+            const {params} = this.props.navigation.state;
+            this.state.username = await AsyncStorage.getItem(`${domainPrefix}.auth.username`)
+            //here is the method to load all chats related to this id = 68
+
+            this.setState({ showProgress: true });
+            getMyConversations("/"+params.id+"?page=0")
+            .then(res => res.response.json())
+            // here you set the response in to json
+            .then(parsed => {
+                // here you parse your json
+                //let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
+                // messageDate to set your date
+                // here you set you data from json into your variables
+                console.log(parsed);
+                this.setState({
+                    showProgress: false,
+                    messages : parsed.content,
+                });
+            })
+            .catch(err => {
+                this.setState({ showProgress: false });
+                Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                console.log(err);
+            });
+    }
+
+    sendMessage() {
         const {params} = this.props.navigation.state;
-        this.state.username = await AsyncStorage.getItem(`${domainPrefix}.auth.username`)
-        //here is the method to load all chats related to this id = 68
+        const {text} = this.state;
+
+        if (text == "") {
+            console.log(this.state.messages);
+            return;
+        }
 
         this.setState({ showProgress: true });
-        getMyConversations("/"+params.id+"?page=0")
-        .then(res => res.response.json())
-        // here you set the response in to json
-        .then(parsed => {
-            // here you parse your json
-            //let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
-            // messageDate to set your date
-            // here you set you data from json into your variables
-            this.setState({ showProgress: false });
-            console.log(parsed);
+
+        let message = {
+          recipient: params.userInfo.id,
+          message: text
+        };
+
+        sendMessage(message, params.id)
+        .then(res => {
+            console.log(res);
             this.setState({
                 showProgress: false,
-                messages : parsed.content,
+                text : '',
+                messages: [res, ...this.state.messages]
             });
         })
         .catch(err => {
@@ -127,7 +161,6 @@ class Chat extends Component {
                         (
                             <MessageView
                                 isCurrentUser = {item.currentUserSender}
-                                sender={item.sender.email === this.state.username}
                                 message={item}>
                             </MessageView>
 
@@ -140,14 +173,13 @@ class Chat extends Component {
                 <View style={styles.footerView}>{/* Footer View for sending message etc */}
                     <TextInput style={styles.footerInputText}
                         underlineColorAndroid="rgba(0,0,0,0)"
+                        onChangeText={(text) => this.setState({text})}
+                        value={this.state.text}
                         placeholder="Write message"/>
                         {/* camera button is here */}
-                    <TouchableOpacity onPress={this.onCameraPress}>
-                        <Image style={styles.btn_cameraImage} source={require('../../../../src/assets/camera.png')} />
-                    </TouchableOpacity>
                     {/* gallery button is here */}
-                    <TouchableOpacity onPress={this.onGalleryPress}>
-                        <Image style={styles.btn_galleryImage} source={require('../../../../src/assets/gallery.png')} />
+                    <TouchableOpacity onPress={this.sendMessage}>
+                        <Text style={styles.sendButton}>Send</Text>
                     </TouchableOpacity>
                 </View>
                 {/* This section contain the bottom area where you can write your message and send image from gallery or camera end */}
@@ -161,31 +193,6 @@ class Chat extends Component {
                    activityIndicatorColor="black"/>
             </KeyboardAvoidingView>// Ending Main View
         );
-    }
-
-    // Methods
-    onCameraPress = () => {
-        // ImagePicker.launchCamera({}, (response) => {
-        // // Same code as in above section!
-        // });
-    }
-
-    onGalleryPress = () => {
-        // ImagePicker.launchImageLibrary({}, (response) => {
-        // // Same code as in above section!
-        // });
-    }
-
-    sendMessage = () => {
-
-        sendMessage('Abhi',597)
-        .then(response => {
-            console.log(response)
-        })
-        .catch(function(error){
-            console.log(error);
-        })
-        console.log('api hit');
     }
 }
 

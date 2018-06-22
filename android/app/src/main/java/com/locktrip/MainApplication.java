@@ -1,4 +1,4 @@
-package com.mobileapp;
+package com.locktrip;
 
 import android.app.Application;
 
