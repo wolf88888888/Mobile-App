@@ -303,11 +303,15 @@ class Property extends Component {
                      + '&endDate=' + this.state.checkOutDateFormated
                      + '&guests=' + this.state.guests
                      + '&priceMin=1&priceMax=5000'
+                     + '&currency=' + this.state.currency
         } else {
             paramUrl = baseHotelUrl
+            this.setState({
+                urlForService : 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData
+            })
             paramUrl += this.state.urlForService
         }
-        paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20') + '&currency=' + this.state.currency
+        paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20')
         this.state.webViewUrl = paramUrl
     }
 
