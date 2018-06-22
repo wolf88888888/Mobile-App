@@ -17,8 +17,9 @@ class Profile extends Component {
         info: {},
         walletAddress: '',
         locBalance:0,
+        preferredCurrency: '',
         currentCurrency:'EUR',
-        currencyLocPrice:0
+        currencyLocPrice:0,
     }
   }
 
@@ -45,8 +46,9 @@ class Profile extends Component {
             this.setState({
                 info: parsedResp,
                 walletAddress : parsedResp.locAddress == null? '': parsedResp.locAddress,
+                preferredCurrency: parsedResp.preferredCurrency == null? parsedResp.currencies[0] : parsedResp.preferredCurrency,
             });
-
+            console.log('userINFO-------', parsedResp);
             console.log(parsedResp.locAddress);
             if (parsedResp.locAddress != null && parsedResp.locAddress != '') {
                 console.log("start ");
@@ -73,7 +75,7 @@ class Profile extends Component {
 
   render() {
       const { navigate } = this.props.navigation;
-      const {currentCurrency, currencyLocPrice, locBalance, walletAddress} = this.state;
+      const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency} = this.state;
 
       console.log("currency: " + currentCurrency);
       console.log("locPrice: " + currencyLocPrice);
@@ -139,7 +141,7 @@ class Profile extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
                         <Text style={styles.navItemText}>Currency</Text>
-                        <Text style={styles.navCurrency}>USD</Text>
+                        <Text style={styles.navCurrency}>{preferredCurrency.code}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
                         <Text style={styles.navItemText}>Switch to Hosting</Text>
