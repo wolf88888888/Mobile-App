@@ -203,7 +203,13 @@ const styles = StyleSheet.create({
         fontSize: 13,
         marginTop: 0,
         color: '#1f2427',
-      }
+    },
+    sendButton: {
+      fontFamily: 'FuturaStd-Medium',
+      fontSize: 15,
+      margin: 10,
+      color: '#000',
+    }
 });
 
 export default styles;

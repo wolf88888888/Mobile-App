@@ -150,6 +150,12 @@ export async function getMyConversations(searchTerm) {
     });
 }
 
+export async function sendMessage(messageObj, id) {
+  return sendRequest(`${host}users/me/conversations/${id}`, RequestMethod.POST, messageObj).then(res => {
+    return res.response.json();
+  });
+}
+
 export async function getUserInfo() {
     return sendRequest(`${host}users/me/info`, RequestMethod.GET).then(res => {
       return res;
