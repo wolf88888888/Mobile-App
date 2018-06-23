@@ -37,7 +37,7 @@ class Favorites extends Component {
                 </View>
                 <View>
                    <FlatList style={styles.flatList}
-                    data="none"
+                    data="no"
                     renderItem={
                         ({item}) =>
                             <View style={styles.Listcontainer} >

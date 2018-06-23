@@ -526,6 +526,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row'
     },
+    SearchAndPickerwarpHome:{
+        display: 'flex',
+        flexDirection: 'row'
+    },
     pickerWrap:{
         width: '32%',
         paddingTop: 40,
@@ -533,6 +537,12 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         justifyContent: 'flex-end',  
         alignItems: 'flex-start'
+    },
+    pickerWrapHomes:{
+        height: 50,
+        backgroundColor: '#fff',
+        width: '100%',
+        alignSelf: 'flex-start',
     },
     picker:{
        width: '100%'
@@ -563,7 +573,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         opacity: 0.5
     },
-
+    touchableOpacityHighlight : {backgroundColor: '#DA7B61'},
     imageViewDiscoverLeft: {height: '100%', flex:1, marginRight: 4},
     imageViewDiscoverRight: {height: '100%', flex:1, marginLeft: 4},
     viewPopularHotels: {marginTop:10, width:'100%', height:110, flexDirection: 'row'},
@@ -572,6 +582,13 @@ const styles = StyleSheet.create({
     imageViewPopularHotels: {height: 120, width:'100%'},
     bottomView: {flexDirection: 'column', justifyContent: 'space-between',alignItems: 'center'},
     bottomViewText: {margin:10,height: 50, width:'60%'},
-    bottomViewBanner: {marginTop:10,height: 80, width:'100%',}
+    bottomViewBanner: {marginTop:10,height: 80, width:'100%',},
+    countriesSpinner: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        paddingLeft: 17,
+        paddingRight: 17
+    },
 });
 export default styles;

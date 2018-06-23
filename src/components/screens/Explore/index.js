@@ -14,39 +14,182 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { domainPrefix } from '../../../config';
 import { getUserInfo, getRegionsBySearchParameter, getCountriesWithListings, getTopHomes, getLocRate, getLocRateInUserSelectedCurrency } from '../../../utils/requester';
 import Icon from 'react-native-fontawesome';
+import Toast from 'react-native-simple-toast';
 
-const shouldBeNative = true; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+
+const shouldBeNative = false; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
 //Bellow are details of hardcoded hotel
 const dummyHotel = {
-    "id": 6527,
-    "externalId": 53209,
-    "name": "Thistle City Barbican",
-    "description": "<p><b>Property Location</b> <br />With a stay at Thistle Barbican Shoreditch in London (London City Centre), you'll be convenient to Barbican Arts Centre and St. Paul's Cathedral.  This spa hotel is close to London Bridge and Tower of London.</p><p><b>Rooms</b> <br />Stay in one of 463 guestrooms featuring flat-screen televisions. Complimentary wireless Internet access keeps you connected, and digital programming is available for your entertainment. Private bathrooms with bathtubs or showers feature complimentary toiletries and hair dryers. Conveniences include phones, as well as desks and coffee/tea makers.</p><p><b>Amenities</b> <br />Relax at the full-service spa, where you can enjoy massages, body treatments, and facials. You're sure to appreciate the recreational amenities, including an indoor pool, a spa tub, and a sauna. This hotel also features complimentary wireless Internet access, concierge services, and wedding services.</p><p><b>Dining</b> <br />Satisfy your appetite at the hotel's restaurant, which serves breakfast and dinner, or stay in and take advantage of 24-hour room service. Relax with a refreshing drink at one of the 2 bars/lounges.</p><p><b>Business, Other Amenities</b> <br />Featured amenities include a business center, express check-out, and complimentary newspapers in the lobby. This hotel has 13 meeting rooms available for events. Self parking (subject to charges) is available onsite.</p> <br/> Pets not allowed  Check-in time starts at 2 PM  Check-out time is noon <br/> Satisfy your appetite at the hotel's restaurant, which serves breakfast and dinner, or stay in and take advantage of 24-hour room service. Relax with a refreshing drink at one of the 2 bars/lounges. <br/> Extra-person charges may apply and vary depending on property policy. <br />Government-issued photo identification and a credit card or cash deposit are required at check-in for incidental charges. <br />Special requests are subject to availability upon check-in and may incur additional charges. Special requests cannot be guaranteed. <br /> <br/> Relax at the full-service spa, where you can enjoy massages, body treatments, and facials. You're sure to appreciate the recreational amenities, including an indoor pool, a spa tub, and a sauna. This hotel also features complimentary wireless Internet access, concierge services, and wedding services. <br /> Stay in one of 463 guestrooms featuring flat-screen televisions. Complimentary wireless Internet access keeps you connected, and digital programming is available for your entertainment. Private bathrooms with bathtubs or showers feature complimentary toiletries and hair dryers. Conveniences include phones, as well as desks and coffee/tea makers.",
-    "price": 124.12,
+    "id": 51432,
+    "externalId": 4722881,
+    "name": "Bon Voyage Hotel Alexander",
+    "description": "on Voyage Hotel Alexander offers its business guests a conference room with maximum capacity of 40 seats arranged as follows:  theater ? 40 seats classroom ? 20 seats ?-shaped ? 15 seats meeting room ? 15 seats   The hall is daylight, with Wi-Fi Internet access and fully technically equipped for seminars, conferences, presentations, trainings and business meetings.   Bon Voyage Hotel Alexander offers coffee breaks, working lunches, business dinners, cocktail parties and corporate receptions, fully tailored to your requirements and budget..",
+    "price": 31.93,
     "photos": [
-      "hotels/images/img-2-2847137318373929-53209.png",
-      "hotels/images/img-2-2847137496912373-53209.png",
-      "hotels/images/img-2-2847137688789566-53209.png",
-      "hotels/images/img-2-2847137853195047-53209.png",
-      "hotels/images/img-2-2847138029413843-53209.png",
-      "hotels/images/img-2-2847138185923117-53209.png",
-      "hotels/images/img-2-2847138338790016-53209.png",
-      "hotels/images/img-2-2847138561951781-53209.png",
-      "hotels/images/img-2-2847138750326642-53209.png"
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_1.jpg",
+      "RXLImages/7/SOF-9Uhotel_Recreational_Facilities_2.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_7.jpg",
+      "RXLImages/7/SOF-9Uhotel_Exterior_1.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_5.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_2.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_6.jpg",
+      "RXLImages/7/SOF-9Uhotel_Recreational_Facilities_3.jpg",
+      "RXLImages/7/SOF-9Uhotel_Lobby_1.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_10.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_4.jpg",
+      "RXLImages/7/SOF-9Uhotel_Exterior_2.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_8.jpg",
+      "RXLImages/7/SOF-9Uhotel_Recreational_Facilities_1.jpg",
+      "RXLImages/7/SOF-9Uhotel_Restaurant_1.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_3.jpg",
+      "RXLImages/7/SOF-9Uhotel_Guest_Room_9.jpg"
     ],
     "stars": 3,
-    "lat": "51.527277",
-    "lon": "-0.095969",
-    "amenities": [],
+    "lat": "42.72611405936",
+    "lon": "23.263673186302",
+    "amenities": [
+      {
+        "text": "Conference Room",
+        "code": "ConferenceRoom",
+        "picture": null,
+        "id": 26
+      },
+      {
+        "text": "Money exchange",
+        "code": "MoneyExchange",
+        "picture": null,
+        "id": 19
+      },
+      {
+        "text": "IndividualAirCondition",
+        "code": "IndividualAirCondition",
+        "picture": null,
+        "id": 75
+      },
+      {
+        "text": "Direct Dial Telephone",
+        "code": "TelephoneInRoom",
+        "picture": null,
+        "id": 3
+      },
+      {
+        "text": "Room service",
+        "code": "RoomService",
+        "picture": "/amenities/images/hotels/room_service.svg",
+        "id": 41
+      },
+      {
+        "text": "Lift",
+        "code": "Lift",
+        "picture": null,
+        "id": 24
+      },
+      {
+        "text": "24hr. CheckIn",
+        "code": "CheckIn24hr",
+        "picture": null,
+        "id": 43
+      },
+      {
+        "text": "24hr. Reception",
+        "code": "Reception24hr",
+        "picture": null,
+        "id": 23
+      },
+      {
+        "text": "Shower",
+        "code": "Shower",
+        "picture": null,
+        "id": 73
+      },
+      {
+        "text": "Reception Area",
+        "code": "ReceptionArea",
+        "picture": null,
+        "id": 22
+      },
+      {
+        "text": "TV in room",
+        "code": "TVInRoom",
+        "picture": null,
+        "id": 17
+      },
+      {
+        "text": "Restaurant Air-Conditioned",
+        "code": "RestaurantAirconditioned",
+        "picture": null,
+        "id": 45
+      },
+      {
+        "text": "Heating",
+        "code": "Heating",
+        "picture": "/amenities/images/hotels/heating.svg",
+        "id": 52
+      },
+      {
+        "text": "Hair dryer",
+        "code": "HairDryer",
+        "picture": "/amenities/images/hotels/hair_dryer.svg",
+        "id": 5
+      },
+      {
+        "text": "WLAN Access Point",
+        "code": "WLANAccessPoint",
+        "picture": null,
+        "id": 72
+      },
+      {
+        "text": "Satellite TV",
+        "code": "SatelliteTV",
+        "picture": null,
+        "id": 34
+      },
+      {
+        "text": "InternetAccess",
+        "code": "InternetAccess",
+        "picture": null,
+        "id": 74
+      },
+      {
+        "text": "Bath Room",
+        "code": "BathRoom",
+        "picture": null,
+        "id": 38
+      },
+      {
+        "text": "Laundry service",
+        "code": "LaundryService",
+        "picture": null,
+        "id": 42
+      },
+      {
+        "text": "Carpeted",
+        "code": "Carpeted",
+        "picture": null,
+        "id": 49
+      },
+      {
+        "text": "Mini-bar",
+        "code": "MiniBarInRoom",
+        "picture": null,
+        "id": 8
+      },
+      {
+        "text": "Car parking",
+        "code": "CarPark",
+        "picture": null,
+        "id": 6
+      }
+    ],
     "rooms": [],
     "additionalInfo": null,
     "city": null,
     "region": null,
     "descriptions": []
-  };;
+  };
 const roomsDummyData = [{ adults: 2, children: [] }]; //Hard coded adults and children
-const urlForService = 'region=52612&currency=GBP&startDate=21/06/2018&endDate=23/06/2018&rooms='+encodeURI(JSON.stringify(roomsDummyData)); //Here we are creating a url with all these hard coded values which will work for 21-23june 2018
+const urlForService = 'region=15664&currency=EUR&startDate=23/06/2018&endDate=24/06/2018&rooms='+encodeURI(JSON.stringify(roomsDummyData)); //Here we are creating a url with all these hard coded values which will work for 21-23june 2018
 
 class Explore extends Component {
     static propTypes = {
@@ -76,11 +219,14 @@ class Explore extends Component {
         this.gotoSearch = this.gotoSearch.bind(this);
         this.renderAutocomplete = this.renderAutocomplete.bind(this);
         this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
+        this.handlePopularCities = this.handlePopularCities.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.state = {
+            searchHotel : true,
             isHotelSelected: true,
             countryId: 0,
+            countryName : '',
             countries: [],
             cities: [],
             search: '',
@@ -107,7 +253,8 @@ class Explore extends Component {
             locRates: [],
             currencyIcon: Icons.euro,
             email: '',
-            token: ''
+            token: '',
+            countriesLoaded : false
         };
         this.getCountryValues();
     }
@@ -168,7 +315,9 @@ class Explore extends Component {
         if (value === '') {
             this.setState({ cities: [] });
         } else {
-            getRegionsBySearchParameter(value).then(res => res.response.json()).then((json) => {
+            getRegionsBySearchParameter(value)
+            .then(res => res.response.json())
+            .then((json) => {
                 if (this.state.search != '') {
                     this.setState({cities : json });
                 }
@@ -180,10 +329,11 @@ class Explore extends Component {
         getCountriesWithListings().then(res => res.response.json()).then((json) => {
             countryArr = []
             json.content.map((item, i) => {
-                countryArr.push({ 'label': item.name, 'value': item.id })
+                countryArr.push({ 'label': item.name, 'value': item })
             })
             this.setState({
-                countries: countryArr
+                countries: countryArr,
+                countriesLoaded: true
             })
         })
     }
@@ -242,35 +392,51 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-
-        if(shouldBeNative){
-            //Native hard coded
-            //Here navigate to hard coded screen
-            this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: dummyHotel, urlForService: urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+        if (shouldBeNative){
+            if(!this.state.searchHotel){
+                this.props.navigation.navigate('PropertyList', {language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice,countryId: this.state.countryId, countryName: this.state.countryName,startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, guests : 2});
+            }
+            else {
+                this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: dummyHotel, urlForService: urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+            }
         }
-        else {
-            //Webview
-            //Here navigate to webview
-            this.props.navigation.navigate('PropertyScreen', {
-                searchedCity: this.state.search,
-                searchedCityId: 72,
-                checkInDate: this.state.checkInDate,
-                checkOutDate: this.state.checkOutDate,
-                guests: this.state.guests,
-                children: this.state.children,
-                countryId: this.state.countryId,
-                regionId: this.state.regionId,
-                isHotelSelected: this.state.isHotelSelected,
-                currency: this.state.language,
-                checkOutDateFormated: this.state.checkOutDateFormated,
-                checkInDateFormated: this.state.checkInDateFormated,
-                roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                locRate : this.state.locPrice,
-                currencyIcon: this.state.currencyIcon,
-                email: this.state.email,
-                token: this.state.token
-            });
+        else{
+            if(!this.state.searchHotel){
+                this.props.navigation.navigate('PropertyList', {language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice,countryId: this.state.countryId, countryName: this.state.countryName,startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, guests : 2});
+            }
+            else {
+                this.props.navigation.navigate('PropertyScreen', {
+                    searchedCity: this.state.search,
+                    searchedCityId: 72,
+                    checkInDate: this.state.checkInDate,
+                    checkOutDate: this.state.checkOutDate,
+                    guests: this.state.guests,
+                    children: this.state.children,
+                    countryId: this.state.countryId,
+                    regionId: this.state.regionId,
+                    isHotelSelected: this.state.isHotelSelected,
+                    currency: this.state.language,
+                    checkOutDateFormated: this.state.checkOutDateFormated,
+                    checkInDateFormated: this.state.checkInDateFormated,
+                    roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+                    locRate : this.state.locPrice,
+                    currencyIcon: this.state.currencyIcon,
+                    email: this.state.email,
+                    token: this.state.token
+                });
+            }
         }
+        // if(shouldBeNative){
+        //     //Native hard coded
+        //     //Here navigate to hard coded screen
+        //     //
+        //     this.props.navigation.navigate('PropertyList',{});
+        // }
+        // else {
+        //     //Webview
+        //     //Here navigate to webview
+        
+        // }
 
     }
 
@@ -301,6 +467,13 @@ class Explore extends Component {
     handleAutocompleteSelect(id, name) {
         this.setState({
             cities: [], search: name, regionId: id
+        });
+    }
+
+    handlePopularCities(id, name){
+        this.setState({
+            cities: [], search: name, regionId: id,
+            searchHotel : true
         });
     }
 
@@ -344,6 +517,71 @@ class Explore extends Component {
         }
     }
 
+    renderHotelTopView(){
+        return(
+            <View style={styles.SearchAndPickerwarp}>
+                        <View style={styles.searchAreaView}>
+                            <SearchBar
+                                autoCorrect={false}
+                                value={this.state.search}
+                                onChangeText={this.onSearchHandler}
+                                placeholder="Discover your next experience"
+                                placeholderTextColor="#bdbdbd"
+                                leftIcon="search"
+                                onLeftPress={this.gotoSearch}
+                            />
+
+                        </View>
+                        <View style={styles.pickerWrap}>
+                            <Picker style={styles.picker}
+                              selectedValue={this.state.language}
+                              onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
+                              <Picker.Item label="EUR" value="EUR" />
+                              <Picker.Item label="USD" value="USD" />
+                              <Picker.Item label="GBP" value="GBP" />
+                            </Picker>
+                        </View>
+                </View>
+        );
+    }
+
+    renderHomeTopView(){
+        return(
+            //Home
+            <View style={styles.SearchAndPickerwarp}>
+                <View style={styles.countriesSpinner}>
+                    <View style={styles.pickerWrapHomes}>
+                        <RNPickerSelect
+                            items={this.state.countries}
+                            placeholder={{
+                                label: 'Choose a location',
+                                value: 0,
+                            }}
+                            onValueChange={(value) => {
+                                this.setState({
+                                    countryId: value.id,
+                                    countryName: value.name
+                                });
+                            }}
+                            value={this.state.countryId}
+                            style={{ ...pickerSelectStyles }}
+                        >
+                    </RNPickerSelect>
+                </View>
+                </View>
+                <View style={styles.pickerWrap}>
+                    <Picker style={styles.picker}
+                        selectedValue={this.state.language}
+                        onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
+                        <Picker.Item label="EUR" value="EUR" />
+                        <Picker.Item label="USD" value="USD" />
+                        <Picker.Item label="GBP" value="GBP" />
+                    </Picker>
+                 </View>
+            </View>
+        );
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, countries
@@ -351,51 +589,8 @@ class Explore extends Component {
         return (
 
             <View style={styles.container}>
-
-                <View style={styles.SearchAndPickerwarp}>
-                        {this.state.isHotelSelected &&
-                            <View style={styles.searchAreaView}>
-                                <SearchBar
-                                    autoCorrect={false}
-                                    value={this.state.search}
-                                    onChangeText={this.onSearchHandler}
-                                    placeholder="Discover your next experience"
-                                    placeholderTextColor="#bdbdbd"
-                                    leftIcon="search"
-                                    onLeftPress={this.gotoSearch}
-                                />
-
-                            </View>
-                        }
-                        {!this.state.isHotelSelected && countries.length > 0 &&
-                            <View style={styles.searchAreaView}>
-                                <RNPickerSelect
-                                    items={countries}
-                                    placeholder={{
-                                        label: 'Choose a location',
-                                        value: 0,
-                                    }}
-                                    onValueChange={(value) => {
-                                        this.setState({
-                                            countryId: value,
-                                        });
-                                    }}
-                                    value={this.state.countryId}
-                                    style={{ ...pickerSelectStyles }}
-                                />
-                            </View>
-                        }
-                        <View style={styles.pickerWrap}>
-
-                                <Picker style={styles.picker}
-                                  selectedValue={this.state.language}
-                                  onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
-                                  <Picker.Item label="EUR" value="EUR" />
-                                  <Picker.Item label="USD" value="USD" />
-                                  <Picker.Item label="GBP" value="GBP" />
-                                </Picker>
-                        </View>
-                </View>
+                {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
+                
                 <ScrollView>
                     <View style={styles.scrollViewContentMain}>
                         {this.renderAutocomplete()}  
@@ -419,11 +614,15 @@ class Explore extends Component {
                         <Text style={styles.scrollViewTitles}>Discover</Text>
                         
                         <View style={styles.viewDiscover}>
-                            <Image style={styles.imageViewDiscoverLeft} resizeMode='contain'
-                                source={require('../../../assets/home_images/hotels.png')}/>
-                        
-                            <Image style={styles.imageViewDiscoverRight} resizeMode='contain'
-                                source={require('../../../assets/home_images/homes.png')}/>
+                            <TouchableOpacity onPress={() => this.setState({searchHotel:true})} style={this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight]:styles.imageViewDiscoverLeft}>
+                                <Image style={{height: '100%', width:'100%'}} resizeMode='contain'
+                                    source={require('../../../assets/home_images/hotels.png')}/>
+                            </TouchableOpacity>
+                            {/* onPress={() => this.handleAutocompleteSelect(123,"y")} */}
+                            <TouchableOpacity onPress={() => this.setState({searchHotel:false,cities: [], search: "", regionId: 0})} style={!this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight]:styles.imageViewDiscoverLeft}>
+                                <Image style={{height: '100%', width:'100%'}} resizeMode='contain'
+                                    source={require('../../../assets/home_images/homes.png')}/>
+                            </TouchableOpacity>
                         </View>
                
                         <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
@@ -432,28 +631,28 @@ class Explore extends Component {
                
                         <View style={styles.viewPopularHotels}>
                    
-                            <View style={styles.subViewPopularHotelsLeft}>
+                            <TouchableOpacity onPress={() => this.handlePopularCities(52612,"London , United Kingdom")} style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/london.png')}/>
-                            </View>
+                            </TouchableOpacity>
                    
-                            <View style={styles.subViewPopularHotelsRight}>
+                            <TouchableOpacity onPress={() => this.handlePopularCities(18417,"Madrid , Spain")} style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/Madrid.png')}/>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                
                         <View style={styles.viewPopularHotels}>
                             
-                            <View style={styles.subViewPopularHotelsLeft}>
+                            <TouchableOpacity onPress={() => this.handlePopularCities(16471,"Paris , France")} style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/paris.png')}/>
-                            </View>
+                            </TouchableOpacity>
                             
-                            <View style={styles.subViewPopularHotelsRight}>
+                            <TouchableOpacity onPress={() => this.handlePopularCities(15375,"Sydney , Australia")} style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/Sydney.png')}/>
-                            </View>
+                            </TouchableOpacity>
                         </View>
 
                         <TouchableOpacity>

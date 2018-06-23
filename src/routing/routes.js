@@ -57,6 +57,8 @@ import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 
+import PropertyList from '../components/screens/PropertyList';
+
 export const LoginNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
@@ -97,6 +99,7 @@ export const FullNavigator = StackNavigator(
         RoomDetailsReview: { screen: RoomDetailsReview},
         GuestInfoForm: { screen: GuestInfoForm},
         PropertyScreen: {screen: PropertyScreen},
+        PropertyList : {screen: PropertyList},
         HotelDetails:{ screen: HotelDetails},
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },

@@ -185,3 +185,8 @@ export async function getCurrentlyLoggedUserJsonFile() {
         return res;
     });
 }
+export async function getListingsByFilter(searchTerms) {
+    return sendRequest(`${host}api/filter_listings?${searchTerms}`, RequestMethod.GET).then(res => {
+      return res;
+    });
+  }
