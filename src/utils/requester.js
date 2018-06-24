@@ -163,8 +163,11 @@ export async function testBook(bookingObj) {
 }
 
 export async function getHotelById(id, search) {
+    //console.log(`${host}api/hotels/${id}?${search}`)
     //return sendRequest(`https://staging.locktrip.com/api/api/hotels/32392?region=15664&currency=USD&startDate=25/05/2018&endDate=26/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D`, RequestMethod.GET).then(res => res);
-    return sendRequest(`${host}api/hotels/${id}${search}`, RequestMethod.GET).then(res => res);
+    return sendRequest(`${host}api/hotels/${id}?${search}`, RequestMethod.GET).then(res => {
+        return res;
+    });
 }
 
 export async function getHotelRooms(id, search) {

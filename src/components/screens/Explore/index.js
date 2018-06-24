@@ -16,181 +16,7 @@ import { getUserInfo, getRegionsBySearchParameter, getCountriesWithListings, get
 import Icon from 'react-native-fontawesome';
 import Toast from 'react-native-simple-toast';
 
-
-const shouldBeNative = false; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
-
-//Bellow are details of hardcoded hotel
-const dummyHotel = {
-    "id": 51432,
-    "externalId": 4722881,
-    "name": "Bon Voyage Hotel Alexander",
-    "description": "on Voyage Hotel Alexander offers its business guests a conference room with maximum capacity of 40 seats arranged as follows:  theater ? 40 seats classroom ? 20 seats ?-shaped ? 15 seats meeting room ? 15 seats   The hall is daylight, with Wi-Fi Internet access and fully technically equipped for seminars, conferences, presentations, trainings and business meetings.   Bon Voyage Hotel Alexander offers coffee breaks, working lunches, business dinners, cocktail parties and corporate receptions, fully tailored to your requirements and budget..",
-    "price": 31.93,
-    "photos": [
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_1.jpg",
-      "RXLImages/7/SOF-9Uhotel_Recreational_Facilities_2.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_7.jpg",
-      "RXLImages/7/SOF-9Uhotel_Exterior_1.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_5.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_2.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_6.jpg",
-      "RXLImages/7/SOF-9Uhotel_Recreational_Facilities_3.jpg",
-      "RXLImages/7/SOF-9Uhotel_Lobby_1.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_10.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_4.jpg",
-      "RXLImages/7/SOF-9Uhotel_Exterior_2.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_8.jpg",
-      "RXLImages/7/SOF-9Uhotel_Recreational_Facilities_1.jpg",
-      "RXLImages/7/SOF-9Uhotel_Restaurant_1.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_3.jpg",
-      "RXLImages/7/SOF-9Uhotel_Guest_Room_9.jpg"
-    ],
-    "stars": 3,
-    "lat": "42.72611405936",
-    "lon": "23.263673186302",
-    "amenities": [
-      {
-        "text": "Conference Room",
-        "code": "ConferenceRoom",
-        "picture": null,
-        "id": 26
-      },
-      {
-        "text": "Money exchange",
-        "code": "MoneyExchange",
-        "picture": null,
-        "id": 19
-      },
-      {
-        "text": "IndividualAirCondition",
-        "code": "IndividualAirCondition",
-        "picture": null,
-        "id": 75
-      },
-      {
-        "text": "Direct Dial Telephone",
-        "code": "TelephoneInRoom",
-        "picture": null,
-        "id": 3
-      },
-      {
-        "text": "Room service",
-        "code": "RoomService",
-        "picture": "/amenities/images/hotels/room_service.svg",
-        "id": 41
-      },
-      {
-        "text": "Lift",
-        "code": "Lift",
-        "picture": null,
-        "id": 24
-      },
-      {
-        "text": "24hr. CheckIn",
-        "code": "CheckIn24hr",
-        "picture": null,
-        "id": 43
-      },
-      {
-        "text": "24hr. Reception",
-        "code": "Reception24hr",
-        "picture": null,
-        "id": 23
-      },
-      {
-        "text": "Shower",
-        "code": "Shower",
-        "picture": null,
-        "id": 73
-      },
-      {
-        "text": "Reception Area",
-        "code": "ReceptionArea",
-        "picture": null,
-        "id": 22
-      },
-      {
-        "text": "TV in room",
-        "code": "TVInRoom",
-        "picture": null,
-        "id": 17
-      },
-      {
-        "text": "Restaurant Air-Conditioned",
-        "code": "RestaurantAirconditioned",
-        "picture": null,
-        "id": 45
-      },
-      {
-        "text": "Heating",
-        "code": "Heating",
-        "picture": "/amenities/images/hotels/heating.svg",
-        "id": 52
-      },
-      {
-        "text": "Hair dryer",
-        "code": "HairDryer",
-        "picture": "/amenities/images/hotels/hair_dryer.svg",
-        "id": 5
-      },
-      {
-        "text": "WLAN Access Point",
-        "code": "WLANAccessPoint",
-        "picture": null,
-        "id": 72
-      },
-      {
-        "text": "Satellite TV",
-        "code": "SatelliteTV",
-        "picture": null,
-        "id": 34
-      },
-      {
-        "text": "InternetAccess",
-        "code": "InternetAccess",
-        "picture": null,
-        "id": 74
-      },
-      {
-        "text": "Bath Room",
-        "code": "BathRoom",
-        "picture": null,
-        "id": 38
-      },
-      {
-        "text": "Laundry service",
-        "code": "LaundryService",
-        "picture": null,
-        "id": 42
-      },
-      {
-        "text": "Carpeted",
-        "code": "Carpeted",
-        "picture": null,
-        "id": 49
-      },
-      {
-        "text": "Mini-bar",
-        "code": "MiniBarInRoom",
-        "picture": null,
-        "id": 8
-      },
-      {
-        "text": "Car parking",
-        "code": "CarPark",
-        "picture": null,
-        "id": 6
-      }
-    ],
-    "rooms": [],
-    "additionalInfo": null,
-    "city": null,
-    "region": null,
-    "descriptions": []
-  };
-const roomsDummyData = [{ adults: 2, children: [] }]; //Hard coded adults and children
-const urlForService = 'region=15664&currency=EUR&startDate=23/06/2018&endDate=24/06/2018&rooms='+encodeURI(JSON.stringify(roomsDummyData)); //Here we are creating a url with all these hard coded values which will work for 21-23june 2018
-
+const shouldBeNative = true; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 class Explore extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
@@ -394,10 +220,11 @@ class Explore extends Component {
     gotoSearch() {
         if (shouldBeNative){
             if(!this.state.searchHotel){
+                //user searched for home
                 this.props.navigation.navigate('PropertyList', {language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice,countryId: this.state.countryId, countryName: this.state.countryName,startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, guests : 2});
             }
             else {
-                this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: dummyHotel, urlForService: urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+                this.props.navigation.navigate('Debug', {regionId: this.state.regionId, language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice, startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated});
             }
         }
         else{
@@ -426,18 +253,6 @@ class Explore extends Component {
                 });
             }
         }
-        // if(shouldBeNative){
-        //     //Native hard coded
-        //     //Here navigate to hard coded screen
-        //     //
-        //     this.props.navigation.navigate('PropertyList',{});
-        // }
-        // else {
-        //     //Webview
-        //     //Here navigate to webview
-        
-        // }
-
     }
 
     spinnerValueChange(value){
