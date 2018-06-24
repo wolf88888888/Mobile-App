@@ -16,7 +16,7 @@ import { getUserInfo, getRegionsBySearchParameter, getCountriesWithListings, get
 import Icon from 'react-native-fontawesome';
 import Toast from 'react-native-simple-toast';
 
-const shouldBeNative = true; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = flag; //This line controls which screen should be show when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 class Explore extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
