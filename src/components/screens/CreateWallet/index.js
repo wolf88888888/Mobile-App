@@ -6,7 +6,8 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
+    Platform
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -20,6 +21,7 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Wallet } from '../../../services/blockchain/wallet';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import Toast from 'react-native-simple-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class CreateWallet extends Component {
     static propTypes = {
@@ -109,10 +111,10 @@ class CreateWallet extends Component {
         const { navigate, goBack } = this.props.navigation;
 
         return (
-            <TouchableWithoutFeedback
-                onPress={Keyboard.dismiss}
-                accessible={true}
-            >
+            <KeyboardAwareScrollView
+                style={styles.container}
+                enableOnAndroid={true}
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
                 <View style={styles.container}>
                     <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
@@ -178,7 +180,7 @@ class CreateWallet extends Component {
                        activityIndicatorSize="large"
                        activityIndicatorColor="black"/>
                 </View>
-            </TouchableWithoutFeedback>
+            </KeyboardAwareScrollView>
         );
     }
 }
