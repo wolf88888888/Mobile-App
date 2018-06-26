@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
     content: {
         width: '80%',
-        height: 250,
+        height: 300,
         backgroundColor: 'white',
         flexDirection: 'column',
         justifyContent: 'space-around',

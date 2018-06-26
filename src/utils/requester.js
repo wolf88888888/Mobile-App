@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native';
+import { create } from 'apisauce'
 import { apiHost, domainPrefix } from '../config';
 
 const host = apiHost;
@@ -128,6 +129,10 @@ export function getTopHomes() {
     return sendRequest(`${host}listings/top`, RequestMethod.GET).then(res => res.response.json());
 }
 
+export function upperFirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export async function getPropertyById(id) {
     return sendRequest(`${host}listings/${id}`, RequestMethod.GET).then(res => res.response.json());
 }
@@ -141,6 +146,18 @@ export async function getRegionsBySearchParameter(param) {
 export async function getCountriesWithListings() {
     return sendRequest(`${host}countries?hasListings=true&size=10000&sort=name,asc`).then(res => {
         return res;
+    });
+}
+
+export async function getCities(countryId, hasListings = false) {
+    let url = `${host}countries/${countryId}/cities?`;
+    if (hasListings) {
+        url += 'hasListings=true&';
+    }
+    url += 'size=10000&sort=name,asc';
+
+    return sendRequest(url, RequestMethod.GET).then(res => {
+        return res.response.json();
     });
 }
 
@@ -160,7 +177,42 @@ export async function getUserInfo() {
     return sendRequest(`${host}users/me/info`, RequestMethod.GET).then(res => {
       return res;
     });
-  }
+}
+
+export async function updateUserInfo(userObj, captchaToken) {
+    return sendRequest(`${host}users/me`, RequestMethod.POST, userObj, captchaToken).then(res => {
+        return {
+            success: res.success
+        };
+    });
+}
+
+export async function uploadPhoto(uri) {
+    const api = create({
+        baseURL: 'https://alpha.locktrip.com/api/',
+    })
+    const data = new FormData();    
+    data.append('image', {
+        uri: uri,
+        type: 'image/jpeg',
+        name: 'image.jpg'
+    });
+    let authToken = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`)
+    api.setHeaders({
+        'Authorization': authToken,
+        'Accept': 'application/json',
+        'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b',
+    });
+    return api.post('/users/me/images/upload', data, {
+        onUploadProgress: (e) => {
+          console.log('progressE-----', e)
+          const progress = e.loaded / e.total;
+          console.log('progress---',progress);
+        }
+    }).then((res) => {
+        return res;
+    })
+}
 
 export async function testBook(bookingObj) {
     return sendRequest(`${host}api/hotels/booking`, RequestMethod.POST, bookingObj).then(res => {

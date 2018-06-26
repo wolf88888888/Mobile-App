@@ -80,7 +80,7 @@ class Explore extends Component {
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.state = {
             isHotelSelected: true,
-            countryId: 0,
+            countryId: null,
             countries: [],
             cities: [],
             search: '',
@@ -373,7 +373,7 @@ class Explore extends Component {
                                     items={countries}
                                     placeholder={{
                                         label: 'Choose a location',
-                                        value: 0,
+                                        value: null,
                                     }}
                                     onValueChange={(value) => {
                                         this.setState({

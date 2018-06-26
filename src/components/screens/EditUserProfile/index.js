@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { AsyncStorage, Clipboard, ScrollView, StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { AsyncStorage, Clipboard, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
 import Image from 'react-native-remote-svg';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import ImagePicker from 'react-native-image-picker'
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import moment from 'moment';
+import moment, { lang } from 'moment';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import BackButton from '../../atoms/BackButton';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import UserProfileSummary from '../../organisms/UserProfileSummary'
 import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import UserProfileReviews from '../../organisms/UserProfileReviews'
@@ -18,10 +20,13 @@ import EditAboutModal from '../../atoms/EditAboutModal';
 import EditPhoneModal from '../../atoms/EditPhoneModal';
 import EditGovernmentModal from '../../atoms/EditGovenmentModal';
 import EditLocationModal from '../../atoms/EditLocationModal';
+import EditSchoolModal from '../../atoms/EditSchoolModal';
+import EditWorkModal from '../../atoms/EditWorkModal';
+import EditLanguageModal from '../../atoms/EditLanguageModal';
 import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo'
 import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction'
 import Footer from '../../atoms/Footer';
-import { getUserInfo } from '../../../utils/requester';
+import { getUserInfo, upperFirst, updateUserInfo, uploadPhoto } from '../../../utils/requester';
 import { imgHost } from '../../../config.js'
 import styles from './styles';
 
@@ -42,24 +47,33 @@ class EditUserProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            avatarSource: null,
             birthday:'',
+            month: '',
+            day: '',
+            year: '',
             city:{},
             country:{},
             email:'',
             firstName:'',
             lastName:'',
             about: '',
-            gender:'Male',
+            gender:'',
             governmentId: '',
-            countryId: null,
+            countryId: 1,
+            school: '',
+            work: '',
             image:'',
             locAddress:'',
             phoneNumber:'',
-            preferredCurrency:{},
+            preferredCurrency:'',
             preferredLanguage:'',
             modalVisible: false,
             isDateTimePickerVisible: false,
+            jsonFile: '',
+            showProgress: false,
         }
+        this.onPhoto = this.onPhoto.bind(this);
         this.onEditName = this.onEditName.bind(this);
         this.onAbout = this.onAbout.bind(this);
         this.onGender = this.onGender.bind(this);
@@ -77,31 +91,62 @@ class EditUserProfile extends Component {
         this.onSavePhone = this.onSavePhone.bind(this);
         this.onSaveGovernmentId = this.onSaveGovernmentId.bind(this);
         this.onSaveLocation = this.onSaveLocation.bind(this);
+        this.onSaveSchool = this.onSaveSchool.bind(this);
+        this.onSaveWork = this.onSaveWork.bind(this);
+        this.onSaveLanguage = this.onSaveLanguage.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.showModal = this.showModal.bind(this);
         this.showDateTimePicker = this.showDateTimePicker.bind(this);
         this.hideDateTimePicker = this.hideDateTimePicker.bind(this);
         this.handleDatePicked = this.handleDatePicked.bind(this);
+        this.updateProfile = this.updateProfile.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        let about = await AsyncStorage.getItem('aboutme');
+        let governmentId = await AsyncStorage.getItem('governmentId');
+        let school = await AsyncStorage.getItem('school');
+        let work = await AsyncStorage.getItem('work');
+        
+        this.setState({
+            about: about,
+            governmentId: governmentId,
+            school: school,
+            work: work,
+        })
+
         getUserInfo()
         .then(res => res.response.json())
         .then(parsedResp => {
+
+            let day = '00';
+            let month = '00';
+            let year = '0000';
+
+            if (parsedResp.birthday !== null) {
+                let birthday = moment.utc(parsedResp.birthday);
+                day = birthday.format('DD');
+                month = birthday.format('MM');
+                year = birthday.format('YYYY');
+            }
+
             this.setState({
-                birthday : parsedResp.birthday == null? '': parsedResp.birthday,
                 city : parsedResp.city == null? '': parsedResp.city,
                 countries: parsedResp.countries == null? []: parsedResp.countries,
                 country : parsedResp.country == null? parsedResp.countries[0]: parsedResp.country,
                 email : parsedResp.email == null? '': parsedResp.email,
                 firstName : parsedResp.firstName == null? '': parsedResp.firstName,
                 lastName : parsedResp.lastName == null? '': parsedResp.lastName,
-                gender : parsedResp.gender == null? 'Male': parsedResp.gender,
+                gender : parsedResp.gender == null? 'men': parsedResp.gender,
                 image : parsedResp.image == null? '': parsedResp.image,
                 locAddress : parsedResp.locAddress == null? '': parsedResp.locAddress,
                 phoneNumber : parsedResp.phoneNumber == null? '': parsedResp.phoneNumber,
-                preferredCurrency: parsedResp.preferredCurrency == null? parsedResp.currencies[0] : parsedResp.preferredCurrency,
+                preferredCurrency: parsedResp.preferredCurrency == null? parsedResp.currencies[0].id : parsedResp.preferredCurrency.id,
                 preferredLanguage: parsedResp.preferredLanguage == null? 'English': parsedResp.preferredLanguage,
+                jsonFile: parsedResp.jsonFile == null? '': parsedResp.jsonFile,
+                day: day,
+                month: month,
+                year: year,
             });
         })
         .catch(err => {
@@ -111,6 +156,53 @@ class EditUserProfile extends Component {
 
     showModal() {
         return this.state.modalView
+    }
+
+    dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {type:mime});
+    }
+
+    onPhoto() {
+        let options = {
+            title: 'Select profile image',
+            storageOptions: {
+              skipBackup: true,
+              path: '/'
+            }
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+              console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                this.setState({
+                    showProgress: true,
+                })
+
+                uploadPhoto(response.uri).then(res => {
+                    if (res.ok){
+                        console.log('upload result', res.data.thumbnail)
+                        this.setState({
+                            image: res.data.thumbnail
+                        })
+                    }
+                    this.setState({
+                        showProgress: false,
+                    })
+                })
+            }
+          });
     }
 
     onEditName() {
@@ -144,14 +236,13 @@ class EditUserProfile extends Component {
             modalView: <EditGenderModal 
                             onSave={(isFemale) => this.onSaveGender(isFemale)} 
                             onCancel={() => this.onCancel()} 
-                            isFemale={this.state.gender=='Female'? true: false}
+                            isFemale={this.state.gender=='women'? true: false}
                         />
         });
         this.showModal();
     }
 
     onBirthDate() {
-        console.log('datepicker');
         this.showDateTimePicker();
     }
 
@@ -184,38 +275,53 @@ class EditUserProfile extends Component {
     }
 
     onLocation() {
-        console.log('onLocation....', this.state.countries);
         this.setState({
             modalVisible: true,
             modalView: <EditLocationModal
-                            onSave={(countryId) => this.onSaveLocation(countryId)} 
+                            onSave={(country, city) => this.onSaveLocation(country, city)} 
                             onCancel={() => this.onCancel()} 
                             countries={this.state.countries}
-                            countryId={0}
+                            country={this.state.country}
+                            city={this.state.city}
                         />
         });
         this.showModal();
     }
 
     onSchool() {
-        this.props.navigation.navigate(
-            'UpdateProfileInfo',
-            { title:"School" },
-        );
+        this.setState({
+            modalVisible: true,
+            modalView: <EditSchoolModal
+                            onSave={(school) => this.onSaveSchool(school)} 
+                            onCancel={() => this.onCancel()} 
+                            school={this.state.school}
+                        />
+        });
+        this.showModal();
     }
 
     onWork() {
-        this.props.navigation.navigate(
-            'UpdateProfileInfo',
-            { title:"Work" },
-        );
+        this.setState({
+            modalVisible: true,
+            modalView: <EditWorkModal
+                            onSave={(work) => this.onSaveWork(work)} 
+                            onCancel={() => this.onCancel()} 
+                            work={this.state.work}
+                        />
+        });
+        this.showModal();
     }
 
     onLanguage() {
-        this.props.navigation.navigate(
-            'UpdateProfileInfo',
-            { title:"Language" },
-        );
+        this.setState({
+            modalVisible: true,
+            modalView: <EditLanguageModal
+                            onSave={(language) => this.onSaveLanguage(language)} 
+                            onCancel={() => this.onCancel()} 
+                            languageValue={this.state.preferredLanguage}
+                        />
+        });
+        this.showModal();
     }
 
     onSaveName(firstName, lastName) {
@@ -231,8 +337,6 @@ class EditUserProfile extends Component {
     onSaveAbout(about) {
         this.setState({
             modalVisible: false,
-        });
-        this.setState({
             about: about,
         });
     }
@@ -241,7 +345,7 @@ class EditUserProfile extends Component {
         this.setState({
             modalVisible: false,
         });
-        gender = isFemale? 'Female': 'Male';
+        gender = isFemale? 'women': 'men';
         this.setState({
             gender: gender,
         });
@@ -263,15 +367,37 @@ class EditUserProfile extends Component {
         });
     }
 
-    onSaveLocation(countryId) {
+    onSaveLocation(country, city) {
         index = _.findIndex(this.state.countries, function(o){
-            return o.id == countryId;
+            return o.id == country.id;
         })
+        country.name = this.state.countries[index].name
         this.setState({
             modalVisible: false,
-            countryId: countryId,
-            location: this.state.countries[index].name,
+            country: country,
+            city: city,
         })
+    }
+
+    onSaveSchool(school){
+        this.setState({
+            modalVisible: false,
+            school: school,
+        });
+    }
+
+    onSaveWork(work){
+        this.setState({
+            modalVisible: false,
+            work: work,
+        });
+    }
+
+    onSaveLanguage(language){
+        this.setState({
+            modalVisible: false,
+            preferredLanguage: language,
+        });
     }
 
     onCancel() {
@@ -289,10 +415,55 @@ class EditUserProfile extends Component {
     }
 
     handleDatePicked(date) {
-        formatted = moment(date).format('D MMMM YYYY');
-        console.log('A date has been picked: ', date);
-        this.setState({ birthday: formatted});
+        date = moment(date);
+        this.setState({
+            month: date.format('MM'),
+            day: date.format('DD'),
+            year: date.format('YYYY'),
+        })
         this.hideDateTimePicker();
+    }
+
+    updateProfile() {
+        this.setState({
+            showProgress: true
+        });
+
+        AsyncStorage.setItem('aboutme', this.state.about);
+        AsyncStorage.setItem('governmentId', this.state.governmentId);
+        AsyncStorage.setItem('school', this.state.school);
+        AsyncStorage.setItem('work', this.state.work);
+
+
+        let userInfo = {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            phoneNumber: this.state.phoneNumber,
+            preferredLanguage: this.state.preferredLanguage,
+            preferredCurrency: parseInt(this.state.preferredCurrency, 10),
+            gender: this.state.gender,
+            country: parseInt(this.state.country.id, 10),
+            city: parseInt(this.state.city.id, 10),
+            birthday: `${this.state.day}/${this.state.month}/${this.state.year}`,
+            locAddress: this.state.locAddress,
+            jsonFile: this.state.jsonFile
+        };
+
+        Object.keys(userInfo).forEach((key) => (userInfo[key] === null || userInfo[key] === '') && delete userInfo[key]);
+
+        updateUserInfo(userInfo, null).then((res) => {
+            if (res.success) {
+                this.setState({
+                    showProgress: false
+                });
+            }
+            else {
+                this.setState({
+                    showProgress: false
+                });
+            }
+        });
+
     }
 
     render() {
@@ -323,7 +494,7 @@ class EditUserProfile extends Component {
                         <BackButton style={styles.closeButton} onPress={() => goBack()}/>
                         <Text style={styles.title}>Edit Profile</Text>
                     </View>
-                    <TouchableOpacity style={styles.cameraContainer} >
+                    <TouchableOpacity style={styles.cameraContainer} onPress={this.onPhoto}>
                         <Image style={styles.cameraButton} source={require('../../../assets/png/camera.png')}/>
                     </TouchableOpacity>
                 </View>
@@ -362,13 +533,13 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title = "Gender"
-                            info = {this.state.gender}
+                            info = { upperFirst(this.state.gender) }
                             onPress={this.onGender}/>
                         <View style={styles.lineStyle} />
 
                         <UserPropertyItemTypeInfo
                             title = "Birth date"
-                            info = {this.state.birthday}
+                            info = { this.state.month + '/' + this.state.day + '/' + this.state.year }
                             onPress={this.onBirthDate}/>
                         <View style={styles.lineStyle} />
 
@@ -396,27 +567,30 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title = "Location"
-                            info = {this.state.location}
+                            info = {this.state.country.name + ', ' + this.state.city.name}
                             onPress={this.onLocation}/>
                         <View style={styles.lineStyle} />
 
-                        <UserPropertyItemTypeAction
+                        <UserPropertyItemTypeInfo
                             title="School"
+                            info = {this.state.school}
                             onPress={this.onSchool}/>
                         <View style={styles.lineStyle} />
 
-                        <UserPropertyItemTypeAction
+                        <UserPropertyItemTypeInfo
                             title="Work"
+                            info = {this.state.work}
                             onPress={this.onWork}/>
                         <View style={styles.lineStyle} />
 
-                        <UserPropertyItemTypeAction
+                        <UserPropertyItemTypeInfo
                             style={{marginBottom:15}}
+                            info = {this.state.preferredLanguage}
                             title="Languages"
                             onPress={this.onLanguage}/>
                     </View>
                 </ScrollView>
-                    <Footer style={styles.footer} button={'Save'} fullButton={true} onClick={()=>{}}/>
+                    <Footer style={styles.footer} button={'Save'} fullButton={true} onClick={this.updateProfile}/>
                     <Modal
                         animationType="fade"
                         transparent={true}
@@ -427,11 +601,20 @@ class EditUserProfile extends Component {
                     </Modal>
                     <DateTimePicker
                         datePickerModeAndroid={'default'}
-                        date={this.state.birthday==''? new Date(): moment(this.state.birthday).toDate()}
+                        date={this.state.year=='0000'? new Date(): moment(this.state.month + '/' + this.state.day + '/' + this.state.year, 'MM/DD/YYYY').toDate()}
                         isVisible={this.state.isDateTimePickerVisible}
                         onConfirm={this.handleDatePicked}
                         onCancel={this.hideDateTimePicker}
                     />
+                    
+                    <ProgressDialog
+                        visible={this.state.showProgress}
+                        title=""
+                        message="Saving Profile info..."
+                        animationType="fade"
+                        activityIndicatorSize="large"
+                        activityIndicatorColor="black"/>
+                
             </View>
         );
     }

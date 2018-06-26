@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { TextInput, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
+import _ from 'lodash';
+import { getCities } from '../../../utils/requester';
 import RNPickerSelect from 'react-native-picker-select';
 import PropTypes from 'prop-types';
 import styles from './styles';
@@ -10,6 +12,8 @@ class EditLocationModal extends Component {
         onCancel: PropTypes.func,
         countries: PropTypes.array,
         countryId: PropTypes.number,
+        cities: PropTypes.array,
+        cityId: PropTypes.number,
     }
 
     static defaultProps = {
@@ -21,8 +25,13 @@ class EditLocationModal extends Component {
         super(props);
         this.state = {
             countries: [],
-            selectedCountryId: 0,
+            cities: [],
+            selectedCountryId: null,
+            selectedCountryName: '',
+            selectedCityId: null,
+            selectedCityName: '',
         };
+        this.getCities = this.getCities.bind(this);
     }
 
     componentWillMount() {
@@ -32,8 +41,28 @@ class EditLocationModal extends Component {
         });
         this.setState({
             countries: countryArr,
-            selectedCountryId: this.props.countryId
-        })
+            selectedCityId: this.props.city.id,
+            selectedCountryId: this.props.country.id,
+            selectedCountryName: this.props.country.name,
+        });
+
+        this.getCities(this.props.country.id);
+    }
+
+    getCities(countryId) {
+        cityArr = [];
+        getCities(countryId, false).then(res => {
+            if(res.content.length > 0) {
+                res.content.map((item, i)=>{
+                    cityArr.push({'label': item.name, 'value': item.id})
+                })
+                this.setState({
+                    cities: cityArr,
+                    selectedCityId: this.state.selectedCityId==null? cityArr[0].value: this.state.selectedCityId,
+                })
+                
+            }
+        });
     }
 
     render() {
@@ -41,24 +70,55 @@ class EditLocationModal extends Component {
             <View style={styles.container}>
                 <View style={styles.content}>
                     <Text style={styles.title}>Edit Location</Text>
-                    <RNPickerSelect
-                        items={this.state.countries}
-                        placeholder={{
-                            label: 'Choose a location',
-                            value: this.state.selectedCountryId,
-                        }}
-                        onValueChange={(value) => {
-                            this.setState({
-                                selectedCountryId: value,
-                            });
-                        }}
-                        value={this.state.selectedCountryId}
-                        style={{ ...pickerSelectStyles }}
-                    />
+                    {/* <View style={{flex: 1}}> */}
+                        <RNPickerSelect
+                            items={this.state.countries}
+                            placeholder={{
+                                label: 'Choose your location',
+                                value: null,
+                            }}
+                            onValueChange={(value) => {
+                                this.setState({
+                                    selectedCountryId: value,
+                                    selectedCityId: null,
+                                });
+                                this.getCities(value);
+                            }}
+                            value={this.state.selectedCountryId}
+                        />
+                        {this.state.selectedCityId!==null && this.state.cities.length>0 &&
+                            <RNPickerSelect
+                                items={this.state.cities}
+                                placeholder={{
+                                    label: 'Choose your city',
+                                    value: this.state.selectedCityId,
+                                }}
+                                onValueChange={(value) => {
+                                    this.setState({
+                                        selectedCityName: this.state.cities[index].label,
+                                        selectedCityId: value,
+                                    });
+                                }}
+                                value={this.state.selectedCityId}
+                            />
+                        }
+                    {/* </View> */}
                     <View style={styles.footer}>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.onSave(this.state.selectedCountryId==null? 0: this.state.selectedCountryId);
+                                cId = this.state.selectedCityId
+                                index = _.findIndex(this.state.cities, function(o){
+                                    return o.value == cId;
+                                })
+                                city = {
+                                    id: this.state.selectedCityId,
+                                    name: this.state.cities[index].label==null? this.state.cities[0].label: this.state.cities[index].label,
+                                }
+                                country = {
+                                    id: this.state.selectedCountryId,
+                                    name: this.state.selectedCountryName
+                                }
+                                this.props.onSave(this.state.selectedCountryId==null? 0: country, city);
                             }}>
                             <View style={styles.SaveButton}>
                                 <Text style={styles.buttonTitle}> Save </Text>
@@ -81,15 +141,15 @@ class EditLocationModal extends Component {
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
-        fontSize: 16,
-        paddingTop: 13,
-        paddingHorizontal: 10,
-        paddingBottom: 12,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        backgroundColor: 'white',
-        color: 'black',
+        // fontSize: 16,
+        // paddingTop: 13,
+        // paddingHorizontal: 10,
+        // paddingBottom: 12,
+        // borderWidth: 1,
+        // borderColor: 'gray',
+        // borderRadius: 4,
+        // backgroundColor: 'white',
+        // color: 'black',
     },
 });
 
