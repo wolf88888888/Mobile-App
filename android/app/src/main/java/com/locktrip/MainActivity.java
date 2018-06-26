@@ -1,6 +1,7 @@
-package com.mobileapp;
+package com.locktrip;
 
 import android.os.Bundle;
+import android.content.Intent;
 
 import com.facebook.react.ReactActivity;
 
@@ -22,5 +23,11 @@ public class MainActivity extends ReactActivity {
         RCTSplashScreen.openSplashScreen(this);   //open splashscreen
         //RCTSplashScreen.openSplashScreen(this, true, ImageView.ScaleType.FIT_XY);   //open splashscreen fullscreen
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }
