@@ -29,10 +29,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    label: {
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 16,
-    },
     SaveButton: {
         padding: 14,
         backgroundColor: '#DA7B61',
@@ -62,7 +58,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#fff',
         textAlign: 'center'
-    }
+    },
+    picker: {
+        width: '100%'
+    },
 });
 
 export default styles;

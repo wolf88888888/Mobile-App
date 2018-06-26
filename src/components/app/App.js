@@ -7,6 +7,7 @@ import store from '../../redux/store';
 
 class App extends Component {
     componentDidMount() {
+        console.disableYellowBox = true;
     }
 
     render() {

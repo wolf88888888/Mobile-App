@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { TextInput, Text, TouchableOpacity, View} from 'react-native';
+import { Picker, Text, TouchableOpacity, View} from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-class EditNameModal extends Component {
+class EditLanguageModal extends Component {
     static propTypes = {
         onSave: PropTypes.func,
         onCancel: PropTypes.func,
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
+        languageValue: PropTypes.string,
     }
 
     static defaultProps = {
@@ -19,44 +18,39 @@ class EditNameModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: null,
-            lastName: null,
+            languageValue: 'en',
         };
+        this.spinnerValueChange = this.spinnerValueChange.bind(this);
     }
 
     componentWillMount() {
         this.setState({
-            firstName: this.props.firstName,
-            lastName: this.props.lastName,
+            languageValue: this.props.languageValue==''? 'English': this.props.languageValue,
         });
+    }
+
+    spinnerValueChange(value){
+        this.setState({languageValue: value});
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.content}>
-                    <Text style={styles.title}>Edit Name</Text>
+                    <Text style={styles.title}>Select Language</Text>
                     <View style={styles.editContent}>
-                        <Text style={styles.label}>First Name: </Text>
-                        <TextInput
-                            autoFocus={true}
-                            style={styles.editInput}
-                            value={this.state.firstName}
-                            onChangeText={(firstName) => this.setState({firstName})}
-                        />
-                    </View>
-                    <View style={styles.editContent}>
-                        <Text style={styles.label}>Last Name: </Text>
-                        <TextInput
-                            style={styles.editInput}
-                            value={this.state.lastName}
-                            onChangeText={(lastName) => this.setState({lastName})}
-                        />
+                        <Picker style={styles.picker}
+                            selectedValue={this.state.languageValue}
+                            onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
+                            <Picker.Item label="English" value="English" />
+                            <Picker.Item label="Russian" value="Russian" />
+                            <Picker.Item label="Chinese" value="Chinese" />
+                        </Picker>
                     </View>
                     <View style={styles.footer}>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.onSave(this.state.firstName, this.state.lastName);
+                                this.props.onSave(this.state.languageValue);
                             }}>
                             <View style={styles.SaveButton}>
                                 <Text style={styles.buttonTitle}> Save </Text>
@@ -77,4 +71,4 @@ class EditNameModal extends Component {
     }
 }
 
-export default EditNameModal;
+export default EditLanguageModal;

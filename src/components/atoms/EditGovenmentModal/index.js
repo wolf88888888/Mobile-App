@@ -34,7 +34,7 @@ class EditGovenmentModal extends Component {
                 <View style={styles.content}>
                     <Text style={styles.title}>Edit Government ID</Text>
                     <View style={styles.editContent}>
-                        <Text>Government ID: </Text>
+                        <Text style={styles.label}>Government ID: </Text>
                         <TextInput
                             autoFocus={true}
                             style={styles.editInput}

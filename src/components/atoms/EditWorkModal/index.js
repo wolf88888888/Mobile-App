@@ -3,12 +3,11 @@ import { TextInput, Text, TouchableOpacity, View} from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-class EditNameModal extends Component {
+class EditWorkModal extends Component {
     static propTypes = {
         onSave: PropTypes.func,
         onCancel: PropTypes.func,
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
+        work: PropTypes.string,
     }
 
     static defaultProps = {
@@ -19,15 +18,13 @@ class EditNameModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: null,
-            lastName: null,
+            work: '',
         };
     }
 
     componentWillMount() {
         this.setState({
-            firstName: this.props.firstName,
-            lastName: this.props.lastName,
+            work: this.props.work,
         });
     }
 
@@ -35,28 +32,20 @@ class EditNameModal extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.content}>
-                    <Text style={styles.title}>Edit Name</Text>
+                    <Text style={styles.title}>Edit Work</Text>
                     <View style={styles.editContent}>
-                        <Text style={styles.label}>First Name: </Text>
+                        <Text style={styles.label}>Work: </Text>
                         <TextInput
                             autoFocus={true}
                             style={styles.editInput}
-                            value={this.state.firstName}
-                            onChangeText={(firstName) => this.setState({firstName})}
-                        />
-                    </View>
-                    <View style={styles.editContent}>
-                        <Text style={styles.label}>Last Name: </Text>
-                        <TextInput
-                            style={styles.editInput}
-                            value={this.state.lastName}
-                            onChangeText={(lastName) => this.setState({lastName})}
+                            value={this.state.work}
+                            onChangeText={(work) => this.setState({work})}
                         />
                     </View>
                     <View style={styles.footer}>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.onSave(this.state.firstName, this.state.lastName);
+                                this.props.onSave(this.state.work);
                             }}>
                             <View style={styles.SaveButton}>
                                 <Text style={styles.buttonTitle}> Save </Text>
@@ -77,4 +66,4 @@ class EditNameModal extends Component {
     }
 }
 
-export default EditNameModal;
+export default EditWorkModal;
