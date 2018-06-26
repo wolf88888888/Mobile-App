@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f1f3',
         height:'100%',
         position:'relative',
+        paddingTop: 45,
+        paddingLeft: 16,
+        paddingRight: 16,
         paddingBottom: 10
     },
     searchAreaView: {

@@ -11,7 +11,7 @@ import Toast from 'react-native-simple-toast';
 export default class RoomDetailsReview extends Component {
     constructor() {
         super();
-        this.handleSubmit = this.handleSubmit.bind(this);
+        //this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             // links: [
             //     {
@@ -118,12 +118,11 @@ export default class RoomDetailsReview extends Component {
       }
 
     handleSubmit(){
-        console.log('HandleSubmit Called')
+        this.setState({modalVisible: false,});
         Toast.showWithGravity('We are working on your transaction this might take some time.', Toast.SHORT, Toast.CENTER);
         //const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
         getCancellationFees(this.state.bookingId)
             .then(res => res.response.json())
-            // here you set the response in to json
             .then((json) => {
                 const password = this.state.password;
                 const preparedBookingId = this.state.bookingId;
@@ -156,7 +155,7 @@ export default class RoomDetailsReview extends Component {
                             roomId,
                             numberOfTravelers.toString()
                           ).then(transaction => {
-                            Toast.showWithGravity(""+transaction, Toast.SHORT, Toast.CENTER);
+                                Toast.showWithGravity(""+transaction, Toast.SHORT, Toast.CENTER);
                             // const bookingConfirmObj = {
                             //   bookingId: preparedBookingId,
                             //   transactionHash: transaction.hash
@@ -164,7 +163,7 @@ export default class RoomDetailsReview extends Component {
                             .catch((err) => {
                                 Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
                             });
-                      }, 2000);
+                      }, 3000);
                 })
                 .catch((err) => {
                     Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
@@ -187,7 +186,7 @@ export default class RoomDetailsReview extends Component {
                     transparent={true}//eslint-disable-line
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-
+                            
                     }}
                 >
                     <View style={styles.modalView}>
@@ -213,7 +212,7 @@ export default class RoomDetailsReview extends Component {
                             />
                             <TouchableOpacity 
                                 style={styles.confirmButton} 
-                                onPress={this.handleSubmit}
+                                onPress={() => this.handleSubmit()}
                             >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
                             </TouchableOpacity>
