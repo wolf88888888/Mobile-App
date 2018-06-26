@@ -1,12 +1,19 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Platform
+} from 'react-native';
 import Switch from 'react-native-customisable-switch';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 import { validateEmail, validateName } from '../../../utils/validation';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import styles from './styles';
 
 class CreateAccount extends Component {
@@ -48,6 +55,10 @@ class CreateAccount extends Component {
         const { navigate, goBack } = this.props.navigation;
 
         return (
+            <KeyboardAwareScrollView
+                style={styles.container}
+                enableOnAndroid={true}
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
             <View style={styles.container}>
                 <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
@@ -148,6 +159,7 @@ class CreateAccount extends Component {
                 </View>
 
             </View>
+            </KeyboardAwareScrollView>
         );
     }
 }

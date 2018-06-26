@@ -15,6 +15,8 @@ import SaveWallet from '../components/screens/SaveWallet';
 import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
+import Chat from '../components/screens/Message/Chat';
+
 import MyTrips from '../components/screens/MyTrips';
 import UserMyTrips from '../components/screens/MyTrips/UserMyTrips';
 import Favourites from '../components/screens/Favorites';
@@ -132,7 +134,8 @@ export const FullNavigator = StackNavigator(
         UpdateProfileInfo: { screen: UpdateProfileInfo },
         SimpleUserProfile: {screen: SimpleUserProfile},
         SingleWishlist: {screen: SingleWishlist},
-        Debug : {screen: Debug}
+        Debug : {screen: Debug},
+        Chat: {screen: Chat},
     },
     {
         initialRouteName: 'MainScreen',

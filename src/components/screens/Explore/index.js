@@ -52,7 +52,6 @@ class Explore extends Component {
             searchHotel : true,
             isHotelSelected: true,
             countryId: 0,
-            countryName : '',
             countries: [],
             cities: [],
             search: '',
@@ -405,7 +404,6 @@ class Explore extends Component {
 
             <View style={styles.container}>
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
-                
                 <ScrollView>
                     <View style={styles.scrollViewContentMain}>
                         {this.renderAutocomplete()}  
