@@ -224,6 +224,7 @@ class Explore extends Component {
                 this.props.navigation.navigate('PropertyList', {language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice,countryId: this.state.countryId, countryName: this.state.countryName,startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, guests : 2});
             }
             else {
+                console.log(this.state.locPrice);
                 this.props.navigation.navigate('Debug', {regionId: this.state.regionId, language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice, startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated});
             }
         }

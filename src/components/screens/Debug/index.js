@@ -231,7 +231,7 @@ class Explore extends Component {
         this.state.regionId = params.regionId;
         this.state.language = params ? params.language : 'EUR';
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
-        this.state.locPrice = params ? params.locPrice : 0;
+        this.state.locPrice = params ? params.locRate : 0;
 
         this.state.startDate = params ? params.startDate : "22/06/2018";
         this.state.endDate = params ? params.endDate : "23/06/2018";       
@@ -278,7 +278,7 @@ class Explore extends Component {
         .then(res => res.response.json())
         .then((json) => {
             this.setState({hotelJson: json});
-            this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: json, urlForService: urlForService, locRate: 12, currencyIcon: Icons.usd});
+            this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: json, urlForService: urlForService, locRate: this.state.locPrice, currencyIcon: Icons.usd});
         }).catch(err => {
             console.log(err);
         });
