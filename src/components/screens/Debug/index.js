@@ -234,7 +234,7 @@ class Explore extends Component {
         this.state.locPrice = params ? params.locPrice : 0;
 
         this.state.startDate = params ? params.startDate : "22/06/2018";
-        this.state.endDate = params ? params.endDate : "23/06/2018";
+        this.state.endDate = params ? params.endDate : "23/06/2018";       
     }
 
     amenitiesText(text){
