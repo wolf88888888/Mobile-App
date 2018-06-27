@@ -100,6 +100,7 @@ class EditUserProfile extends Component {
         this.hideDateTimePicker = this.hideDateTimePicker.bind(this);
         this.handleDatePicked = this.handleDatePicked.bind(this);
         this.updateProfile = this.updateProfile.bind(this);
+        this.onBackPress = this.onBackPress.bind(this);
     }
 
     async componentDidMount() {
@@ -466,6 +467,11 @@ class EditUserProfile extends Component {
 
     }
 
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        this.props.navigation.state.params.updateGender(this.state.gender);
+    }
+    
     render() {
         const { navigate, goBack } = this.props.navigation;
 
@@ -491,7 +497,7 @@ class EditUserProfile extends Component {
             <View style={styles.container}>
                 <View style={styles.topContainer}>
                     <View style={styles.titleConatiner}>
-                        <BackButton style={styles.closeButton} onPress={() => goBack()}/>
+                        <BackButton style={styles.closeButton} onPress={() => this.onBackPress()}/>
                         <Text style={styles.title}>Edit Profile</Text>
                     </View>
                     <TouchableOpacity style={styles.cameraContainer} onPress={this.onPhoto}>
@@ -533,7 +539,7 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title = "Gender"
-                            info = { upperFirst(this.state.gender) }
+                            info = { upperFirst(this.state.gender=='men'? 'Male': 'Female') }
                             onPress={this.onGender}/>
                         <View style={styles.lineStyle} />
 

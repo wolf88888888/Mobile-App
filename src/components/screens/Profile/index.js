@@ -33,6 +33,7 @@ class Profile extends Component {
         this.onCurrency = this.onCurrency.bind(this);
         this.onSaveCurrency = this.onSaveCurrency.bind(this);
         this.onCancel = this.onCancel.bind(this);
+        this.updateGender = this.updateGender.bind(this);
     }
 
     componentDidMount() {
@@ -163,6 +164,14 @@ class Profile extends Component {
         });
     }
 
+    updateGender(data) {
+        this.setState({
+            info: {
+                gender: data.gender
+            },
+        })
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency} = this.state;
@@ -231,7 +240,7 @@ class Profile extends Component {
                         <TouchableOpacity onPress={() => navigate('SimpleUserProfile')} style={styles.navItem}>
                             <Text style={styles.navItemText}>View Profile</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigate('EditUserProfile')} style={styles.navItem}>
+                        <TouchableOpacity onPress={() => navigate('EditUserProfile', { updateGender: this.updateGender })} style={styles.navItem}>
                             <Text style={styles.navItemText}>Edit Profile</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-user.png')} style={styles.navIcon} />
                         </TouchableOpacity>
