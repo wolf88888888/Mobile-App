@@ -36,8 +36,8 @@ class Inbox extends Component {
             error: null,
             refreshing: false,
             inboxMessages : [],
-            showProgress: false
-          };
+            showProgress: false,
+        };
     }
 
     componentDidMount() {
@@ -50,6 +50,8 @@ class Inbox extends Component {
             this.setState({
                 inboxMessages : parsed.content,
             });
+            console.log("message");
+            console.log(parsed.content);
         })
         .catch(err => {
             this.setState({ showProgress: false });
@@ -75,7 +77,7 @@ class Inbox extends Component {
                     <FlatList data={this.state.inboxMessages} // Data source
                     // List Start
                         renderItem={({item, index}) => (
-                        <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat')}>
+                        <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat', item)}>
                             {/* Press to go on chat screen start*/}
                                 <InboxMessagesView
                                     inboxMessage={item}>

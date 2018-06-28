@@ -1,4 +1,4 @@
-package com.mobileapp;
+package com.locktrip;
 
 import android.os.Bundle;
 import android.content.Intent;

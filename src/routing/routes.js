@@ -15,6 +15,8 @@ import SaveWallet from '../components/screens/SaveWallet';
 import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
+import Chat from '../components/screens/Message/Chat';
+
 import MyTrips from '../components/screens/MyTrips';
 import UserMyTrips from '../components/screens/MyTrips/UserMyTrips';
 import Favourites from '../components/screens/Favorites';
@@ -57,6 +59,10 @@ import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 
+import PropertyList from '../components/screens/PropertyList';
+import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
+import Debug from '../components/screens/Debug';
+
 export const LoginNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
@@ -79,7 +85,7 @@ export const MainNavigator = TabNavigator(
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
         MY_TRIPS: { screen: MyTrips },
-        FAVORITES: { screen: Favourites},
+        FAVORITES: { screen: SingleWishlist},
 
         EXPLORE: { screen: Explore }
     },
@@ -97,6 +103,7 @@ export const FullNavigator = StackNavigator(
         RoomDetailsReview: { screen: RoomDetailsReview},
         GuestInfoForm: { screen: GuestInfoForm},
         PropertyScreen: {screen: PropertyScreen},
+        PropertyList : {screen: PropertyList},
         HotelDetails:{ screen: HotelDetails},
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },
@@ -125,7 +132,10 @@ export const FullNavigator = StackNavigator(
         UserProfile: { screen: UserProfile },
         EditUserProfile: { screen: EditUserProfile },
         UpdateProfileInfo: { screen: UpdateProfileInfo },
-        SimpleUserProfile: {screen: SimpleUserProfile}
+        SimpleUserProfile: {screen: SimpleUserProfile},
+        SingleWishlist: {screen: SingleWishlist},
+        Debug : {screen: Debug},
+        Chat: {screen: Chat},
     },
     {
         initialRouteName: 'MainScreen',

@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { AsyncStorage, Clipboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Image from 'react-native-remote-svg';
+import moment from 'moment'
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { connect } from 'react-redux';
 import BackButton from '../../atoms/BackButton';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import UserProfileReviews from '../../organisms/UserProfileReviews'
 import UserProfileHomes from '../../organisms/UserProfileHomes'
@@ -29,6 +31,7 @@ class SimpleUserProfile extends Component {
         super(props);
         this.state = {
             birthday:'',
+            birthdayDisplay:'',
             city:{},
             country:{},
             email:'',
@@ -39,7 +42,11 @@ class SimpleUserProfile extends Component {
             locAddress:'',
             phoneNumber:'',
             preferredCurrency:{},
-            preferredLanguage:''
+            preferredLanguage:'',
+            day:'',
+            month:'',
+            year:'',
+            showProgress:true,
         }
     }
 
@@ -47,8 +54,20 @@ class SimpleUserProfile extends Component {
         getUserInfo()
         .then(res => res.response.json())
         .then(parsedResp => {
+            let day = '00';
+            let month = '00';
+            let year = '0000';
+
+            if (parsedResp.birthday !== null) {
+                let birthday = moment.utc(parsedResp.birthday);
+                day = birthday.format('DD');
+                month = birthday.format('MM');
+                year = birthday.format('YYYY');
+            }
             this.setState({
+                showProgress: false,
                 birthday : parsedResp.birthday == null? '': parsedResp.birthday,
+                birthdayDisplay : month + '/' + day + '/' + year,
                 city : parsedResp.city == null? '': parsedResp.city,
                 country : parsedResp.country == null? parsedResp.countries[0]: parsedResp.country,
                 email : parsedResp.email == null? '': parsedResp.email,
@@ -122,7 +141,7 @@ class SimpleUserProfile extends Component {
                         <ProfileHistoryItem
                             style={styles.historyStyle}
                             title = {"Birthdate"}
-                            detail = {this.state.birthday}/>
+                            detail = {this.state.birthdayDisplay}/>
 
                         <View style={styles.lineStyle} />
                         <ProfileHistoryItem
@@ -156,6 +175,13 @@ class SimpleUserProfile extends Component {
                             detail = {this.state.preferredCurrency.code}/>
                     </View>
                 </ScrollView>
+                <ProgressDialog
+                        visible={this.state.showProgress}
+                        title=""
+                        message={this.state.loadMessage}
+                        animationType="fade"
+                        activityIndicatorSize="large"
+                        activityIndicatorColor="black"/>
             </View>
         );
     }

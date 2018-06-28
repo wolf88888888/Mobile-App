@@ -9,36 +9,35 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     placeholderImageView: {
-        marginTop: 10
+        marginTop: 40
     },
     placeholderImage: {
-        width: 300,
-        height: 210,
-        marginTop: 20
+        width: '90%',
+        height: 200,
     },
     title: {
-        fontFamily: 'futura',
-        fontSize: 24,
-        color: '#1f2427',
-        marginLeft: 14,
-        marginTop: 30
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 28,
+        color: '#000',
+        marginLeft: 20,
+        marginTop: 0
     },
     subtitle: {
-        fontFamily: 'futura',
-        fontSize: 19,
-        marginRight: 10,
-        color: '#1f2427'
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 20,
+        marginTop: 8,
+        color: '#000'
     },
     subtext: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 16,
-        marginTop: 8,
-        color: '#767b7d'
+        fontSize: 15,
+        marginTop: 5,
+        color: '#000'
     },
     buttonExplore: {
-        backgroundColor: '#cc8068',
-        paddingHorizontal: 60,
-        paddingVertical: 15,
+        backgroundColor: '#D87A61',
+        paddingHorizontal: 15,
+        paddingVertical: 12.5,
         marginTop: 90
     },
     exploreBtnText: {
@@ -53,14 +52,15 @@ const styles = StyleSheet.create({
         marginLeft: 16
     },
     flatList:{
-        marginRight: 18
+        
     },
     Listcontainer:{
-        marginBottom: 30
+        
     },
     chatToolbar: {
         alignSelf: 'flex-start',
-        marginBottom: 30
+        marginBottom: 20,
+        marginTop: 70,
     }
 
 });

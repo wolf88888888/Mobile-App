@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Platform
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
@@ -12,6 +13,7 @@ import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import styles from './styles';
 import Toast from 'react-native-simple-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class CreatePassword extends Component {
     static propTypes = {
@@ -77,6 +79,10 @@ class CreatePassword extends Component {
         const { params } = this.props.navigation.state;
 
         return (
+            <KeyboardAwareScrollView
+                style={styles.container}
+                enableOnAndroid={true}
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
             <View style={styles.container}>
                 <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
@@ -135,6 +141,7 @@ class CreatePassword extends Component {
                     </View>
                 </View>
             </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
