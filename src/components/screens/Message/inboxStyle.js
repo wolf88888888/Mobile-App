@@ -163,7 +163,9 @@ const styles = StyleSheet.create({
           fontSize: 12
       },
       lastView:{
-          marginTop:5
+          marginTop:5,
+          width: 8,
+          height: 8,
       },
       statusView:{
           width: 8,
