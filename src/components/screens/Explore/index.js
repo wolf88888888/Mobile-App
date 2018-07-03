@@ -483,15 +483,17 @@ class Explore extends Component {
                         <Text style={styles.scrollViewTitles}>Discover</Text>
                         
                         <View style={styles.viewDiscover}>
+                            
                             <TouchableOpacity onPress={() => this.setState({searchHotel:true})} style={this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight]:styles.imageViewDiscoverLeft}>
-                                <Image style={{height: '100%', width:'100%'}} resizeMode='contain'
+                                <Image style={{height: '100%', width:'100%'}} resizeMode='stretch'
                                     source={require('../../../assets/home_images/hotels.png')}/>
                             </TouchableOpacity>
-                            {/* onPress={() => this.handleAutocompleteSelect(123,"y")} */}
+
                             <TouchableOpacity onPress={() => this.setState({searchHotel:false,cities: [], search: "", regionId: 0})} style={!this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight]:styles.imageViewDiscoverLeft}>
-                                <Image style={{height: '100%', width:'100%'}} resizeMode='contain'
+                                <Image style={{height: '100%', width:'100%'}} resizeMode='stretch'
                                     source={require('../../../assets/home_images/homes.png')}/>
                             </TouchableOpacity>
+                            
                         </View>
                
                         <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
