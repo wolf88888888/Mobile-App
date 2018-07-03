@@ -16,7 +16,7 @@ import { getUserInfo, getRegionsBySearchParameter, getCountriesWithListings, get
 import Icon from 'react-native-fontawesome';
 import Toast from 'react-native-simple-toast';
 
-const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
 class Explore extends Component {
     static propTypes = {
@@ -263,25 +263,32 @@ class Explore extends Component {
                 this.props.navigation.navigate('PropertyList', {language: this.state.language,currencyIcon: this.state.currencyIcon,locRate : this.state.locPrice,countryId: this.state.countryId, countryName: this.state.countryName,startDate: this.state.checkInDateFormated, endDate: this.state.checkOutDateFormated, guests : 2});
             }
             else {
-                this.props.navigation.navigate('PropertyScreen', {
-                    searchedCity: this.state.search,
-                    searchedCityId: 72,
-                    checkInDate: this.state.checkInDate,
-                    checkOutDate: this.state.checkOutDate,
-                    guests: this.state.guests,
-                    children: this.state.children,
-                    countryId: this.state.countryId,
-                    regionId: this.state.regionId,
-                    isHotelSelected: this.state.isHotelSelected,
-                    currency: this.state.language,
-                    checkOutDateFormated: this.state.checkOutDateFormated,
-                    checkInDateFormated: this.state.checkInDateFormated,
-                    roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                    locRate : this.state.locPrice,
-                    currencyIcon: this.state.currencyIcon,
-                    email: this.state.email,
-                    token: this.state.token
-                });
+                if (this.state.regionId == ''){
+                    //Empty location
+                    Toast.showWithGravity('Location field cannot be empty', Toast.SHORT, Toast.CENTER);
+                    this.setState({search : ''});
+                }
+                else {
+                    this.props.navigation.navigate('PropertyScreen', {
+                        searchedCity: this.state.search,
+                        searchedCityId: 72,
+                        checkInDate: this.state.checkInDate,
+                        checkOutDate: this.state.checkOutDate,
+                        guests: this.state.guests,
+                        children: this.state.children,
+                        countryId: this.state.countryId,
+                        regionId: this.state.regionId,
+                        isHotelSelected: this.state.isHotelSelected,
+                        currency: this.state.language,
+                        checkOutDateFormated: this.state.checkOutDateFormated,
+                        checkInDateFormated: this.state.checkInDateFormated,
+                        roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+                        locRate : this.state.locPrice,
+                        currencyIcon: this.state.currencyIcon,
+                        email: this.state.email,
+                        token: this.state.token
+                    });
+                }
             }
         }
     }
