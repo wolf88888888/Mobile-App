@@ -173,9 +173,12 @@ class Explore extends Component {
             json.content.map((item, i) => {
                 countryArr.push({ 'label': item.name, 'value': item })
             })
+            console.log(countryArr[0].value.id);
             this.setState({
                 countries: countryArr,
-                countriesLoaded: true
+                countriesLoaded: true,
+                countryId: countryArr[0].value.id,
+                countryName: countryArr[0].label,
             })
         })
     }
@@ -414,7 +417,6 @@ class Explore extends Component {
                                 value: 0,
                             }}
                             onValueChange={(value) => {
-                                console.log(value);
                                 this.setState({
                                     countryId: value.id,
                                     countryName: value.name,
