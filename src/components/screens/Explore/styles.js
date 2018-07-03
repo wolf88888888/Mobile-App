@@ -584,6 +584,7 @@ const styles = StyleSheet.create({
     bottomViewText: {margin:10,height: 50, width:'60%'},
     bottomViewBanner: {marginTop:10,height: 80, width:'100%',},
     countriesSpinner: {
+        marginTop: 40,
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-end',
