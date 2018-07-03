@@ -100,6 +100,7 @@ class EditUserProfile extends Component {
         this.hideDateTimePicker = this.hideDateTimePicker.bind(this);
         this.handleDatePicked = this.handleDatePicked.bind(this);
         this.updateProfile = this.updateProfile.bind(this);
+        this.onBackPress = this.onBackPress.bind(this);
     }
 
     async componentDidMount() {
@@ -213,6 +214,7 @@ class EditUserProfile extends Component {
                             onCancel={() => this.onCancel()} 
                             firstName={this.state.firstName} 
                             lastName={this.state.lastName}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -225,6 +227,7 @@ class EditUserProfile extends Component {
                             onSave={(about) => this.onSaveAbout(about)} 
                             onCancel={() => this.onCancel()} 
                             about={this.state.about}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -237,6 +240,7 @@ class EditUserProfile extends Component {
                             onSave={(isFemale) => this.onSaveGender(isFemale)} 
                             onCancel={() => this.onCancel()} 
                             isFemale={this.state.gender=='women'? true: false}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -257,6 +261,7 @@ class EditUserProfile extends Component {
                             onSave={(pickerData) => this.onSavePhone(pickerData)} 
                             onCancel={() => this.onCancel()} 
                             phone={this.state.phoneNumber}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -269,6 +274,7 @@ class EditUserProfile extends Component {
                             onSave={(governmentId) => this.onSaveGovernmentId(governmentId)} 
                             onCancel={() => this.onCancel()} 
                             governmentId={this.state.governmentId}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -295,6 +301,7 @@ class EditUserProfile extends Component {
                             onSave={(school) => this.onSaveSchool(school)} 
                             onCancel={() => this.onCancel()} 
                             school={this.state.school}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -307,6 +314,7 @@ class EditUserProfile extends Component {
                             onSave={(work) => this.onSaveWork(work)} 
                             onCancel={() => this.onCancel()} 
                             work={this.state.work}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -319,6 +327,7 @@ class EditUserProfile extends Component {
                             onSave={(language) => this.onSaveLanguage(language)} 
                             onCancel={() => this.onCancel()} 
                             languageValue={this.state.preferredLanguage}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -466,6 +475,11 @@ class EditUserProfile extends Component {
 
     }
 
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        this.props.navigation.state.params.updateGender(this.state.gender);
+    }
+    
     render() {
         const { navigate, goBack } = this.props.navigation;
 
@@ -491,7 +505,7 @@ class EditUserProfile extends Component {
             <View style={styles.container}>
                 <View style={styles.topContainer}>
                     <View style={styles.titleConatiner}>
-                        <BackButton style={styles.closeButton} onPress={() => goBack()}/>
+                        <BackButton style={styles.closeButton} onPress={() => this.onBackPress()}/>
                         <Text style={styles.title}>Edit Profile</Text>
                     </View>
                     <TouchableOpacity style={styles.cameraContainer} onPress={this.onPhoto}>
@@ -533,7 +547,7 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title = "Gender"
-                            info = { upperFirst(this.state.gender) }
+                            info = { upperFirst(this.state.gender=='men'? 'Male': 'Female') }
                             onPress={this.onGender}/>
                         <View style={styles.lineStyle} />
 
@@ -596,7 +610,7 @@ class EditUserProfile extends Component {
                         transparent={true}
                         visible={this.state.modalVisible}
                         fullScreen={false}
-                        onRequestClose={() => {}}>
+                        onRequestClose={() => {this.onCancel()}}>
                         {this.showModal()}
                     </Modal>
                     <DateTimePicker
