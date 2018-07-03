@@ -214,6 +214,7 @@ class EditUserProfile extends Component {
                             onCancel={() => this.onCancel()} 
                             firstName={this.state.firstName} 
                             lastName={this.state.lastName}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -226,6 +227,7 @@ class EditUserProfile extends Component {
                             onSave={(about) => this.onSaveAbout(about)} 
                             onCancel={() => this.onCancel()} 
                             about={this.state.about}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -238,6 +240,7 @@ class EditUserProfile extends Component {
                             onSave={(isFemale) => this.onSaveGender(isFemale)} 
                             onCancel={() => this.onCancel()} 
                             isFemale={this.state.gender=='women'? true: false}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -258,6 +261,7 @@ class EditUserProfile extends Component {
                             onSave={(pickerData) => this.onSavePhone(pickerData)} 
                             onCancel={() => this.onCancel()} 
                             phone={this.state.phoneNumber}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -270,6 +274,7 @@ class EditUserProfile extends Component {
                             onSave={(governmentId) => this.onSaveGovernmentId(governmentId)} 
                             onCancel={() => this.onCancel()} 
                             governmentId={this.state.governmentId}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -296,6 +301,7 @@ class EditUserProfile extends Component {
                             onSave={(school) => this.onSaveSchool(school)} 
                             onCancel={() => this.onCancel()} 
                             school={this.state.school}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -308,6 +314,7 @@ class EditUserProfile extends Component {
                             onSave={(work) => this.onSaveWork(work)} 
                             onCancel={() => this.onCancel()} 
                             work={this.state.work}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -320,6 +327,7 @@ class EditUserProfile extends Component {
                             onSave={(language) => this.onSaveLanguage(language)} 
                             onCancel={() => this.onCancel()} 
                             languageValue={this.state.preferredLanguage}
+                            onRequestClose={() => {this.onCancel()}}
                         />
         });
         this.showModal();
@@ -602,7 +610,7 @@ class EditUserProfile extends Component {
                         transparent={true}
                         visible={this.state.modalVisible}
                         fullScreen={false}
-                        onRequestClose={() => {}}>
+                        onRequestClose={() => {this.onCancel()}}>
                         {this.showModal()}
                     </Modal>
                     <DateTimePicker

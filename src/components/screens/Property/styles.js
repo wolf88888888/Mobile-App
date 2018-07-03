@@ -306,6 +306,12 @@ const styles = StyleSheet.create({
     backButton:{
         marginTop: 25,
         marginLeft: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    btn_backText: {
+        marginLeft: 5,
+        fontFamily: 'FuturaStd-Medium',
     },
     btn_backImage:{
         height: 24,

@@ -201,7 +201,7 @@ class Profile extends Component {
                     transparent={true}
                     visible={this.state.modalVisible}
                     fullScreen={false}
-                    onRequestClose={() => {}}>
+                    onRequestClose={() => {this.onCancel()}}>
                     {this.showModal()}
                 </Modal>
                 <ProgressDialog
