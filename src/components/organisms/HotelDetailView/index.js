@@ -11,11 +11,15 @@ import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
 import Slideshow from '../../atoms/Slideshow';
-
 import StarRatings from '../../atoms/StarRatings';
+
+import ImageCarousel from '../../atoms/ImagePage';
 
 import styles from './styles';
 
+const dimensionWindows = Dimensions.get('window');
+const logoWidth = dimensionWindows.width;
+const logoHeight = logoWidth * 35 / 54;
 
 const RNViewPropTypes = ViewPropTypes || View.propTypes;
 const RNPropTypes = PropTypes || React.PropTypes;
@@ -48,6 +52,7 @@ class HotelDetailView extends Component {
             dataSource: [],
         };
 
+        console.log(props.dataSourcePreview);
         this.state.dataSource = props.dataSourcePreview;
     }
 
@@ -62,6 +67,8 @@ class HotelDetailView extends Component {
         //     });
         //     }, 2000)
         // });
+        console.log("width : " + logoWidth);
+        console.log("height : " + logoHeight);
     }
 
     componentWillUnmount() {
@@ -73,12 +80,17 @@ class HotelDetailView extends Component {
         const ratingSize = 8;
         return (
           <View style={styles.container}>
-              <Slideshow
-                    style={styles.logoImage}
-                    dataSource={this.state.dataSource}
-                    position={this.state.position}
-                    onPositionChanged={position => this.setState({ position })}
-                    />
+            <View style={{width: logoWidth, height: logoHeight}}>
+                <ImageCarousel
+                  delay={1500}
+                  style={styles.logoImage}
+                  width={logoWidth}
+                  height={logoHeight}
+                  indicatorSize={12.5}
+                  indicatorOffset={20}
+                  indicatorColor="#D87A61"
+                  images={this.state.dataSource} />
+              </View>
               <CardView style={styles.topView}
                   cardElevation={1.5}
                   cardMaxElevation={1.5}

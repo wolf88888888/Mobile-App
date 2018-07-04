@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity, ProgressBarAndroid } from 'react-native';
-import styles from './styles';
+import { StyleSheet, Text, View, FlatList,TouchableOpacity, ProgressBarAndroid } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Icon from 'react-native-fontawesome';
+import Image from 'react-native-remote-svg';
 
+import styles from './styles';
 
 class Favorites extends Component {
     state = {
@@ -38,7 +39,7 @@ class Favorites extends Component {
     renderProgressBar(){
         return(
             <View style={[styles.container,{justifyContent: "center", alignItems: "center"}]}>
-                <ProgressBarAndroid 
+                <ProgressBarAndroid
                     styleAttr="Inverse"
                     color="#cc8068" />
             </View>
@@ -69,7 +70,7 @@ class Favorites extends Component {
         return(
             <View style={styles.container}>
                 <View style={styles.chatToolbar}>
-                    <Text style={styles.title}>Wishlists</Text>                             
+                    <Text style={styles.title}>Wishlists</Text>
                 </View>
                 <View style={{width: '100%'}}>
                    <FlatList style={styles.flatList}
@@ -82,8 +83,8 @@ class Favorites extends Component {
                                     source={require('../../../assets/temple/overview.jpg')}
                                 />
                                 <View style={{flexDirection:'column', alignItems: 'flex-start', width:'90%'}}>
-                                    <Text style={styles.subtitle}>Summer <FontAwesome style={{fontSize: 8}}>{Icons.circle}</FontAwesome><Text  style={styles.subtext}> 4 Listings </Text></Text>                                           
-                                </View>                                   
+                                    <Text style={styles.subtitle}>Summer <FontAwesome style={{fontSize: 8}}>{Icons.circle}</FontAwesome><Text  style={styles.subtext}> 4 Listings </Text></Text>
+                                </View>
                             </TouchableOpacity>
                         }
                     />
@@ -97,12 +98,12 @@ class Favorites extends Component {
         return (
             <View style={{flex: 1}}>
                 {/* {this.state.isLoading && this.renderProgressBar()} */}
-                {/* {this.renderNoWishList()} */}
-                {this.renderWishList()}
+                {this.renderNoWishList()}
             </View>
         )
     }
     onStartExploring = () =>{
+        this.props.navigation.navigate('EXPLORE');
     }
     onBackPress = () => {
         this.props.navigation.navigate('EXPLORE');

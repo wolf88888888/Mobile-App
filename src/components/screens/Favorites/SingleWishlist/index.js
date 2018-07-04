@@ -83,7 +83,7 @@ class SingleWishList extends Component {
                                     <Text style={styles.title2}>{item.title2}</Text>
                                     <Text style={styles.title3}>{item.rating} {starFill} {starFill} {starFill} {starFill} {starEmpty} {item.reveiws}</Text>
                                     <Text style={styles.title4}>{item.title4}</Text>
-                                </View>                                 
+                                </View>
                             </TouchableOpacity>
                         }
                     />
