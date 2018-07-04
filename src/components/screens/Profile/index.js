@@ -106,11 +106,12 @@ class Profile extends Component {
             return o.id == currency.id;
         })
         currency.code = this.state.currencies[index<0? 1: index].code
+        AsyncStorage.setItem('currentCurrency', currency.code);
         this.setState({
             loadMessage:'Updating user data...',
             modalVisible: false,
             preferredCurrency: currency,
-            showProgress: true,
+            currentCurrency: currency.code,
         })
 
         let day = '00';
@@ -142,14 +143,10 @@ class Profile extends Component {
 
         updateUserInfo(userInfo, null).then((res) => {
             if (res.success) {
-                this.setState({
-                    showProgress: false
-                });
+                console.log('success updating userdata')
             }
             else {
-                this.setState({
-                    showProgress: false
-                });
+                console.log('failed updating userdata')
             }
         });
     }
@@ -208,7 +205,7 @@ class Profile extends Component {
                         visible={this.state.showProgress}
                         title=""
                         message={this.state.loadMessage}
-                        animationType="slide"
+                        animationType="fade"
                         activityIndicatorSize="large"
                         activityIndicatorColor="black"/>
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
