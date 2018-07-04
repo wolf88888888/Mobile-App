@@ -1,17 +1,8 @@
-import { StyleSheet, Dimensions } from 'react-native';
-const dimensionWindows = Dimensions.get('window');
+import { StyleSheet } from 'react-native';
 
-const logoWidth = dimensionWindows.width;
-const logoHeight = logoWidth * 35 / 54;
 const styles = StyleSheet.create({
     container: {
       flexDirection:'column',
-    },
-
-    logoImage: {
-        alignSelf: 'stretch',
-        width: logoWidth,
-        height: logoHeight,
     },
 
     topView: {

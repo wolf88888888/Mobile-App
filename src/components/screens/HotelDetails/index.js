@@ -66,9 +66,9 @@ class HotelDetails extends Component {
         this.state.locRate = params ? params.locRate : '';
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
         const hotelPhotos = [];
-        
+
         for (var i = 0; i < this.state.hotel.photos.length; i ++) {
-            hotelPhotos.push({url:imgHost+this.state.hotel.photos[i]})
+            hotelPhotos.push({uri:imgHost+this.state.hotel.photos[i]})
         }
 
         this.state.description = this.state.hotel.description;
@@ -85,7 +85,7 @@ class HotelDetails extends Component {
     componentDidMount() {
         getHotelById(this.state.hotel.id,'?'+this.state.urlForService)
         .then(res => res.response.json())
-        // here you set the response in to json 
+        // here you set the response in to json
         .then(parsed => {
             // here you parse your json
             // here you set you data from json into your variables
@@ -160,7 +160,7 @@ class HotelDetails extends Component {
                         lat={parseFloat(this.state.latitude)}
                         lon={parseFloat(this.state.longitude)}
                         radius={200}/>
-                    <View style={{marginBottom:50}}/>                    
+                    <View style={{marginBottom:50}}/>
                 </View>
             </ScrollView>
             </View>
