@@ -54,6 +54,7 @@ export default class RoomDetailsReview extends Component {
 
     componentDidMount() {
         const { params } = this.props.navigation.state //eslint-disable-line
+        console.log(params.guestRecord);
         const value = {
             quoteId: params.quoteId,
             rooms:[{
@@ -106,14 +107,14 @@ export default class RoomDetailsReview extends Component {
         } else {
           trailingZeroes = 18 - (tokens.length - 1 - index);
         }
-    
+
         wei = tokens.replace(/[.,]/g, '');
         if (trailingZeroes >= 0) {
           wei = wei + '0'.repeat(trailingZeroes);
         } else {
           wei = wei.substring(0, index + 18);
         }
-    
+
         return wei;
       }
 
@@ -186,7 +187,7 @@ export default class RoomDetailsReview extends Component {
                     transparent={true}//eslint-disable-line
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-                            
+
                     }}
                 >
                     <View style={styles.modalView}>
@@ -210,8 +211,8 @@ export default class RoomDetailsReview extends Component {
                                 placeholder="Wallet password"
                                 secureTextEntry={true}
                             />
-                            <TouchableOpacity 
-                                style={styles.confirmButton} 
+                            <TouchableOpacity
+                                style={styles.confirmButton}
                                 onPress={() => this.handleSubmit()}
                             >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
