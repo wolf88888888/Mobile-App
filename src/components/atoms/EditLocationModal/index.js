@@ -84,6 +84,7 @@ class EditLocationModal extends Component {
                                 });
                                 this.getCities(value);
                             }}
+                            style={{ ...pickerSelectStyles }}
                             value={this.state.selectedCountryId}
                         />
                         {this.state.selectedCityId!==null && this.state.cities.length>0 &&
@@ -99,6 +100,7 @@ class EditLocationModal extends Component {
                                         selectedCityId: value,
                                     });
                                 }}
+                                style={{ ...pickerSelectStyles }}
                                 value={this.state.selectedCityId}
                             />
                         }
@@ -141,15 +143,15 @@ class EditLocationModal extends Component {
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
-        // fontSize: 16,
-        // paddingTop: 13,
-        // paddingHorizontal: 10,
-        // paddingBottom: 12,
-        // borderWidth: 1,
-        // borderColor: 'gray',
-        // borderRadius: 4,
-        // backgroundColor: 'white',
-        // color: 'black',
+        fontSize: 16,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        backgroundColor: 'white',
+        color: 'black',
     },
 });
 

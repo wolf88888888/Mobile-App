@@ -13,6 +13,7 @@ import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import BackButton from '../../atoms/BackButton';
 
 var clientRef = '';
 var utf8 = require('utf8');
@@ -319,9 +320,7 @@ class Property extends Component {
                      + '&currency=' + this.state.currency
         } else {
             paramUrl = baseHotelUrl
-            this.setState({
-                urlForService : 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData
-            })
+            this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData
             paramUrl += this.state.urlForService
         }
         paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20')
@@ -353,10 +352,14 @@ class Property extends Component {
         const { isLoading, isAvailable, email, token, urlForService } = this.state;
         return (
             <View style={styles.container}>
-                <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
+                <View style={styles.titleConatiner}>
+                    <BackButton style={styles.closeButton} onPress={() => this.onBackPress()}/>
+                    <Text style={styles.btn_backText}>Modify Search</Text>
+                </View>
+                {/* <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
                     <Text style={styles.btn_backText}>Modify Search</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <WebView
                     ref={(webViewRef) => { this.webViewRef.ref = webViewRef; }}
                     onNavigationStateChange={(navState) => { this.webViewRef.canGoBack = navState.canGoBack; }}
@@ -364,8 +367,8 @@ class Property extends Component {
                     source = {{ 
                         uri: this.state.webViewUrl
                     }}
-                    injectedJavaScript={jsCode}
-                    javaScriptEnabled={true}
+                    // injectedJavaScript={jsCode}
+                    // javaScriptEnabled={true}
                 />
             </View>
         );

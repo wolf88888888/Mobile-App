@@ -110,10 +110,10 @@ class EditUserProfile extends Component {
         let work = await AsyncStorage.getItem('work');
         
         this.setState({
-            about: about,
-            governmentId: governmentId,
-            school: school,
-            work: work,
+            about: about!=null? about : '',
+            governmentId: governmentId!=null? governmentId : '',
+            school: school!=null? school : '',
+            work: work!=null? work : '',
         })
 
         getUserInfo()
@@ -437,7 +437,7 @@ class EditUserProfile extends Component {
         this.setState({
             showProgress: true
         });
-
+        
         AsyncStorage.setItem('aboutme', this.state.about);
         AsyncStorage.setItem('governmentId', this.state.governmentId);
         AsyncStorage.setItem('school', this.state.school);
