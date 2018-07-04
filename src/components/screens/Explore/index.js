@@ -22,7 +22,7 @@ import {
 } from '../../../utils/requester';
 import Toast from 'react-native-simple-toast';
 
-const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
 class Explore extends Component {
     static propTypes = {
@@ -528,6 +528,70 @@ class Explore extends Component {
         );
     }
 
+    renderHotelSelected(){
+        return(
+            <View
+                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                <Image
+                    style= {{flex: 1,
+                        margin: 20,
+                        width: null,
+                        height: null,
+                        resizeMode: 'contain'}}
+                    source={require('../../../assets/home_images/hotels_selected.png')}
+                />
+            </View>
+        )
+    }
+
+    renderHotelDeSelected(){
+        return(
+            <View
+                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                <Image
+                    style= {{flex: 1,
+                        margin: 20,
+                        width: null,
+                        height: null,
+                        resizeMode: 'contain'}}
+                    source={require('../../../assets/home_images/hotels_not_selected.png')}
+                />
+            </View>
+        )
+    }
+
+    renderHomeSelected(){
+        return(
+            <View
+                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                <Image
+                    style= {{flex: 1,
+                        margin: 20,
+                        width: null,
+                        height: null,
+                        resizeMode: 'contain'}}
+                    source={require('../../../assets/home_images/homes_selected.png')}
+                />
+            </View>
+        )
+    }
+
+    renderHomeDeSelected(){
+        return(
+            <View
+                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                <Image
+                    style= {{flex: 1,
+                        margin: 20,
+                        width: null,
+                        height: null,
+                        resizeMode: 'contain'}}
+                    source={require('../../../assets/home_images/homes__not_selected.png')}
+                />
+            </View>
+        )
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, countries
@@ -561,12 +625,13 @@ class Explore extends Component {
                         <View style={styles.viewDiscover}>
 
                             <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
-                                              style={this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight] : styles.imageViewDiscoverLeft}>
+                                              style={styles.imageViewDiscoverLeft}>
                                 <Image style={{
                                     height: '100%',
                                     width: '100%'
                                 }} resizeMode='stretch'
                                        source={require('../../../assets/home_images/hotels.png')}/>
+                                {this.state.searchHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.setState({
@@ -575,12 +640,13 @@ class Explore extends Component {
                                 search: '',
                                 regionId: 0
                             })}
-                                              style={!this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight] : styles.imageViewDiscoverLeft}>
+                                              style={styles.imageViewDiscoverLeft}>
                                 <Image style={{
                                     height: '100%',
                                     width: '100%'
                                 }} resizeMode='stretch'
                                        source={require('../../../assets/home_images/homes.png')}/>
+                                {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
                             </TouchableOpacity>
 
                         </View>
