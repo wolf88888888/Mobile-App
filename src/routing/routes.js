@@ -48,8 +48,6 @@ import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 import RoomDetailsReview from '../components/screens/RoomDetailsReview';
 import GuestInfoForm from '../components/screens/GuestInfoForm';
 
-
-
 import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
@@ -85,7 +83,7 @@ export const MainNavigator = TabNavigator(
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
         MY_TRIPS: { screen: MyTrips },
-        FAVORITES: { screen: SingleWishlist},
+        FAVORITES: { screen: Favourites},
 
         EXPLORE: { screen: Explore }
     },

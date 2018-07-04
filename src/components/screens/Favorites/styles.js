@@ -8,41 +8,49 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
+
     placeholderImageView: {
         marginTop: 40
     },
     placeholderImage: {
-        width: '90%',
-        height: 200,
+        width: 135,
+        height: 135,
+        marginTop: 75
     },
     title: {
         fontFamily: 'FuturaStd-Medium',
-        fontSize: 28,
+        fontSize: 22,
         color: '#000',
         marginLeft: 20,
-        marginTop: 0
+        marginRight: 20,
+        marginTop: 10,
+        textAlign: "center"
     },
     subtitle: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 20,
-        marginTop: 8,
-        color: '#000'
+        fontSize: 16,
+        marginRight: 10,
+        color: '#000',
+        textAlign: "center"
     },
     subtext: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 15,
         marginTop: 5,
-        color: '#000'
+        marginLeft: 20,
+        marginRight: 20,
+        color: '#000',
+        textAlign: "center"
     },
     buttonExplore: {
         backgroundColor: '#D87A61',
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         paddingVertical: 12.5,
-        marginTop: 90
+        marginTop: 50,
     },
     exploreBtnText: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 18,
+        fontSize: 17,
         color: '#fff'
     },
     btn_backImage:{
@@ -52,10 +60,10 @@ const styles = StyleSheet.create({
         marginLeft: 16
     },
     flatList:{
-        
+
     },
     Listcontainer:{
-        
+
     },
     chatToolbar: {
         alignSelf: 'flex-start',

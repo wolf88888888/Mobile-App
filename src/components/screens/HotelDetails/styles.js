@@ -1,9 +1,14 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+
+
     container: {
         flex: 1,
-        backgroundColor:'#f0f1f3'
+        flexDirection: 'column',
+        backgroundColor: '#f0f1f3',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
     },
 
     topButtonContainer: {
@@ -28,6 +33,15 @@ const styles = StyleSheet.create({
 
     roomfacility: {
         marginTop:5
+    },
+
+    placeholderImageView: {
+        marginTop: 40
+    },
+    placeholderImage: {
+        width: 135,
+        height: 135,
+        marginTop: 75
     },
 
     etcContaner: {
