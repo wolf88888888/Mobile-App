@@ -40,6 +40,7 @@
     "prop-types": "^15.6.1",
     "react": "16.2.0",
     "react-native": "^0.55.4",
+    "react-native-background-fetch": "^2.0.8",
     "react-native-cardview": "^1.1.5",
     "react-native-customisable-switch": "git://github.com/baderahmed/react-native-customisable-switch.git#118fe5aa51150b8c471c081a23ba38087aa210c6",
     "react-native-dash": "0.0.8",
