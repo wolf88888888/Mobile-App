@@ -125,7 +125,7 @@ class CreateWallet extends Component {
 
                         <View>
                             <Text style={styles.infoText}>
-                                Your LOC wallet is blockchain based and will not have control over it. It will not be on our server. When you are adding funds to it, your funds will be in your complete control and possession. It is very important not to share the password with anyone. For security reasons we will not store this password and there will be no way for you to recover it in case you forget it.
+                            Your LOC wallet is Blockchain based and you are the only person to have access to it. It will not be on our server. When you are adding funds to it, your funds will be in your complete control and possession. It is very important not to share your wallet password. For security reasons we will not store this password and there will be no way for you to recover it through our site.
                             </Text>
                         </View>
 

@@ -59,9 +59,9 @@ class CongratsWallet extends Component {
                             source={require('../../../assets/walletCongrats.png')}
                             style={styles.walletCongratsImage} />
                         <Text style={styles.bigTitle}>Congratulations!</Text>
-                        <Text style={styles.subTitle}>Your wallet has been created</Text>
+                        <Text style={styles.subTitle}>Your LOC Wallet Has Been Created</Text>
                         <View style={styles.gotoButtonContainer}>
-                            <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Go to Login" />
+                            <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Proceed to Login" />
                         </View>
                     </View>
                 </View>

@@ -29,10 +29,13 @@ class EditCurrencyModal extends Component {
 
     componentWillMount() {
         currencyArr = [];
-        this.props.currencies.map((item, i) => {
-            currencyArr.push({ 'label': item.code, 'value': item.id })
-        });
-        console.log('cccc=====', currencyArr)
+        for (var i = 0; i< this.props.currencies.length; i++){
+            let item = this.props.currencies[i];
+            if ( i > 2 ) {
+                break;
+            }
+            currencyArr.push({ 'label': item.code, 'value': item.id });
+        }
         this.setState({
             currencies: currencyArr,
             selectedCurrencyId: this.props.currency.id,

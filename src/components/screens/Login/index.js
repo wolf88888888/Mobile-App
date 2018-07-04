@@ -41,6 +41,13 @@ class Login extends Component {
             duration: 850,
             delay: 500
         });
+
+        // Toast.showWithGravity(alertMessage, Toast.SHORT, Toast.BOTTOM);
+        // if (__DEV__) {
+        //     Toast.showWithGravity("Debug ----- ", Toast.SHORT, Toast.BOTTOM);
+        // } else {
+        //     Toast.showWithGravity("Release ----- ", Toast.SHORT, Toast.BOTTOM);
+        // }
     }
 
     // TODO: Need a way to generate a Google ReCAPTCHA token

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View , WebView} from 'react-native';
+import { FlatList, ScrollView, Text, TouchableOpacity, View , WebView, BackHandler, Platform} from 'react-native';
 import Image from 'react-native-remote-svg';
 import SplashScreen from 'react-native-smart-splash-screen';
 import { withNavigation } from 'react-navigation';
@@ -22,6 +22,10 @@ let baseHomeUrl = 'https://alpha.locktrip.com/homes/listings/?'
 let baseHotelUrl = 'https://alpha.locktrip.com/mobile/search?'
 
 class Property extends Component {
+    webViewRef = {
+        canGoBack: false,
+        ref: null,
+    };
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -69,7 +73,6 @@ class Property extends Component {
         UUIDGenerator.getRandomUUID((uuid) => {
             uid = uuid;
         });
-      
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -148,7 +151,16 @@ class Property extends Component {
             animationType: SplashScreen.animationType.scale,
             duration: 0,
             delay: 0,
-        })
+        });
+        if (Platform.OS === 'android') {
+            BackHandler.addEventListener('hardwareBackPress', this.onAndroidBackPress);
+        }
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress');
+        }
     }
 
     componentDidMount() {
@@ -231,6 +243,7 @@ class Property extends Component {
     }
 
     onBackPress(){
+        console.log('app back button pressed.');
         this.props.navigation.goBack();
     }
     
@@ -315,6 +328,15 @@ class Property extends Component {
         this.state.webViewUrl = paramUrl
     }
 
+    onAndroidBackPress = () => {
+        if (this.webViewRef.canGoBack && this.webViewRef.ref) {
+            console.log('android backbutton pressed in webview.....');
+            this.webViewRef.ref.goBack();
+            return true;
+        }
+        return false;
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
@@ -331,11 +353,13 @@ class Property extends Component {
         const { isLoading, isAvailable, email, token, urlForService } = this.state;
         return (
             <View style={styles.container}>
-                
                 <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
+                    <Text style={styles.btn_backText}>Modify Search</Text>
                 </TouchableOpacity>
                 <WebView
+                    ref={(webViewRef) => { this.webViewRef.ref = webViewRef; }}
+                    onNavigationStateChange={(navState) => { this.webViewRef.canGoBack = navState.canGoBack; }}
                     style = {styles.webView}
                     source = {{ 
                         uri: this.state.webViewUrl

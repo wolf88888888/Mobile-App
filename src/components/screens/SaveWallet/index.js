@@ -116,12 +116,12 @@ class SaveWallet extends Component {
 
                         <View style={styles.main}>
                             <View style={styles.titleView}>
-                                <Text style={styles.titleText}>Wallet Recovery</Text>
+                                <Text style={styles.titleText}>Wallet Recovery Keywords</Text>
                             </View>
 
                             <View>
                                 <Text style={styles.infoText}>
-                                    Your mnemonic recovery keywords are a way for you to backup the access to your wallet. You should print them on a piece of paper and store them in a safe place.
+                                Your mnemonic recovery keywords are the ONLY WAY you could recover access to your wallet in case your device is damaged and/or in case you forget your wallet password. You should write them down on a piece of paper and store them in a safe place where no one else has access to.
                                 </Text>
                             </View>
 
@@ -148,7 +148,7 @@ class SaveWallet extends Component {
                         <ProgressDialog
                            visible={this.state.showProgress}
                            title=""
-                           message="Registering..."
+                           message="Finalizing…"
                            animationType="slide"
                            activityIndicatorSize="large"
                            activityIndicatorColor="black"/>
