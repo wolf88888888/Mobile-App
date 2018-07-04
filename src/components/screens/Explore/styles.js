@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
       margin:0
     },
     scrollViewTitles:{fontWeight: '400',fontFamily: 'FuturaStd-Light',fontSize: 20,color: '#1f2427',top: 2},
-    viewDiscover: {width:'100%', height:120,  flexDirection: 'row'},
+    viewDiscover: {width:'100%', height:100,  flexDirection: 'row', marginBottom: 10},
     divider : {
         marginTop: 10,
         marginBottom: 10,
@@ -573,7 +573,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         opacity: 0.5
     },
-    touchableOpacityHighlight : {backgroundColor: '#DA7B61'},
+    touchableOpacityHighlight : {
+        borderBottomWidth: 3,
+        borderBottomColor: '#DA7B61'
+    },
     imageViewDiscoverLeft: {height: '100%', flex:1, marginRight: 4},
     imageViewDiscoverRight: {height: '100%', flex:1, marginLeft: 4},
     viewPopularHotels: {marginTop:10, width:'100%', height:110, flexDirection: 'row'},
@@ -584,6 +587,7 @@ const styles = StyleSheet.create({
     bottomViewText: {margin:10,height: 50, width:'60%'},
     bottomViewBanner: {marginTop:10,height: 80, width:'100%',},
     countriesSpinner: {
+        marginTop: 40,
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-end',

@@ -48,10 +48,10 @@ class AvailableRoomsView extends Component {
 
     componentDidMount() {
         getHotelRooms(this.props.id, this.props.search).then((res) => {
-            console.log(res);
+            //console.log(res);
             if (res.success) {
                 res.response.json().then((data) => {
-                    console.log("sucess", data);
+                    //console.log("sucess", data);
                     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                     this.setState({rooms: ds.cloneWithRows(data)});
                 });
@@ -60,7 +60,7 @@ class AvailableRoomsView extends Component {
                     const { errors } = response;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            console.log('Error:', errors[key].message);
+                            //console.log('Error:', errors[key].message);
                         }
                     });
                 });
@@ -82,7 +82,12 @@ class AvailableRoomsView extends Component {
                             cardMaxElevation={1.5}
                             cornerRadius={0}>
                             <Text style={styles.name}>{rowData.roomsResults[0].name+"("+rowData.roomsResults[0].mealType+")"}</Text>
-                            <Text style={styles.price}>1 night: <FontAwesome>{this.props.currencyIcon} {Number(((parseFloat(rowData.roomsResults[0].price) * this.props.locRate)).toFixed(2))} {rowData.roomsResults[0].price} LOC</FontAwesome></Text>
+                            <Text 
+                                style={styles.price}>
+                                1 night: 
+                                <FontAwesome>{this.props.currencyIcon}
+                                
+                                {(rowData.roomsResults[0].price).toFixed(2)} {((rowData.roomsResults[0].price)/this.props.locRate).toFixed(2)} LOC</FontAwesome></Text>
                             {/* <Text style={styles.price}>{"1 night:" + Number(((parseFloat(rowData.roomsResults[0].price))).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text> */}
                             <TouchableOpacity onPress={this.onRoomPress.bind(this,rowData)}>
                                 <Text style={styles.book}>Book Now</Text>

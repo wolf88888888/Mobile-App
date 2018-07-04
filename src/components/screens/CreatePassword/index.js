@@ -97,8 +97,7 @@ class CreatePassword extends Component {
                     <View style={styles.titleView}><Text style={styles.titleText}>Create Password</Text></View>
 
                     <Text style={styles.finePrintText}>
-                    Your password must be 8 or more characters long. Do not use any common passwords, repetition or sequences.
-                    Try making it longer or adding latin letter and number, adding symbols, like !, # or %.
+                    Your password must be at least: 8 characters long, should containt at least one digit and should contain at least one symbol.
                     </Text>
 
                     <View style={styles.inputView}>
@@ -108,7 +107,7 @@ class CreatePassword extends Component {
                             autoCapitalize="none"
                             value={password}
                             onChangeText={this.onChangeHandler('password')}
-                            placeholder="Password"
+                            placeholder="Password (8 chars with a digit and a symbol)"
                             placeholderTextColor="#fff"
                             rightIcon={validatePassword(password) ? 'check' : null}
                         />
@@ -123,7 +122,7 @@ class CreatePassword extends Component {
                             autoCapitalize="none"
                             value={confirmPassword}
                             onChangeText={this.onChangeHandler('confirmPassword')}
-                            placeholder="Password"
+                            placeholder="Password (8 chars with a digit and a symbol)"
                             placeholderTextColor="#fff"
                             rightIcon={validateConfirmPassword(password, confirmPassword) ? 'check' : null}
                         />
