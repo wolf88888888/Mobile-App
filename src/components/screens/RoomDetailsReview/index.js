@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Modal, TextInput, AsyncStorage } from 'react-native';
+import { AsyncStorage, Modal, ScrollView, Text, TextInput, TouchableOpacity, View, WebView } from 'react-native';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Image from 'react-native-remote-svg';
 import styles from './styles';
-import { testBook,getCancellationFees,getCurrentlyLoggedUserJsonFile } from '../../../utils/requester';
-import {HotelReservation} from '../../../services/blockchain/hotelReservation';
+import { getCancellationFees, getCurrentlyLoggedUserJsonFile, testBook } from '../../../utils/requester';
+import { HotelReservation } from '../../../services/blockchain/hotelReservation';
 import Toast from 'react-native-simple-toast';
 
 export default class RoomDetailsReview extends Component {
@@ -13,54 +13,35 @@ export default class RoomDetailsReview extends Component {
         super();
         //this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            // links: [
-            //     {
-            //         key: 0,
-            //         name: 'Room Type',
-            //         rhs: 'Standard Room'
-            //     },
-            //     {
-            //         key: 1,
-            //         name: 'Dates',
-            //         rhs: '25 Jan - 26 Jan'
-            //     },
-            //     {
-            //         key: 2,
-            //         name: 'Guests',
-            //         rhs: '2 guests'
-            //     },
-            //     {
-            //         key: 3,
-            //         name: 'Cancellation Fees',
-            //         rhs: 'Show'
-            //     }
-            // ],
             modalVisible: false,
             cancellationView: false,
             walletPassword: '',
-            password : '',
+            password: '',
             // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
             creationDate: '',
             // cancellationLOCPrice: '',
             cancellationPrice: '',
-            bookingId : '',
-            hotelBooking : '',
-            booking : '',
-            data : ''
+            bookingId: '',
+            hotelBooking: '',
+            booking: '',
+            data: ''
         };
     }
 
     componentDidMount() {
-        const { params } = this.props.navigation.state //eslint-disable-line
+        const { params } = this.props.navigation.state; //eslint-disable-line
         console.log(params.guestRecord);
         const value = {
             quoteId: params.quoteId,
-            rooms:[{
+            rooms: [{
                 adults: params.guestRecord
-                ,"children":[]}],
-                "currency":"USD"};
+                ,
+                'children': []
+            }],
+            'currency': 'USD'
+        };
 
         testBook(value)
             .then(res => res.response.json())
@@ -76,15 +57,15 @@ export default class RoomDetailsReview extends Component {
                     arrivalDate: endDate.format('DD MMM'),
                     creationDate: startDate.format('DD MMM'),
                     cancellationPrice: parsed.fiatPrice,
-                    bookingId : bookingId,
-                    hotelBooking : hotelBooking,
+                    bookingId: bookingId,
+                    hotelBooking: hotelBooking,
                     booking: value,
                     data: parsed
                     // cancellationLOCPrice: parsed.locPrice,
                 });
             })
             .catch((err) => {
-                Toast.showWithGravity("Access to one of the quotes failed. The quote is no longer available.", Toast.SHORT, Toast.CENTER);
+                Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
                 console.log(err); //eslint-disable-line
             });
     }
@@ -103,25 +84,29 @@ export default class RoomDetailsReview extends Component {
         let trailingZeroes = 0;
         let wei = '';
         if (index === -1) {
-          trailingZeroes = 18;
+            trailingZeroes = 18;
         } else {
-          trailingZeroes = 18 - (tokens.length - 1 - index);
+            trailingZeroes = 18 - (tokens.length - 1 - index);
         }
 
         wei = tokens.replace(/[.,]/g, '');
         if (trailingZeroes >= 0) {
-          wei = wei + '0'.repeat(trailingZeroes);
+            wei = wei + '0'.repeat(trailingZeroes);
         } else {
-          wei = wei.substring(0, index + 18);
+            wei = wei.substring(0, index + 18);
         }
 
         return wei;
-      }
+    }
 
-    handleSubmit(){
-        this.setState({modalVisible: false,});
+    handleSubmit() {
+
+        this.setState({ modalVisible: false });
+
         Toast.showWithGravity('We are working on your transaction this might take some time.', Toast.SHORT, Toast.CENTER);
+
         //const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
+
         getCancellationFees(this.state.bookingId)
             .then(res => res.response.json())
             .then((json) => {
@@ -129,7 +114,8 @@ export default class RoomDetailsReview extends Component {
                 const preparedBookingId = this.state.bookingId;
                 const booking = this.state.hotelBooking;
                 const startDate = moment(booking.arrivalDate, 'YYYY-MM-DD');
-                const endDate = moment(booking.arrivalDate, 'YYYY-MM-DD').add(booking.nights, 'days');
+                const endDate = moment(booking.arrivalDate, 'YYYY-MM-DD')
+                    .add(booking.nights, 'days');
                 const hotelId = booking.hotelId;
                 const roomId = this.state.booking.quoteId;
                 const cancellationFees = json;
@@ -139,39 +125,39 @@ export default class RoomDetailsReview extends Component {
                 const numberOfTravelers = 2;
 
                 getCurrentlyLoggedUserJsonFile()
-                .then(res => res.response.json())
-                // here you set the response in to json
-                .then((json) => {
-                    setTimeout(() => {
-                        HotelReservation.createReservation(
-                            json.jsonFile,
-                            password,
-                            preparedBookingId.toString(),
-                            wei,
-                            startDate.unix().toString(),
-                            endDate.unix().toString(),
-                            daysBeforeStartOfRefund,
-                            refundPercentages,
-                            hotelId,
-                            roomId,
-                            numberOfTravelers.toString()
-                          ).then(transaction => {
-                                Toast.showWithGravity(""+transaction, Toast.SHORT, Toast.CENTER);
-                            // const bookingConfirmObj = {
-                            //   bookingId: preparedBookingId,
-                            //   transactionHash: transaction.hash
-                            })
-                            .catch((err) => {
-                                Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
-                            });
-                      }, 3000);
-                })
-                .catch((err) => {
-                    Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
-                });
+                    .then(res => res.response.json())
+                    // here you set the response in to json
+                    .then((json) => {
+                        setTimeout(() => {
+                            HotelReservation.createReservation(//this line needs to be checked
+                                json.jsonFile,
+                                password,
+                                preparedBookingId.toString(),
+                                wei,
+                                startDate.unix()
+                                    .toString(),
+                                endDate.unix()
+                                    .toString(),
+                                daysBeforeStartOfRefund,
+                                refundPercentages,
+                                hotelId,
+                                roomId,
+                                numberOfTravelers.toString()
+                            )
+                                .then(transaction => {
+                                    Toast.showWithGravity('' + transaction, Toast.SHORT, Toast.CENTER);
+                                })
+                                .catch((err) => {
+                                    Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                                });
+                        }, 3000);
+                    })
+                    .catch((err) => {
+                        Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                    });
             })
             .catch((err) => {
-                Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
+                Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
             });
     }
 
@@ -182,6 +168,13 @@ export default class RoomDetailsReview extends Component {
         const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
+                <View style={{ height: 0 }}>
+                    <WebView
+                        ref={el => this.webView = el}
+                        source={{html: '<html><body></body></html>'}}
+                        onMessage={this.handleMessage}
+                    />
+                </View>
                 <Modal
                     animationType="fade"
                     transparent={true}//eslint-disable-line
@@ -197,23 +190,24 @@ export default class RoomDetailsReview extends Component {
                                 <View style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.setState({modalVisible:false}); //eslint-disable-line
+                                            this.setState({ modalVisible: false }); //eslint-disable-line
                                         }}
                                     >
-                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
+                                        <Image style={styles.closeButtonSvg}
+                                               source={require('../../../../src/assets/png/close.png')}/>
                                     </TouchableOpacity>
                                 </View>
                             </View>
                             <TextInput
                                 style={styles.walletPasswordInput}
-                                onChangeText={walletPassword => this.setState({ password : walletPassword })}
+                                onChangeText={walletPassword => this.setState({ password: walletPassword })}
                                 value={this.state.password}
                                 placeholder="Wallet password"
                                 secureTextEntry={true}
                             />
                             <TouchableOpacity
                                 style={styles.confirmButton}
-                                onPress={() => this.handleSubmit()}
+                                onPress={() => this.runJSInBackground('window.postMessage("test")')}
                             >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
                             </TouchableOpacity>
@@ -239,11 +233,13 @@ export default class RoomDetailsReview extends Component {
                                             this.setCancellationView(!this.state.cancellationView);
                                         }}
                                     >
-                                        <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
+                                        <Image style={styles.closeButtonSvg}
+                                               source={require('../../../../src/assets/png/close.png')}/>
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <Text style={{ fontFamily: 'FuturaStd-Light' }}>USD {this.state.cancellationPrice} - ({this.state.cancellationPrice}LOC)</Text>
+                            <Text style={{ fontFamily: 'FuturaStd-Light' }}>USD {this.state.cancellationPrice} -
+                                ({this.state.cancellationPrice}LOC)</Text>
                             <TouchableOpacity
                                 style={styles.confirmButton}
                                 onPress={() => {
@@ -256,9 +252,11 @@ export default class RoomDetailsReview extends Component {
                     </View>
                 </Modal>
                 {/* Cancellation Fee Button View end */}
-                <ScrollView >
+                <ScrollView>
                     {/* Back Button */}
-                    <TouchableOpacity onPress={() => { this.props.navigation.goBack(); }} style={styles.backButton}>
+                    <TouchableOpacity onPress={() => {
+                        this.props.navigation.goBack();
+                    }} style={styles.backButton}>
                         <Image
                             style={styles.btn_backImage}
                             source={require('../../../../src/assets/png/arrow-back.png')}
@@ -269,7 +267,8 @@ export default class RoomDetailsReview extends Component {
                         <Text style={styles.heading}>Review Room Details</Text>
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
-                                <Image source={require('../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
+                                <Image source={require('../../../../src/assets/apartment.png')}
+                                       style={styles.hotelThumb}/>
                             </View>
                             <View style={styles.hotelInfoView}>
                                 <Text style={styles.hotelName}>{params.hotelDetails.name}</Text>
@@ -308,7 +307,9 @@ export default class RoomDetailsReview extends Component {
                         </View>
                         <View style={styles.listItemRhsWrapper}>
                             <TouchableOpacity
-                                onPress={() => { this.setCancellationView(true); }}
+                                onPress={() => {
+                                    this.setCancellationView(true);
+                                }}
                             >
                                 <Text style={styles.rhs}>Show</Text>
                             </TouchableOpacity>
@@ -341,6 +342,14 @@ export default class RoomDetailsReview extends Component {
                 </View>
             </View>
         );
+    }
+
+    runJSInBackground (code) {
+        this.webView.injectJavaScript(code)
+    }
+
+    handleMessage = (e) => {
+        this.handleSubmit();
     }
 }
 
@@ -386,6 +395,6 @@ RoomDetailsReview.propTypes = {
     hotelName: PropTypes.string, //eslint-disable-line
     hotelAddress: PropTypes.string,//eslint-disable-line
     priceInUserCurreny: PropTypes.number,//eslint-disable-line
-    priceInLoc : PropTypes.number,//eslint-disable-line
-    guests : PropTypes.array,//eslint-disable-line
+    priceInLoc: PropTypes.number,//eslint-disable-line
+    guests: PropTypes.array//eslint-disable-line
 };
