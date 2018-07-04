@@ -17,7 +17,6 @@ import Icon from 'react-native-fontawesome';
 import Toast from 'react-native-simple-toast';
 
 const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
-
 class Explore extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
@@ -104,12 +103,12 @@ class Explore extends Component {
     async componentWillMount() {
         const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
         const email_value = await AsyncStorage.getItem(`${domainPrefix}.auth.username`);
-        
+
         this.setState({
             token: token_value,
             email : email_value,
         });
-            
+
         SplashScreen.close({
             animationType: SplashScreen.animationType.scale,
             duration: 0,
@@ -130,7 +129,7 @@ class Explore extends Component {
             AsyncStorage.setItem('currentCurrency', "EUR");
             AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
 
-            
+
         }).catch(err => {
             console.log(err);
         });
@@ -462,7 +461,7 @@ class Explore extends Component {
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 <ScrollView>
                     <View style={styles.scrollViewContentMain}>
-                        {this.renderAutocomplete()}  
+                        {this.renderAutocomplete()}
                         <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
@@ -477,13 +476,13 @@ class Explore extends Component {
                             showSearchButton= {true}
                         />
                     </View>
-                    
+
                     <View style={styles.scrollViewContent}>
-                        
+
                         <Text style={styles.scrollViewTitles}>Discover</Text>
-                        
+
                         <View style={styles.viewDiscover}>
-                            
+
                             <TouchableOpacity onPress={() => this.setState({searchHotel:true})} style={this.state.searchHotel ? [styles.imageViewDiscoverLeft, styles.touchableOpacityHighlight]:styles.imageViewDiscoverLeft}>
                                 <Image style={{height: '100%', width:'100%'}} resizeMode='stretch'
                                     source={require('../../../assets/home_images/hotels.png')}/>
@@ -493,33 +492,33 @@ class Explore extends Component {
                                 <Image style={{height: '100%', width:'100%'}} resizeMode='stretch'
                                     source={require('../../../assets/home_images/homes.png')}/>
                             </TouchableOpacity>
-                            
+
                         </View>
-               
+
                         <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
 
                         <View style={styles.divider}/>
-               
+
                         <View style={styles.viewPopularHotels}>
-                   
+
                             <TouchableOpacity onPress={() => this.handlePopularCities(52612,"London , United Kingdom")} style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/london.png')}/>
                             </TouchableOpacity>
-                   
+
                             <TouchableOpacity onPress={() => this.handlePopularCities(18417,"Madrid , Spain")} style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/Madrid.png')}/>
                             </TouchableOpacity>
                         </View>
-               
+
                         <View style={styles.viewPopularHotels}>
-                            
+
                             <TouchableOpacity onPress={() => this.handlePopularCities(16471,"Paris , France")} style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/paris.png')}/>
                             </TouchableOpacity>
-                            
+
                             <TouchableOpacity onPress={() => this.handlePopularCities(15375,"Sydney , Australia")} style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/Sydney.png')}/>
@@ -532,7 +531,7 @@ class Explore extends Component {
                             </View>
                         </TouchableOpacity>
 
-               
+
                         <View style={styles.bottomView}>
                             <Image style={styles.bottomViewText} resizeMode='stretch'
                                 source={require('../../../assets/texthome.png')}/>
@@ -544,7 +543,7 @@ class Explore extends Component {
                             <Image style={styles.bottomViewBanner} resizeMode='stretch'
                                 source={require('../../../../src/assets/vector.png')}/>
                         </View>
-               
+
                     </View>
                 </ScrollView>
 

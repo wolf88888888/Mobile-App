@@ -42,7 +42,7 @@ class EditGenderModal extends Component {
                                 }
                                 <Image source={require('../../../assets/png/male.png')} style={styles.headerIcons}/>
                             </TouchableOpacity>
-                            <Text style={styles.genderType}>Men</Text>
+                            <Text style={styles.genderType}>Male</Text>
                         </View>
                         <View style={styles.genderView}>
                             <TouchableOpacity onPress={() => this.setState({isFemale: true})} style={[styles.gender, this.state.isFemale? styles.selected: '']}>
@@ -52,7 +52,7 @@ class EditGenderModal extends Component {
                                 }
                                 <Image source={require('../../../assets/png/female.png')} style={styles.headerIcons}/>
                             </TouchableOpacity>
-                            <Text style={styles.genderType}>Women</Text>
+                            <Text style={styles.genderType}>Female</Text>
                         </View>
                     </View>
                     <View style={styles.footer}>

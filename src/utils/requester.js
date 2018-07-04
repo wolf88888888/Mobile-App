@@ -167,6 +167,12 @@ export async function getMyConversations(searchTerm) {
     });
 }
 
+export async function changeMessageStatus(conversationObj) {
+  return sendRequest(`${host}users/me/conversations`, RequestMethod.POST, conversationObj).then(res => {
+    return res.response.json();
+  });
+}
+
 export async function sendMessage(messageObj, id) {
   return sendRequest(`${host}users/me/conversations/${id}`, RequestMethod.POST, messageObj).then(res => {
     return res.response.json();

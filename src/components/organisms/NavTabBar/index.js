@@ -28,6 +28,7 @@ export default class NavTabBar extends Component {
             currencySign: '$',
             locRate: null
         },
+        reloadTab: true,
         navigation: {
             navigate: () => {},
             state: {
@@ -72,7 +73,7 @@ export default class NavTabBar extends Component {
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => navigate('MY_TRIPS')}>
+                <TouchableWithoutFeedback onPress={() => navigate('MY_TRIPS', {reload: this.props.reloadTab})}>
                     <View style={styles.tab}>
                         <Text style={active === 'MY_TRIPS' ? styles.activeIconStyle : styles.inactiveIconStyle}>
                             <FontAwesome>{Icons.suitcase}</FontAwesome>

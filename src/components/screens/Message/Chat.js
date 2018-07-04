@@ -13,7 +13,7 @@ import {
 import { domainPrefix } from '../../../config';
 import Image from 'react-native-remote-svg';
 // import ImagePicker from 'react-native-image-picker';
-import { getMyConversations, sendMessage } from '../../../utils/requester';
+import { getMyConversations, sendMessage, changeMessageStatus } from '../../../utils/requester';
 import styles from './styles';
 import moment from 'moment';
 import BackButton from '../../atoms/BackButton';
@@ -56,31 +56,59 @@ class Chat extends Component {
     }
 
     async componentDidMount() {
-            const {params} = this.props.navigation.state;
-            this.state.username = await AsyncStorage.getItem(`${domainPrefix}.auth.username`)
-            //here is the method to load all chats related to this id = 68
+        const {params} = this.props.navigation.state;
+        this.state.username = await AsyncStorage.getItem(`${domainPrefix}.auth.username`)
+        //here is the method to load all chats related to this id = 68
 
-            this.setState({ showProgress: true });
-            getMyConversations("/"+params.id+"?page=0")
-            .then(res => res.response.json())
-            // here you set the response in to json
-            .then(parsed => {
-                // here you parse your json
-                //let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
-                // messageDate to set your date
-                // here you set you data from json into your variables
-                console.log(parsed);
-                this.setState({
-                    showProgress: false,
-                    messages : parsed.content,
-                });
-            })
-            .catch(err => {
-                this.setState({ showProgress: false });
-                Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-                console.log(err);
+        this.setState({ showProgress: true });
+        getMyConversations("/"+params.id+"?page=0")
+        .then(res => res.response.json())
+        // here you set the response in to json
+        .then(parsed => {
+            // here you parse your json
+            //let messageDate = moment(parsed.content[0].createdAt, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY');
+            // messageDate to set your date
+            // here you set you data from json into your variables
+            console.log(parsed);
+            this.setState({
+                showProgress: false,
+                messages : parsed.content,
             });
+
+            // if (params.unread == "true") {
+                // this.changeMessageFlag(params.id, params.unread);
+                this.changeMessageFlag(params.id, "false");
+            // }
+        })
+        .catch(err => {
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            console.log(err);
+        });
     }
+
+    changeMessageFlag(id, unread) {
+        let conversationObj = {
+            conversationId: id,
+            unread: unread === 'true' ? 'false' : 'true'
+        };
+        console.log(conversationObj);
+
+        changeMessageStatus(conversationObj).then(() => {
+            console.log("changeMessageFlag");
+            // let messages = this.state.messages;
+            //
+            // let message = messages.find(x => x.id === id);
+            // let messageIndex = messages.findIndex(x => x.id === id);
+            //
+            // message.unread = unread === 'true' ? 'false' : 'true';
+            //
+            // messages = messages.filter(x => x.id !== id);
+            // messages.splice(messageIndex, 0, message);
+            //
+            // this.setState({ messages: messages });
+        });
+     }
 
     sendMessage() {
         const {params} = this.props.navigation.state;
