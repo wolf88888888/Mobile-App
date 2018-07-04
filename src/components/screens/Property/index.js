@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, Text, TouchableOpacity, View , WebView, BackHandler, Platform} from 'react-native';
 import Image from 'react-native-remote-svg';
 import SplashScreen from 'react-native-smart-splash-screen';
 import { withNavigation } from 'react-navigation';
@@ -18,8 +18,14 @@ var clientRef = '';
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
 let uid = '';
+let baseHomeUrl = 'https://alpha.locktrip.com/homes/listings/?'
+let baseHotelUrl = 'https://alpha.locktrip.com/mobile/search?'
 
 class Property extends Component {
+    webViewRef = {
+        canGoBack: false,
+        ref: null,
+    };
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -67,7 +73,6 @@ class Property extends Component {
         UUIDGenerator.getRandomUUID((uuid) => {
             uid = uuid;
         });
-      
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -79,6 +84,7 @@ class Property extends Component {
         this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.generateSearchUrl = this.generateSearchUrl.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
@@ -94,6 +100,7 @@ class Property extends Component {
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
             //these state are for paramerters in urlForService
+            countryId: 0,
             regionId: '',
             currency: '',
             checkInDateFormated: '',
@@ -103,7 +110,13 @@ class Property extends Component {
             isLoading: true,
             noResultsFound: false,
             locRate: 0,
-            currencyIcon : ''
+            currencyIcon : '',
+            isHotelSelected: false,
+            webViewUrl: '',
+            isLoading: true,
+            isAvailable: false,
+            email:'',
+            token:''
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -113,15 +126,23 @@ class Property extends Component {
         this.state.guests = params ? params.guests : 0;
         this.state.children = params ? params.children : 0;
 
-        this.state.regionId = params ? params.regionId : [];
-        this.state.currency = params ? params.currency : [];
+        this.state.isHotelSelected = params? params.isHotelSelected : false;
+        this.state.countryId = params ? params.countryId : 0;
+        this.state.regionId = params ? params.regionId : 0;
+        this.state.currency = params ? params.currency : 'USD';
         this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
         this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
         this.state.locRate = params ? params.locRate : 0;
         this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
-
+        this.state.email = params? params.email : '';
+        this.state.token = params? params.token : '';
+      
         this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        
+        this.generateSearchUrl()
+
+        console.log('Received Params', params)
     }
 
     componentWillMount(){
@@ -130,7 +151,16 @@ class Property extends Component {
             animationType: SplashScreen.animationType.scale,
             duration: 0,
             delay: 0,
-        })
+        });
+        if (Platform.OS === 'android') {
+            BackHandler.addEventListener('hardwareBackPress', this.onAndroidBackPress);
+        }
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress');
+        }
     }
 
     componentDidMount() {
@@ -213,6 +243,7 @@ class Property extends Component {
     }
 
     onBackPress(){
+        console.log('app back button pressed.');
         this.props.navigation.goBack();
     }
     
@@ -276,95 +307,66 @@ class Property extends Component {
         );
     }
 
+    generateSearchUrl(){
+        var paramUrl = ''
+        if ( !this.state.isHotelSelected ) {
+            paramUrl = baseHomeUrl
+            paramUrl += 'countryId=' + this.state.countryId
+                     + '&startDate=' + this.state.checkInDateFormated
+                     + '&endDate=' + this.state.checkOutDateFormated
+                     + '&guests=' + this.state.guests
+                     + '&priceMin=1&priceMax=5000'
+                     + '&currency=' + this.state.currency
+        } else {
+            paramUrl = baseHotelUrl
+            this.setState({
+                urlForService : 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData
+            })
+            paramUrl += this.state.urlForService
+        }
+        paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20')
+        this.state.webViewUrl = paramUrl
+    }
+
+    onAndroidBackPress = () => {
+        if (this.webViewRef.canGoBack && this.webViewRef.ref) {
+            console.log('android backbutton pressed in webview.....');
+            this.webViewRef.ref.goBack();
+            return true;
+        }
+        return false;
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
         } = this.state;
         const { params } = this.props.navigation.state;
+        let jsCode = `
+            document.querySelector('.filter-box').style.display = 'none',
+            document.querySelector('#footer').style.display = 'none',
+            document.querySelector('#main-nav').style.display = 'none'
+            document.querySelector('.hotel-info').style.width = '100%'
+            document.querySelector('.hotel-chekin').style.width = '100%';
+        `;
+        const { navigate, goBack } = this.props.navigation;
+        const { isLoading, isAvailable, email, token, urlForService } = this.state;
         return (
             <View style={styles.container}>
-
                 <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
+                    <Text style={styles.btn_backText}>Modify Search</Text>
                 </TouchableOpacity>
-
-                <View style={styles.searchAreaView}>
-                    <SearchBar
-                        autoCorrect={false}
-                        value={search}
-                        onChangeText={this.onSearchHandler}
-                        placeholder={searchedCity}
-                        placeholderTextColor="#bdbdbd"
-                        leftIcon="search"
-                    />
-                </View>
-                {!this.props.autocomplete.length && this.renderAutocomplete()}
-                {this.state.isLoading && this.renderLoader()}
-                {this.state.noResultsFound && this.renderInfoTv()}
-
-                <View style={styles.itemView}>
-                    <DateAndGuestPicker
-                            checkInDate={checkInDate}
-                            checkOutDate={checkOutDate}
-                            adults={guests}
-                            children={0}
-                            guests = {0}
-                            infants={0}
-                            gotoGuests={this.gotoGuests}
-                            gotoSearch={this.gotoSearch}
-                            onDatesSelect={this.onDatesSelect}
-                            gotoSettings={this.gotoSettings}
-                            showSearchButton= {false}
-                        />
-
-
-                    <FlatList style={styles.flatList}
-                            data={this.state.listings}
-                            renderItem={
-                                ({item}) =>
-                                <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
-                                <View style={styles.card}>
-                                {console.log(item)}
-                                <Image 
-                                source={{uri : imgHost + item.photos[0]}} 
-                                style={styles.popularHotelsImage}/>
-                                <TouchableOpacity style={styles.favoritesButton}>
-                                    <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
-                                </TouchableOpacity>
-                                        <View style={styles.cardContent}>
-                                            <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                                            <View style={styles.aboutPlaceView}>
-                                                <Text style={styles.placeReviewText}>Excellent</Text>
-                                                <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
-                                                <View style={styles.ratingIconsWrapper}>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                </View>
-                                                <Text style={styles.totalReviews}>73 Reviews</Text>
-                                            </View>
-                                            <View style={styles.costView}>
-                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{params ? params.currencyIcon: Icons.euro}</FontAwesome> {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
-                                                <Text style={styles.perNight}>per night</Text>
-                                            </View>
-                                        </View>
-                                </View>
-                                </TouchableOpacity>
-                            }
-                        />
-                </View>
-                <SockJsClient 
-                    url={apiHost + 'handler'} 
-                    topics={[`/topic/all/${uid}${binaryToBase64(utf8.encode(this.state.urlForService))}`]}
-                    onMessage={this.handleReceiveSingleHotel} 
-                    ref={(client) => { clientRef = client }}
-                    onConnect={this.sendInitialWebsocketRequest.bind(this)}
-                    getRetryInterval={() => { return 3000; }}
-                    autoReconnect={true}
-                    debug={true}
-                    />
+                <WebView
+                    ref={(webViewRef) => { this.webViewRef.ref = webViewRef; }}
+                    onNavigationStateChange={(navState) => { this.webViewRef.canGoBack = navState.canGoBack; }}
+                    style = {styles.webView}
+                    source = {{ 
+                        uri: this.state.webViewUrl
+                    }}
+                    injectedJavaScript={jsCode}
+                    javaScriptEnabled={true}
+                />
             </View>
         );
     }

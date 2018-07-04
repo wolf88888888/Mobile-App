@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     },
 
     avatar: {
+        backgroundColor: 'white',
         alignSelf: 'stretch',
         width: avatarWidth,
         height: avatarHeight,
@@ -81,6 +82,8 @@ const styles = StyleSheet.create({
     },
 
     nameText: {
+        paddingLeft: 20,
+        paddingRight: 20,
         fontFamily: 'FuturaStd-Medium',
         fontSize:17,
         color:'#000'
@@ -93,6 +96,8 @@ const styles = StyleSheet.create({
     },
 
     aboutText: {
+        paddingLeft: 20,
+        paddingRight: 20,
         fontFamily: 'FuturaStd-Light',
         fontSize:16,
         color:'#000'
@@ -120,6 +125,16 @@ const styles = StyleSheet.create({
 
     footer:{
      },
+     
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 });
 
 export default styles;

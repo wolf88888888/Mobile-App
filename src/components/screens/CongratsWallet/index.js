@@ -35,6 +35,18 @@ class CongratsWallet extends Component {
 
     constructor(props) {
         super(props)
+        this.gotoRoot = this.gotoRoot.bind(this);
+    }
+
+    gotoRoot() {
+        const { params } = this.props.navigation.state;
+        const { pop } = this.props.navigation;
+        if (params.isFB) {
+            pop(5);
+        }
+        else {
+            pop(6);
+        }
     }
 
     render() {
@@ -47,9 +59,9 @@ class CongratsWallet extends Component {
                             source={require('../../../assets/walletCongrats.png')}
                             style={styles.walletCongratsImage} />
                         <Text style={styles.bigTitle}>Congratulations!</Text>
-                        <Text style={styles.subTitle}>Your wallet has been created</Text>
+                        <Text style={styles.subTitle}>Your LOC Wallet Has Been Created</Text>
                         <View style={styles.gotoButtonContainer}>
-                            <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={() => navigate('Login')} text="Go to Login" />
+                            <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Proceed to Login" />
                         </View>
                     </View>
                 </View>

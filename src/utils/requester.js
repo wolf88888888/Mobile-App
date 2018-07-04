@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native';
+import { create } from 'apisauce'
 import { apiHost, domainPrefix } from '../config';
 
 const host = apiHost;
@@ -128,6 +129,10 @@ export function getTopHomes() {
     return sendRequest(`${host}listings/top`, RequestMethod.GET).then(res => res.response.json());
 }
 
+export function upperFirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export async function getPropertyById(id) {
     return sendRequest(`${host}listings/${id}`, RequestMethod.GET).then(res => res.response.json());
 }
@@ -144,17 +149,76 @@ export async function getCountriesWithListings() {
     });
 }
 
+export async function getCities(countryId, hasListings = false) {
+    let url = `${host}countries/${countryId}/cities?`;
+    if (hasListings) {
+        url += 'hasListings=true&';
+    }
+    url += 'size=10000&sort=name,asc';
+
+    return sendRequest(url, RequestMethod.GET).then(res => {
+        return res.response.json();
+    });
+}
+
 export async function getMyConversations(searchTerm) {
     return sendRequest(`${host}users/me/conversations${searchTerm !== null && searchTerm !== undefined ? `${searchTerm}&` : '?'}sort=id,desc`, RequestMethod.GET).then(res => {
         return res;
     });
 }
 
+export async function changeMessageStatus(conversationObj) {
+  return sendRequest(`${host}users/me/conversations`, RequestMethod.POST, conversationObj).then(res => {
+    return res.response.json();
+  });
+}
+
+export async function sendMessage(messageObj, id) {
+  return sendRequest(`${host}users/me/conversations/${id}`, RequestMethod.POST, messageObj).then(res => {
+    return res.response.json();
+  });
+}
+
 export async function getUserInfo() {
     return sendRequest(`${host}users/me/info`, RequestMethod.GET).then(res => {
       return res;
     });
-  }
+}
+
+export async function updateUserInfo(userObj, captchaToken) {
+    return sendRequest(`${host}users/me`, RequestMethod.POST, userObj, captchaToken).then(res => {
+        return {
+            success: res.success
+        };
+    });
+}
+
+export async function uploadPhoto(uri) {
+    const api = create({
+        baseURL: 'https://alpha.locktrip.com/api/',
+    })
+    const data = new FormData();    
+    data.append('image', {
+        uri: uri,
+        type: 'image/jpeg',
+        name: 'image.jpg'
+    });
+    let authToken = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`)
+    api.setHeaders({
+        'Authorization': authToken,
+        'Accept': 'application/json',
+        'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b',
+    });
+    return api.post('/users/me/images/upload', data, {
+        onUploadProgress: (e) => {
+          console.log('progressE-----', e)
+          const progress = e.loaded / e.total;
+          console.log('progress---',progress);
+        }
+    }).then((res) => {
+        return res;
+    })
+}
 
 export async function testBook(bookingObj) {
     return sendRequest(`${host}api/hotels/booking`, RequestMethod.POST, bookingObj).then(res => {
@@ -163,8 +227,11 @@ export async function testBook(bookingObj) {
 }
 
 export async function getHotelById(id, search) {
+    //console.log(`${host}api/hotels/${id}?${search}`)
     //return sendRequest(`https://staging.locktrip.com/api/api/hotels/32392?region=15664&currency=USD&startDate=25/05/2018&endDate=26/05/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D`, RequestMethod.GET).then(res => res);
-    return sendRequest(`${host}api/hotels/${id}${search}`, RequestMethod.GET).then(res => res);
+    return sendRequest(`${host}api/hotels/${id}?${search}`, RequestMethod.GET).then(res => {
+        return res;
+    });
 }
 
 export async function getHotelRooms(id, search) {
@@ -185,3 +252,8 @@ export async function getCurrentlyLoggedUserJsonFile() {
         return res;
     });
 }
+export async function getListingsByFilter(searchTerms) {
+    return sendRequest(`${host}api/filter_listings?${searchTerms}`, RequestMethod.GET).then(res => {
+      return res;
+    });
+  }

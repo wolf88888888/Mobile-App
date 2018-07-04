@@ -43,11 +43,11 @@ export default function InboxMessagesView(props) {
                         </View>
                         <View style={[styles.rightView]}>
                             {/* To set section 2 it is divided in 3 part this one is part 2 where you can set time start*/}
-                            <Text style={[styles.messageTimeTitle]}>{messageCreatedAt < moment().add('-1', 'days') ? messageCreatedAt.format('HH:mm') : timeAgo.format(new Date(messageCreatedAt))}</Text>
+                            <Text style={[styles.messageTimeTitle]}>{messageCreatedAt > moment().add('-1', 'days') ? messageCreatedAt.format('HH:mm') : messageCreatedAt.format('DD MMM, YYYY')}</Text>
                             {/* To set section 2 it is divided in 3 part this one is part 2 where you can set time end*/}
                         </View>
                         <View style={[styles.lastView]}>
-                            <View style={[styles.statusView]}></View>
+                            {props.inboxMessage.unread != "false" && (<View style={[styles.statusView]}></View>)}
                         </View>
                     </View>
                     <Text

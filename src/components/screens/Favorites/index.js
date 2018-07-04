@@ -1,10 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity, ProgressBarAndroid } from 'react-native';
 import styles from './styles';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Icon from 'react-native-fontawesome';
 
 
 class Favorites extends Component {
+    state = {
+        isLoading: true,
+    };
+
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -25,37 +31,74 @@ class Favorites extends Component {
 
     }
 
-    render() {
+    goToSingleWishList(){
+        this.props.navigation.navigate('SingleWishlist');
+    }
+
+    renderProgressBar(){
+        return(
+            <View style={[styles.container,{justifyContent: "center", alignItems: "center"}]}>
+                <ProgressBarAndroid 
+                    styleAttr="Inverse"
+                    color="#cc8068" />
+            </View>
+        );
+    }
+
+    renderNoWishList(){
         const { navigate } = this.props.navigation;
-        return (
+        return(
+            <View style={styles.container}>
+                <View style={styles.placeholderImageView}>
+                    <Image
+                        style={styles.placeholderImage}
+                        source={require('../../../assets/placeholder_favorites.png')}
+                    />
+                </View>
+                <Text style={styles.title}>You don't have any added destinations yet.</Text>
+                <Text style={styles.subtext}>Explore thousands of locations and add your favourites here.</Text>
+                <TouchableOpacity onPress={this.onStartExploring} style={styles.buttonExplore}>
+                    <Text style={styles.exploreBtnText}>Discover your next experience</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    renderWishList(){
+        const { navigate } = this.props.navigation;
+        return(
             <View style={styles.container}>
                 <View style={styles.chatToolbar}>
-                    <TouchableOpacity onPress={this.onBackPress}>
-                        <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-white.png')}/>
-                    </TouchableOpacity>
                     <Text style={styles.title}>Wishlists</Text>                             
                 </View>
-                <View>
+                <View style={{width: '100%'}}>
                    <FlatList style={styles.flatList}
                     data="none"
                     renderItem={
                         ({item}) =>
-                            <View style={styles.Listcontainer} >
-                                <View style={styles.flatList}> 
-                                    <View style={styles.placeholderImageView}>
-                                        <Image
-                                            style={styles.placeholderImage}
-                                            source={require('../../../assets/apartment.png')}
-                                        />
-                                        <View>
-                                           <Text style={styles.subtitle}>Summer .<Text  style={styles.subtext}> 4 Listings </Text></Text>                                           
-                                        </View>                                   
-                                    </View>
-                                </View>
-                            </View> 
+                            <TouchableOpacity onPress={() => this.goToSingleWishList()} style={{flexDirection:'column', alignItems: 'center', marginTop: 10, marginBottom: 10}}>
+                                <Image
+                                    style={styles.placeholderImage}
+                                    source={require('../../../assets/temple/overview.jpg')}
+                                />
+                                <View style={{flexDirection:'column', alignItems: 'flex-start', width:'90%'}}>
+                                    <Text style={styles.subtitle}>Summer <FontAwesome style={{fontSize: 8}}>{Icons.circle}</FontAwesome><Text  style={styles.subtext}> 4 Listings </Text></Text>                                           
+                                </View>                                   
+                            </TouchableOpacity>
                         }
                     />
                 </View>
+            </View>
+        );
+    }
+
+    render() {
+        const { navigate } = this.props.navigation;
+        return (
+            <View style={{flex: 1}}>
+                {/* {this.state.isLoading && this.renderProgressBar()} */}
+                {/* {this.renderNoWishList()} */}
+                {this.renderWishList()}
             </View>
         )
     }

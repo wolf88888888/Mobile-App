@@ -6,11 +6,12 @@ import Image from 'react-native-remote-svg';
 import styles from './styles';
 import { testBook,getCancellationFees,getCurrentlyLoggedUserJsonFile } from '../../../utils/requester';
 import {HotelReservation} from '../../../services/blockchain/hotelReservation';
+import Toast from 'react-native-simple-toast';
 
 export default class RoomDetailsReview extends Component {
     constructor() {
         super();
-        this.handleSubmit = this.handleSubmit.bind(this);
+        //this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             // links: [
             //     {
@@ -53,6 +54,7 @@ export default class RoomDetailsReview extends Component {
 
     componentDidMount() {
         const { params } = this.props.navigation.state //eslint-disable-line
+        console.log(params.guestRecord);
         const value = {
             quoteId: params.quoteId,
             rooms:[{
@@ -82,6 +84,7 @@ export default class RoomDetailsReview extends Component {
                 });
             })
             .catch((err) => {
+                Toast.showWithGravity("Access to one of the quotes failed. The quote is no longer available.", Toast.SHORT, Toast.CENTER);
                 console.log(err); //eslint-disable-line
             });
     }
@@ -104,23 +107,23 @@ export default class RoomDetailsReview extends Component {
         } else {
           trailingZeroes = 18 - (tokens.length - 1 - index);
         }
-    
+
         wei = tokens.replace(/[.,]/g, '');
         if (trailingZeroes >= 0) {
           wei = wei + '0'.repeat(trailingZeroes);
         } else {
           wei = wei.substring(0, index + 18);
         }
-    
+
         return wei;
       }
 
     handleSubmit(){
-        console.log('HandleSubmit Called')
+        this.setState({modalVisible: false,});
+        Toast.showWithGravity('We are working on your transaction this might take some time.', Toast.SHORT, Toast.CENTER);
         //const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
         getCancellationFees(this.state.bookingId)
             .then(res => res.response.json())
-            // here you set the response in to json
             .then((json) => {
                 const password = this.state.password;
                 const preparedBookingId = this.state.bookingId;
@@ -153,22 +156,22 @@ export default class RoomDetailsReview extends Component {
                             roomId,
                             numberOfTravelers.toString()
                           ).then(transaction => {
-                              console.log('b');
+                                Toast.showWithGravity(""+transaction, Toast.SHORT, Toast.CENTER);
                             // const bookingConfirmObj = {
                             //   bookingId: preparedBookingId,
                             //   transactionHash: transaction.hash
                             })
                             .catch((err) => {
-                                console.log(err);
+                                Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
                             });
-                      }, 2000);
+                      }, 3000);
                 })
                 .catch((err) => {
-                    console.log(err); //eslint-disable-line
+                    Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
                 });
             })
             .catch((err) => {
-                console.log(err); //eslint-disable-line
+                Toast.showWithGravity(""+err, Toast.SHORT, Toast.CENTER);
             });
     }
 
@@ -194,7 +197,7 @@ export default class RoomDetailsReview extends Component {
                                 <View style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.navigation.goBack(); //eslint-disable-line
+                                            this.setState({modalVisible:false}); //eslint-disable-line
                                         }}
                                     >
                                         <Image style={styles.closeButtonSvg} source={require('../../../../src/assets/png/close.png')} />
@@ -206,10 +209,11 @@ export default class RoomDetailsReview extends Component {
                                 onChangeText={walletPassword => this.setState({ password : walletPassword })}
                                 value={this.state.password}
                                 placeholder="Wallet password"
+                                secureTextEntry={true}
                             />
-                            <TouchableOpacity 
-                                style={styles.confirmButton} 
-                                onPress={this.handleSubmit}
+                            <TouchableOpacity
+                                style={styles.confirmButton}
+                                onPress={() => this.handleSubmit()}
                             >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
                             </TouchableOpacity>

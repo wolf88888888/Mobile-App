@@ -7,8 +7,7 @@ import {
     View,
     Image,
     ScrollView,
-    FlatList,
-    ToastAndroid
+    FlatList
 } from 'react-native';
 import FontAwesome, {Icons} from 'react-native-fontawesome';
 import {imgHost} from '../../../config'
@@ -19,15 +18,16 @@ import SplashScreen from 'react-native-smart-splash-screen';
 import {getMyConversations, approveMessage, declineMessage} from '../../../utils/requester';
 import InboxMessagesView from './InboxMessagesView';
 import BackButton from '../../atoms/BackButton';
-import DialogProgress from 'react-native-dialog-progress'
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import Toast from 'react-native-simple-toast';
 
 // You will find all component related to style in this class
 import styles from './inboxStyle';
 
 class Inbox extends Component {
-
     constructor(props) {
         super(props);
+        this.onConversation = this.onConversation.bind(this);
         this.state = {
             loading: false,
             data: [],
@@ -35,37 +35,62 @@ class Inbox extends Component {
             seed: 1,
             error: null,
             refreshing: false,
-            inboxMessages : []
-          };
+            inboxMessages : [],
+            showProgress: false,
+        };
     }
 
     componentDidMount() {
-        // here is the method to load all chats related to this id = 68
-        const options = {
-            title:"",
-            message:"Loading Message...",
-            isCancelable:true
-        };
-
-        DialogProgress.show(options);
+        this.setState({ showProgress: true });
         getMyConversations()
         .then(res => res.response.json())
         // here you set the response in to json
         .then(parsed => {
-            DialogProgress.hide();
+            // this.setState({ showProgress: false });
             this.setState({
+                showProgress: false,
                 inboxMessages : parsed.content,
             });
+            console.log("message");
+            console.log(parsed.content);
         })
         .catch(err => {
-            DialogProgress.hide();
-            ToastAndroid.showWithGravityAndOffset('Cannot get messages, Please check network connection.', ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 200);
+            this.setState({ showProgress: false });
+            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(err);
         });
     }
 
-    render() {
+    onConversation(item){
         const {navigate} = this.props.navigation;
+        if (item.unread == "true") {
+            let messages = this.state.inboxMessages;
+
+            let message = messages.find(x => x.id === item.id);
+            let messageIndex = messages.findIndex(x => x.id === item.id);
+
+            message.unread = 'false';
+
+            messages = messages.filter(x => x.id !== item.id);
+            messages.splice(messageIndex, 0, message);
+
+            this.setState({ inboxMessages: messages });
+        }
+        navigate('Chat', item);
+        // let messages = this.state.messages;
+        //
+        // let message = messages.find(x => x.id === id);
+        // let messageIndex = messages.findIndex(x => x.id === id);
+        //
+        // message.unread = unread === 'true' ? 'false' : 'true';
+        //
+        // messages = messages.filter(x => x.id !== id);
+        // messages.splice(messageIndex, 0, message);
+        //
+        // this.setState({ messages: messages });
+    }
+
+    render() {
         return (
             <View style={styles.InboxView}>
             {/* Main Container Start */}
@@ -81,7 +106,7 @@ class Inbox extends Component {
                     <FlatList data={this.state.inboxMessages} // Data source
                     // List Start
                         renderItem={({item, index}) => (
-                        <TouchableOpacity style={[styles.tr]} onPress={() => navigate('Chat')}>
+                        <TouchableOpacity style={[styles.tr]} onPress={() => {this.onConversation(item)}}>
                             {/* Press to go on chat screen start*/}
                                 <InboxMessagesView
                                     inboxMessage={item}>
@@ -94,6 +119,14 @@ class Inbox extends Component {
                 </ScrollView>
 
             {/* Main Container End */}
+
+                <ProgressDialog
+                   visible={this.state.showProgress}
+                   title=""
+                   message="Loading Message..."
+                   animationType="slide"
+                   activityIndicatorSize="large"
+                   activityIndicatorColor="black"/>
             </View>
         );
     }

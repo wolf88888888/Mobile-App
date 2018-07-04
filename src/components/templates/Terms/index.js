@@ -1,106 +1,75 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
 import { register, login } from '../../../utils/requester';
 import { domainPrefix } from '../../../config';
+import styles from './styles';
 
-const Terms = (props) => {
-    const { navigate, pop } = props.navigation;
-    const { params } = props.navigation.state;
+class Terms extends Component {
+    static propTypes = {
+        navigation: PropTypes.shape({
+            navigate: PropTypes.func
+        })
+    }
 
-    return (
-        <View style={styles.container}>
-            <StatusBar
-                backgroundColor="rgba(0,0,0,0)"
-                translucent
-                barStyle="dark-content"
-            />
+    static defaultProps = {
+        navigation: {
+            navigate: () => {}
+        }
+    }
 
-            <Text style={styles.title}>Before continuing</Text>
-            <Text style={styles.paragraph}>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</Text>
-            <Text style={styles.paragraph}>I agree many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</Text>
+    constructor(props) {
+        super(props);
+        this.onDecline = this.onDecline.bind(this);
+        this.state = {
+        }
+    }
 
-            <View style={styles.buttonsView}>
-                <TouchableOpacity onPress={() => navigate('CreateWallet', { ...params })}>
-                    <View style={styles.acceptButtonView}>
-                        <Text style={styles.acceptButtonText}>Accept</Text>
-                    </View>
-                </TouchableOpacity>
+    componentDidMount() {
+    }
 
-                <TouchableOpacity onPress={() => pop(3)}>
-                    <View style={styles.declineButtonView}>
-                        <Text style={styles.declineButtonText}>Decline</Text>
-                    </View>
-                </TouchableOpacity>
+    onDecline() {
+        const { params } = this.props.navigation.state;
+        const { pop } = this.props.navigation;
+        if (params.isFB) {
+            pop(2);
+        }
+        else {
+            pop(3);
+        }
+    }
+
+    render() {
+        const { navigate, goBack, pop } = this.props.navigation;
+        const { params } = this.props.navigation.state;
+        return (
+            <View style={styles.container}>
+                <StatusBar
+                    backgroundColor="rgba(0,0,0,0)"
+                    translucent
+                    barStyle="dark-content"
+                />
+
+                <Text style={styles.title}>Before continuing</Text>
+                <Text style={styles.paragraph}>I accept the terms and conditions found on https://locktrip.com/terms.html</Text>
+                <Text style={styles.paragraph}>I understand that if I forget my wallet password, the only way to recover it would be through the mnemonic ketwords provided during the wallet creation. It is my sole responsibility to write them and store them in a safe place. I also understand the dangers associated with Blockchain based assets and under no circumstances will I hold LockTrip responsible for any loss that could arise due to any type of security breach and/or forgotten wallet password or mnemonic keywords.</Text>
+
+                <View style={styles.buttonsView}>
+                    <TouchableOpacity onPress={() => navigate('CreateWallet', { ...params })}>
+                        <View style={styles.acceptButtonView}>
+                            <Text style={styles.acceptButtonText}>Accept</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={this.onDecline}>
+                        <View style={styles.declineButtonView}>
+                            <Text style={styles.declineButtonText}>Decline</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    );
-};
-
-Terms.propTypes = {
-    // start react-navigation props
-    navigation: PropTypes.object.isRequired
-};
+        );
+    }
+}
 
 export default Terms;
-
-const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#f0f1f3',
-        padding: 15
-    },
-    title: {
-        color: '#000',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 22,
-        marginTop: 90
-    },
-    paragraph: {
-        color: '#444',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 17,
-        lineHeight: 20,
-        marginTop: 25
-    },
-    buttonsView: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-        marginTop: 40
-    },
-    acceptButtonView: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: 158,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 50,
-        borderRadius: 25,
-        backgroundColor: '#DA7B61'
-    },
-    declineButtonView: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: 158,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 50,
-        borderRadius: 25,
-        borderColor: '#DA7B61',
-        borderWidth: 1.5,
-        backgroundColor: '#f0f1f3'
-    },
-    acceptButtonText: {
-        color: '#fcf9f8',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 17
-    },
-    declineButtonText: {
-        color: '#DA7B61',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 17
-    }
-});
