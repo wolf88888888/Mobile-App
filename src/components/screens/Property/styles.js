@@ -311,12 +311,18 @@ const styles = StyleSheet.create({
     },
     btn_backText: {
         marginLeft: 5,
+        marginTop: 28,
         fontFamily: 'FuturaStd-Medium',
     },
     btn_backImage:{
         height: 24,
         width: 24,
         resizeMode: 'contain'
-      },
+    },
+    titleConatiner: {
+        width:'100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+    }
 });
 export default styles;
