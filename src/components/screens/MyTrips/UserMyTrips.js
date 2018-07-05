@@ -32,7 +32,8 @@ class UserMyTrips extends Component {
             trips : props.navigation.state.params.trips.content,
             isLast: props.navigation.state.params.trips.last,
             page:   0,
-            userImageUrl : ''
+            userImageUrl : '',
+            isLoading: false,
         };
         this.onEndReached = this.onEndReached.bind(this)
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -71,7 +72,8 @@ class UserMyTrips extends Component {
     onEndReached () {
         console.log('reached to end');
         pageNumber = this.state.page + 1
-        if (!this.state.isLast){
+        if (!this.state.isLast && !this.state.isLoading){
+            this.setState({isLoading: true})
             getMyHotelBookings('?page=' + pageNumber)
                 .then(res => res.response.json())
                 .then(parsed => {
@@ -89,6 +91,7 @@ class UserMyTrips extends Component {
                         trips: tempArr,
                         isLast: parsed.last,
                         page: pageNumber,
+                        isLoading: false,
                     })
                     
                 })
