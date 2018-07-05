@@ -10,9 +10,10 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     btn_backImage:{
-        height: 50,
-        width: 50,
-        marginTop: 24
+        width: 24,
+        height: 24,
+        marginTop: 40,
+        marginLeft: 18,
     },
     steps: {
         fontFamily: 'FuturaStd-Light',

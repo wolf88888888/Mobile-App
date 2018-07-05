@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity ,BackHandler, Platform} from 'react-native';
 import styles from './styles';
+import _ from 'lodash';
 import { domainPrefix,imgHost } from '../../../config';
 import { getMyHotelBookings,getUserInfo } from '../../../utils/requester';
 import moment from 'moment';
@@ -28,9 +29,29 @@ class UserMyTrips extends Component {
         console.log(props.navigation.state);
         //State
         this.state = {
-            trips : props.navigation.state.params.trips,
-            userImageUrl : ''
+            trips : props.navigation.state.params.trips.content,
+            isLast: props.navigation.state.params.trips.last,
+            page:   0,
+            userImageUrl : '',
+            isLoading: false,
         };
+        this.onEndReached = this.onEndReached.bind(this)
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    
+    handleBackButtonClick() {
+        console.log('back pressed---')
+        this.props.navigation.goBack();
+        this.props.navigation.state.params.gotoBooking();
+        return true;
     }
 
     componentDidMount() {
@@ -46,6 +67,38 @@ class UserMyTrips extends Component {
             //if error arises in getting user info
             console.log(err);
         });
+    }
+
+    onEndReached () {
+        console.log('reached to end');
+        pageNumber = this.state.page + 1
+        if (!this.state.isLast && !this.state.isLoading){
+            this.setState({isLoading: true})
+            getMyHotelBookings('?page=' + pageNumber)
+                .then(res => res.response.json())
+                .then(parsed => {
+                    console.log('My trips----', parsed);
+                    
+                    var tempArr = []
+                    tempArr = this.state.trips.concat(parsed.content)
+                    tempArr = _.orderBy(tempArr, ['arrival_date'],['asc']);
+                    // _.remove(tripArray, function(obj) {
+                    //     var tripDate = moment(obj.arrival_date).utc();
+                    //     var now = moment().utc();
+                    //     return tripDate < now;
+                    // });
+                    this.setState({
+                        trips: tempArr,
+                        isLast: parsed.last,
+                        page: pageNumber,
+                        isLoading: false,
+                    })
+                    
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     }
 
     render() {
@@ -66,6 +119,8 @@ class UserMyTrips extends Component {
                 <FlatList
                     style={styles.flatList}
                     data={this.state.trips}
+                    onEndReached={this.onEndReached}
+                    onEndReachedThreshold={0.5}
                     renderItem={
                         ({item}) =>
                             <View style={styles.flatListMainView}>
@@ -107,12 +162,9 @@ class UserMyTrips extends Component {
         )
     }
 
-    onStartExploring = () =>{
-
-    }
-
     onBackPress = () => {
         this.props.navigation.goBack();
+        this.props.navigation.state.params.gotoBooking();
     }
 }
 

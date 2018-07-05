@@ -6,7 +6,8 @@ import {
     AsyncStorage,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
+    Platform
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -20,6 +21,7 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Wallet } from '../../../services/blockchain/wallet';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import Toast from 'react-native-simple-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class CreateWallet extends Component {
     static propTypes = {
@@ -56,7 +58,9 @@ class CreateWallet extends Component {
     }
 
     submitPassword() {
-        console.log();
+        const { params } = this.props.navigation.state;
+        // console.log(params);
+        // return;
         if (this.state.password.length < 8) {
             Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
             return;
@@ -76,8 +80,6 @@ class CreateWallet extends Component {
         }
 
         this.setState({ showProgress: true });
-
-        const { params } = this.props.navigation.state;
 
         try {
             setTimeout(() => {
@@ -109,10 +111,10 @@ class CreateWallet extends Component {
         const { navigate, goBack } = this.props.navigation;
 
         return (
-            <TouchableWithoutFeedback
-                onPress={Keyboard.dismiss}
-                accessible={true}
-            >
+            <KeyboardAwareScrollView
+                style={styles.container}
+                enableOnAndroid={true}
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
                 <View style={styles.container}>
                     <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
@@ -123,7 +125,7 @@ class CreateWallet extends Component {
 
                         <View>
                             <Text style={styles.infoText}>
-                                Your LOC wallet is blockchain based and will not have control over it. It will not be on our server. When you are adding funds to it, your funds will be in your complete control and possession. It is very important not to share the password with anyone. For security reasons we will not store this password and there will be no way for you to recover it in case you forget it.
+                            Your LOC wallet is Blockchain based and you are the only person to have access to it. It will not be on our server. When you are adding funds to it, your funds will be in your complete control and possession. It is very important not to share your wallet password. For security reasons we will not store this password and there will be no way for you to recover it through our site.
                             </Text>
                         </View>
 
@@ -178,7 +180,7 @@ class CreateWallet extends Component {
                        activityIndicatorSize="large"
                        activityIndicatorColor="black"/>
                 </View>
-            </TouchableWithoutFeedback>
+            </KeyboardAwareScrollView>
         );
     }
 }

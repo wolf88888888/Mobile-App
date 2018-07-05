@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Platform
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
@@ -12,6 +13,7 @@ import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
 import styles from './styles';
 import Toast from 'react-native-simple-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class CreatePassword extends Component {
     static propTypes = {
@@ -48,7 +50,6 @@ class CreatePassword extends Component {
     }
 
     onCreatePassword() {
-
         if (this.state.password.length < 8) {
             Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
             return;
@@ -69,7 +70,7 @@ class CreatePassword extends Component {
         const { params } = this.props.navigation.state;
         const { password, confirmPassword } = this.state;
 
-        this.props.navigation.navigate('Terms', { ...params, password })
+        this.props.navigation.navigate('Terms', { ...params, password, isFB:false })
     }
 
     render() {
@@ -78,6 +79,10 @@ class CreatePassword extends Component {
         const { params } = this.props.navigation.state;
 
         return (
+            <KeyboardAwareScrollView
+                style={styles.container}
+                enableOnAndroid={true}
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
             <View style={styles.container}>
                 <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
@@ -92,8 +97,7 @@ class CreatePassword extends Component {
                     <View style={styles.titleView}><Text style={styles.titleText}>Create Password</Text></View>
 
                     <Text style={styles.finePrintText}>
-                    Your password must be 8 or more characters long. Do not use any common passwords, repetition or sequences.
-                    Try making it longer or adding latin letter and number, adding symbols, like !, # or %.
+                    Your password must be at least: 8 characters long, should containt at least one digit and should contain at least one symbol.
                     </Text>
 
                     <View style={styles.inputView}>
@@ -103,7 +107,7 @@ class CreatePassword extends Component {
                             autoCapitalize="none"
                             value={password}
                             onChangeText={this.onChangeHandler('password')}
-                            placeholder="Password"
+                            placeholder="Password (8 chars with a digit and a symbol)"
                             placeholderTextColor="#fff"
                             rightIcon={validatePassword(password) ? 'check' : null}
                         />
@@ -118,7 +122,7 @@ class CreatePassword extends Component {
                             autoCapitalize="none"
                             value={confirmPassword}
                             onChangeText={this.onChangeHandler('confirmPassword')}
-                            placeholder="Password"
+                            placeholder="Password (8 chars with a digit and a symbol)"
                             placeholderTextColor="#fff"
                             rightIcon={validateConfirmPassword(password, confirmPassword) ? 'check' : null}
                         />
@@ -136,6 +140,7 @@ class CreatePassword extends Component {
                     </View>
                 </View>
             </View>
+            </KeyboardAwareScrollView>
         );
     }
 }

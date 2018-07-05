@@ -45,6 +45,7 @@
 		84B015A420D5B399004ED6EF /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B0157C20D5AD69004ED6EF /* libLRDRCTSimpleToast.a */; };
 		99776688F31153BD51E7152E /* libPods-MobileApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B85C65B26FA94B6C4D54728 /* libPods-MobileApp.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		F1A6AF6E20DDC0DB00527566 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1A6AF6C20DDC0B700527566 /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -342,6 +343,13 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		F1A6AF6B20DDC0B700527566 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
+			remoteInfo = RNImagePicker;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -367,6 +375,8 @@
 		2D02E47B1E0B4A5D006451C7 /* MobileApp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MobileApp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* MobileApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MobileApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		410BBDA520E6422000AB0243 /* MobileApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MobileApp.entitlements; path = MobileApp/MobileApp.entitlements; sourceTree = "<group>"; };
+		41E2AD5720E4EC15002D4BC7 /* MobileApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MobileApp copy-Info.plist"; path = "/Users/Mac/Work/React Native/Locktrip-Forked/Mobile-App/ios/MobileApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		45294B11ABBF4B7891E077D0 /* RNUUIDGenerator.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNUUIDGenerator.xcodeproj; path = "../node_modules/react-native-uuid-generator/ios/RNUUIDGenerator.xcodeproj"; sourceTree = "<group>"; };
 		462BFACB204FE8B800E32BF8 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = MobileApp/LaunchScreen.xib; sourceTree = "<group>"; };
 		4687A9E120525437000F3A9D /* FuturaStd-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FuturaStd-Light.otf"; sourceTree = "<group>"; };
@@ -382,6 +392,7 @@
 		95E6140F454CDA4E27E0C8D0 /* Pods-MobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MobileApp/Pods-MobileApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9B83022F2885484E8B84E8CE /* libRNUUIDGenerator.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNUUIDGenerator.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -397,6 +408,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1A6AF6E20DDC0DB00527566 /* libRNImagePicker.a in Frameworks */,
 				84B015A420D5B399004ED6EF /* libLRDRCTSimpleToast.a in Frameworks */,
 				46A6F58F204F4FBC00BF95D4 /* libRCTSplashScreen.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -524,6 +536,7 @@
 		13B07FAE1A68108700A75B9A /* MobileApp */ = {
 			isa = PBXGroup;
 			children = (
+				410BBDA520E6422000AB0243 /* MobileApp.entitlements */,
 				462BFACB204FE8B800E32BF8 /* LaunchScreen.xib */,
 				46A6F596204F86F200BF95D4 /* splash.png */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -616,6 +629,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */,
 				46A6F540204F4C6700BF95D4 /* RCTSplashScreen.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -655,6 +669,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				840DF2F720D58F77005853D1 /* Recovered References */,
 				48BA10E3FC83DA4B323F1BBD /* Pods */,
+				41E2AD5720E4EC15002D4BC7 /* MobileApp copy-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -701,6 +716,14 @@
 			children = (
 				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1A6AF4120DDC0B700527566 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1A6AF6C20DDC0B700527566 /* libRNImagePicker.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -793,10 +816,21 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 885FR9U95U;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = ZPZ25B5V33;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 0;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 885FR9U95U;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
@@ -873,6 +907,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = F1A6AF4120DDC0B700527566 /* Products */;
+					ProjectRef = F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */;
 				},
 				{
 					ProductGroup = 840DF2F820D58F8F005853D1 /* Products */;
@@ -1170,6 +1208,13 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F1A6AF6C20DDC0B700527566 /* libRNImagePicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNImagePicker.a;
+			remoteRef = F1A6AF6B20DDC0B700527566 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1332,6 +1377,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 885FR9U95U;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1343,10 +1389,7 @@
 				INFOPLIST_FILE = MobileAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1361,6 +1404,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 885FR9U95U;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-uuid-generator/ios",
@@ -1368,10 +1412,7 @@
 				INFOPLIST_FILE = MobileAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1386,8 +1427,11 @@
 			baseConfigurationReference = 95E6140F454CDA4E27E0C8D0 /* Pods-MobileApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = ZPZ25B5V33;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen",
@@ -1400,7 +1444,9 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = c.om.locktrip;
 				PRODUCT_NAME = MobileApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1410,7 +1456,10 @@
 			baseConfigurationReference = 0EF7915A9926B5F3C0E259AF /* Pods-MobileApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZPZ25B5V33;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen",
@@ -1423,7 +1472,9 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = c.om.locktrip;
 				PRODUCT_NAME = MobileApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1438,6 +1489,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 885FR9U95U;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1446,15 +1498,12 @@
 				);
 				INFOPLIST_FILE = "MobileApp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MobileApp-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.locktrip.locktrip.tv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1473,6 +1522,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 885FR9U95U;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1480,15 +1530,12 @@
 				);
 				INFOPLIST_FILE = "MobileApp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MobileApp-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.locktrip.locktrip.tv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1509,10 +1556,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "MobileApp-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MobileApp-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1534,10 +1578,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "MobileApp-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MobileApp-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;

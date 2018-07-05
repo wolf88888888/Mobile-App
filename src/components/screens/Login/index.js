@@ -41,6 +41,13 @@ class Login extends Component {
             duration: 850,
             delay: 500
         });
+
+        // Toast.showWithGravity(alertMessage, Toast.SHORT, Toast.BOTTOM);
+        // if (__DEV__) {
+        //     Toast.showWithGravity("Debug ----- ", Toast.SHORT, Toast.BOTTOM);
+        // } else {
+        //     Toast.showWithGravity("Release ----- ", Toast.SHORT, Toast.BOTTOM);
+        // }
     }
 
     // TODO: Need a way to generate a Google ReCAPTCHA token
@@ -67,8 +74,9 @@ class Login extends Component {
                     const { errors } = response;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
+                            // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
                             console.log('Error logging in  :', errors[key].message);
+                            alert(errors[key].message);
                         }
                     });
                 });
@@ -76,7 +84,7 @@ class Login extends Component {
         })
         .catch(err => {
             this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot login, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            alert('Cannot login, Please check network connection.');
             console.log(err);
         });
     }

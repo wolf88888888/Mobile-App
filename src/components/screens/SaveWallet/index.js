@@ -21,6 +21,7 @@ import { register, login } from '../../../utils/requester';
 import { imgHost } from '../../../config';
 // import DialogProgress from 'react-native-dialog-progress'
 import Toast from 'react-native-simple-toast';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -66,14 +67,14 @@ class SaveWallet extends Component {
             message:"Registering...",
             isCancelable:false
         };
-        // DialogProgress.show(options);
 
+        this.setState({ showProgress: true });
         register(user, null)
         .then((res) => {
-            // DialogProgress.hide();
+            this.setState({ showProgress: false });
             if (res.success) {
                 console.log(res);
-                navigate('CongratsWallet')
+                navigate('CongratsWallet', {isFB:params.isFB})
                 // login(user, null).then((res) => {
                 //     if (res.success) {
                 //         res.response.json().then((data) => {
@@ -97,7 +98,7 @@ class SaveWallet extends Component {
             }
         })
         .catch(err => {
-            // DialogProgress.hide();
+            this.setState({ showProgress: false });
             Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(err);
         });
@@ -115,12 +116,12 @@ class SaveWallet extends Component {
 
                         <View style={styles.main}>
                             <View style={styles.titleView}>
-                                <Text style={styles.titleText}>Wallet Recovery</Text>
+                                <Text style={styles.titleText}>Wallet Recovery Keywords</Text>
                             </View>
 
                             <View>
                                 <Text style={styles.infoText}>
-                                    Your mnemonic recovery keywords are a way for you to backup the access to your wallet. You should print them on a piece of paper and store them in a safe place.
+                                Your mnemonic recovery keywords are the ONLY WAY you could recover access to your wallet in case your device is damaged and/or in case you forget your wallet password. You should write them down on a piece of paper and store them in a safe place where no one else has access to.
                                 </Text>
                             </View>
 
@@ -144,6 +145,13 @@ class SaveWallet extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
+                        <ProgressDialog
+                           visible={this.state.showProgress}
+                           title=""
+                           message="Finalizing…"
+                           animationType="slide"
+                           activityIndicatorSize="large"
+                           activityIndicatorColor="black"/>
                     </View>
                 </TouchableWithoutFeedback>
             </ScrollView>
