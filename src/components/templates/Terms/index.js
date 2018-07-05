@@ -52,7 +52,7 @@ class Terms extends Component {
 
                 <Text style={styles.title}>Before continuing</Text>
                 <Text style={styles.paragraph}>I accept the terms and conditions found on https://locktrip.com/terms.html</Text>
-                <Text style={styles.paragraph}>I understand that if I forget my wallet password, the only way to recover it would be through the mnemonic ketwords provided during the wallet creation. It is my sole responsibility to write them and store them in a safe place. I also understand the dangers associated with Blockchain based assets and under no circumstances will I hold LockTrip responsible for any loss that could arise due to any type of security breach and/or forgotten wallet password or mnemonic keywords.</Text>
+                <Text style={styles.paragraph}>I understand that if I forget my wallet password, the only way to recover it would be through the mnemonic keywords provided during the wallet creation. It is my sole responsibility to write them and store them in a safe place. I also understand the dangers associated with Blockchain based assets and under no circumstances will I hold LockTrip responsible for any loss that could arise due to any type of security breach and/or forgotten wallet password or mnemonic keywords.</Text>
 
                 <View style={styles.buttonsView}>
                     <TouchableOpacity onPress={() => navigate('CreateWallet', { ...params })}>
