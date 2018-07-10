@@ -20,7 +20,7 @@ import {
     getLocRate,
     getLocRateInUserSelectedCurrency
 } from '../../../utils/requester';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-easy-toast';
 
 const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
@@ -58,6 +58,7 @@ class Explore extends Component {
         this.handlePopularCities = this.handlePopularCities.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.showToast = this.showToast.bind(this);
         this.state = {
             searchHotel: true,
             isHotelSelected: true,
@@ -155,6 +156,10 @@ class Explore extends Component {
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    showToast() {
+        this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
 
     onChangeHandler(property) {
@@ -325,7 +330,7 @@ class Explore extends Component {
             else {
                 if (this.state.regionId == '') {
                     //Empty location
-                    Toast.showWithGravity('Location field cannot be empty', Toast.SHORT, Toast.CENTER);
+                    this.refs.toast.show('Location field cannot be empty.', 1500);
                     this.setState({ search: '' });
                 }
                 else {
@@ -599,6 +604,16 @@ class Explore extends Component {
         return (
 
             <View style={styles.container}>
+                <Toast
+                    ref="toast"
+                    style={{backgroundColor:'#DA7B61'}}
+                    position='bottom'
+                    positionValue={150}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{color:'white', fontFamily: 'FuturaStd-Light'}}
+                />
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 <ScrollView>
                     <View style={styles.scrollViewContentMain}>
@@ -685,7 +700,7 @@ class Explore extends Component {
                             </TouchableOpacity>
                         </View>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.showToast}>
                             <View style={styles.searchButtonView}>
                                 <Text style={styles.searchButtonText}>Show All</Text>
                             </View>
@@ -695,7 +710,7 @@ class Explore extends Component {
                         <View style={styles.bottomView}>
                             <Image style={styles.bottomViewText} resizeMode='stretch'
                                    source={require('../../../assets/texthome.png')}/>
-                            <TouchableOpacity style={styles.getStartedButtonView}>
+                            <TouchableOpacity onPress={this.showToast} style={styles.getStartedButtonView}>
                                 <View>
                                     <Text style={styles.searchButtonText}>Get Started</Text>
                                 </View>
