@@ -11,26 +11,26 @@ const styles = StyleSheet.create({
         color: '#000',
         fontFamily: 'FuturaStd-Light',
         fontSize: 22,
-        marginTop: 90
+        marginTop: '10%'
     },
     paragraph: {
         color: '#444',
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
         lineHeight: 20,
-        marginTop: 25
+        marginTop: '10%'
     },
     buttonsView: {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-between',
-        marginTop: 40
+        marginTop: '10%'
     },
     acceptButtonView: {
         display: 'flex',
         flexDirection: 'row',
-        width: 158,
+        width: 150,
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     declineButtonView: {
         display: 'flex',
         flexDirection: 'row',
-        width: 158,
+        width: 150,
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,

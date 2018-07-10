@@ -142,8 +142,11 @@ class Welcome extends Component {
         const { navigate, goBack } = this.props.navigation;
         return (
             <View style={styles.container}>
+
                 <Image source={SplashPNG} resizeMode='contain' style={styles.splashImage} />
+
                 <Text style={styles.titleText}>Welcome</Text>
+
                 <View style={styles.buttonCollectionWrap}>
                     <Button
                         onPress={() => navigate('Login')}
@@ -161,9 +164,11 @@ class Welcome extends Component {
                         text="Create an Account"
                     />
                 </View>
+
                 <Text style={styles.finePrintText}>
                     By tapping Log In, Continue or Create Account, I agree to LockChain's Terms of Service, Payments Terms of Service and Privacy Policy.
                 </Text>
+
                 <GetStartedImage />
 
 
