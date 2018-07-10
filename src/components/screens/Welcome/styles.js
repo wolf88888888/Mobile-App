@@ -6,13 +6,20 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: '#DA7B61'
+        backgroundColor: '#DA7B61',
+        justifyContent: 'space-between'
     },
     splashImage: {
-        width: 200,
+        width: 150,
         height: 80,
-        marginTop: 100,
+        marginTop: '20%',
         resizeMode:'contain'
+    },
+    titleText: {
+        color: '#fff',
+        fontSize: 25,
+        fontFamily: 'FuturaStd-Light',
+        marginBottom: '15%'
     },
     buttonCollectionWrap: {
         display: 'flex',
@@ -32,20 +39,16 @@ const styles = StyleSheet.create({
     createAccountButton: {
         marginTop: 20
     },
-    titleText: {
-        color: '#fff',
-        fontSize: 25,
-        fontFamily: 'FuturaStd-Light',
-        marginBottom: 73
-    },
     finePrintText: {
-        marginTop: 60,
         marginLeft: 30,
         marginRight: 30,
         color: '#fff',
         fontSize: 13,
         fontFamily: 'FuturaStd-Light',
-        textAlign: 'justify'
+        textAlign: 'justify',
+        position: 'absolute',
+        bottom:'15%',
+        left:0,
     }
 });
 
