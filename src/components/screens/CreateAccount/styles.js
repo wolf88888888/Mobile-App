@@ -35,9 +35,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        padding: 18
     },
     finePrintText: {
+        paddingLeft: 18,
+        flex: 0.8,
+        alignSelf: 'flex-start',
         color: '#fff',
         fontSize: 13,
         fontFamily: 'FuturaStd-Light',

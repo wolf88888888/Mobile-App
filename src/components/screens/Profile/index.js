@@ -13,6 +13,7 @@ import { Wallet } from '../../../services/blockchain/wallet';
 import styles from './styles';
 import { domainPrefix } from '../../../config';
 import EditCurrencyModal from '../../atoms/EditCurrencyModal';
+import Toast from 'react-native-easy-toast'
 
 class Profile extends Component {
     constructor(props) {
@@ -34,6 +35,9 @@ class Profile extends Component {
         this.onSaveCurrency = this.onSaveCurrency.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.updateGender = this.updateGender.bind(this);
+        this.showProgressView = this.showProgressView.bind(this);
+        this.hideProgressView = this.hideProgressView.bind(this);
+        this.showToast = this.showToast.bind(this);
     }
 
     componentDidMount() {
@@ -124,7 +128,7 @@ class Profile extends Component {
             month = birthday.format('MM');
             year = birthday.format('YYYY');
         }
-
+        
         let userInfo = {
             firstName: this.state.info.firstName,
             lastName: this.state.info.lastName,
@@ -140,12 +144,14 @@ class Profile extends Component {
         };
 
         Object.keys(userInfo).forEach((key) => (userInfo[key] === null || userInfo[key] === '') && delete userInfo[key]);
-
+        this.showProgressView();
         updateUserInfo(userInfo, null).then((res) => {
             if (res.success) {
+                this.hideProgressView();
                 console.log('success updating userdata')
             }
             else {
+                this.hideProgressView();
                 console.log('failed updating userdata')
             }
         });
@@ -161,12 +167,29 @@ class Profile extends Component {
         });
     }
 
-    updateGender(data) {
+    showProgressView() {
+        this.setState({
+            showProgress: true,
+        });
+    }
+
+    hideProgressView() {
+        this.setState({
+            showProgress: false,
+        });
+    }
+
+    updateGender(gender) {
         this.setState({
             info: {
-                gender: data.gender
-            },
+                ...this.state.info,
+                gender: gender,
+            }
         })
+    }
+
+    showToast() {
+        this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
 
     render() {
@@ -193,6 +216,16 @@ class Profile extends Component {
                 <View style={styles.titleConatiner}>
                     <BackButton style={styles.closeButton} onPress={() => navigate('EXPLORE')}/>
                 </View>
+                <Toast
+                    ref="toast"
+                    style={{backgroundColor:'#DA7B61'}}
+                    position='bottom'
+                    positionValue={100}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{color:'white', fontFamily: 'FuturaStd-Light'}}
+                />
                 <Modal
                     animationType="fade"
                     transparent={true}
@@ -223,9 +256,9 @@ class Profile extends Component {
                         <Image
                             source={require('../../../assets/splash.png')}
                             style={styles.logoBackground} />
-                        <View style={styles.addMore}>
-                            <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
-                        </View>
+                            <TouchableOpacity onPress={this.showToast} style={styles.addMore}>
+                                <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
+                            </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => { Clipboard.setString(this.state.walletAddress) }}>
                         <View style={styles.copyBox}>
@@ -241,11 +274,11 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Edit Profile</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-user.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.showToast} style={styles.navItem}>
                             <Text style={styles.navItemText}>Notifications</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-bell.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.showToast} style={styles.navItem}>
                             <Text style={styles.navItemText}>Payment Methods</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-payment.png')} style={styles.navIcon} />
                         </TouchableOpacity>
@@ -253,7 +286,7 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Currency</Text>
                             <Text style={styles.navCurrency}>{preferredCurrency.code}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigate('ViewProfile')} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.showToast} style={styles.navItem}>
                             <Text style={styles.navItemText}>Switch to Hosting</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>
