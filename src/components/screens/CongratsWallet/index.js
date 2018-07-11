@@ -42,10 +42,10 @@ class CongratsWallet extends Component {
         const { params } = this.props.navigation.state;
         const { pop } = this.props.navigation;
         if (params.isFB) {
-            pop(5);
+            pop(6);
         }
         else {
-            pop(6);
+            pop(7);
         }
     }
 

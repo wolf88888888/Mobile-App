@@ -36,6 +36,7 @@ class CreateAccount extends Component {
             firstName: '',
             lastName: '',
             email: '',
+            country: '',
             userWantsPromo: true,
             checkZIndex: 1 // zIndex of switchCheckView
         };
@@ -50,7 +51,7 @@ class CreateAccount extends Component {
 
     render() {
         const {
-            firstName, lastName, email, userWantsPromo, checkZIndex
+            firstName, lastName, email, country, userWantsPromo, checkZIndex
         } = this.state;
         const { navigate, goBack } = this.props.navigation;
 
@@ -106,6 +107,19 @@ class CreateAccount extends Component {
                         />
                     </View>
 
+                    <View style={styles.inputView}>
+                        <SmartInput
+                            keyboardType="default"
+                            autoCorrect={false}
+                            autoCapitalize="none"
+                            value={country}
+                            onChangeText={this.onChangeHandler('country')}
+                            placeholder="Country of Residence"
+                            placeholderTextColor="#fff"
+                            rightIcon={country.length > 3 ? 'check' : null}
+                        />
+                    </View>
+
                     <View style={styles.finePrintView}>
                         <Text style={styles.finePrintText}>
                         I'd like to receive promotional communications, including discounts,
@@ -147,7 +161,7 @@ class CreateAccount extends Component {
                         <TouchableOpacity
                             disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
                             onPress={() => navigate('CreatePassword', {
-                                firstName, lastName, email, userWantsPromo
+                                firstName, lastName, email, country ,userWantsPromo
                             })}
                         >
                             <View style={styles.nextButton}>
