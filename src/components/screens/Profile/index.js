@@ -22,6 +22,7 @@ class Profile extends Component {
             info: {},
             walletAddress: '',
             locBalance:0,
+            ethBalance:'0.0',
             preferredCurrency: '',
             currentCurrency:'EUR',
             currencies: [],
@@ -71,13 +72,10 @@ class Profile extends Component {
             console.log(parsedResp.locAddress);
             if (parsedResp.locAddress != null && parsedResp.locAddress != '') {
                 console.log("start ");
-                // Wallet.getBalance(parsedResp.locAddress).then(x => {
-                //     const ethBalance = x / (Math.pow(10, 18));
-                //     //var json = JSON.stringify(myObj);
-                //     console.log("ethBalance");
-                //     // console.log(bigNumberToString(x, 10));
-                //     console.log(ethBalance);
-                // });
+                Wallet.getBalance(parsedResp.locAddress).then(x => {
+                    const ethBalance = x / (Math.pow(10, 18));
+                    this.setState({ethBalance: ethBalance});
+                });
                 Wallet.getTokenBalance(parsedResp.locAddress).then(y => {
                     const locBalance = y / (Math.pow(10, 18));
                     this.setState({locBalance: locBalance});
@@ -194,7 +192,7 @@ class Profile extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency} = this.state;
+        const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency, ethBalance} = this.state;
 
         console.log("currency: " + currentCurrency);
         console.log("locPrice: " + currencyLocPrice);
@@ -252,6 +250,10 @@ class Profile extends Component {
                         <Text style={styles.balanceLabel}>Current Balance</Text>
                         <View style={{width: '100%'}}>
                             <Text style={styles.balanceText}>{locBalance.toFixed(2)} LOC / {displayPrice}</Text>
+                        </View>
+                        <Text style={styles.balanceLabel}>ETH Balance</Text>
+                        <View style={{width: '100%'}}>
+                            <Text style={styles.balanceText}>{ethBalance}</Text>
                         </View>
                         <Image
                             source={require('../../../assets/splash.png')}
