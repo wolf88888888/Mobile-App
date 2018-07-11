@@ -249,11 +249,11 @@ class Profile extends Component {
                         </View>
                         <Text style={styles.balanceLabel}>Current Balance</Text>
                         <View style={{width: '100%'}}>
-                            <Text style={styles.balanceText}>{locBalance.toFixed(2)} LOC / {displayPrice}</Text>
+                            <Text style={styles.balanceText}>{locBalance.toFixed(6)} LOC / {displayPrice}</Text>
                         </View>
                         <Text style={styles.balanceLabel}>ETH Balance</Text>
                         <View style={{width: '100%'}}>
-                            <Text style={styles.balanceText}>{ethBalance}</Text>
+                            <Text style={styles.balanceText}>{parseFloat(ethBalance).toFixed(6)}</Text>
                         </View>
                         <Image
                             source={require('../../../assets/splash.png')}
