@@ -72,8 +72,7 @@ class MyTrips extends Component {
         getMyHotelBookings()
         .then(res => res.response.json())
         .then(parsed => {
-            console.log('My trips----', parsed);
-            var tripArray = _.orderBy(parsed.content, ['arrival_date'],['asc']);
+            var tripArray = _.orderBy(parsed.content, ['arrival_date'],['desc']);
             // _.remove(tripArray, function(obj) {
             //     var tripDate = moment(obj.arrival_date).utc();
             //     var now = moment().utc();

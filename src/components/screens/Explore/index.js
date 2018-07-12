@@ -22,7 +22,7 @@ import {
 } from '../../../utils/requester';
 import Toast from 'react-native-easy-toast';
 
-const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
 class Explore extends Component {
     static propTypes = {
@@ -58,6 +58,7 @@ class Explore extends Component {
         this.handlePopularCities = this.handlePopularCities.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.spinnerValueChange = this.spinnerValueChange.bind(this);
         this.showToast = this.showToast.bind(this);
         this.state = {
             searchHotel: true,
@@ -69,7 +70,7 @@ class Explore extends Component {
             cities: [],
             search: '',
             regionId: '',
-            currency: 'USD',
+            currency: 'EUR',
             checkInDate: startDate.format('ddd, DD MMM')
                 .toString(),
             checkInDateFormated: startDate.format('DD/MM/YYYY')
@@ -121,10 +122,9 @@ class Explore extends Component {
     async componentWillMount() {
         const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
         const email_value = await AsyncStorage.getItem(`${domainPrefix}.auth.username`);
-
         this.setState({
             token: token_value,
-            email: email_value
+            email: email_value,
         });
 
         SplashScreen.close({
@@ -134,28 +134,14 @@ class Explore extends Component {
         });
     }
 
-    componentDidMount() {
+     async componentDidMount() {
         console.disableYellowBox = true;
         getTopHomes()
             .then((topHomes) => {
                 const truncated = topHomes.content.slice(0, 4);
                 this.setState({ topHomes: truncated });
             });
-
-        getLocRate()
-            .then((json) => {
-                this.setState({
-                    locRates: json[0],
-                    locPrice: json[0].price_eur
-                });
-                AsyncStorage.setItem('currentCurrency', 'EUR');
-                AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
-
-
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        this.spinnerValueChange(this.state.language);
     }
 
     showToast() {
@@ -360,36 +346,37 @@ class Explore extends Component {
 
     spinnerValueChange(value) {
         this.setState({ language: value });
-        if (value == 'EUR') {
-            AsyncStorage.setItem('currentCurrency', 'EUR');
-            AsyncStorage.setItem('currencyLocPrice', this.state.locRates.price_eur);
-            this.setState({
-                locPrice: this.state.locRates.price_eur,
-                currencyIcon: Icons.euro
-            });
-        }
-        else if (value == 'USD') {
-            AsyncStorage.setItem('currentCurrency', 'USD');
-            AsyncStorage.setItem('currencyLocPrice', this.state.locRates.price_usd);
-            this.setState({
-                locPrice: this.state.locRates.price_usd,
-                currencyIcon: Icons.usd
-            });
-        }
-        else if (value == 'GBP') {
-            getLocRateInUserSelectedCurrency('GBP')
-                .then((json) => {
-                    AsyncStorage.setItem('currentCurrency', 'GBP');
-                    AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
+        getLocRateInUserSelectedCurrency(value)
+            .then((json) => {
+                console.log('spinnerValueJson----', json[0], value);
+                if (value == 'EUR') {
+                    // AsyncStorage.setItem('currentCurrency', 'EUR');
+                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
+                    this.setState({
+                        locPrice: json[0].price_eur,
+                        currencyIcon: Icons.euro
+                    });
+                }
+                else if (value == 'USD') {
+                    // AsyncStorage.setItem('currentCurrency', 'USD');
+                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_usd);
+                    this.setState({
+                        locPrice: json[0].price_usd,
+                        currencyIcon: Icons.usd
+                    });
+                }
+                else if (value == 'GBP') {
+                    // AsyncStorage.setItem('currentCurrency', 'GBP');
+                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
                     this.setState({
                         locPrice: json[0].price_gbp,
                         currencyIcon: Icons.gbp
                     });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
+                }
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     handleAutocompleteSelect(id, name) {
