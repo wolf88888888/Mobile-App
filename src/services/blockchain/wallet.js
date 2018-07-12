@@ -9,6 +9,7 @@ import {
   getNodeProvider
 } from './config/contracts-config.js';
 
+// import ERROR from './config/errors.json';
 const ERROR = require('./config/errors.json');
 
 class Wallet {

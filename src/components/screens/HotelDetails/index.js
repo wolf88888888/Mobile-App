@@ -67,8 +67,8 @@ class HotelDetails extends Component {
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
         const hotelPhotos = [];
 
-        for (var i = 0; i < this.state.hotel.photos.length; i ++) {
-            hotelPhotos.push({uri:imgHost+this.state.hotel.photos[i]})
+        for (var i = 0; i < this.state.hotel.hotelPhotos.length; i ++) {
+            hotelPhotos.push({uri:imgHost+this.state.hotel.hotelPhotos[i].url})
         }
 
         this.state.description = this.state.hotel.description;
