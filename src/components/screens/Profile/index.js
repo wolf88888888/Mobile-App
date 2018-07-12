@@ -8,7 +8,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import BackButton from '../../atoms/BackButton';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import { getUserInfo, updateUserInfo } from '../../../utils/requester';
+import { getUserInfo, updateUserInfo, getLocRateInUserSelectedCurrency} from '../../../utils/requester';
 import { Wallet } from '../../../services/blockchain/wallet';
 import styles from './styles';
 import { domainPrefix } from '../../../config';
@@ -22,6 +22,7 @@ class Profile extends Component {
             info: {},
             walletAddress: '',
             locBalance:0,
+            ethBalance:'0.0',
             preferredCurrency: '',
             currentCurrency:'EUR',
             currencies: [],
@@ -38,6 +39,7 @@ class Profile extends Component {
         this.showProgressView = this.showProgressView.bind(this);
         this.hideProgressView = this.hideProgressView.bind(this);
         this.showToast = this.showToast.bind(this);
+        this.getCurrencyRate = this.getCurrencyRate.bind(this);
     }
 
     componentDidMount() {
@@ -71,13 +73,10 @@ class Profile extends Component {
             console.log(parsedResp.locAddress);
             if (parsedResp.locAddress != null && parsedResp.locAddress != '') {
                 console.log("start ");
-                // Wallet.getBalance(parsedResp.locAddress).then(x => {
-                //     const ethBalance = x / (Math.pow(10, 18));
-                //     //var json = JSON.stringify(myObj);
-                //     console.log("ethBalance");
-                //     // console.log(bigNumberToString(x, 10));
-                //     console.log(ethBalance);
-                // });
+                Wallet.getBalance(parsedResp.locAddress).then(x => {
+                    const ethBalance = x / (Math.pow(10, 18));
+                    this.setState({ethBalance: ethBalance});
+                });
                 Wallet.getTokenBalance(parsedResp.locAddress).then(y => {
                     const locBalance = y / (Math.pow(10, 18));
                     this.setState({locBalance: locBalance});
@@ -85,6 +84,7 @@ class Profile extends Component {
             }
         })
         .catch(err => {
+            this.hideProgressView();
             console.log(err);
         });
     }
@@ -110,6 +110,7 @@ class Profile extends Component {
             return o.id == currency.id;
         })
         currency.code = this.state.currencies[index<0? 1: index].code
+        console.log('currency_code', currency.code);
         AsyncStorage.setItem('currentCurrency', currency.code);
         this.setState({
             loadMessage:'Updating user data...',
@@ -147,13 +148,46 @@ class Profile extends Component {
         this.showProgressView();
         updateUserInfo(userInfo, null).then((res) => {
             if (res.success) {
-                this.hideProgressView();
+                this.getCurrencyRate(currency.code);
                 console.log('success updating userdata')
             }
             else {
                 this.hideProgressView();
                 console.log('failed updating userdata')
             }
+        });
+    }
+
+    getCurrencyRate(currencyCode){
+        getLocRateInUserSelectedCurrency(currencyCode)
+            .then((json) => {
+                this.hideProgressView();
+                if (currencyCode == 'EUR') {
+                    AsyncStorage.setItem('currentCurrency', 'EUR');
+                    AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
+                    this.setState({
+                        currencyLocPrice: json[0].price_eur,
+                    });
+                }
+                else if (currencyCode == 'USD') {
+                    AsyncStorage.setItem('currentCurrency', 'USD');
+                    AsyncStorage.setItem('currencyLocPrice', json[0].price_usd);
+                    this.setState({
+                        currencyLocPrice: json[0].price_usd,
+                    });
+                }
+                else if (currencyCode == 'GBP') {
+                    AsyncStorage.setItem('currentCurrency', 'GBP');
+                    AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
+                    this.setState({
+                        currencyLocPrice: json[0].price_gbp,
+                    });
+                        
+                }
+        })
+        .catch(err => {
+            this.hideProgressView();
+            console.log(err);
         });
     }
 
@@ -194,7 +228,7 @@ class Profile extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency} = this.state;
+        const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency, ethBalance} = this.state;
 
         console.log("currency: " + currentCurrency);
         console.log("locPrice: " + currencyLocPrice);
@@ -251,7 +285,11 @@ class Profile extends Component {
                         </View>
                         <Text style={styles.balanceLabel}>Current Balance</Text>
                         <View style={{width: '100%'}}>
-                            <Text style={styles.balanceText}>{locBalance.toFixed(2)} LOC / {displayPrice}</Text>
+                            <Text style={styles.balanceText}>{locBalance.toFixed(6)} LOC / {displayPrice}</Text>
+                        </View>
+                        <Text style={styles.balanceLabel}>ETH Balance</Text>
+                        <View style={{width: '100%'}}>
+                            <Text style={styles.balanceText}>{parseFloat(ethBalance).toFixed(6)}</Text>
                         </View>
                         <Image
                             source={require('../../../assets/splash.png')}

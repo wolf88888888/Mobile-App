@@ -52,6 +52,11 @@ class SaveWallet extends Component {
         this.setState({ walletMnemonic: await AsyncStorage.getItem('walletMnemonic') });
     }
 
+    toWalletKeywordValidation() {
+        const { params } = this.props.navigation.state;
+        this.props.navigation.navigate('WalletKeywordValidation', { ...params})
+    }
+
     onClickAccept = async () => {
         const { params } = this.props.navigation.state;
         const {navigate} = this.props.navigation;
@@ -136,7 +141,7 @@ class SaveWallet extends Component {
 
                             <View style={styles.nextButtonView}>
                                 <TouchableOpacity
-                                    onPress={() => this.onClickAccept()}>
+                                    onPress={() => this.toWalletKeywordValidation()}>
                                     <View style={styles.nextButton}>
                                         <Text style={styles.buttonText}>
                                             <FontAwesome>{Icons.arrowRight}</FontAwesome>

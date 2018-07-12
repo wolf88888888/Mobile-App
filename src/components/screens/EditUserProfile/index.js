@@ -489,7 +489,7 @@ class EditUserProfile extends Component {
                 imageAvatar = {uri:'https://staging.locktrip.com/images/default.png'};
             }
             else {
-                imageAvatar ={uri:imgHost+this.state.image}
+                imageAvatar ={uri: 'https://static.locktrip.com' + this.state.image}
             }
         }
         

@@ -54,7 +54,6 @@ class CreateWallet extends Component {
 
     submitPassword() {
         const { params } = this.props.navigation.state;
-        // console.log(params);
         // return;
         if (this.state.password.length < 8) {
             Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);

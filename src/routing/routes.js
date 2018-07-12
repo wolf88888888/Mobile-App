@@ -12,6 +12,7 @@ import Explore from '../components/screens/Explore';
 import Profile from '../components/screens/Profile'
 import CreateWallet from '../components/screens/CreateWallet';
 import SaveWallet from '../components/screens/SaveWallet';
+import WalletKeywordValidation from '../components/screens/WalletKeywordValidation';
 import CongratsWallet from '../components/screens/CongratsWallet'
 import NavTabBar from '../components/organisms/NavTabBar/container';
 import Inbox from '../components/screens/Message/Inbox';
@@ -70,6 +71,7 @@ export const LoginNavigator = StackNavigator(
         Terms: { screen: Terms },
         CreateWallet: { screen: CreateWallet },
         SaveWallet: { screen: SaveWallet },
+        WalletKeywordValidation: {screen: WalletKeywordValidation},
         CongratsWallet: { screen: CongratsWallet }
     },
     {
