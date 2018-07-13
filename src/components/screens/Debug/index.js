@@ -234,7 +234,7 @@ class Explore extends Component {
         this.state.locPrice = params ? params.locRate : 0;
 
         this.state.startDate = params ? params.startDate : "22/06/2018";
-        this.state.endDate = params ? params.endDate : "23/06/2018";       
+        this.state.endDate = params ? params.endDate : "23/06/2018";
     }
 
     amenitiesText(text){
@@ -278,6 +278,7 @@ class Explore extends Component {
         .then(res => res.response.json())
         .then((json) => {
             this.setState({hotelJson: json});
+            console.log(json);
             this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: json, urlForService: urlForService, locRate: this.state.locPrice, currencyIcon: Icons.usd});
         }).catch(err => {
             console.log(err);
@@ -317,7 +318,7 @@ class Explore extends Component {
                         value={this.state.endDate}
                         underlineColorAndroid={"transparent"}
                     />
-                    
+
                     <Text style={{marginTop: 10, fontSize: 20}}>Hotel Details</Text>
 
 

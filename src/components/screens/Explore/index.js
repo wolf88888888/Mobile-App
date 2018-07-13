@@ -10,7 +10,7 @@ import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import styles from './styles';
 import RNPickerSelect from 'react-native-picker-select';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { Icons } from 'react-native-fontawesome';
 import { domainPrefix } from '../../../config';
 import {
     getUserInfo,
