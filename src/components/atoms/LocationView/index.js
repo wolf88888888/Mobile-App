@@ -22,6 +22,8 @@ class LocationView extends Component {
         lat: PropTypes.number.isRequired,
         lon: PropTypes.number.isRequired,
         radius: PropTypes.number.isRequired,
+        hotelName: PropTypes.string.isRequired,
+        hotelPrice: PropTypes.string.isRequired,
     };
 
     static defaultProps = {
@@ -32,6 +34,8 @@ class LocationView extends Component {
         lat: 0,
         lon: 0,
         radius: 200,
+        hotelName: '',
+        hotelPrice: ''
     };
 
     constructor(props) {
@@ -74,6 +78,23 @@ class LocationView extends Component {
                               longitudeDelta: 0.005,
                             }}
                             debug={false}>
+                            <MapView.Marker
+                                coordinate={{latitude: this.props.lat, longitude: this.props.lon}}
+                                title={this.props.hotelName}
+                                description={this.props.hotelPrice}
+                            >
+                                <MapView.Callout
+                                    tooltip={true}>
+                                    <View style={{flexDirection: 'column'}}>
+                                        <Text>
+                                            {this.props.hotelName}
+                                        </Text>
+                                        <Text>
+                                            {this.props.hotelPrice}
+                                        </Text>
+                                    </View>
+                                </MapView.Callout>
+                            </MapView.Marker>
                             <MapView.Circle
                                     center={{latitude: this.props.lat, longitude: this.props.lon}}
                                     radius = { this.props.radius }

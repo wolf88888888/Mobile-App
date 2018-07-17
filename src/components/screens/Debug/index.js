@@ -191,7 +191,7 @@ import styles from './styles';
 class Explore extends Component {
     state = {
         hotelJson: undefined,
-        hotelId: "51432",
+        hotelId: "6518",
         externalId: "4722881",
         hotelName: "Bon Voyage Hotel Alexander",
         hotelPrice: "31.93",
@@ -234,7 +234,7 @@ class Explore extends Component {
         this.state.locPrice = params ? params.locRate : 0;
 
         this.state.startDate = params ? params.startDate : "22/06/2018";
-        this.state.endDate = params ? params.endDate : "23/06/2018";       
+        this.state.endDate = params ? params.endDate : "23/06/2018";
     }
 
     amenitiesText(text){
@@ -317,7 +317,7 @@ class Explore extends Component {
                         value={this.state.endDate}
                         underlineColorAndroid={"transparent"}
                     />
-                    
+
                     <Text style={{marginTop: 10, fontSize: 20}}>Hotel Details</Text>
 
 
