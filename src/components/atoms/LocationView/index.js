@@ -61,8 +61,7 @@ class LocationView extends Component {
                     {this.props.transpotation != '' && (<Text style={styles.subtitle}>Transpotation</Text>)}
                     {this.props.transpotation != '' && (<Text style={styles.subdetail}>{this.props.transpotation}</Text>)}
                 </View>
-
-
+                
                 <CardView style={styles.topView}
                     cardElevation={0.75}
                     cardMaxElevation={.75}
