@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         marginTop:-65,
         alignSelf: 'stretch',
         width: dimensionWindows.width,
-        height: dimensionWindows.width * 5 / 8,
+        height: dimensionWindows.width * 5 / 6.5,
     },
 });
 

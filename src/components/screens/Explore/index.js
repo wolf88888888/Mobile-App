@@ -666,13 +666,13 @@ class Explore extends Component {
 
                         </View>
 
-                        <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
+                        <Text style={styles.scsrollViewTitles}>Popular Destinations</Text>
 
-                        <View style={styles.divider}/>
+                        <View style={styles.divsider}/>
 
                         <View style={styles.viewPopularHotels}>
 
-                            <TouchableOpacity onPress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
+                            <TouchableOpacity onPsress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
                                               style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                        source={require('../../../assets/home_images/london.png')}/>

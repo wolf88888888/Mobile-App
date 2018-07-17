@@ -60,7 +60,6 @@ class HotelDetails extends Component {
             currencyIcon: ''
         }
         const { params } = this.props.navigation.state;
-
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
         this.state.urlForService = params ? params.urlForService : '';
@@ -164,8 +163,9 @@ class HotelDetails extends Component {
                         location={this.state.mainAddress + ", " + this.state.countryName}
                         titleStyle={{fontSize: 17}}
                         hotelName={this.state.hotel.name}
-                        hotelPrice={this.state.hotelFullDetails.locRate}
+                        hotelPrice={`LOC ${this.state.hotelFullDetails.locRate}`}
                         description={this.state.hotel.generalDescription}
+                        image={this.state.dataSourcePreview[0]['uri']}
                         lat={parseFloat(this.state.latitude)}
                         lon={parseFloat(this.state.longitude)}
                         radius={200}/>
