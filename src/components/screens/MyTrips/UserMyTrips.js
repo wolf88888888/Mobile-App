@@ -81,7 +81,7 @@ class UserMyTrips extends Component {
                     
                     var tempArr = []
                     tempArr = this.state.trips.concat(parsed.content)
-                    tempArr = _.orderBy(tempArr, ['arrival_date'],['asc']);
+                    tempArr = _.orderBy(tempArr, ['arrival_date'],['desc']);
                     // _.remove(tripArray, function(obj) {
                     //     var tripDate = moment(obj.arrival_date).utc();
                     //     var now = moment().utc();

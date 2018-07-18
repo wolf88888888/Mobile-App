@@ -5,16 +5,11 @@ import {
     View,
     AsyncStorage,
     TouchableOpacity,
-    TouchableWithoutFeedback,
-    Keyboard,
     Platform
 } from 'react-native';
-import Image from 'react-native-remote-svg';
-import { autobind } from 'core-decorators';
 
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
-import { domainPrefix } from '../../../config';
 import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
 import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';

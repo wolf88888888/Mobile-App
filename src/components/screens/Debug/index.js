@@ -278,6 +278,7 @@ class Explore extends Component {
         .then(res => res.response.json())
         .then((json) => {
             this.setState({hotelJson: json});
+            console.log(json);
             this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: json, urlForService: urlForService, locRate: this.state.locPrice, currencyIcon: Icons.usd});
         }).catch(err => {
             console.log(err);
