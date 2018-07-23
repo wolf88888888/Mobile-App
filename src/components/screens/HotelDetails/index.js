@@ -89,24 +89,25 @@ class HotelDetails extends Component {
     }
 
     componentDidMount() {
-        // getHotelById(this.state.hotel.id,'?'+this.state.urlForService)
-        // .then(res => res.response.json())
-        // // here you set the response in to json
-        // .then(parsed => {
-        //     // here you parse your json
-        //     // here you set you data from json into your variables
-        //     console.log(parsed)
-        //     this.setState({
-        //         hotelFullDetails : parsed,
-        //         mainAddress: parsed.additionalInfo.mainAddress,
-        //         countryName: parsed.region.country.name,
-        //         latitude: parsed.lat,
-        //         longitude: parsed.lon,
-        //     });
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        // });
+        getHotelById(this.state.hotel.id,'?'+this.state.urlForService)
+        .then(res => res.response.json())
+        // here you set the response in to json
+        .then(parsed => {
+            // here you parse your json
+            // here you set you data from json into your variables
+            this.setState({
+                hotelFullDetails : parsed,
+                mainAddress: parsed.additionalInfo.mainAddress,
+                regionName: parsed.city,
+                countryName: parsed.country,
+                description: parsed.generalDescription,
+                latitude: parsed.latitude,
+                longitude: parsed.longitude,
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
 
