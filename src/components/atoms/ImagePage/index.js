@@ -131,12 +131,14 @@ export default class ImageCarousel extends Component {
                 /* this.scrolling prevent trigger onPress while is scrolling */
                 images.map((img, i) => {
                   return (
-                    <TouchableImage
-                        style={{width:this.props.width, height:this.props.height}}
-                      key={i}
-                      image={img}
-                      onPress={this.scrolling ? () => {} : () => this._onPressImg(i)}
-                      />
+                    <View>
+                      <TouchableImage
+                          style={{width:this.props.width, height:this.props.height}}
+                        key={i}
+                        image={img}
+                        onPress={this.scrolling ? () => {} : () => this._onPressImg(i)}
+                        />
+                    </View>
                   );
                 })
               }

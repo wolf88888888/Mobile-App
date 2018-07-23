@@ -92,10 +92,11 @@ class HotelDetails extends Component {
             this.setState({
                 hotelFullDetails : parsed,
                 mainAddress: parsed.additionalInfo.mainAddress,
-                regionName: parsed.region.regionName,
-                countryName: parsed.region.country.name,
-                latitude: parsed.lat,
-                longitude: parsed.lon,
+                regionName: parsed.city,
+                countryName: parsed.country,
+                description: parsed.generalDescription,
+                latitude: parsed.latitude,
+                longitude: parsed.longitude,
             });
         })
         .catch(err => {

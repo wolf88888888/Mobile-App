@@ -3,6 +3,7 @@ import {View, Text, TextInput,Picker,Item} from 'react-native';
 import styles from './styles';
 import RNPickerSelect from 'react-native-picker-select';
 import PropTypes from 'prop-types';
+import { getUserInfo } from '../../../utils/requester';
 
 export default class GuestFormRow extends Component {
     constructor(props) {
@@ -28,6 +29,21 @@ export default class GuestFormRow extends Component {
             },
             guestRecord : {}
         }
+        if (this.props.itemIndex == 0){
+            getUserInfo()
+                .then(res => res.response.json())
+                .then(parsedResp => {
+                    this.setState({
+                        guest: { ...this.state.guest, firstName : parsedResp.firstName == null? '': parsedResp.firstName, lastName : parsedResp.lastName == null? '': parsedResp.lastName},
+                    });
+                    this.props.onFirstNameChange(0, parsedResp.firstName == null? '': parsedResp.firstName);
+                    this.props.onLastNameChange(0, parsedResp.lastName == null? '': parsedResp.lastName)
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+
     }
 
     handleGuestInfo(){
@@ -89,18 +105,20 @@ export default class GuestFormRow extends Component {
                     <View style={styles.firstNameFlex}>
                         <TextInput
                             style={[styles.formField, styles.spaceRight]}
-                            onChangeText={(text) => this.props.onFirstNameChange(this.props.itemIndex,text)}
+                            onChangeText={(text) => {this.props.onFirstNameChange(this.props.itemIndex,text), this.setState({guest: {...this.state.guest, firstName: text}}) }}
                             //onBlur={() => this.textDone()}
-                            placeholder="First Name"
+                            placeholder={this.props.itemIndex==0? "First Name": "Optional"}
                             underlineColorAndroid="#fff"
+                            value={this.state.guest.firstName}
                         />
                     </View>
                     <View style={styles.lastNameFlex}>
                         <TextInput
                             style={styles.formField}
-                            onChangeText={(text) => this.props.onLastNameChange(this.props.itemIndex,text)}
-                            placeholder="Last Name"
+                            onChangeText={(text) => {this.props.onLastNameChange(this.props.itemIndex,text), this.setState({guest: {...this.state.guest, lastName: text}}) }}
+                            placeholder={this.props.itemIndex==0? this.state.guest.lastName: "Optional"}
                             underlineColorAndroid="#fff"
+                            value={this.state.guest.lastName}
                         />
                     </View>
                 </View>
