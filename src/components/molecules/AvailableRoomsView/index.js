@@ -51,9 +51,9 @@ class AvailableRoomsView extends Component {
             //console.log(res);
             if (res.success) {
                 res.response.json().then((data) => {
-                    console.log("sucess", data);
                     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                    this.setState({rooms: ds.cloneWithRows(data)});
+                    this.setState({rooms: ds.cloneWithRows(this.sortArray(data, 'price'))});
+                    
                 });
             } else {
                 res.response.then((response) => {
@@ -66,6 +66,15 @@ class AvailableRoomsView extends Component {
                 });
             }
         });
+    }
+
+    sortArray(array, key){
+        return array.sort(function (a,b) {
+            console.log(a.roomsResults[0].price)
+            return b.roomsResults[0].price > a.roomsResults[0].price ? -1
+                : b.roomsResults[0].price < a.roomsResults[0].price ? 1
+                : 0
+        })
     }
 
     render() {
