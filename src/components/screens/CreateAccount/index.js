@@ -10,10 +10,13 @@ import {
 import Switch from 'react-native-customisable-switch';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import RNPickerSelect from 'react-native-picker-select';
+import Toast from 'react-native-simple-toast';
 import { validateEmail, validateName } from '../../../utils/validation';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getCountriesWithListings } from '../../../utils/requester';
 import styles from './styles';
 
 class CreateAccount extends Component {
@@ -32,21 +35,61 @@ class CreateAccount extends Component {
     constructor(props) {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.getCountriesForSignup = this.getCountriesForSignup.bind(this);
         this.state = {
             firstName: '',
             lastName: '',
             email: '',
             country: '',
             userWantsPromo: true,
-            checkZIndex: 1 // zIndex of switchCheckView
+            checkZIndex: 1, // zIndex of switchCheckView
+            countries: [],
+            countriesLoaded: false,
+            countryId: undefined,
+            countryName: undefined
         };
         this.animationTime = 150; // time for switch to slide from one end to the other
+        this.getCountriesForSignup();
     }
 
     onChangeHandler(property) {
         return (value) => {
             this.setState({ [property]: value });
         };
+    }
+
+    getCountriesForSignup() {
+        getCountriesWithListings()
+            .then(res => res.response.json())
+            .then((json) => {
+                countryArr = [];
+                json.content.map((item, i) => {
+                    countryArr.push({
+                        'label': item.name,
+                        'value': item
+                    });
+                });
+                this.setState({
+                    countries: countryArr,
+                    countriesLoaded: true,
+                    countryId: countryArr[0].value.id,
+                    countryName: countryArr[0].label,
+                });
+            });
+    }
+
+    goToCreatePassword() {
+        const {
+            firstName, lastName, email, country, userWantsPromo, checkZIndex
+        } = this.state;
+        if (country === undefined || country === ''){
+            Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.CENTER);
+        }
+        else {
+            this.props.navigation.navigate('CreatePassword', {
+                firstName, lastName, email, country ,userWantsPromo
+            })
+        }
     }
 
     render() {
@@ -58,17 +101,18 @@ class CreateAccount extends Component {
         return (
             <KeyboardAwareScrollView
                 style={styles.container}
-                enableOnAndroid={true}
-                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
-            <View style={styles.container}>
-                <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
+                enableOnAndroid= {true} //eslint-disable-line
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}
+            >
+                <View style={styles.container}>
+                    <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
-                <View style={styles.lowOpacity}>
-                    <Image
-                        source={require('../../../assets/get-started-white-outline.png')}
-                        style={styles.getStartedImage}
-                    />
-                </View>
+                    <View style={styles.lowOpacity}>
+                        <Image
+                            source={require('../../../assets/get-started-white-outline.png')}
+                            style={styles.getStartedImage}
+                        />
+                    </View>
                 <View style={styles.main}>
                     <View style={styles.titleView}><Text style={styles.titleText}>Create Account</Text></View>
 
@@ -108,16 +152,23 @@ class CreateAccount extends Component {
                     </View>
 
                     <View style={styles.inputView}>
-                        <SmartInput
-                            keyboardType="default"
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            value={country}
-                            onChangeText={this.onChangeHandler('country')}
-                            placeholder="Country of Residence"
-                            placeholderTextColor="#fff"
-                            rightIcon={country.length > 3 ? 'check' : null}
-                        />
+                    <RNPickerSelect
+                            items={this.state.countries}
+                            placeholder={{
+                                label: 'Country of Residence',
+                                value: 0
+                            }}
+                            onValueChange={(value) => {
+                                this.setState({
+                                    countryId: value.id,
+                                    countryName: value.name,
+                                    country: value.name,
+                                    value: value
+                                });
+                            }}
+                            style={{ ...pickerSelectStyles }}
+                        >
+                        </RNPickerSelect>
                     </View>
 
                     <View style={styles.finePrintView}>
@@ -160,9 +211,7 @@ class CreateAccount extends Component {
                     <View style={styles.nextButtonView}>
                         <TouchableOpacity
                             disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
-                            onPress={() => navigate('CreatePassword', {
-                                firstName, lastName, email, country ,userWantsPromo
-                            })}
+                            onPress={() => this.goToCreatePassword()}
                         >
                             <View style={styles.nextButton}>
                                 <Text style={styles.buttonText}>
@@ -172,11 +221,36 @@ class CreateAccount extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-
             </View>
             </KeyboardAwareScrollView>
         );
     }
 }
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        height: 50,
+        fontSize: 16,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        color: 'white'
+    },
+    inputAndroid: {
+        marginLeft: 12,
+        color: 'white',
+    },
+    underline: {
+        borderTopWidth: 0,
+        borderTopColor: '#888988',
+        marginHorizontal: 4,
+    },
+    viewContainer: {
+        borderColor: '#e4a193',
+        borderWidth: 1,
+        borderRadius: 25,
+        height: 50,
+    }
+});
 
 export default CreateAccount;

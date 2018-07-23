@@ -22,6 +22,9 @@ class LocationView extends Component {
         lat: PropTypes.number.isRequired,
         lon: PropTypes.number.isRequired,
         radius: PropTypes.number.isRequired,
+        hotelName: PropTypes.string.isRequired,
+        hotelPrice: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -32,7 +35,14 @@ class LocationView extends Component {
         lat: 0,
         lon: 0,
         radius: 200,
+        hotelName: '',
+        hotelPrice: '',
+        image: ''
     };
+
+    calloutClick(){
+        window.alert('Under development');
+    }
 
     constructor(props) {
         super(props);
@@ -48,12 +58,10 @@ class LocationView extends Component {
                 <View style={styles.descriptionView}>
                     <Text style={[styles.title, titleStyle]}>Location</Text>
                     {this.props.detail != '' && (<Text style={styles.detail}>{this.props.detail}</Text>)}
-
                     {this.props.transpotation != '' && (<Text style={styles.subtitle}>Transpotation</Text>)}
                     {this.props.transpotation != '' && (<Text style={styles.subdetail}>{this.props.transpotation}</Text>)}
                 </View>
-
-
+                
                 <CardView style={styles.topView}
                     cardElevation={0.75}
                     cardMaxElevation={.75}
@@ -74,6 +82,28 @@ class LocationView extends Component {
                               longitudeDelta: 0.005,
                             }}
                             debug={false}>
+                            <MapView.Marker
+                                coordinate={{latitude: this.props.lat, longitude: this.props.lon}}
+                                title={this.props.hotelName}
+                                description={this.props.hotelPrice}
+                                onCalloutPress={()=> this.calloutClick()}
+                            >
+                                <MapView.Callout
+                                    tooltip={true}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center' ,backgroundColor: '#FFF'}}>
+                                        <Text style={styles.location}>
+                                            {this.props.hotelName}
+                                        </Text>
+                                        <Text style={styles.description}>
+                                            {this.props.hotelPrice}
+                                        </Text>
+                                        <Image
+                                            style={{width: 66, height: 58}}
+                                            source={{uri: this.props.image}}
+                                        />
+                                    </View>
+                                </MapView.Callout>
+                            </MapView.Marker>
                             <MapView.Circle
                                     center={{latitude: this.props.lat, longitude: this.props.lon}}
                                     radius = { this.props.radius }
