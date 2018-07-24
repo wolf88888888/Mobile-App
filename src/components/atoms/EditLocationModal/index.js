@@ -95,8 +95,8 @@ class EditLocationModal extends Component {
                                     value: this.state.selectedCityId,
                                 }}
                                 onValueChange={(value) => {
+                                    console.log('onchange city---', value);
                                     this.setState({
-                                        selectedCityName: this.state.cities[index].label,
                                         selectedCityId: value,
                                     });
                                 }}

@@ -116,7 +116,7 @@ export default class GuestFormRow extends Component {
                         <TextInput
                             style={styles.formField}
                             onChangeText={(text) => {this.props.onLastNameChange(this.props.itemIndex,text), this.setState({guest: {...this.state.guest, lastName: text}}) }}
-                            placeholder={this.props.itemIndex==0? this.state.guest.lastName: "Optional"}
+                            placeholder={this.props.itemIndex==0? "Last Name": "Optional"}
                             underlineColorAndroid="#fff"
                             value={this.state.guest.lastName}
                         />
