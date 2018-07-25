@@ -78,6 +78,8 @@ class CreatePassword extends Component {
         const { navigate, goBack } = this.props.navigation;
         const { params } = this.props.navigation.state;
 
+        console.log(params);
+
         return (
             <KeyboardAwareScrollView
                 style={styles.container}

@@ -65,10 +65,16 @@ class HotelDetails extends Component {
         this.state.urlForService = params ? params.urlForService : '';
         this.state.locRate = params ? params.locRate : '';
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
+        this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
+        this.state.countryName = params.hotelDetail.country;
+        this.state.latitude = params.hotelDetail.latitude;
+        this.state.longitude = params.hotelDetail.longitude;
+        this.state.hotelFullDetails = params;
         const hotelPhotos = [];
 
-        for (var i = 0; i < this.state.hotel.hotelPhotos.length; i ++) {
-            hotelPhotos.push({uri:imgHost+this.state.hotel.hotelPhotos[i].url})
+
+        for (var i = 0; i < params.hotelDetail.hotelPhotos.length; i ++) {
+            hotelPhotos.push({uri:imgHost+params.hotelDetail.hotelPhotos[i]["url"]})
         }
 
         this.state.description = this.state.hotel.description;
@@ -92,10 +98,11 @@ class HotelDetails extends Component {
             this.setState({
                 hotelFullDetails : parsed,
                 mainAddress: parsed.additionalInfo.mainAddress,
-                regionName: parsed.region.regionName,
-                countryName: parsed.region.country.name,
-                latitude: parsed.lat,
-                longitude: parsed.lon,
+                regionName: parsed.city,
+                countryName: parsed.country,
+                description: parsed.generalDescription,
+                latitude: parsed.latitude,
+                longitude: parsed.longitude,
             });
         })
         .catch(err => {
@@ -142,7 +149,7 @@ class HotelDetails extends Component {
                     <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]}/>
 
                     <AvailableRoomsView
-                        id={this.state.hotel.id}
+                        id={this.state.hotel.additionalInfo.id}
                         navigate= {navigate}
                         search={'?'+this.state.urlForService}
                         onBooking={this.onBooking}
@@ -154,9 +161,12 @@ class HotelDetails extends Component {
                     <View style={[styles.lineStyle, {marginLeft:20, marginRight:20, marginTop:15, marginBottom:15}]} />
 
                      <LocationView
-                        location={this.state.regionName + ", " + this.state.countryName}
+                        location={this.state.mainAddress + ", " + this.state.countryName}
                         titleStyle={{fontSize: 17}}
-                        description={this.state.mainAddress}
+                        hotelName={this.state.hotel.name}
+                        hotelPrice={`LOC ${this.state.hotelFullDetails.locRate}`}
+                        description={this.state.hotel.generalDescription}
+                        image={this.state.dataSourcePreview[0]['uri']}
                         lat={parseFloat(this.state.latitude)}
                         lon={parseFloat(this.state.longitude)}
                         radius={200}/>
