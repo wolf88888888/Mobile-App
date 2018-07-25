@@ -20,6 +20,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 
+import co.airbitz.fastcrypto.RNFastCryptoPackage;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
           new RCTSplashScreenPackage(),    //register Module
           new MapsPackage(),
           new ImagePickerPackage(),
-          new FBSDKPackage(mCallbackManager)
+          new FBSDKPackage(mCallbackManager),
+          new RNFastCryptoPackage()
       );
     }
 

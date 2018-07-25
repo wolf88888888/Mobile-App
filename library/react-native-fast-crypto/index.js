@@ -15,7 +15,7 @@ function getUTF8Bytes(password) {
 export async function scrypt (passwd, salt, N, r, p, size) {
   console.log('scrypt : ' + passwd + ' : ' + salt);
 
-  const byPasswd = getUTF8Bytes(passwd);//base32.parse("NV4XAYLTON3W64TE")
+  const byPasswd = passwd;//getUTF8Bytes(passwd);//base32.parse("NV4XAYLTON3W64TE")
   const bysalt = salt;//getUTF8Bytes(salt);//base32.parse("NV4XGYLMOQ======")
   console.log(' *********************** ');
   console.log(byPasswd);
