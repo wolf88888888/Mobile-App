@@ -1,26 +1,30 @@
-import React, { Component } from 'react';
 import {
+    Button,
+    Dimensions,
+    FlatList,
+    Keyboard,
+    ListView,
+    ProgressBarAndroid,
+    ScrollView,
     Text,
-    View,
-    TouchableOpacity,ProgressBarAndroid,
-    Keyboard,ListView,Button,ScrollView,TextInput,Dimensions,FlatList
-  } from 'react-native';
-
-import PropTypes from 'prop-types';
-import Image from 'react-native-remote-svg';
-
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import FacilitiesView from '../../molecules/FacilitiesView';
-import LocationView from '../../atoms/LocationView';
-
-import styles from './styles';
-
-import HotelDetailView from '../../organisms/HotelDetailView';
-import AvailableRoomsView from '../../molecules/AvailableRoomsView'
-import { imgHost } from '../../../config';
-import { getHotelById } from '../../../utils/requester';
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React, { Component } from 'react';
+
+import AvailableRoomsView from '../../molecules/AvailableRoomsView'
+import FacilitiesView from '../../molecules/FacilitiesView';
+import HotelDetailView from '../../organisms/HotelDetailView';
 import Icon from 'react-native-fontawesome';
+import Image from 'react-native-remote-svg';
+import LocationView from '../../atoms/LocationView';
+import PropTypes from 'prop-types';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import { getHotelById } from '../../../utils/requester';
+import { imgHost } from '../../../config';
+import styles from './styles';
 
 class HotelDetails extends Component {
 

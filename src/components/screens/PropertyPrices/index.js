@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
 import {
+    Keyboard,
+    ListView,
     Text,
-    View,
     TouchableOpacity,
-    Keyboard,ListView
-    } from 'react-native';
-import PropTypes from 'prop-types';
-import Image from 'react-native-remote-svg';
-import BackButton from '../../atoms/BackButton';
+    View
+} from 'react-native';
+import React, { Component } from 'react';
 
+import BackButton from '../../atoms/BackButton';
+import Image from 'react-native-remote-svg';
+import PropTypes from 'prop-types';
 import styles from './styles';
 
 const ds = new ListView.DataSource({rowHasChanged:(row1,row2)=> row1 != row2});

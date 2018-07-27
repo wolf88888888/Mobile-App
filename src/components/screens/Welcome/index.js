@@ -1,22 +1,24 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import {
     AsyncStorage,
     Text,
     View
 } from 'react-native';
-import Image from 'react-native-remote-svg';
+import React, { Component } from 'react';
+
 import Button from '../../atoms/Button';
-import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import GetStartedImage from '../../atoms/GetStartedImage';
+import Image from 'react-native-remote-svg';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
+import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import { domainPrefix } from '../../../config';
 import { login } from '../../../utils/requester';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import styles from './styles';
 
 const FBSDK = require('react-native-fbsdk');
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
-import styles from './styles';
+
 let self;
 class Welcome extends Component {
     static propTypes = {
@@ -54,7 +56,7 @@ class Welcome extends Component {
                 console.log("Success");
                 res.response.json().then((jsonRep) => {
                     console.log(jsonRep);
-                    AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, jsonRep.Authorization);
+                    AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, jsonRep.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, fbInfo.email);
                     this.props.navigation.navigate('MainScreen');

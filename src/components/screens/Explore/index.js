@@ -1,26 +1,27 @@
-import { withNavigation } from 'react-navigation';
+import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
-import moment from 'moment';
-import _ from 'lodash';
-import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView, Text, View, TouchableOpacity, Image, Picker, StyleSheet, AsyncStorage } from 'react-native';
-import PropTypes from 'prop-types';
+import {
+    getCountriesWithListings,
+    getLocRate,
+    getLocRateInUserSelectedCurrency,
+    getRegionsBySearchParameter,
+    getTopHomes,
+    getUserInfo
+} from '../../../utils/requester';
+
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
+import { Icons } from 'react-native-fontawesome';
+import PropTypes from 'prop-types';
+import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import styles from './styles';
-import RNPickerSelect from 'react-native-picker-select';
-import { Icons } from 'react-native-fontawesome';
-import { domainPrefix } from '../../../config';
-import {
-    getUserInfo,
-    getRegionsBySearchParameter,
-    getCountriesWithListings,
-    getTopHomes,
-    getLocRate,
-    getLocRateInUserSelectedCurrency
-} from '../../../utils/requester';
+import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-easy-toast';
+import _ from 'lodash';
+import { domainPrefix } from '../../../config';
+import moment from 'moment';
+import styles from './styles';
+import { withNavigation } from 'react-navigation';
 
 const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
@@ -120,7 +121,7 @@ class Explore extends Component {
     }
 
     async componentWillMount() {
-        const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
+        const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
         const email_value = await AsyncStorage.getItem(`${domainPrefix}.auth.username`);
         this.setState({
             token: token_value,

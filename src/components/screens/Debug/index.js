@@ -1,20 +1,20 @@
-import { withNavigation } from 'react-navigation';
+import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-import moment from 'moment';
-import _ from 'lodash';
-import SplashScreen from 'react-native-smart-splash-screen';
-import { ScrollView, Text, View, TouchableOpacity, Image, Picker, StyleSheet, AsyncStorage, TextInput} from 'react-native';
-import PropTypes from 'prop-types';
+
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
+import Icon from 'react-native-fontawesome';
+import PropTypes from 'prop-types';
+import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import RNPickerSelect from 'react-native-picker-select';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { domainPrefix } from '../../../config';
-import { getHotelById } from '../../../utils/requester';
-import Icon from 'react-native-fontawesome';
+import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-simple-toast';
+import _ from 'lodash';
+import { domainPrefix } from '../../../config';
+import moment from 'moment';
 import styles from './styles';
+import { withNavigation } from 'react-navigation';
 
 //Bellow are details of hardcoded hotel
 // const dummyHotel = {
@@ -219,7 +219,7 @@ class Explore extends Component {
 
     static defaultProps = {
         navigation: {
-            navigate: () => {}
+            navigate: () => { }
         }
     }
 
@@ -237,51 +237,54 @@ class Explore extends Component {
         this.state.endDate = params ? params.endDate : "23/06/2018";
     }
 
-    amenitiesText(text){
-        var arr = text.split(",").map(function(item) {
+    amenitiesText(text) {
+        var arr = text.split(",").map(function (item) {
             return item.trim();
         });
-        this.setState({amenitiesText: text, amenitiesTextArray: arr});
+        this.setState({ amenitiesText: text, amenitiesTextArray: arr });
     }
 
-    amenitiesCode(code){
-        var arr = code.split(",").map(function(item) {
+    amenitiesCode(code) {
+        var arr = code.split(",").map(function (item) {
             return item.trim();
         });
-        this.setState({amenitiesCode: text, amenitiesCodeArray: arr});
+        this.setState({ amenitiesCode: text, amenitiesCodeArray: arr });
     }
 
-    amenitiesId(id){
-        var arr = id.split(",").map(function(item) {
+    amenitiesId(id) {
+        var arr = id.split(",").map(function (item) {
             return item.trim();
         });
-        this.setState({amenitiesId: text, amenitiesIdArray: arr});
+        this.setState({ amenitiesId: text, amenitiesIdArray: arr });
     }
 
-    spinnerValueChange(value){
-        this.setState({language: value});
-        if(value == "EUR"){
-            this.setState({currencyIcon: Icons.euro})
+    spinnerValueChange(value) {
+        this.setState({ language: value });
+        if (value == "EUR") {
+            this.setState({ currencyIcon: Icons.euro })
         }
-        else if(value == "USD"){
-            this.setState({currencyIcon: Icons.usd})
+        else if (value == "USD") {
+            this.setState({ currencyIcon: Icons.usd })
         }
-        else if(value == "GBP"){
-            this.setState({currencyIcon: Icons.gbp});
+        else if (value == "GBP") {
+            this.setState({ currencyIcon: Icons.gbp });
         }
     }
 
-    assembleJson(){
+    assembleJson() {
         const roomsDummyData = [{ adults: 2, children: [] }];
-        const urlForService = "region="+this.state.regionId+"&currency="+this.state.language+"&startDate="+this.state.startDate+"&endDate="+this.state.endDate+"&rooms="+encodeURI(JSON.stringify(roomsDummyData));
-        getHotelById(this.state.hotelId,"region="+this.state.regionId+"&currency="+this.state.language+"&startDate="+this.state.startDate+"&endDate="+this.state.endDate+"&rooms="+encodeURI(JSON.stringify(roomsDummyData)))
-        .then(res => res.response.json())
-        .then((json) => {
-            this.setState({hotelJson: json});
-            console.log(json);
-            this.props.navigation.navigate('HotelDetails', {guests : 2, hotelDetail: json, urlForService: urlForService, locRate: this.state.locPrice, currencyIcon: Icons.usd});
-        }).catch(err => {
-            console.log(err);
+        const urlForService = "region=" + this.state.regionId + "&currency=" + this.state.language + "&startDate=" + this.state.startDate + "&endDate=" + this.state.endDate + "&rooms=" + encodeURI(JSON.stringify(roomsDummyData));
+
+        let searchTermParams = [];
+        searchTermParams.push(`region=${this.state.regionId}`, `currency=${this.state.language}`, `startDate=${this.state.startDate}`, `endDate=${this.state.endDate}`, `rooms=${encodeURI(JSON.stringify(roomsDummyData))}`);
+        requester.getHotelById(this.state.hotelId, searchTermParams).then(res => {
+            res.body.then(data => {
+                this.setState({ hotelJson: data });
+                console.log(data);
+                this.props.navigation.navigate('HotelDetails', { guests: 2, hotelDetail: data, urlForService: urlForService, locRate: this.state.locPrice, currencyIcon: Icons.usd });
+            }).catch(err => {
+                console.log(err);
+            });
         });
     }
 
@@ -289,49 +292,49 @@ class Explore extends Component {
         return (
 
             <View style={styles.container}>
-                <Image style={{width:'60%', height: 50, alignSelf:'center',resizeMode:'contain'}} source={require('../../../assets/splash.png')}/>
+                <Image style={{ width: '60%', height: 50, alignSelf: 'center', resizeMode: 'contain' }} source={require('../../../assets/splash.png')} />
                 <ScrollView>
-                    <Text style={{marginTop: 10, fontSize: 20}}>URL Details</Text>
+                    <Text style={{ marginTop: 10, fontSize: 20 }}>URL Details</Text>
 
                     <Text>Region Id:</Text>
                     <Text
-                        style={{height: 40, flexDirection:'column',}}>{this.state.regionId}
+                        style={{ height: 40, flexDirection: 'column', }}>{this.state.regionId}
                     </Text>
 
-                    <Text style={{marginTop: 10}}>Currency:</Text>
+                    <Text style={{ marginTop: 10 }}>Currency:</Text>
                     <Text
-                        style={{height: 40,}}>{this.state.language}
+                        style={{ height: 40, }}>{this.state.language}
                     </Text>
 
-                    <Text style={{marginTop: 10}}>Start Date (dd/mm/yyy):</Text>
+                    <Text style={{ marginTop: 10 }}>Start Date (dd/mm/yyy):</Text>
                     <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        onChangeText={(text) => this.setState({startDate: text})}
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={(text) => this.setState({ startDate: text })}
                         value={this.state.startDate}
                         underlineColorAndroid={"transparent"}
                     />
 
-                    <Text style={{marginTop: 10}}>End Date (dd/mm/yyy):</Text>
+                    <Text style={{ marginTop: 10 }}>End Date (dd/mm/yyy):</Text>
                     <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        onChangeText={(text) => this.setState({endDate: text})}
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={(text) => this.setState({ endDate: text })}
                         value={this.state.endDate}
                         underlineColorAndroid={"transparent"}
                     />
 
-                    <Text style={{marginTop: 10, fontSize: 20}}>Hotel Details</Text>
+                    <Text style={{ marginTop: 10, fontSize: 20 }}>Hotel Details</Text>
 
 
                     <Text>Hotel Id:</Text>
                     <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        onChangeText={(text) => this.setState({hotelId: text})}
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={(text) => this.setState({ hotelId: text })}
                         value={this.state.hotelId}
                         underlineColorAndroid={"transparent"}
                     />
 
-                    <TouchableOpacity onPress={() => this.assembleJson()} style={{marginTop: 10,flexDirection:'row', justifyContent:'center', alignItems:'center',width: '100%', height: 50, backgroundColor: '#DA7B61'}}>
-                        <Text style={{fontSize: 20, color: 'white'}}>Search</Text>
+                    <TouchableOpacity onPress={() => this.assembleJson()} style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', height: 50, backgroundColor: '#DA7B61' }}>
+                        <Text style={{ fontSize: 20, color: 'white' }}>Search</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </View>

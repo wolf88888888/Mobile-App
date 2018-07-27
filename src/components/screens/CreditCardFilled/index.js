@@ -1,12 +1,14 @@
-import PropTypes from 'prop-types';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Switch from 'react-native-customisable-switch';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
-import Image from 'react-native-remote-svg';
 import { validateEmail, validateName } from '../../../utils/validation';
+
 import GoBack from '../../atoms/GoBack';
+import Image from 'react-native-remote-svg';
+import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
+import Switch from 'react-native-customisable-switch';
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

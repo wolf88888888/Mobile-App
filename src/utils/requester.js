@@ -1,6 +1,7 @@
+import { apiHost, domainPrefix } from '../config';
+
 import { AsyncStorage } from 'react-native';
 import { create } from 'apisauce'
-import { apiHost, domainPrefix } from '../config';
 
 const host = apiHost;
 const { fetch } = global;
@@ -14,7 +15,7 @@ async function getHeaders(headers = null) {
     headers = headers || {};
 
     try {
-        const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
+        const value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
         if (value !== null) {
             headers.Authorization = value;
         }
@@ -34,7 +35,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
 
     const getParams = {
         headers: {
-            'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`),
+            'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`),
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
@@ -44,7 +45,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
     const postParams = {
         // headers: allHeaders,
         headers: {
-            'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`),
+            'Authorization': await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`),
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'X-Device-Version': '49365f68-42e1-11e8-842f-0ed5f89f718b'
@@ -81,7 +82,7 @@ async function sendRequest(endpoint, method, postObj = null, captchaToken = null
                     response: res.json().then((r) => {
                         console.log(res);
                         if (r.errors && r.errors.ExpiredJwt) {
-                            AsyncStorage.multiRemove([`${domainPrefix}.auth.lockchain`, `${domainPrefix}.auth.username`]);
+                            AsyncStorage.multiRemove([`${domainPrefix}.auth.locktrip`, `${domainPrefix}.auth.username`]);
                             if (onLogOut) onLogOut();
                         }
                         return r;
@@ -203,7 +204,7 @@ export async function uploadPhoto(uri) {
         type: 'image/jpeg',
         name: 'image.jpg'
     });
-    let authToken = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`)
+    let authToken = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`)
     api.setHeaders({
         'Authorization': authToken,
         'Accept': 'application/json',
