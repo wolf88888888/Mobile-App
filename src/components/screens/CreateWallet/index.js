@@ -56,6 +56,7 @@ class CreateWallet extends Component {
         let progress = 0;
         this.setState({ progress });
         interval = setInterval(() => {
+            console.log("animate - " + progress);
             if (this.state.showProgress) {
                 progress += 0.004;
                 if (progress > 0.9) {
@@ -115,14 +116,14 @@ class CreateWallet extends Component {
                         AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
                         this.props.navigation.navigate('SaveWallet', { ...params});
                         this.setState({ showProgress: false });
-                    }, 500);
+                    }, 1000);
                 })
                 .catch(err => {
                     this.setState({ showProgress: false });
                     Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
                     console.log(err);
                 });
-            }, 1000);
+            }, 500);
 
         } catch (error) {
             this.setState({ showProgress: false });
