@@ -1,6 +1,6 @@
 import {
 	Config
-} from './../../../config';
+} from '../../../config';
 import ethers from 'ethers';
 import StandardToken from './contracts-json/StandardToken.json';
 import LOCExchangeContractJSON from './contracts-json/LOCExchange.json';

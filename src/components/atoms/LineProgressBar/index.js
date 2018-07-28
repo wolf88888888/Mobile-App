@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { View } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styles from './styles';
