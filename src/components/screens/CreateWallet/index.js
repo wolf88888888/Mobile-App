@@ -56,7 +56,7 @@ class CreateWallet extends Component {
         let progress = 0;
         this.setState({ progress });
         interval = setInterval(() => {
-            console.log("animate - " + progress);
+            //console.log("animate - " + progress);
             if (this.state.showProgress) {
                 progress += 0.004;
                 if (progress > 0.9) {
