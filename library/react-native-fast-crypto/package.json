@@ -1,0 +1,29 @@
+{
+  "name": "react-native-fast-crypto",
+  "version": "1.5.5",
+  "description": "Native C/C++ implemented crypto libraries for React Native apps",
+  "keywords": [
+    "react-native",
+    "scrypt",
+    "fast",
+    "native"
+  ],
+  "files": [
+    "README.md",
+    "ios/*",
+    "android/*",
+    "index.js",
+    "package.json"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "build": "echo Ok"
+  },
+  "dependencies": {
+    "buffer": "^5.1.0",
+    "rfc4648": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react-native": "^0.55.4"
+  }
+}

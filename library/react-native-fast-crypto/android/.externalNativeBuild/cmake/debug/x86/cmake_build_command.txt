@@ -1,0 +1,16 @@
+Executable : D:\DevelopmentTools\SDK\cmake\3.6.4111459\bin\cmake.exe
+arguments : 
+-HH:\Net\2018\LockTrip\Mobile-App\library\react-native-fast-crypto\android\src\main\cpp
+-BH:\Net\2018\LockTrip\Mobile-App\library\react-native-fast-crypto\android\.externalNativeBuild\cmake\debug\x86
+-DANDROID_ABI=x86
+-DANDROID_PLATFORM=android-16
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=H:\Net\2018\LockTrip\Mobile-App\library\react-native-fast-crypto\android\build\intermediates\cmake\debug\obj\x86
+-DCMAKE_BUILD_TYPE=Debug
+-DANDROID_NDK=D:\DevelopmentTools\SDK\ndk-bundle
+-DCMAKE_TOOLCHAIN_FILE=D:\DevelopmentTools\SDK\ndk-bundle\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=D:\DevelopmentTools\SDK\cmake\3.6.4111459\bin\ninja.exe
+-GAndroid Gradle - Ninja
+-DANDROID_TOOLCHAIN=clang
+-DANDROID_STL=c++_shared
+jvmArgs : 
+
