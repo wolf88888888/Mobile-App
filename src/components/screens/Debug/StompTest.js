@@ -1,7 +1,8 @@
-import { withNavigation } from 'react-navigation';
+import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
+
 import Stomp from 'stompjs';
-import { ScrollView, Text, View, TouchableOpacity, Image, Picker, StyleSheet, AsyncStorage, TextInput} from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
