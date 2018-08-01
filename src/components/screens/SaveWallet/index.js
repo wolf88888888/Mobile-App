@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-import { login, register } from '../../../utils/requester';
 
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
@@ -20,6 +19,7 @@ import WhiteBackButton from '../../atoms/WhiteBackButton';
 import { autobind } from 'core-decorators';
 import { domainPrefix } from '../../../config';
 import { imgHost } from '../../../config';
+import requester from '../../../initDependencies';
 import styles from './styles';
 
 // import DialogProgress from 'react-native-dialog-progress'
@@ -77,15 +77,14 @@ class SaveWallet extends Component {
         };
 
         this.setState({ showProgress: true });
-        register(user, null)
-        .then((res) => {
+        requester.register(user, null).then(res => {
             this.setState({ showProgress: false });
             if (res.success) {
                 console.log(res);
                 navigate('CongratsWallet', {isFB:params.isFB})
             } else {
-                res.response.then((response) => {
-                    const { errors } = response;
+                res.errors.then(data => {
+                    const { errors } = data;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
                             Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);

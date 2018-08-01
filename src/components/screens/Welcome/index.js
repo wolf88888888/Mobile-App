@@ -12,7 +12,7 @@ import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import { domainPrefix } from '../../../config';
-import { login } from '../../../utils/requester';
+import requester from '../../../initDependencies';
 import styles from './styles';
 
 const FBSDK = require('react-native-fbsdk');
@@ -50,20 +50,20 @@ class Welcome extends Component {
     tryLogin(fbInfo) {
         this.setState({ showProgress: true });
         // fbInfo.email = "test1231@test.com";
-        login({email:fbInfo.email, password:fbInfo.id+"!a123"}, null).then((res) => {
+        requester.login({email:fbInfo.email, password:fbInfo.id+"!a123"}, null).then(res => {
             this.setState({ showProgress: false });
             if (res.success) {
                 console.log("Success");
-                res.response.json().then((jsonRep) => {
-                    console.log(jsonRep);
-                    AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, jsonRep.Authorization);
+                res.body.then(data => {
+                    console.log(data);
+                    AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, fbInfo.email);
                     this.props.navigation.navigate('MainScreen');
                 });
             } else {
-                res.response.then((response) => {
-                    const { errors } = response;
+                res.errors.then(data => {
+                    const { errors } = data;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
                             if (errors[key].message == "Incorrect password") {

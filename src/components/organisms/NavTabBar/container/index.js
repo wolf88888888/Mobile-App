@@ -1,8 +1,8 @@
 import { AsyncStorage } from 'react-native';
-import { connect } from 'react-redux';
-import { setLocRate } from '../../../../redux/common/actions';
-import { getLocRateInUserSelectedCurrency, getCurrencyRates } from '../../../../utils/requester';
 import NavTabBar from '../';
+import { connect } from 'react-redux';
+import requester from '../../../../initDependencies';
+import { setLocRate } from '../../../../redux/common/actions';
 import { toJS } from '../../../../utils/toJS';
 
 const mapStateToPropst = ({ paymentInfo }) => ({
@@ -11,13 +11,16 @@ const mapStateToPropst = ({ paymentInfo }) => ({
 
 const mapDispatchToProps = dispatch => ({
     loadInitialData: ({ currency }) => {
-        getLocRateInUserSelectedCurrency(currency)
-            .then((data) => {
+        requester.getLocRateByCurrency(currency).then(res => {
+            res.body.then(data => {
                 dispatch(setLocRate(data[0][`price_${currency.toLowerCase()}`]));
             });
+        });
 
-        getCurrencyRates().then((data) => {
-            AsyncStorage.setItem('currencyRates', JSON.stringify(data));
+        requester.getCurrencyRates().then(res => {
+            res.body.then(data => {
+                AsyncStorage.setItem('currencyRates', JSON.stringify(data));
+            });
         });
     }
 });

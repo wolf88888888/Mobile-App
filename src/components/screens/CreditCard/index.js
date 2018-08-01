@@ -6,7 +6,6 @@ import { validateEmail, validateName } from '../../../utils/validation';
 import GoBack from '../../atoms/GoBack';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
-import { SaveCard } from '../../../utils/requester';
 import SmartInput from '../../atoms/SmartInput';
 import Switch from 'react-native-customisable-switch';
 
@@ -160,22 +159,22 @@ class CreditCard extends Component {
         const { CardHolder, CardNumber,MY,CVV } = this.state;
         const user = {CardHolder, CardNumber,MY,CVV};
 
-        SaveCard(user, null).then((res) => {
-            if (res.success) {
-                res.response.json().then((data) => {
+        // SaveCard(user, null).then((res) => {
+        //     if (res.success) {
+        //         res.response.json().then((data) => {
 
-                });
-            } else {
-                res.response.then((response) => {
-                    const { errors } = response;
-                    Object.keys(errors).forEach((key) => {
-                        if (typeof key !== 'function') {
-                            console.log('Error saving card:', errors[key].message);
-                        }
-                    });
-                });
-            }
-        });
+        //         });
+        //     } else {
+        //         res.response.then((response) => {
+        //             const { errors } = response;
+        //             Object.keys(errors).forEach((key) => {
+        //                 if (typeof key !== 'function') {
+        //                     console.log('Error saving card:', errors[key].message);
+        //                 }
+        //             });
+        //         });
+        //     }
+        // });
     }
 
     render() {

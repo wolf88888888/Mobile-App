@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import UserProfileHomes from '../../organisms/UserProfileHomes'
 import UserProfileReviews from '../../organisms/UserProfileReviews'
 import { connect } from 'react-redux';
-import { getUserInfo } from '../../../utils/requester';
 import { imgHost } from '../../../config.js';
 import moment from 'moment'
 import requester from '../../../initDependencies';

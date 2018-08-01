@@ -29,7 +29,6 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { imgHost } from '../../../config.js'
 import styles from './styles';
-import { upperFirst } from '../../../utils/requester';
 
 class EditUserProfile extends Component {
 
@@ -153,6 +152,10 @@ class EditUserProfile extends Component {
         }).catch(err => {
             console.log(err);
         });
+    }
+
+    upperFirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     showModal() {
@@ -549,7 +552,7 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title="Gender"
-                            info={upperFirst(this.state.gender == 'men' ? 'Male' : 'Female')}
+                            info={this.upperFirst(this.state.gender == 'men' ? 'Male' : 'Female')}
                             onPress={this.onGender} />
                         <View style={styles.lineStyle} />
 

@@ -1,13 +1,5 @@
 import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
-import {
-    getCountriesWithListings,
-    getLocRate,
-    getLocRateInUserSelectedCurrency,
-    getRegionsBySearchParameter,
-    getTopHomes,
-    getUserInfo
-} from '../../../utils/requester';
 
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import { Icons } from 'react-native-fontawesome';
@@ -20,6 +12,7 @@ import Toast from 'react-native-easy-toast';
 import _ from 'lodash';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
+import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
 
@@ -135,13 +128,14 @@ class Explore extends Component {
         });
     }
 
-     async componentDidMount() {
+    async componentDidMount() {
         console.disableYellowBox = true;
-        getTopHomes()
-            .then((topHomes) => {
-                const truncated = topHomes.content.slice(0, 4);
+        requester.getTopListings().then(res => {
+            res.body.then(data => {
+                const truncated = data.content.slice(0, 4);
                 this.setState({ topHomes: truncated });
             });
+        });
         this.spinnerValueChange(this.state.language);
     }
 
@@ -174,22 +168,21 @@ class Explore extends Component {
         if (value === '') {
             this.setState({ cities: [] });
         } else {
-            getRegionsBySearchParameter(value)
-                .then(res => res.response.json())
-                .then((json) => {
+            requester.getRegionsBySearchParameter([`query=${value}`]).then(res => {
+                res.body.then(data => {
                     if (this.state.search != '') {
-                        this.setState({ cities: json });
+                        this.setState({ cities: data });
                     }
                 });
+            });
         }
     }
 
     getCountryValues() {
-        getCountriesWithListings()
-            .then(res => res.response.json())
-            .then((json) => {
+        requester.getCountries(true).then(res => {
+            res.body.then(data => {
                 countryArr = [];
-                json.content.map((item, i) => {
+                data.content.map((item, i) => {
                     countryArr.push({
                         'label': item.name,
                         'value': item
@@ -203,6 +196,7 @@ class Explore extends Component {
                     countryName: countryArr[0].label
                 });
             });
+        });
     }
 
     onValueChange = (value) => {
@@ -347,14 +341,14 @@ class Explore extends Component {
 
     spinnerValueChange(value) {
         this.setState({ language: value });
-        getLocRateInUserSelectedCurrency(value)
-            .then((json) => {
-                console.log('spinnerValueJson----', json[0], value);
+        requester.getLocRateByCurrency(value).then(res => {
+            res.body.then(data => {
+                console.log('spinnerValueJson----', data[0], value);
                 if (value == 'EUR') {
                     // AsyncStorage.setItem('currentCurrency', 'EUR');
                     // AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
                     this.setState({
-                        locPrice: json[0].price_eur,
+                        locPrice: data[0].price_eur,
                         currencyIcon: Icons.euro
                     });
                 }
@@ -362,7 +356,7 @@ class Explore extends Component {
                     // AsyncStorage.setItem('currentCurrency', 'USD');
                     // AsyncStorage.setItem('currencyLocPrice', json[0].price_usd);
                     this.setState({
-                        locPrice: json[0].price_usd,
+                        locPrice: data[0].price_usd,
                         currencyIcon: Icons.usd
                     });
                 }
@@ -370,13 +364,13 @@ class Explore extends Component {
                     // AsyncStorage.setItem('currentCurrency', 'GBP');
                     // AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
                     this.setState({
-                        locPrice: json[0].price_gbp,
+                        locPrice: data[0].price_gbp,
                         currencyIcon: Icons.gbp
                     });
                 }
-        })
-        .catch(err => {
-            console.log(err);
+            }).catch(err => {
+                console.log(err);
+            });
         });
     }
 
@@ -406,7 +400,7 @@ class Explore extends Component {
 
                 <View style={styles.tilesView}>
                     {this.state.topHomes.map(listing => <SmallPropertyTile listingsType="homes" listing={listing}
-                                                                           key={listing.id}/>)}
+                        key={listing.id} />)}
                 </View>
             </View>
         );
@@ -521,64 +515,72 @@ class Explore extends Component {
         );
     }
 
-    renderHotelSelected(){
-        return(
+    renderHotelSelected() {
+        return (
             <View
-                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                style={{ width: '100%', height: '100%', position: 'absolute' }}>
                 <Image
-                    style= {{flex: 1,
+                    style={{
+                        flex: 1,
                         margin: 20,
                         width: null,
                         height: null,
-                        resizeMode: 'contain'}}
+                        resizeMode: 'contain'
+                    }}
                     source={require('../../../assets/home_images/hotels_selected.png')}
                 />
             </View>
         )
     }
 
-    renderHotelDeSelected(){
-        return(
+    renderHotelDeSelected() {
+        return (
             <View
-                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                style={{ width: '100%', height: '100%', position: 'absolute' }}>
                 <Image
-                    style= {{flex: 1,
+                    style={{
+                        flex: 1,
                         margin: 20,
                         width: null,
                         height: null,
-                        resizeMode: 'contain'}}
+                        resizeMode: 'contain'
+                    }}
                     source={require('../../../assets/home_images/hotels_not_selected.png')}
                 />
             </View>
         )
     }
 
-    renderHomeSelected(){
-        return(
+    renderHomeSelected() {
+        return (
             <View
-                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                style={{ width: '100%', height: '100%', position: 'absolute' }}>
                 <Image
-                    style= {{flex: 1,
+                    style={{
+                        flex: 1,
                         margin: 20,
                         width: null,
                         height: null,
-                        resizeMode: 'contain'}}
+                        resizeMode: 'contain'
+                    }}
                     source={require('../../../assets/home_images/homes_selected.png')}
                 />
             </View>
         )
     }
 
-    renderHomeDeSelected(){
-        return(
+    renderHomeDeSelected() {
+        return (
             <View
-                style={{width: '100%',height: '100%', position: 'absolute'}}>
+                style={{ width: '100%', height: '100%', position: 'absolute' }}>
                 <Image
-                    style= {{flex: 1,
+                    style={{
+                        flex: 1,
                         margin: 20,
                         width: null,
                         height: null,
-                        resizeMode: 'contain'}}
+                        resizeMode: 'contain'
+                    }}
                     source={require('../../../assets/home_images/homes__not_selected.png')}
                 />
             </View>
@@ -594,13 +596,13 @@ class Explore extends Component {
             <View style={styles.container}>
                 <Toast
                     ref="toast"
-                    style={{backgroundColor:'#DA7B61'}}
+                    style={{ backgroundColor: '#DA7B61' }}
                     position='bottom'
                     positionValue={150}
                     fadeInDuration={500}
                     fadeOutDuration={500}
                     opacity={1.0}
-                    textStyle={{color:'white', fontFamily: 'FuturaStd-Light'}}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 <ScrollView>
@@ -628,12 +630,12 @@ class Explore extends Component {
                         <View style={styles.viewDiscover}>
 
                             <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
-                                              style={styles.imageViewDiscoverLeft}>
+                                style={styles.imageViewDiscoverLeft}>
                                 <Image style={{
                                     height: '100%',
                                     width: '100%'
                                 }} resizeMode='stretch'
-                                       source={require('../../../assets/home_images/hotels.png')}/>
+                                    source={require('../../../assets/home_images/hotels.png')} />
                                 {this.state.searchHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
                             </TouchableOpacity>
 
@@ -643,12 +645,12 @@ class Explore extends Component {
                                 search: '',
                                 regionId: 0
                             })}
-                                              style={styles.imageViewDiscoverLeft}>
+                                style={styles.imageViewDiscoverLeft}>
                                 <Image style={{
                                     height: '100%',
                                     width: '100%'
                                 }} resizeMode='stretch'
-                                       source={require('../../../assets/home_images/homes.png')}/>
+                                    source={require('../../../assets/home_images/homes.png')} />
                                 {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
                             </TouchableOpacity>
 
@@ -656,35 +658,35 @@ class Explore extends Component {
 
                         <Text style={styles.scsrollViewTitles}>Popular Destinations</Text>
 
-                        <View style={styles.divsider}/>
+                        <View style={styles.divsider} />
 
                         <View style={styles.viewPopularHotels}>
 
                             <TouchableOpacity onPsress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
-                                              style={styles.subViewPopularHotelsLeft}>
+                                style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
-                                       source={require('../../../assets/home_images/london.png')}/>
+                                    source={require('../../../assets/home_images/london.png')} />
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.handlePopularCities(18417, 'Madrid , Spain')}
-                                              style={styles.subViewPopularHotelsRight}>
+                                style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
-                                       source={require('../../../assets/home_images/Madrid.png')}/>
+                                    source={require('../../../assets/home_images/Madrid.png')} />
                             </TouchableOpacity>
                         </View>
 
                         <View style={styles.viewPopularHotels}>
 
                             <TouchableOpacity onPress={() => this.handlePopularCities(16471, 'Paris , France')}
-                                              style={styles.subViewPopularHotelsLeft}>
+                                style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
-                                       source={require('../../../assets/home_images/paris.png')}/>
+                                    source={require('../../../assets/home_images/paris.png')} />
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.handlePopularCities(15375, 'Sydney , Australia')}
-                                              style={styles.subViewPopularHotelsRight}>
+                                style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
-                                       source={require('../../../assets/home_images/Sydney.png')}/>
+                                    source={require('../../../assets/home_images/Sydney.png')} />
                             </TouchableOpacity>
                         </View>
 
@@ -697,14 +699,14 @@ class Explore extends Component {
 
                         <View style={styles.bottomView}>
                             <Image style={styles.bottomViewText} resizeMode='stretch'
-                                   source={require('../../../assets/texthome.png')}/>
+                                source={require('../../../assets/texthome.png')} />
                             <TouchableOpacity onPress={this.showToast} style={styles.getStartedButtonView}>
                                 <View>
                                     <Text style={styles.searchButtonText}>Get Started</Text>
                                 </View>
                             </TouchableOpacity>
                             <Image style={styles.bottomViewBanner} resizeMode='stretch'
-                                   source={require('../../../../src/assets/vector.png')}/>
+                                source={require('../../../../src/assets/vector.png')} />
                         </View>
 
                     </View>

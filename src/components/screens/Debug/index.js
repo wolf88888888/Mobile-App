@@ -13,6 +13,7 @@ import Toast from 'react-native-simple-toast';
 import _ from 'lodash';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
+import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
 
