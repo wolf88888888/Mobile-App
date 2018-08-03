@@ -1,22 +1,23 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import {
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    Platform
+    View
 } from 'react-native';
-import Switch from 'react-native-customisable-switch';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React, { Component } from 'react';
+import { validateEmail, validateName } from '../../../utils/validation';
+
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
-import Toast from 'react-native-simple-toast';
-import { validateEmail, validateName } from '../../../utils/validation';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
 import SmartInput from '../../atoms/SmartInput';
-import { getCountriesWithListings } from '../../../utils/requester';
+import Switch from 'react-native-customisable-switch';
+import Toast from 'react-native-simple-toast';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import requester from '../../../initDependencies';
 import styles from './styles';
 
 class CreateAccount extends Component {
@@ -28,7 +29,7 @@ class CreateAccount extends Component {
 
     static defaultProps = {
         navigation: {
-            navigate: () => {}
+            navigate: () => { }
         }
     }
 
@@ -59,11 +60,10 @@ class CreateAccount extends Component {
     }
 
     getCountriesForSignup() {
-        getCountriesWithListings()
-            .then(res => res.response.json())
-            .then((json) => {
+        requester.getCountries(true).then(res => {
+            res.body.then(data => {
                 countryArr = [];
-                json.content.map((item, i) => {
+                data.content.map((item, i) => {
                     countryArr.push({
                         'label': item.name,
                         'value': item
@@ -76,18 +76,19 @@ class CreateAccount extends Component {
                     countryName: countryArr[0].label,
                 });
             });
+        });
     }
 
     goToCreatePassword() {
         const {
             firstName, lastName, email, country, userWantsPromo, checkZIndex
         } = this.state;
-        if (country === undefined || country === ''){
+        if (country === undefined || country === '') {
             Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.CENTER);
         }
         else {
             this.props.navigation.navigate('CreatePassword', {
-                firstName, lastName, email, country ,userWantsPromo
+                firstName, lastName, email, country, userWantsPromo
             })
         }
     }
@@ -101,11 +102,11 @@ class CreateAccount extends Component {
         return (
             <KeyboardAwareScrollView
                 style={styles.container}
-                enableOnAndroid= {true} //eslint-disable-line
+                enableOnAndroid={true} //eslint-disable-line
                 enableAutoAutomaticScroll={(Platform.OS === 'ios')}
             >
                 <View style={styles.container}>
-                    <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
+                    <WhiteBackButton style={styles.closeButton} onPress={() => goBack()} />
 
                     <View style={styles.lowOpacity}>
                         <Image
@@ -113,115 +114,115 @@ class CreateAccount extends Component {
                             style={styles.getStartedImage}
                         />
                     </View>
-                <View style={styles.main}>
-                    <View style={styles.titleView}><Text style={styles.titleText}>Create Account</Text></View>
+                    <View style={styles.main}>
+                        <View style={styles.titleView}><Text style={styles.titleText}>Create Account</Text></View>
 
-                    <View style={styles.inputView}>
-                        <SmartInput
-                            autoCorrect={false}
-                            value={firstName}
-                            onChangeText={this.onChangeHandler('firstName')}
-                            placeholder="First Name"
-                            placeholderTextColor="#fff"
-                            rightIcon={validateName(firstName) ? 'check' : null}
-                        />
-                    </View>
-
-                    <View style={styles.inputView}>
-                        <SmartInput
-                            autoCorrect={false}
-                            value={lastName}
-                            onChangeText={this.onChangeHandler('lastName')}
-                            placeholder="Last Name"
-                            placeholderTextColor="#fff"
-                            rightIcon={validateName(lastName) ? 'check' : null}
-                        />
-                    </View>
-
-                    <View style={styles.inputView}>
-                        <SmartInput
-                            keyboardType="email-address"
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            value={email}
-                            onChangeText={this.onChangeHandler('email')}
-                            placeholder="Email"
-                            placeholderTextColor="#fff"
-                            rightIcon={validateEmail(email) ? 'check' : null}
-                        />
-                    </View>
-
-                    <View style={styles.inputView}>
-                    <RNPickerSelect
-                            items={this.state.countries}
-                            placeholder={{
-                                label: 'Country of Residence',
-                                value: 0
-                            }}
-                            onValueChange={(value) => {
-                                this.setState({
-                                    countryId: value.id,
-                                    countryName: value.name,
-                                    country: value.name,
-                                    value: value
-                                });
-                            }}
-                            style={{ ...pickerSelectStyles }}
-                        >
-                        </RNPickerSelect>
-                    </View>
-
-                    <View style={styles.finePrintView}>
-                        <Text style={styles.finePrintText}>
-                        I'd like to receive promotional communications, including discounts,
-                        surveys and inspiration via email, SMS and phone.
-                        </Text>
-
-                        <View style={{flex: 0.2, alignSelf: 'flex-end',}}>
-                            { userWantsPromo ?
-                                <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                    <Text style={styles.switchCheckText}>
-                                        <FontAwesome>{Icons.check}</FontAwesome>
-                                    </Text>
-                                </View>
-                                : null }
-                            <Switch
-                                value={userWantsPromo}
-                                onChangeValue={() => {
-                                    this.setState({ userWantsPromo: !userWantsPromo, checkZIndex: 0 });
-                                    setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
-                                }}
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
+                        <View style={styles.inputView}>
+                            <SmartInput
+                                autoCorrect={false}
+                                value={firstName}
+                                onChangeText={this.onChangeHandler('firstName')}
+                                placeholder="First Name"
+                                placeholderTextColor="#fff"
+                                rightIcon={validateName(firstName) ? 'check' : null}
                             />
                         </View>
-                    </View>
 
-                    <View style={styles.nextButtonView}>
-                        <TouchableOpacity
-                            disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
-                            onPress={() => this.goToCreatePassword()}
-                        >
-                            <View style={styles.nextButton}>
-                                <Text style={styles.buttonText}>
-                                    <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                </Text>
+                        <View style={styles.inputView}>
+                            <SmartInput
+                                autoCorrect={false}
+                                value={lastName}
+                                onChangeText={this.onChangeHandler('lastName')}
+                                placeholder="Last Name"
+                                placeholderTextColor="#fff"
+                                rightIcon={validateName(lastName) ? 'check' : null}
+                            />
+                        </View>
+
+                        <View style={styles.inputView}>
+                            <SmartInput
+                                keyboardType="email-address"
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                value={email}
+                                onChangeText={this.onChangeHandler('email')}
+                                placeholder="Email"
+                                placeholderTextColor="#fff"
+                                rightIcon={validateEmail(email) ? 'check' : null}
+                            />
+                        </View>
+
+                        <View style={styles.inputView}>
+                            <RNPickerSelect
+                                items={this.state.countries}
+                                placeholder={{
+                                    label: 'Country of Residence',
+                                    value: 0
+                                }}
+                                onValueChange={(value) => {
+                                    this.setState({
+                                        countryId: value.id,
+                                        countryName: value.name,
+                                        country: value.name,
+                                        value: value
+                                    });
+                                }}
+                                style={{ ...pickerSelectStyles }}
+                            >
+                            </RNPickerSelect>
+                        </View>
+
+                        <View style={styles.finePrintView}>
+                            <Text style={styles.finePrintText}>
+                                I'd like to receive promotional communications, including discounts,
+                                surveys and inspiration via email, SMS and phone.
+                        </Text>
+
+                            <View style={{ flex: 0.2, alignSelf: 'flex-end', }}>
+                                {userWantsPromo ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    : null}
+                                <Switch
+                                    value={userWantsPromo}
+                                    onChangeValue={() => {
+                                        this.setState({ userWantsPromo: !userWantsPromo, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#DA7B61"
+                                    activeBackgroundColor="#e4a193"
+                                    inactiveBackgroundColor="#DA7B61"
+                                    switchWidth={62}
+                                    switchBorderColor="#e4a193"
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
                             </View>
-                        </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.nextButtonView}>
+                            <TouchableOpacity
+                                disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
+                                onPress={() => this.goToCreatePassword()}
+                            >
+                                <View style={styles.nextButton}>
+                                    <Text style={styles.buttonText}>
+                                        <FontAwesome>{Icons.arrowRight}</FontAwesome>
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
             </KeyboardAwareScrollView>
         );
     }

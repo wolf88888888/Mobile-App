@@ -1,19 +1,20 @@
-import PropTypes from 'prop-types';
+import { BackHandler, FlatList, Platform, ScrollView, Text, TouchableOpacity, View, WebView } from 'react-native';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View , WebView, BackHandler, Platform} from 'react-native';
-import Image from 'react-native-remote-svg';
-import SplashScreen from 'react-native-smart-splash-screen';
-import { withNavigation } from 'react-navigation';
-import SockJsClient from 'react-stomp';
 import { apiHost, imgHost } from '../../../config';
-import { getRegionsBySearchParameter, getTopHomes } from '../../../utils/requester';
+
+import BackButton from '../../atoms/BackButton';
+import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
+import Image from 'react-native-remote-svg';
+import PropTypes from 'prop-types';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import styles from './styles';
+import SockJsClient from 'react-stomp';
+import SplashScreen from 'react-native-smart-splash-screen';
 import UUIDGenerator from 'react-native-uuid-generator';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
-import BackButton from '../../atoms/BackButton';
+import requester from '../../../initDependencies';
+import styles from './styles';
+import { withNavigation } from 'react-navigation';
 
 var clientRef = '';
 var utf8 = require('utf8');
@@ -165,9 +166,11 @@ class Property extends Component {
     }
 
     componentDidMount() {
-        getTopHomes().then((topHomes) => {
-            const truncated = topHomes.content.slice(0, 4);
-            this.setState({ topHomes: truncated });
+        requester.getTopListings().then(res => {
+            res.body.then(data => {
+                const truncated = data.content.slice(0, 4);
+                this.setState({ topHomes: truncated });
+            });
         });
     }
 
@@ -192,9 +195,11 @@ class Property extends Component {
     onSearchChange(value){
         setSearchValue({ value });
         clearSelected();
-        getRegionsBySearchParameter(value).then((res) => {
-             setSearchRegions(res);
-             setAutocomplete(value);
+        requester.getRegionsBySearchParameter(value).then(res => {
+            res.body.then(data => {
+                setSearchRegions(data);
+                setAutocomplete(value);
+            });
         });
     }
 
