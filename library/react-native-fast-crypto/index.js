@@ -2,7 +2,7 @@ import { NativeModules } from 'react-native'
 import { base16, base64 } from 'rfc4648'
 
 const { RNFastCrypto } = NativeModules
-const Buffer = require('buffer/').Buffer
+const Buffer = require('buffer').Buffer
 var utils = require('./utils');
 
 function getUTF8Bytes(password) {
@@ -17,21 +17,21 @@ export async function scrypt (passwd, salt, N, r, p, size) {
 
   const byPasswd = passwd;//getUTF8Bytes(passwd);//base32.parse("NV4XAYLTON3W64TE")
   const bysalt = salt;//getUTF8Bytes(salt);//base32.parse("NV4XGYLMOQ======")
-  console.log(' *********************** ');
-  console.log(byPasswd);
-  console.log(bysalt);
+  // console.log(' *********************** ');
+  // console.log(byPasswd);
+  // console.log(bysalt);
 
   passwd = base64.stringify(byPasswd)
   salt = base64.stringify(bysalt)
-  console.log('passwd: ' + passwd)
-  console.log('salt: ' + salt)
+  // console.log('passwd: ' + passwd)
+  // console.log('salt: ' + salt)
 
   //console.log('RNFS:scrypt(' + N.toString() + ', ' + r.toString() + ', ' + p.toString())
-  console.log('RNFS:script start')
+  // console.log('RNFS:script start')
   const t = Date.now()
   const retval:string = await RNFastCrypto.scrypt(passwd, salt, N, r, p, size)
   const elapsed = Date.now() - t
-  console.log('RNFS:script finished in ' + elapsed + 'ms')
+  // console.log('RNFS:script finished in ' + elapsed + 'ms')
 
   let uint8array = base64.parse(retval)
   return uint8array.subarray(0, size)
