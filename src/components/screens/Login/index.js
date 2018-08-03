@@ -14,7 +14,6 @@ import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import SplashScreen from 'react-native-smart-splash-screen';
-import Toast from 'react-native-simple-toast';
 import { autobind } from 'core-decorators';
 import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
@@ -41,13 +40,6 @@ class Login extends Component {
             duration: 850,
             delay: 500
         });
-
-        // Toast.showWithGravity(alertMessage, Toast.SHORT, Toast.BOTTOM);
-        // if (__DEV__) {
-        //     Toast.showWithGravity("Debug ----- ", Toast.SHORT, Toast.BOTTOM);
-        // } else {
-        //     Toast.showWithGravity("Release ----- ", Toast.SHORT, Toast.BOTTOM);
-        // }
     }
 
     // TODO: Need a way to generate a Google ReCAPTCHA token
