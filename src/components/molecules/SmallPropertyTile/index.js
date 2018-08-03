@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
 import { AsyncStorage, Image, Text, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
+
 import PropTypes from 'prop-types';
-import { getPropertyById } from '../../../utils/requester';
+import { connect } from 'react-redux';
+import requester from '../../../initDependencies';
 import styles from './styles';
 import { toJS } from '../../../utils/toJS';
 
@@ -22,7 +23,7 @@ class SmallPropertyTile extends Component {
     }
 
     async componentDidMount() {
-        const property = await getPropertyById(this.props.listing.id);
+        const property = await requester.getListing(this.props.listing.id).then(res => res.body);
         let currencyRates = await AsyncStorage.getItem('currencyRates');
         currencyRates = JSON.parse(currencyRates);
         const { currency } = this.props.paymentInfo;

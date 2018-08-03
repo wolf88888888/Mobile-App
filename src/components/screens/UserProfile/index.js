@@ -1,15 +1,15 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { AsyncStorage, Clipboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { connect } from 'react-redux';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import UserProfileSummary from '../../organisms/UserProfileSummary'
-import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
-import UserProfileReviews from '../../organisms/UserProfileReviews'
-import UserProfileHomes from '../../organisms/UserProfileHomes'
+import React, { Component } from 'react';
 
+import Image from 'react-native-remote-svg';
+import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
+import PropTypes from 'prop-types';
+import UserProfileHomes from '../../organisms/UserProfileHomes'
+import UserProfileReviews from '../../organisms/UserProfileReviews'
+import UserProfileSummary from '../../organisms/UserProfileSummary'
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import { connect } from 'react-redux';
 import styles from './styles';
 
 class UserProfile extends Component {

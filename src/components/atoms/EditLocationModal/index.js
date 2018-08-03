@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { TextInput, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
-import _ from 'lodash';
-import { getCities } from '../../../utils/requester';
-import RNPickerSelect from 'react-native-picker-select';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
 import PropTypes from 'prop-types';
+import RNPickerSelect from 'react-native-picker-select';
+import _ from 'lodash';
+import requester from '../../../initDependencies';
 import styles from './styles';
 
 class EditLocationModal extends Component {
@@ -17,8 +18,8 @@ class EditLocationModal extends Component {
     }
 
     static defaultProps = {
-        onSave: () => {},
-        onCancel: () => {},
+        onSave: () => { },
+        onCancel: () => { },
     }
 
     constructor(props) {
@@ -51,17 +52,18 @@ class EditLocationModal extends Component {
 
     getCities(countryId) {
         cityArr = [];
-        getCities(countryId, false).then(res => {
-            if(res.content.length > 0) {
-                res.content.map((item, i)=>{
-                    cityArr.push({'label': item.name, 'value': item.id})
-                })
-                this.setState({
-                    cities: cityArr,
-                    selectedCityId: this.state.selectedCityId==null? cityArr[0].value: this.state.selectedCityId,
-                })
-                
-            }
+        requester.getCities(countryId, false).then(res => {
+            res.body.then(data => {
+                if (data.content.length > 0) {
+                    data.content.map((item, i) => {
+                        cityArr.push({ 'label': item.name, 'value': item.id })
+                    })
+                    this.setState({
+                        cities: cityArr,
+                        selectedCityId: this.state.selectedCityId == null ? cityArr[0].value : this.state.selectedCityId,
+                    })
+                }
+            });
         });
     }
 
@@ -71,56 +73,56 @@ class EditLocationModal extends Component {
                 <View style={styles.content}>
                     <Text style={styles.title}>Edit Location</Text>
                     {/* <View style={{flex: 1}}> */}
+                    <RNPickerSelect
+                        items={this.state.countries}
+                        placeholder={{
+                            label: 'Choose your location',
+                            value: null,
+                        }}
+                        onValueChange={(value) => {
+                            this.setState({
+                                selectedCountryId: value,
+                                selectedCityId: null,
+                            });
+                            this.getCities(value);
+                        }}
+                        style={{ ...pickerSelectStyles }}
+                        value={this.state.selectedCountryId}
+                    />
+                    {this.state.selectedCityId !== null && this.state.cities.length > 0 &&
                         <RNPickerSelect
-                            items={this.state.countries}
+                            items={this.state.cities}
                             placeholder={{
-                                label: 'Choose your location',
-                                value: null,
+                                label: 'Choose your city',
+                                value: this.state.selectedCityId,
                             }}
                             onValueChange={(value) => {
                                 this.setState({
-                                    selectedCountryId: value,
-                                    selectedCityId: null,
+                                    selectedCityName: this.state.cities[index].label,
+                                    selectedCityId: value,
                                 });
-                                this.getCities(value);
                             }}
                             style={{ ...pickerSelectStyles }}
-                            value={this.state.selectedCountryId}
+                            value={this.state.selectedCityId}
                         />
-                        {this.state.selectedCityId!==null && this.state.cities.length>0 &&
-                            <RNPickerSelect
-                                items={this.state.cities}
-                                placeholder={{
-                                    label: 'Choose your city',
-                                    value: this.state.selectedCityId,
-                                }}
-                                onValueChange={(value) => {
-                                    console.log('onchange city---', value);
-                                    this.setState({
-                                        selectedCityId: value,
-                                    });
-                                }}
-                                style={{ ...pickerSelectStyles }}
-                                value={this.state.selectedCityId}
-                            />
-                        }
+                    }
                     {/* </View> */}
                     <View style={styles.footer}>
                         <TouchableOpacity
                             onPress={() => {
                                 cId = this.state.selectedCityId
-                                index = _.findIndex(this.state.cities, function(o){
+                                index = _.findIndex(this.state.cities, function (o) {
                                     return o.value == cId;
                                 })
                                 city = {
                                     id: this.state.selectedCityId,
-                                    name: this.state.cities[index].label==null? this.state.cities[0].label: this.state.cities[index].label,
+                                    name: this.state.cities[index].label == null ? this.state.cities[0].label : this.state.cities[index].label,
                                 }
                                 country = {
                                     id: this.state.selectedCountryId,
                                     name: this.state.selectedCountryName
                                 }
-                                this.props.onSave(this.state.selectedCountryId==null? 0: country, city);
+                                this.props.onSave(this.state.selectedCountryId == null ? 0 : country, city);
                             }}>
                             <View style={styles.SaveButton}>
                                 <Text style={styles.buttonTitle}> Save </Text>
@@ -134,7 +136,7 @@ class EditLocationModal extends Component {
                                 <Text style={styles.buttonTitle}>Cancel</Text>
                             </View>
                         </TouchableOpacity>
-                    </View>    
+                    </View>
                 </View>
             </View>
         )

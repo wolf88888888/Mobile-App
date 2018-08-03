@@ -1,23 +1,17 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { AsyncStorage, Clipboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
+
 import GoBack from '../../atoms/GoBack';
+import Image from 'react-native-remote-svg';
+import PropTypes from 'prop-types';
 import Switch from 'react-native-customisable-switch';
+import { connect } from 'react-redux';
 
 class PaymentMethods extends Component {
   constructor(props) {
     super(props);
-    this.state = {
- 
-    }
   }   
-   
-
-  componentDidMount() {
-  }
 
   render() {
     const { navigate } = this.props.navigation;

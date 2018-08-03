@@ -1,27 +1,30 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
-    Text,
-    View,
     AsyncStorage,
+    Keyboard,
+    ScrollView,
+    Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard,
-    ScrollView
+    View
 } from 'react-native';
-import Image from 'react-native-remote-svg';
-import { autobind } from 'core-decorators';
-
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import SmartInput from '../../atoms/SmartInput';
-import { domainPrefix } from '../../../config';
-import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { register, login } from '../../../utils/requester';
-import { imgHost } from '../../../config';
-// import DialogProgress from 'react-native-dialog-progress'
-import Toast from 'react-native-simple-toast';
+import React, { Component } from 'react';
+
+import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
+import SmartInput from '../../atoms/SmartInput';
+import Toast from 'react-native-simple-toast';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import { autobind } from 'core-decorators';
+import { domainPrefix } from '../../../config';
+import { imgHost } from '../../../config';
+import requester from '../../../initDependencies';
+import styles from './styles';
+
+// import DialogProgress from 'react-native-dialog-progress'
+
+
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -74,25 +77,14 @@ class SaveWallet extends Component {
         };
 
         this.setState({ showProgress: true });
-        register(user, null)
-        .then((res) => {
+        requester.register(user, null).then(res => {
             this.setState({ showProgress: false });
             if (res.success) {
                 console.log(res);
                 navigate('CongratsWallet', {isFB:params.isFB})
-                // login(user, null).then((res) => {
-                //     if (res.success) {
-                //         res.response.json().then((data) => {
-                //             AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
-                //             // TODO: Get first name + last name from response included with Authorization token (Backend)
-                //             AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                //         });
-
-                //     }
-                // });
             } else {
-                res.response.then((response) => {
-                    const { errors } = response;
+                res.errors.then(data => {
+                    const { errors } = data;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
                             Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);

@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
-    Text,
-    View,
     AsyncStorage,
+    Keyboard,
+    Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard
+    View
 } from 'react-native';
-import Image from 'react-native-remote-svg';
-import { autobind } from 'core-decorators';
-
-import SmartInput from '../../atoms/SmartInput';
-import { domainPrefix } from '../../../config';
+import React, { Component } from 'react';
 import { validateEmail, validatePassword, validatePassword1 } from '../../../utils/validation';
-import { login } from '../../../utils/requester';
-import styles from './styles';
-import SplashScreen from 'react-native-smart-splash-screen';
+
+import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
+import SmartInput from '../../atoms/SmartInput';
+import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-simple-toast';
+import { autobind } from 'core-decorators';
+import { domainPrefix } from '../../../config';
+import requester from '../../../initDependencies';
+import styles from './styles';
 
 class Login extends Component {
     static propTypes = {
@@ -60,18 +60,18 @@ class Login extends Component {
 
         this.setState({ showProgress: true });
 
-        login(user, null).then((res) => {
+        requester.login(user, null).then(res => {
             this.setState({ showProgress: false });
             if (res.success) {
-                res.response.json().then((data) => {
-                    AsyncStorage.setItem(`${domainPrefix}.auth.lockchain`, data.Authorization);
+                res.body.then(data => {
+                    AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
                     this.props.navigation.navigate('MainScreen');
                 });
             } else {
-                res.response.then((response) => {
-                    const { errors } = response;
+                res.errors.then(data => {
+                    const { errors } = data;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
                             // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);

@@ -1,19 +1,20 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { AsyncStorage, Clipboard, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
-import Image from 'react-native-remote-svg';
+import { AsyncStorage, Clipboard, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { connect } from 'react-redux';
-import _ from 'lodash';
-import moment from 'moment';
+import React, { Component } from 'react';
+
 import BackButton from '../../atoms/BackButton';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import { getUserInfo, updateUserInfo, getLocRateInUserSelectedCurrency} from '../../../utils/requester';
-import { Wallet } from '../../../services/blockchain/wallet';
-import styles from './styles';
-import { domainPrefix } from '../../../config';
 import EditCurrencyModal from '../../atoms/EditCurrencyModal';
+import Image from 'react-native-remote-svg';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast'
+import { Wallet } from '../../../services/blockchain/wallet';
+import _ from 'lodash';
+import { connect } from 'react-redux';
+import { domainPrefix } from '../../../config';
+import moment from 'moment';
+import requester from '../../../initDependencies';
+import styles from './styles';
 
 class Profile extends Component {
     constructor(props) {
@@ -21,15 +22,15 @@ class Profile extends Component {
         this.state = {
             info: {},
             walletAddress: '',
-            locBalance:0,
-            ethBalance:'0.0',
+            locBalance: 0,
+            ethBalance: '0.0',
             preferredCurrency: '',
-            currentCurrency:'EUR',
+            currentCurrency: 'EUR',
             currencies: [],
-            currencyLocPrice:0,
-            modalVisible:false,
-            showProgress:true,
-            loadMessage:'Loading...'
+            currencyLocPrice: 0,
+            modalVisible: false,
+            showProgress: true,
+            loadMessage: 'Loading...'
         }
         this.showModal = this.showModal.bind(this);
         this.onCurrency = this.onCurrency.bind(this);
@@ -46,7 +47,7 @@ class Profile extends Component {
         AsyncStorage.getItem('currentCurrency', (err, result) => {
             if (result) {
                 console.log("currentCurrencycurrentCurrency " + result);
-                this.setState({ currentCurrency: result});
+                this.setState({ currentCurrency: result });
             }
             if (err) console.error(`Error currencyLocPrice: ${err}`);
         });
@@ -54,38 +55,37 @@ class Profile extends Component {
         AsyncStorage.getItem('currencyLocPrice', (err, result) => {
             console.log("currencyLocPricecurrencyLocPrice " + result);
             if (result) {
-                this.setState({ currencyLocPrice: result});
+                this.setState({ currencyLocPrice: result });
             }
             if (err) console.error(`Error currencyLocPrice: ${err}`);
         });
 
-        getUserInfo()
-        .then(res => res.response.json())
-        .then(parsedResp => {
-            this.setState({
-                showProgress: false,
-                info: parsedResp,
-                currencies: parsedResp.currencies,
-                walletAddress : parsedResp.locAddress == null? '': parsedResp.locAddress,
-                preferredCurrency: parsedResp.preferredCurrency == null? parsedResp.currencies[0] : parsedResp.preferredCurrency,
+        requester.getUserInfo().then(res => {
+            res.body.then(data => {
+                this.setState({
+                    showProgress: false,
+                    info: data,
+                    currencies: data.currencies,
+                    walletAddress: data.locAddress == null ? '' : data.locAddress,
+                    preferredCurrency: data.preferredCurrency == null ? data.currencies[0] : data.preferredCurrency,
+                });
+                console.log('userINFO-------', data);
+                console.log(data.locAddress);
+                if (data.locAddress != null && data.locAddress != '') {
+                    console.log("start ");
+                    Wallet.getBalance(data.locAddress).then(x => {
+                        const ethBalance = x / (Math.pow(10, 18));
+                        this.setState({ ethBalance: ethBalance });
+                    });
+                    Wallet.getTokenBalance(data.locAddress).then(y => {
+                        const locBalance = y / (Math.pow(10, 18));
+                        this.setState({ locBalance: locBalance });
+                    });
+                }
+            }).catch(err => {
+                this.hideProgressView();
+                console.log(err);
             });
-            console.log('userINFO-------', parsedResp);
-            console.log(parsedResp.locAddress);
-            if (parsedResp.locAddress != null && parsedResp.locAddress != '') {
-                console.log("start ");
-                Wallet.getBalance(parsedResp.locAddress).then(x => {
-                    const ethBalance = x / (Math.pow(10, 18));
-                    this.setState({ethBalance: ethBalance});
-                });
-                Wallet.getTokenBalance(parsedResp.locAddress).then(y => {
-                    const locBalance = y / (Math.pow(10, 18));
-                    this.setState({locBalance: locBalance});
-                });
-            }
-        })
-        .catch(err => {
-            this.hideProgressView();
-            console.log(err);
         });
     }
     componentDidCatch(errorString, errorInfo) {
@@ -96,24 +96,24 @@ class Profile extends Component {
         this.setState({
             modalVisible: true,
             modalView: <EditCurrencyModal
-                            onSave={(currency) => this.onSaveCurrency(currency)} 
-                            onCancel={() => this.onCancel()}
-                            currencies={this.state.currencies}
-                            currency={this.state.preferredCurrency}
-                        />
+                onSave={(currency) => this.onSaveCurrency(currency)}
+                onCancel={() => this.onCancel()}
+                currencies={this.state.currencies}
+                currency={this.state.preferredCurrency}
+            />
         });
         this.showModal();
     }
 
     onSaveCurrency(currency) {
-        index = _.findIndex(this.state.currencies, function(o){
+        index = _.findIndex(this.state.currencies, function (o) {
             return o.id == currency.id;
         })
-        currency.code = this.state.currencies[index<0? 1: index].code
+        currency.code = this.state.currencies[index < 0 ? 1 : index].code
         console.log('currency_code', currency.code);
         AsyncStorage.setItem('currentCurrency', currency.code);
         this.setState({
-            loadMessage:'Updating user data...',
+            loadMessage: 'Updating user data...',
             modalVisible: false,
             preferredCurrency: currency,
             currentCurrency: currency.code,
@@ -129,7 +129,7 @@ class Profile extends Component {
             month = birthday.format('MM');
             year = birthday.format('YYYY');
         }
-        
+
         let userInfo = {
             firstName: this.state.info.firstName,
             lastName: this.state.info.lastName,
@@ -146,7 +146,7 @@ class Profile extends Component {
 
         Object.keys(userInfo).forEach((key) => (userInfo[key] === null || userInfo[key] === '') && delete userInfo[key]);
         this.showProgressView();
-        updateUserInfo(userInfo, null).then((res) => {
+        requester.updateUserInfo(userInfo, null).then(res => {
             if (res.success) {
                 this.getCurrencyRate(currency.code);
                 console.log('success updating userdata')
@@ -158,34 +158,34 @@ class Profile extends Component {
         });
     }
 
-    getCurrencyRate(currencyCode){
-        getLocRateInUserSelectedCurrency(currencyCode)
-            .then((json) => {
+    getCurrencyRate(currencyCode) {
+        requester.getLocRateByCurrency(currencyCode).then(res => {
+            res.body.then(data => {
                 this.hideProgressView();
                 if (currencyCode == 'EUR') {
                     AsyncStorage.setItem('currentCurrency', 'EUR');
-                    AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
+                    AsyncStorage.setItem('currencyLocPrice', data[0].price_eur);
                     this.setState({
-                        currencyLocPrice: json[0].price_eur,
+                        currencyLocPrice: data[0].price_eur,
                     });
                 }
                 else if (currencyCode == 'USD') {
                     AsyncStorage.setItem('currentCurrency', 'USD');
-                    AsyncStorage.setItem('currencyLocPrice', json[0].price_usd);
+                    AsyncStorage.setItem('currencyLocPrice', data[0].price_usd);
                     this.setState({
-                        currencyLocPrice: json[0].price_usd,
+                        currencyLocPrice: data[0].price_usd,
                     });
                 }
                 else if (currencyCode == 'GBP') {
                     AsyncStorage.setItem('currentCurrency', 'GBP');
-                    AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
+                    AsyncStorage.setItem('currencyLocPrice', data[0].price_gbp);
                     this.setState({
-                        currencyLocPrice: json[0].price_gbp,
+                        currencyLocPrice: data[0].price_gbp,
                     });
-                        
+
                 }
-        })
-        .catch(err => {
+            });
+        }).catch(err => {
             this.hideProgressView();
             console.log(err);
         });
@@ -228,7 +228,7 @@ class Profile extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        const {currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency, ethBalance} = this.state;
+        const { currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency, ethBalance } = this.state;
 
         console.log("currency: " + currentCurrency);
         console.log("locPrice: " + currencyLocPrice);
@@ -248,55 +248,55 @@ class Profile extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.titleConatiner}>
-                    <BackButton style={styles.closeButton} onPress={() => navigate('EXPLORE')}/>
+                    <BackButton style={styles.closeButton} onPress={() => navigate('EXPLORE')} />
                 </View>
                 <Toast
                     ref="toast"
-                    style={{backgroundColor:'#DA7B61'}}
+                    style={{ backgroundColor: '#DA7B61' }}
                     position='bottom'
                     positionValue={100}
                     fadeInDuration={500}
                     fadeOutDuration={500}
                     opacity={1.0}
-                    textStyle={{color:'white', fontFamily: 'FuturaStd-Light'}}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
                 <Modal
                     animationType="fade"
                     transparent={true}
                     visible={this.state.modalVisible}
                     fullScreen={false}
-                    onRequestClose={() => {this.onCancel()}}>
+                    onRequestClose={() => { this.onCancel() }}>
                     {this.showModal()}
                 </Modal>
                 <ProgressDialog
-                        visible={this.state.showProgress}
-                        title=""
-                        message={this.state.loadMessage}
-                        animationType="fade"
-                        activityIndicatorSize="large"
-                        activityIndicatorColor="black"/>
+                    visible={this.state.showProgress}
+                    title=""
+                    message={this.state.loadMessage}
+                    animationType="fade"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black" />
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
                     <View style={styles.cardBox}>
                         <Image
                             source={require('../../../assets/splash.png')}
                             style={styles.logo} />
-                        <View style={{width: '100%'}}>
+                        <View style={{ width: '100%' }}>
                             <Text style={styles.walletAddres}>{walletAddress}</Text>
                         </View>
                         <Text style={styles.balanceLabel}>Current Balance</Text>
-                        <View style={{width: '100%'}}>
+                        <View style={{ width: '100%' }}>
                             <Text style={styles.balanceText}>{locBalance.toFixed(6)} LOC / {displayPrice}</Text>
                         </View>
                         <Text style={styles.balanceLabel}>ETH Balance</Text>
-                        <View style={{width: '100%'}}>
+                        <View style={{ width: '100%' }}>
                             <Text style={styles.balanceText}>{parseFloat(ethBalance).toFixed(6)}</Text>
                         </View>
                         <Image
                             source={require('../../../assets/splash.png')}
                             style={styles.logoBackground} />
-                            <TouchableOpacity onPress={this.showToast} style={styles.addMore}>
-                                <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
-                            </TouchableOpacity>
+                        <TouchableOpacity onPress={this.showToast} style={styles.addMore}>
+                            <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => { Clipboard.setString(this.state.walletAddress) }}>
                         <View style={styles.copyBox}>
@@ -342,8 +342,8 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  // start react-navigation props
-  navigation: PropTypes.object.isRequired
+    // start react-navigation props
+    navigation: PropTypes.object.isRequired
 };
 
 export default Profile;
