@@ -39,9 +39,7 @@ class Welcome extends Component {
         this.state = {
             showProgress: false
         }
-
     }
-
 
     componentDidMount() {
         self = this;

@@ -1,10 +1,5 @@
 
-#if __has_include("RCTBridgeModule.h")
-#import "RCTBridgeModule.h"
-#else
-#import <RCTBridgeModule.h>
-#endif
-
+#import <React/RCTBridgeModule.h>
 @interface RNFastCrypto : NSObject <RCTBridgeModule>
 
 @end
