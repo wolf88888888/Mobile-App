@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    Platform
-} from 'react-native';
-import Image from 'react-native-remote-svg';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import PropTypes from 'prop-types';
-import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import SmartInput from '../../atoms/SmartInput';
-import styles from './styles';
-import Toast from 'react-native-simple-toast';
+import {
+    Platform,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import React, { Component } from 'react';
+import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
+
+import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import PropTypes from 'prop-types';
+import SmartInput from '../../atoms/SmartInput';
+import Toast from 'react-native-simple-toast';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import styles from './styles';
 
 class CreatePassword extends Component {
     static propTypes = {

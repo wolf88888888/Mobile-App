@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
-    Text,
-    View,
     AsyncStorage,
+    Platform,
+    Text,
     TouchableOpacity,
-    Platform
+    View
 } from 'react-native';
-
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import SmartInput from '../../atoms/SmartInput';
-import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
-import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React, { Component } from 'react';
+import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
+import SmartInput from '../../atoms/SmartInput';
+import Toast from 'react-native-simple-toast';
 import { Wallet } from '../../../services/blockchain/wallet';
 import LineProgressDialog from '../../atoms/SimpleDialogs/LineProgressDialog';
-import Toast from 'react-native-simple-toast';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import styles from './styles';
 
 var interval;
 class CreateWallet extends Component {

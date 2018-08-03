@@ -1,7 +1,7 @@
+import { AsyncStorage, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, {Component} from 'react';
-import { StatusBar, StyleSheet, Text, View, TouchableOpacity, AsyncStorage } from 'react-native';
+
 import PropTypes from 'prop-types';
-import { register, login } from '../../../utils/requester';
 import { domainPrefix } from '../../../config';
 import styles from './styles';
 

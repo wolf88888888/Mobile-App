@@ -1,14 +1,15 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity ,BackHandler, Platform} from 'react-native';
-import styles from './styles';
-import _ from 'lodash';
-import { domainPrefix,imgHost } from '../../../config';
-import { getMyHotelBookings,getUserInfo } from '../../../utils/requester';
-import moment from 'moment';
-import Dash from 'react-native-dash';
-import BackButton from '../../atoms/BackButton';
+import { BackHandler, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React, { Component } from 'react';
+import { domainPrefix, imgHost } from '../../../config';
+
+import BackButton from '../../atoms/BackButton';
+import Dash from 'react-native-dash';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+import moment from 'moment';
+import requester from '../../../initDependencies';
+import styles from './styles';
 
 class UserMyTrips extends Component {
 
@@ -20,7 +21,7 @@ class UserMyTrips extends Component {
 
     static defaultProps = {
         navigation: {
-            navigate: () => {}
+            navigate: () => { }
         }
     }
 
@@ -29,10 +30,10 @@ class UserMyTrips extends Component {
         console.log(props.navigation.state);
         //State
         this.state = {
-            trips : props.navigation.state.params.trips.content,
+            trips: props.navigation.state.params.trips.content,
             isLast: props.navigation.state.params.trips.last,
-            page:   0,
-            userImageUrl : '',
+            page: 0,
+            userImageUrl: '',
             isLoading: false,
         };
         this.onEndReached = this.onEndReached.bind(this)
@@ -42,11 +43,11 @@ class UserMyTrips extends Component {
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
-    
+
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
-    
+
     handleBackButtonClick() {
         console.log('back pressed---')
         this.props.navigation.goBack();
@@ -56,32 +57,30 @@ class UserMyTrips extends Component {
 
     componentDidMount() {
         //Loading user info for user image
-        getUserInfo()
-        .then(res => res.response.json())
-        .then(parsed => {
-            this.setState({
-                userImageUrl : parsed.image,
+        requester.getUserInfo().then(res => {
+            res.body.then(data => {
+                this.setState({
+                    userImageUrl: data.image,
+                });
+            }).catch(err => {
+                //if error arises in getting user info
+                console.log(err);
             });
-        })
-        .catch(err => {
-            //if error arises in getting user info
-            console.log(err);
         });
     }
 
-    onEndReached () {
+    onEndReached() {
         console.log('reached to end');
         pageNumber = this.state.page + 1
-        if (!this.state.isLast && !this.state.isLoading){
-            this.setState({isLoading: true})
-            getMyHotelBookings('?page=' + pageNumber)
-                .then(res => res.response.json())
-                .then(parsed => {
-                    console.log('My trips----', parsed);
-                    
+        if (!this.state.isLast && !this.state.isLoading) {
+            this.setState({ isLoading: true })
+            requester.getMyHotelBookings([`page=${pageNumber}`]).then(res => {
+                res.body.then(data => {
+                    console.log('My trips----', data);
+                    console.log('ASD');
                     var tempArr = []
-                    tempArr = this.state.trips.concat(parsed.content)
-                    tempArr = _.orderBy(tempArr, ['arrival_date'],['desc']);
+                    tempArr = this.state.trips.concat(data.content)
+                    tempArr = _.orderBy(tempArr, ['arrival_date'], ['desc']);
                     // _.remove(tripArray, function(obj) {
                     //     var tripDate = moment(obj.arrival_date).utc();
                     //     var now = moment().utc();
@@ -89,15 +88,15 @@ class UserMyTrips extends Component {
                     // });
                     this.setState({
                         trips: tempArr,
-                        isLast: parsed.last,
+                        isLast: data.last,
                         page: pageNumber,
                         isLoading: false,
                     })
-                    
-                })
-                .catch(err => {
+
+                }).catch(err => {
                     console.log(err);
                 });
+            });
         }
     }
 
@@ -106,12 +105,12 @@ class UserMyTrips extends Component {
 
         let imageAvatar = '';
         if (this.state.image != '') {
-            imageAvatar ={uri:imgHost+this.state.userImageUrl}
+            imageAvatar = { uri: imgHost + this.state.userImageUrl }
         }
         return (
             <View style={styles.container}>
-               <View style={styles.chatToolbar}>
-                    <BackButton onPress={this.onBackPress}/>
+                <View style={styles.chatToolbar}>
+                    <BackButton onPress={this.onBackPress} />
 
                     <Text style={styles.title}>Your Trips</Text>
                 </View>
@@ -122,7 +121,7 @@ class UserMyTrips extends Component {
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.5}
                     renderItem={
-                        ({item}) =>
+                        ({ item }) =>
                             <View style={styles.flatListMainView}>
                                 <View>
                                     <View style={styles.img_round}>
@@ -132,7 +131,7 @@ class UserMyTrips extends Component {
                                             {(moment(item.arrival_date)).format("MMM").toString()}
                                         </Text>
                                     </View>
-                                    <Dash dashColor='#dedede' dashStyle={{borderRadius: 80, overflow: 'hidden'}} style={{flex: 1, flexDirection:'column',alignItems: 'center',justifyContent: 'flex-end'}}/>
+                                    <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
                                 </View>
                                 <View style={styles.flatListDataView}>
                                     <View style={styles.flatListTitleView}>
@@ -147,17 +146,17 @@ class UserMyTrips extends Component {
 
                                     <Image
                                         style={styles.hotelImage}
-                                        source={{uri : imgHost + JSON.parse(item.hotel_photo).thumbnail}}
+                                        source={{ uri: imgHost + JSON.parse(item.hotel_photo).thumbnail }}
                                     />
                                     <View style={styles.flatListBottomView}>
                                         <View style={styles.flatListUserProfileView}>
-                                            <Image style={styles.senderImage} source={imageAvatar}/>
+                                            <Image style={styles.senderImage} source={imageAvatar} />
                                         </View>
                                     </View>
                                 </View>
                             </View>
-                        }
-                    />
+                    }
+                />
             </View>
         )
     }

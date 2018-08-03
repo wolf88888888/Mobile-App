@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
 import { AsyncStorage, Modal, ScrollView, Text, TextInput, TouchableOpacity, View, WebView } from 'react-native';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import Image from 'react-native-remote-svg';
-import styles from './styles';
-import { getCancellationFees, getCurrentlyLoggedUserJsonFile, testBook } from '../../../utils/requester';
+import React, { Component } from 'react';
+
 import { HotelReservation } from '../../../services/blockchain/hotelReservation';
+import Image from 'react-native-remote-svg';
+import PropTypes from 'prop-types';
 import Toast from 'react-native-simple-toast';
+import moment from 'moment';
+import requester from '../../../initDependencies';
+import styles from './styles';
 
 export default class RoomDetailsReview extends Component {
     constructor() {
@@ -43,31 +44,30 @@ export default class RoomDetailsReview extends Component {
             'currency': 'USD'
         };
 
-        testBook(value)
-            .then(res => res.response.json())
-            .then((parsed) => {
-                console.log(parsed);
-                const bookingId = parsed.preparedBookingId;
-                const hotelBooking = parsed.booking.hotelBooking[0];
-                const startDate = moment(parsed.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
-                const endDate = moment(parsed.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+        requester.createReservation(value).then(res => {
+            res.body.then(data => {
+                const bookingId = data.preparedBookingId;
+                const hotelBooking = data.booking.hotelBooking[0];
+                const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
+                const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
                 this.setState({
-                    // bookingDetail: parsed,
-                    roomName: parsed.booking.hotelBooking[0].room.roomType.text,
+                    // bookingDetail: data,
+                    roomName: data.booking.hotelBooking[0].room.roomType.text,
                     arrivalDate: endDate.format('DD MMM'),
                     creationDate: startDate.format('DD MMM'),
-                    cancellationPrice: parsed.fiatPrice,
+                    cancellationPrice: data.fiatPrice,
                     bookingId: bookingId,
                     hotelBooking: hotelBooking,
                     booking: value,
-                    data: parsed
-                    // cancellationLOCPrice: parsed.locPrice,
+                    data: data
+                    // cancellationLOCPrice: data.locPrice,
                 });
             })
-            .catch((err) => {
-                Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
-                console.log(err); //eslint-disable-line
-            });
+                .catch((err) => {
+                    Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
+                    console.log(err); //eslint-disable-line
+                });
+        });
     }
 
     // Control Modal Visibility
@@ -105,11 +105,8 @@ export default class RoomDetailsReview extends Component {
 
         Toast.showWithGravity('We are working on your transaction this might take some time.', Toast.SHORT, Toast.CENTER);
 
-        //const value = await AsyncStorage.getItem(`${domainPrefix}.auth.lockchain`);
-
-        getCancellationFees(this.state.bookingId)
-            .then(res => res.response.json())
-            .then((json) => {
+        requester.getCancellationFees(this.state.bookingId).then(res => {
+            res.body.then(data => {
                 const password = this.state.password;
                 const preparedBookingId = this.state.bookingId;
                 const booking = this.state.hotelBooking;
@@ -118,19 +115,17 @@ export default class RoomDetailsReview extends Component {
                     .add(booking.nights, 'days');
                 const hotelId = booking.hotelId;
                 const roomId = this.state.booking.quoteId;
-                const cancellationFees = json;
+                const cancellationFees = data;
                 const daysBeforeStartOfRefund = [];
                 const refundPercentages = [];
                 const wei = (this.tokensToWei(this.state.data.locPrice.toString()));
                 const numberOfTravelers = 2;
 
-                getCurrentlyLoggedUserJsonFile()
-                    .then(res => res.response.json())
-                    // here you set the response in to json
-                    .then((json) => {
+                requester.getMyJsonFile().then(res => {
+                    res.body.then(data => {
                         setTimeout(() => {
                             HotelReservation.createReservation(//this line needs to be checked
-                                json.jsonFile,
+                                data.jsonFile,
                                 password,
                                 preparedBookingId.toString(),
                                 wei,
@@ -151,14 +146,14 @@ export default class RoomDetailsReview extends Component {
                                     Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
                                 });
                         }, 3000);
-                    })
-                    .catch((err) => {
+                    }).catch((err) => {
                         Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
                     });
-            })
-            .catch((err) => {
-                Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                });
             });
+        }).catch((err) => {
+            Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+        });
     }
 
     // Keys for flatlist
@@ -171,7 +166,7 @@ export default class RoomDetailsReview extends Component {
                 <View style={{ height: 0 }}>
                     <WebView
                         ref={el => this.webView = el}
-                        source={{html: '<html><body></body></html>'}}
+                        source={{ html: '<html><body></body></html>' }}
                         onMessage={this.handleMessage}
                     />
                 </View>
@@ -194,7 +189,7 @@ export default class RoomDetailsReview extends Component {
                                         }}
                                     >
                                         <Image style={styles.closeButtonSvg}
-                                               source={require('../../../../src/assets/png/close.png')}/>
+                                            source={require('../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -234,7 +229,7 @@ export default class RoomDetailsReview extends Component {
                                         }}
                                     >
                                         <Image style={styles.closeButtonSvg}
-                                               source={require('../../../../src/assets/png/close.png')}/>
+                                            source={require('../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -268,7 +263,7 @@ export default class RoomDetailsReview extends Component {
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
                                 <Image source={require('../../../../src/assets/apartment.png')}
-                                       style={styles.hotelThumb}/>
+                                    style={styles.hotelThumb} />
                             </View>
                             <View style={styles.hotelInfoView}>
                                 <Text style={styles.hotelName}>{params.hotelDetails.name}</Text>
@@ -344,7 +339,7 @@ export default class RoomDetailsReview extends Component {
         );
     }
 
-    runJSInBackground (code) {
+    runJSInBackground(code) {
         this.webView.injectJavaScript(code)
     }
 
