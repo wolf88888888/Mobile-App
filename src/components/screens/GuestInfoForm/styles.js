@@ -131,13 +131,13 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     genderFlex: {
-        flex: 0.26
+        flex: 0.30
     },
     firstNameFlex: {
-        flex: 0.37
+        flex: 0.35
     },
     lastNameFlex: {
-        flex: 0.37
+        flex: 0.35
     },
     gender: {
         height: 50,
