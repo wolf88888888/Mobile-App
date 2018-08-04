@@ -61,6 +61,7 @@ import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
 import PropertyList from '../components/screens/PropertyList';
 import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
+import Calendar from '../components/screens/Calendar';
 
 export const LoginNavigator = StackNavigator(
     {
@@ -86,7 +87,6 @@ export const MainNavigator = TabNavigator(
         MESSAGES: { screen: Inbox },
         MY_TRIPS: { screen: MyTrips },
         FAVORITES: { screen: Favourites},
-
         EXPLORE: { screen: Explore }
     },
     {
@@ -100,6 +100,7 @@ export const FullNavigator = StackNavigator(
     {
         MainScreen: { screen: MainNavigator },
         GuestsScreen: { screen: Guests },
+        CalendarScreen: {screen: Calendar},
         RoomDetailsReview: { screen: RoomDetailsReview},
         GuestInfoForm: { screen: GuestInfoForm},
         PropertyScreen: {screen: PropertyScreen},
@@ -135,7 +136,7 @@ export const FullNavigator = StackNavigator(
         SimpleUserProfile: {screen: SimpleUserProfile},
         SingleWishlist: {screen: SingleWishlist},
         Debug : {screen: Debug},
-        Chat: {screen: Chat},
+        Chat: {screen: Chat}
     },
     {
         initialRouteName: 'MainScreen',

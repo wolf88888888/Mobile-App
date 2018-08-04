@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View, Image } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
-import Calendar from '../../templates/Calendar';
+import { withNavigation } from 'react-navigation';
 
 
 class DateAndGuestPicker extends Component {
@@ -12,6 +11,7 @@ class DateAndGuestPicker extends Component {
         this.onGuests = this.onGuests.bind(this);
         this.onSearch = this.onSearch.bind(this);
         this.onSettings = this.onSettings.bind(this);
+        this.onCalendar = this.onCalendar.bind(this);
     }
 
     componentDidMount() {
@@ -29,6 +29,15 @@ class DateAndGuestPicker extends Component {
         this.props.gotoSearch();
     }
 
+    onCalendar() {
+        this.props.navigation.navigate('CalendarScreen', {
+            startDate: this.props.checkInDate,
+            endDate: this.props.checkOutDate,
+            format: "ddd, DD MMM",
+            onConfirm: this.props.onDatesSelect
+        });
+    }
+
     render() {
         const {
             checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton
@@ -37,9 +46,9 @@ class DateAndGuestPicker extends Component {
         return (
             <View style={styles.container}>
                 <View style={showSearchButton ? styles.pickerRow : {display:'none'}}>
-                    <View>
+                    <View style={{flex:1}}>
                         <TouchableOpacity
-                            onPress={() => this.calendar.open()}
+                            onPress={this.onCalendar}
                             style={checkInDate && checkOutDate ? styles.datesPickerViewComplete : styles.datesPickerViewIncomplete}
                         >
                             <View style={styles.datePickerView}>
@@ -79,13 +88,6 @@ class DateAndGuestPicker extends Component {
                         <Text style={showSearchButton ? styles.searchButtonText : {height: 0}}>Search</Text>
                     </View>
                 </TouchableOpacity>
-                <Calendar
-                    startDate={checkInDate}
-                    endDate={checkOutDate}
-                    format="ddd, DD MMM"
-                    ref={(calendar) => { this.calendar = calendar; }}
-                    onConfirm={onDatesSelect}
-                />
             </View>
         );
     }
@@ -104,4 +106,4 @@ DateAndGuestPicker.propTypes = {
     showSearchButton : PropTypes.bool
 };
 
-export default DateAndGuestPicker;
+export default withNavigation(DateAndGuestPicker);

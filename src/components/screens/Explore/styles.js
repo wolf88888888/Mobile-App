@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
         paddingBottom: 10
     },
     searchAreaView: {
-        width: '68%',
+        //width: '68%',
        // height: 105,
+       flex:1,
         backgroundColor: '#f0f1f3',
         paddingTop: 40,
         paddingLeft: 17,
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
     showAllButton: {
         padding: 14,
         alignItems: 'center',
-        backgroundColor: '#cc8068'
+        backgroundColor: '#DA7B61'
     },
     showAllText: {
         color: '#fff',
@@ -429,32 +430,33 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 50,
         alignItems: 'center',
-        backgroundColor: '#cc8068',
+        backgroundColor: '#DA7B61',
         marginTop: 15,
         marginBottom: 15
     },
     fab: {
-
         position: 'absolute',
         right: 18,
         bottom: 10,
         paddingVertical: 8,
         paddingHorizontal: 15,
         alignItems: 'center',
-        backgroundColor: '#cc8068',
+        // backgroundColor: '#cc8068',
+        backgroundColor: '#000',
         marginTop: 15,
         justifyContent: 'center',
-        shadowColor: '#858585',
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 1
+            height: 2
         },
-        shadowRadius: 2,
-        shadowOpacity: 0.5
+        shadowRadius: 3,
+        shadowOpacity: 0.6
     },
     fabText: {
-        fontFamily: 'FuturaStd-Light',
-        color: '#fff'
+        fontFamily: 'FuturaStd-Medium',
+        color: '#fff',
+        fontSize: 13
     },
     bottomSvg: {
         height: 80
@@ -554,14 +556,23 @@ const styles = StyleSheet.create({
         width: dimensionWindows.width,
         height: dimensionWindows.width * 5 / 8,
     },
+
     scrollViewContent : {
         flexGrow: 1, padding:16, paddingVertical: 10,
     },
+
     scrollViewContentMain:{
       padding:0,
       margin:0
     },
-    scrollViewTitles:{fontWeight: '400',fontFamily: 'FuturaStd-Light',fontSize: 20,color: '#1f2427',top: 2},
+
+    scrollViewTitles:{
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 17,
+        color: '#1f2427',
+        top: 2
+    },
+
     viewDiscover: {width:'100%', height:100,  flexDirection: 'row', marginBottom: 10},
     divider : {
         marginTop: 10,

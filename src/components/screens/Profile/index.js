@@ -3,18 +3,18 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import BackButton from '../../atoms/BackButton';
-import EditCurrencyModal from '../../atoms/EditCurrencyModal';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast'
 import { Wallet } from '../../../services/blockchain/wallet';
 import _ from 'lodash';
-import { connect } from 'react-redux';
-import { domainPrefix } from '../../../config';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog'
+
+const BASIC_CURRENCY_LIST = ['USD', 'GBP', 'EUR'];
 
 class Profile extends Component {
     constructor(props) {
@@ -25,12 +25,13 @@ class Profile extends Component {
             locBalance: 0,
             ethBalance: '0.0',
             preferredCurrency: '',
-            currentCurrency: 'EUR',
             currencies: [],
             currencyLocPrice: 0,
             modalVisible: false,
             showProgress: true,
-            loadMessage: 'Loading...'
+            loadMessage: 'Loading...',
+            currencySelectionVisible: false,
+            currentCurrency: 'EUR',
         }
         this.showModal = this.showModal.bind(this);
         this.onCurrency = this.onCurrency.bind(this);
@@ -93,16 +94,17 @@ class Profile extends Component {
     }
 
     onCurrency() {
-        this.setState({
-            modalVisible: true,
-            modalView: <EditCurrencyModal
-                onSave={(currency) => this.onSaveCurrency(currency)}
-                onCancel={() => this.onCancel()}
-                currencies={this.state.currencies}
-                currency={this.state.preferredCurrency}
-            />
-        });
-        this.showModal();
+        // this.setState({
+        //     modalVisible: true,
+        //     modalView: <EditCurrencyModal
+        //         onSave={(currency) => this.onSaveCurrency(currency)}
+        //         onCancel={() => this.onCancel()}
+        //         currencies={this.state.currencies}
+        //         currency={this.state.preferredCurrency}
+        //     />
+        // });
+        // this.showModal();
+        this.setState({ currencySelectionVisible: true });
     }
 
     onSaveCurrency(currency) {
@@ -336,6 +338,18 @@ class Profile extends Component {
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
+
+                <SingleSelectMaterialDialog
+                    title={'Select Currency'}
+                    items={BASIC_CURRENCY_LIST.map((row, index) => ({ value: index, label: row }))}
+                    visible={this.state.currencySelectionVisible}
+                    onCancel={() => this.setState({ currencySelectionVisible: false })}
+                    onOk={result => {
+                        this.setState({ currencySelectionVisible: false });
+                        this.setState({ currentCurrency: result.selectedItem });
+                        this.onSaveCurrency(result.selectedItem);
+                    }}
+                />
             </View>
         );
     }
