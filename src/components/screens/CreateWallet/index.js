@@ -1,23 +1,25 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
-    Text,
-    View,
     AsyncStorage,
+    Platform,
+    Text,
     TouchableOpacity,
-    Platform
+    View
 } from 'react-native';
-
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import SmartInput from '../../atoms/SmartInput';
-import { validatePassword, validateConfirmPassword, hasLetterAndNumber, hasSymbol } from '../../../utils/validation';
-import styles from './styles';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { Wallet } from '../../../services/blockchain/wallet';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import Toast from 'react-native-simple-toast';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import React, { Component } from 'react';
+import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
+import SmartInput from '../../atoms/SmartInput';
+import Toast from 'react-native-simple-toast';
+import { Wallet } from '../../../services/blockchain/wallet';
+import LineProgressDialog from '../../atoms/SimpleDialogs/LineProgressDialog';
+import WhiteBackButton from '../../atoms/WhiteBackButton';
+import styles from './styles';
+
+var interval;
 class CreateWallet extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
@@ -42,9 +44,35 @@ class CreateWallet extends Component {
         this.state = {
             password: '',
             confirmPassword: '',
-            showProgress: false
+            showProgress: false,
+            progress: 0
         };
     }
+
+    componentDidMount() {
+        //this.animate();
+    }
+
+    animate() {
+        let progress = 0;
+        this.setState({ progress });
+        interval = setInterval(() => {
+            //console.log("animate - " + progress);
+            if (this.state.showProgress) {
+                progress += 0.004;
+                if (progress > 0.9) {
+                    progress = 0.9;
+                    this.stopAnimation();
+                }
+                this.setState({ progress });
+            }
+        }, 50);
+    }
+
+    stopAnimation() {
+        clearInterval(interval);
+    }
+    
 
     onChangeHandler(property) {
         return (value) => {
@@ -73,18 +101,23 @@ class CreateWallet extends Component {
             return;
         }
 
-        this.setState({ showProgress: true });
+        this.setState({ showProgress: true});
+        this.animate();
 
         try {
             setTimeout(() => {
                 Wallet.createFromPassword(this.state.password)
                 .then((wallet) => {
-                    this.setState({ showProgress: false });
-                    console.log(wallet);
-                    AsyncStorage.setItem('walletAddress', wallet.address);
-                    AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
-                    AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
-                    this.props.navigation.navigate('SaveWallet', { ...params});
+                    this.stopAnimation();
+                    this.setState({ progress: 1});
+                    setTimeout(() => {
+                        console.log(wallet);
+                        AsyncStorage.setItem('walletAddress', wallet.address);
+                        AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
+                        AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
+                        this.props.navigation.navigate('SaveWallet', { ...params});
+                        this.setState({ showProgress: false });
+                    }, 1000);
                 })
                 .catch(err => {
                     this.setState({ showProgress: false });
@@ -166,13 +199,12 @@ class CreateWallet extends Component {
                         </View>
                     </View>
 
-                    <ProgressDialog
-                       visible={this.state.showProgress}
-                       title="Creating Wallet..."
-                       message="We are creating your wallet through the Ethereum network. Please be patient. This process can take up to 2-3 minutes due to the advanced security procedure involved."
-                       animationType="slide"
-                       activityIndicatorSize="large"
-                       activityIndicatorColor="black"/>
+                    <LineProgressDialog
+                        style={{flex:1}}
+                        visible={this.state.showProgress}
+                        title=""
+                        message={"Creating Wallet: " + parseInt(this.state.progress * 100) + "%" }
+                        progress={this.state.progress}/>
                 </View>
             </KeyboardAwareScrollView>
         );

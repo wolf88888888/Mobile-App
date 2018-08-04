@@ -1,28 +1,38 @@
-import PropTypes from 'prop-types';
-import React, {Component} from 'react';
 import {
+    FlatList,
+    Image,
+    ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    Image,
-    ScrollView,
-    FlatList
+    View
 } from 'react-native';
-import FontAwesome, {Icons} from 'react-native-fontawesome';
-import {imgHost} from '../../../config'
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React, { Component } from 'react';
+
+import BackButton from '../../atoms/BackButton';
+import InboxMessagesView from './InboxMessagesView';
+import { ListView } from 'react-native';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import PropTypes from 'prop-types';
+import SplashScreen from 'react-native-smart-splash-screen';
+import Toast from 'react-native-simple-toast';
+import { imgHost } from '../../../config'
+import requester from '../../../initDependencies';
+import styles from './inboxStyle';
+
 // import Image from 'react-native-remote-svg'; import GoBack from
 // '../common/GoBack';
-import {ListView} from 'react-native';
-import SplashScreen from 'react-native-smart-splash-screen';
-import {getMyConversations, approveMessage, declineMessage} from '../../../utils/requester';
-import InboxMessagesView from './InboxMessagesView';
-import BackButton from '../../atoms/BackButton';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import Toast from 'react-native-simple-toast';
+
+
+
+
+
+
+
 
 // You will find all component related to style in this class
-import styles from './inboxStyle';
+
 
 class Inbox extends Component {
     constructor(props) {
@@ -35,34 +45,33 @@ class Inbox extends Component {
             seed: 1,
             error: null,
             refreshing: false,
-            inboxMessages : [],
+            inboxMessages: [],
             showProgress: false,
         };
     }
 
     componentDidMount() {
         this.setState({ showProgress: true });
-        getMyConversations()
-        .then(res => res.response.json())
-        // here you set the response in to json
-        .then(parsed => {
-            // this.setState({ showProgress: false });
-            this.setState({
-                showProgress: false,
-                inboxMessages : parsed.content,
-            });
-            console.log("message");
-            console.log(parsed.content);
-        })
-        .catch(err => {
-            this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-            console.log(err);
+        requester.getMyConversations().then(res => {
+            // here you set the response in to json
+            res.body.then(data => {
+                // this.setState({ showProgress: false });
+                this.setState({
+                    showProgress: false,
+                    inboxMessages: data.content,
+                });
+                console.log("message");
+                console.log(data.content);
+            }).catch(err => {
+                    this.setState({ showProgress: false });
+                    Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                    console.log(err);
+                });
         });
     }
 
-    onConversation(item){
-        const {navigate} = this.props.navigation;
+    onConversation(item) {
+        const { navigate } = this.props.navigation;
         if (item.unread == "true") {
             let messages = this.state.inboxMessages;
 
@@ -93,40 +102,40 @@ class Inbox extends Component {
     render() {
         return (
             <View style={styles.InboxView}>
-            {/* Main Container Start */}
+                {/* Main Container Start */}
 
-                <BackButton onPress={this.onBackPress}/>
+                <BackButton onPress={this.onBackPress} />
                 <ScrollView>
                     <View style={[styles.topText]}>
-                    {/* Top Text Start */}
+                        {/* Top Text Start */}
                         <Text style={[styles.heading]}>Inbox</Text>
                         <Text style={styles.subHeading}>You have {this.state.inboxMessages.length} unread messages</Text>
-                    {/* Top Text end */}
+                        {/* Top Text end */}
                     </View>
                     <FlatList data={this.state.inboxMessages} // Data source
-                    // List Start
-                        renderItem={({item, index}) => (
-                        <TouchableOpacity style={[styles.tr]} onPress={() => {this.onConversation(item)}}>
-                            {/* Press to go on chat screen start*/}
+                        // List Start
+                        renderItem={({ item, index }) => (
+                            <TouchableOpacity style={[styles.tr]} onPress={() => { this.onConversation(item) }}>
+                                {/* Press to go on chat screen start*/}
                                 <InboxMessagesView
                                     inboxMessage={item}>
                                 </InboxMessagesView>
-                            {/* Press to go on chat screen end*/}
-                        </TouchableOpacity>
-                    )
-                    // List End
-                    }/>
+                                {/* Press to go on chat screen end*/}
+                            </TouchableOpacity>
+                        )
+                            // List End
+                        } />
                 </ScrollView>
 
-            {/* Main Container End */}
+                {/* Main Container End */}
 
                 <ProgressDialog
-                   visible={this.state.showProgress}
-                   title=""
-                   message="Loading Message..."
-                   animationType="slide"
-                   activityIndicatorSize="large"
-                   activityIndicatorColor="black"/>
+                    visible={this.state.showProgress}
+                    title=""
+                    message="Loading Message..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black" />
             </View>
         );
     }
