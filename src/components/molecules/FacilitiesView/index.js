@@ -26,7 +26,7 @@ class FacilitiesView extends Component {
         super(props);
         this.onFacilityMore = this.onFacilityMore.bind(this);
         this.state = {
-            more: 0
+            more: 23
         };
     }
 
@@ -38,7 +38,7 @@ class FacilitiesView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>Room Faility</Text>
+                <Text style={styles.title}>Room Facility</Text>
                 <View style={styles.facilities}>
                     <FacilityView image={require('../../../assets/Facilities/Homes/BathTub.png')}/>
                     <FacilityView image={require('../../../assets/Facilities/Homes/TV.png')}/>

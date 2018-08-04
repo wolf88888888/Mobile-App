@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ViewPropTypes
 } from 'react-native';
-
+import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
 
@@ -25,8 +25,14 @@ const FacilityView = (props) => {
                         </TouchableOpacity>
                     :
                         <View/>
-                :
-                    <Image source={props.image} style={styles.facilityImage}/>
+                :   
+                    <CardView style={styles.imageBackground}
+                        cardElevation={1}
+                        cardMaxElevation={1}
+                        cornerRadius={0}>
+                    
+                        <Image source={props.image} style={styles.facilityImage}/>
+                    </CardView>
             }
 
         </View>

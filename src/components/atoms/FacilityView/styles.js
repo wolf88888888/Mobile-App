@@ -1,15 +1,15 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const dimensionWindows = Dimensions.get('window');
-const containWidth = (dimensionWindows.width - 65) / 6;
-const imageWidth = containWidth;
+const containWidth = (dimensionWindows.width - 65) / 7;
+const imageWidth = (dimensionWindows.width - 120) / 9;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft:2.5,
-        marginRight:2.5,
+        marginLeft:2,
+        marginRight:2,
         width: containWidth,
         height: containWidth,
     },
@@ -21,11 +21,21 @@ const styles = StyleSheet.create({
     },
 
     facilityImage: {
-        borderColor:'#cccccc',
-        borderWidth:0.3,
+        resizeMode: 'center',
         width: imageWidth,
         height: imageWidth,
     },
+
+    imageBackground: {
+        borderColor:'#cccccc',
+        borderWidth:0.3,
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        width: containWidth,
+        height: containWidth,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
 
 export default styles;
