@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         marginLeft: 18,
     },
     steps: {
+        fontSize: 12,
         fontFamily: 'FuturaStd-Light',
         color: '#afafaf'
     },
@@ -24,10 +25,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     heading: {
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Light',
         marginTop: 5,
         fontSize: 24,
-        fontWeight: '400',
+        fontWeight: '200',
         marginBottom: 25
     },
     hotelInfoContainer: {
@@ -37,6 +38,8 @@ const styles = StyleSheet.create({
         flex: 0.3
     },
     hotelInfoView: {
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
         flex: 0.7,
         paddingTop: 7,
         paddingHorizontal: 8
@@ -80,12 +83,12 @@ const styles = StyleSheet.create({
         paddingVertical: 2
     },
     price: {
-        fontSize: 18
+        fontSize: 16
     },
     hotelName: {
-        fontFamily: 'futura',
-        fontSize: 17,
-        fontWeight: '400'
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 16,
+        fontWeight: '200'
     },
     hotelPlace: {
         fontFamily: 'FuturaStd-Light',
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     },
     labelGuest: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 18
+        fontSize: 16
     },
     inputFieldsView: {
         flexDirection: 'row',
@@ -157,11 +160,11 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 2,
         shadowOpacity: 0.5,
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: 'FuturaStd-Light'
     },
     genderText: {
-        fontSize: 18,
+        fontSize: 14,
         fontFamily: 'FuturaStd-Light'
     },
     spaceRight: {

@@ -92,7 +92,8 @@ export default class GuestFormRow extends Component {
                     <View style={styles.genderFlex}>
                         <View style={[styles.gender, styles.spaceRight]}>
 
-                            <Picker selectedValue={this.state.gender}
+                            <Picker 
+                                selectedValue={this.state.gender}
                                 style={{ height: '100%', width: '100%', }}
                                 itemStyle={{ height: '100%', fontFamily: 'FuturaStd-Light', }}
                                 onValueChange={this.onValueChange}>

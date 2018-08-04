@@ -105,6 +105,8 @@ export default class GuestInfoForm extends Component {
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 1 OF 2</Text>
                         <Text style={styles.heading}>Provide Guest Information</Text>
+                        
+                        
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
                                 <Image source={require('../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
