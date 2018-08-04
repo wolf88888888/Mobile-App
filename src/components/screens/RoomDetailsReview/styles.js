@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         marginLeft: 18,
     },
     steps: {
+        fontSize: 12,
         fontFamily: 'FuturaStd-Light',
         color: '#afafaf'
     },
@@ -23,10 +24,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     heading: {
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Light',
         marginTop: 5,
         fontSize: 24,
-        fontWeight: '400',
+        fontWeight: '200',
         marginBottom: 25
     },
     hotelInfoContainer: {
@@ -37,9 +38,11 @@ const styles = StyleSheet.create({
         flex: 0.3
     },
     hotelInfoView: {
+        flexDirection: 'column',
         flex: 0.7,
         paddingTop: 7,
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
+        justifyContent: 'flex-end'
     },
     hotelThumb: {
         resizeMode: 'cover',
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
     },
     confirmPayText: {
         color: '#fff',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: '100',
         fontFamily: 'FuturaStd-Light'
     },
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
         paddingVertical: 2
     },
     price: {
-        fontSize: 18
+        fontSize: 16
     },
     listItem: {
         flex: 1,
@@ -104,30 +107,30 @@ const styles = StyleSheet.create({
     },
     listItemText: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '100',
         color: '#262626'
     },
     hotelName: {
-        fontFamily: 'futura',
-        fontSize: 17,
-        fontWeight: '400'
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 15,
+        fontWeight: '200'
     },
     hotelPlace: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 12,
+        fontSize: 11,
         color: '#7c7c7c',
         fontWeight: '100'
     },
     period1: {
         marginTop: 5,
-        fontSize: 12,
+        fontSize: 11,
         color: '#535353',
         fontWeight: '100'
     },
     period2: {
         marginTop: 3,
-        fontSize: 12,
+        fontSize: 11,
         color: '#535353',
         fontWeight: '100'
     },
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     rhs: {
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: 'FuturaStd-Light',
         color: '#DA7B61'
     },
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     },
     walletPasswordLabel: {
         fontFamily: 'futura',
-        fontSize: 18
+        fontSize: 16
     },
     closeButtonView: {
         flex: 1,
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     walletPasswordInput: {
         backgroundColor: '#fff',
         padding: 15,
-        fontSize: 16,
+        fontSize: 15,
         marginTop: 15,
         borderWidth: 1,
         borderColor: '#b6b6b6',
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
     confirmButtonText: {
         fontFamily: 'FuturaStd-Light',
         color: '#fff',
-        fontSize: 16
+        fontSize: 15
     }
 });
 
