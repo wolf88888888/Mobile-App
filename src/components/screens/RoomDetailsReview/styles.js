@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     walletPasswordLabel: {
-        fontFamily: 'futura',
+        fontFamily: 'FuturaStd-Light',
         fontSize: 16
     },
     closeButtonView: {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     walletPasswordInput: {
         backgroundColor: '#fff',
         padding: 15,
-        fontSize: 15,
+        fontSize: 16,
         marginTop: 15,
         borderWidth: 1,
         borderColor: '#b6b6b6',

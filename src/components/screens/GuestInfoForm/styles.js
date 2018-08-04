@@ -50,7 +50,11 @@ const styles = StyleSheet.create({
         height: 60
     },
     floatingBar: {
+        position:'absolute',
+        bottom:0,
+        alignSelf:'center',
         height: 80,
+        width: '100%',
         backgroundColor: '#fff',
         flexDirection: 'row',
         alignItems: 'flex-end'

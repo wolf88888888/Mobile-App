@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, TextInput, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, TextInput, FlatList, KeyboardAvoidingView} from 'react-native';
 import Image from 'react-native-remote-svg';
 import GuestFormRow from './GuestFormRow';
 import styles from './styles';
@@ -98,10 +98,12 @@ export default class GuestInfoForm extends Component {
         const {params} = this.props.navigation.state
         return (
             <View style={styles.container}>
+                <KeyboardAvoidingView style={{height: '100%', width:'100%'}}>
                     <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
                         <Image style={styles.btn_backImage}
                                source={require('../../../../src/assets/png/arrow-back.png')}/>
                     </TouchableOpacity>
+                    
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 1 OF 2</Text>
                         <Text style={styles.heading}>Provide Guest Information</Text>
@@ -116,6 +118,7 @@ export default class GuestInfoForm extends Component {
                                 <Text style={styles.hotelPlace}>{params.hotelDetails.additionalInfo.mainAddress}</Text>
                             </View>
                         </View>
+                        
                         <View style={styles.form}>
                             <FlatList
                                 style={styles.flatList}
@@ -151,7 +154,9 @@ export default class GuestInfoForm extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                </KeyboardAvoidingView>
             </View>
+            
         )
     }
     onProceedPress = () => {

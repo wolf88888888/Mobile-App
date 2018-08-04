@@ -198,6 +198,7 @@ export default class RoomDetailsReview extends Component {
                                 onChangeText={walletPassword => this.setState({ password: walletPassword })}
                                 value={this.state.password}
                                 placeholder="Wallet password"
+                                underlineColorAndroid="rgba(0,0,0,0)"
                                 secureTextEntry={true}
                             />
                             <TouchableOpacity
