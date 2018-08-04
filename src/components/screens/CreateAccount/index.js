@@ -167,7 +167,7 @@ class CreateAccount extends Component {
                                         value: value
                                     });
                                 }}
-                                style={{ ...pickerSelectStyles }}
+                                style={{...pickerSelectStyles}}
                             >
                             </RNPickerSelect>
                         </View>
@@ -228,19 +228,40 @@ class CreateAccount extends Component {
     }
 }
 
-const pickerSelectStyles = StyleSheet.create({
+const pickerSelectStyles = {
     inputIOS: {
         height: 50,
-        fontSize: 16,
+        fontSize: 17,
+        paddingLeft: 20,
         paddingTop: 13,
-        paddingHorizontal: 10,
+        paddingRight: 10,
         paddingBottom: 12,
-        color: 'white'
+        color: '#fff',
+        fontFamily: 'FuturaStd-Light'
     },
+
+    icon : {
+        position: 'absolute',
+        backgroundColor: 'transparent',
+        borderTopWidth: 7.5,
+        borderTopColor: '#fff',
+        borderRightWidth: 7.5,
+        borderRightColor: 'transparent',
+        borderLeftWidth: 7.5,
+        borderLeftColor: 'transparent',
+        width: 0,
+        height: 0,
+        top: 20,
+        right: 12,
+    },
+
+	placeholderColor: '#fff',
+
     inputAndroid: {
         marginLeft: 12,
         color: 'white',
     },
+
     underline: {
         borderTopWidth: 0,
         borderTopColor: '#888988',
@@ -252,6 +273,6 @@ const pickerSelectStyles = StyleSheet.create({
         borderRadius: 25,
         height: 50,
     }
-});
+};
 
 export default CreateAccount;
