@@ -7,7 +7,7 @@ import {
 import {
   LOCTokenContract,
   getNodeProvider
-} from './config/contracts-config.js';
+} from './config/contracts-config';
 import crypto from '../../../library/react-native-fast-crypto';
 
 // import ERROR from './config/errors.json';

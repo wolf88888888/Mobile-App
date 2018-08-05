@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React from 'react';
 import PropTypes from 'prop-types';
-import Image from 'react-native-remote-svg';
 import SVGButton from '../SVGButton'
 import styles from './styles';
 
