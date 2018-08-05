@@ -5,7 +5,8 @@ import {
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View
+    View,
+    StatusBar
 } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
@@ -107,6 +108,11 @@ class SaveWallet extends Component {
         let i = 0;
         return (
             <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
+                <StatusBar
+                    backgroundColor="rgba(0,0,0,0)"
+                    translucent
+                    barStyle="light-content"
+                />
                 <TouchableWithoutFeedback>
                     <View style={styles.container}>
                         <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>

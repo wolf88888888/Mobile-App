@@ -1,10 +1,18 @@
 import { StyleSheet } from 'react-native';
+import Dimensions from 'Dimensions';
+
+const { height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#DA7B61'
+    },
+    main_container: {
+        flex: 1,
+        flexDirection: 'column',
+        height: height,
     },
     main: {
         flex: 1,

@@ -12,7 +12,7 @@ import UserProfileReviews from '../../organisms/UserProfileReviews'
 import { connect } from 'react-redux';
 import { imgHost } from '../../../config.js';
 import moment from 'moment'
-import requester from '../../../initDependencies';
+import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
 
 class SimpleUserProfile extends Component {
@@ -31,7 +31,6 @@ class SimpleUserProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            birthday: '',
             birthdayDisplay: '',
             city: {},
             country: {},
@@ -47,45 +46,48 @@ class SimpleUserProfile extends Component {
             day: '',
             month: '',
             year: '',
-            showProgress: true,
+            showProgress: false,
+            loadMessage: 'loading...',
         }
     }
 
-    componentDidMount() {
-        requester.getUserInfo().then(res => {
-            res.body.then(data => {
-                let day = '00';
-                let month = '00';
-                let year = '0000';
-
-                if (data.birthday !== null) {
-                    let birthday = moment.utc(data.birthday);
-                    day = birthday.format('DD');
-                    month = birthday.format('MM');
-                    year = birthday.format('YYYY');
-                }
-                this.setState({
-                    showProgress: false,
-                    birthday: data.birthday == null ? '' : data.birthday,
-                    birthdayDisplay: month + '/' + day + '/' + year,
-                    city: data.city == null ? '' : data.city,
-                    country: data.country == null ? data.countries[0] : data.country,
-                    email: data.email == null ? '' : data.email,
-                    firstName: data.firstName == null ? '' : data.firstName,
-                    lastName: data.lastName == null ? '' : data.lastName,
-                    gender: data.gender == null ? '' : data.gender,
-                    image: data.image == null ? '' : data.image,
-                    locAddress: data.locAddress == null ? '' : data.locAddress,
-                    phoneNumber: data.phoneNumber == null ? '' : data.phoneNumber,
-                    preferredCurrency: data.preferredCurrency == null ? data.currencies[0] : data.preferredCurrency,
-                    preferredLanguage: data.preferredLanguage == null ? 'English' : data.preferredLanguage,
-                });
-            }).catch(err => {
-                console.log(err);
-            });
-        }).catch(err => {
-            console.log(err);
+     async componentDidMount() {
+        let email = await userInstance.getEmail();
+        let firstName = await userInstance.getFirstName();
+        let lastName = await userInstance.getLastName();
+        let phoneNumber = await userInstance.getPhoneNumber();
+        let preferredLanguage = await userInstance.getLanguage();
+        let preferredCurrency = await userInstance.getCurrency();
+        let gender = await userInstance.getGender();
+        let country = await userInstance.getCountry();
+        let city = await userInstance.getCity();
+        let locAddress = await userInstance.getLocAddress();
+        let profileImage = await userInstance.getProfileImage();
+        let day = '01';
+        let month = '01';
+        let year = '1970';
+        let birth = await userInstance.getBirthday();
+        if (birth !== null) {
+            let birthday = moment.utc(parseInt(birth, 10));
+            day = birthday.format('DD');
+            month = birthday.format('MM');
+            year = birthday.format('YYYY');
+        }
+        this.setState({
+            birthdayDisplay: month + '/' + day + '/' + year,
+            city: city,
+            country: country,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            gender: gender,
+            image: profileImage==null ? '' : profileImage,
+            locAddress: locAddress,
+            phoneNumber: phoneNumber,
+            preferredCurrency: preferredCurrency,
+            preferredLanguage: preferredLanguage,
         });
+
     }
 
     render() {
