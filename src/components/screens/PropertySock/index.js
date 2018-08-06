@@ -133,9 +133,9 @@ class Property extends Component {
             console.log("anadroid");
             androidStomp.startSession(uid, mainUrl);
             DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                console.log(JSON.parse(message)),
-                this.handleAndroidSingleHotel(JSON.parse(message))
-              ));
+                console.log(message),
+                this.handleAndroidSingleHotel(message)
+            ));
         }
     }
 
@@ -381,20 +381,26 @@ class Property extends Component {
         );
     }
 
-    handleAndroidSingleHotel(object){
-        if (object.hasOwnProperty('allElements')) {
-            if (object.allElements){
-                this.setState({
-                    isLoading: false,
-                });
+    handleAndroidSingleHotel(message){
+        try {
+            var object = JSON.parse(message);
+            if (object.hasOwnProperty('allElements')) {
+                if (object.allElements){
+                    this.setState({
+                        isLoading: false,
+                    });
+                }
+                if (this.state.listings.length <= 0){
+                    this.setState({noResultsFound: true,})
+                }
+            } else {
+                console.log("2");
+                this.setState(prevState => ({
+                    listings: [...prevState.listings, object]
+                  }));
             }
-            if (this.state.listings.length <= 0){
-                this.setState({noResultsFound: true,})
-            }
-        } else {
-            this.setState(prevState => ({
-                listings: [...prevState.listings, object]
-              }));
+        } catch(e) {
+            console.log(e);
         }
     }
 

@@ -68,12 +68,19 @@ public class StompModule extends ReactContextBaseJavaModule {
 
             @Override
             public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
+                Log.e("StompTest","A1");
+//                WritableMap event = Arguments.createMap();
+//                event.putString("message",exception.toString());
+//                emitDeviceEvent("SOCK_EXCEPTION", event);
             }
 
             @Override
             public void handleTransportError(StompSession session, Throwable exception) {
+                //Here
                 //error.invoke("went wrong");
+//                WritableMap event = Arguments.createMap();
+//                event.putString("message",exception.toString());
+//                emitDeviceEvent("SOCK_ERROR", event);
             }
 
             @Override
