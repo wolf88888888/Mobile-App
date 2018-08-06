@@ -198,6 +198,7 @@ export default class RoomDetailsReview extends Component {
                                 onChangeText={walletPassword => this.setState({ password: walletPassword })}
                                 value={this.state.password}
                                 placeholder="Wallet password"
+                                underlineColorAndroid="rgba(0,0,0,0)"
                                 secureTextEntry={true}
                             />
                             <TouchableOpacity
@@ -272,7 +273,7 @@ export default class RoomDetailsReview extends Component {
                         </View>
                     </View>
                     {/* Button list displayed using flat list */}
-                    <View style={styles.listItem}>
+                    <View style={[styles.listItem, {marginTop: 16}]}>
                         <View style={styles.listItemNameWrapper}>
                             <Text style={styles.listItemText}>Room Type</Text>
                         </View>
@@ -316,7 +317,7 @@ export default class RoomDetailsReview extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.bold400]}>${params.price}</Text>
+                            <Text style={[styles.price, {fontWeight: '400'}, styles.fontFuturaStd]}>${params.price}</Text>
                             <Text style={styles.period1}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>

@@ -71,11 +71,12 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "rfc4648": "^1.1.0",
     "shortid": "^2.2.8",
     "sockjs-client": "^1.1.4",
+    "stomp-websocket-js": "^1.0.0",
     "stompjs": "^2.3.3",
     "stream": "0.0.2",
-    "utf8": "^3.0.0",
-    "rfc4648": "^1.0.0"
+    "utf8": "^3.0.0"
   }
 }

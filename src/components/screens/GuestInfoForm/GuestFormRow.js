@@ -66,10 +66,7 @@ export default class GuestFormRow extends Component {
     }
 
     onValueChange = value => {
-        this.setState({
-            gender: value,
-            genderRepresentation: value
-        });
+        this.setState({ guest: { ...this.state.guest, genderRepresentation: value } })
     }
 
     textDone() {
@@ -93,11 +90,11 @@ export default class GuestFormRow extends Component {
                     <View style={styles.genderFlex}>
                         <View style={[styles.gender, styles.spaceRight]}>
 
-                            <Picker selectedValue={this.state.gender}
+                            <Picker 
+                                selectedValue={this.state.gender}
                                 style={{ height: '100%', width: '100%', }}
-                                itemStyle={{ height: '100%', fontFamily: 'FuturaStd-Light', }}
+                                itemStyle={{backgroundColor: 'red', height: '100%', fontFamily: 'FuturaStd-Light', fontSize:17}}
                                 onValueChange={this.onValueChange}>
-
                                 <Item label="Mr" value="Mr" />
                                 <Item label="Mrs" value="Mrs" />
                             </Picker>
@@ -107,7 +104,6 @@ export default class GuestFormRow extends Component {
                         <TextInput
                             style={[styles.formField, styles.spaceRight]}
                             onChangeText={(text) => { this.props.onFirstNameChange(this.props.itemIndex, text), this.setState({ guest: { ...this.state.guest, firstName: text } }) }}
-                            //onBlur={() => this.textDone()}
                             placeholder={this.props.itemIndex == 0 ? "First Name" : "Optional"}
                             underlineColorAndroid="#fff"
                             value={this.state.guest.firstName}

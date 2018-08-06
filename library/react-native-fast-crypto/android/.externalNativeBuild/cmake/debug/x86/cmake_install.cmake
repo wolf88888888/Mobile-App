@@ -1,8 +1,8 @@
-# Install script for directory: H:/Net/2018/LockTrip/Mobile-App/library/react-native-fast-crypto/android/src/main/cpp
+# Install script for directory: /Users/Mac/Work/React Native/Locktrip/Mobile-App/library/react-native-fast-crypto/android/src/main/cpp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Project")
+  set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "H:/Net/2018/LockTrip/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/debug/x86/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/Mac/Work/React Native/Locktrip/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/debug/x86/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
