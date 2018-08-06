@@ -15,10 +15,8 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 var stomp = require('stomp-websocket-js');
 
-var clientRef = '';
-var client = undefined;
-var utf8 = require('utf8');
-var binaryToBase64 = require('binaryToBase64');
+
+var clientRef = undefined;
 let uid = '';
 
 const mainUrl = '';
@@ -131,24 +129,24 @@ class Property extends Component {
 
     componentWillMount(){
 
-        onmi = function(message){
-            console.log(message.body);
-        }
-
-        client = stomp.client('wss://alpha.locktrip.com/socket');
-        client.connect({}, (frame) => {
+        clientRef = stomp.client('wss://alpha.locktrip.com/socket');
+        clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
-            client.subscribe("search/62fb14a4-8f6a-11e8-9eb6-529269fb1459", this.handleReceiveSingleHotel);
-            client.send("search",
+            clientRef.subscribe(`search/${uid}`, this.handleReceiveSingleHotel);
+            clientRef.send("search",
                 headers,
-                JSON.stringify({uuid: '62fb14a4-8f6a-11e8-9eb6-529269fb1459', query : mainUrl})
+                JSON.stringify({uuid: uid, query : mainUrl})
             )
             }, (error) => {
-                alert("Nayy");
+                clientRef.disconnect();
+                this.setState({
+                    isLoading: false,
+                });
             });
     }
 
     componentDidMount() {
+
     }
 
     onChangeHandler(property) {
@@ -159,7 +157,7 @@ class Property extends Component {
 
     onDatesSelect({ startDate, endDate }){
         this.setState({
-            search : 'fuck',
+            search : '',
             checkInDate : startDate,
             checkOutDate : endDate,
         });
@@ -277,8 +275,7 @@ class Property extends Component {
             <View style={{ flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                marginBottom: 10}}>
-                
+                marginBottom: 10}}>   
             </View>
         );
     }
@@ -372,13 +369,12 @@ class Property extends Component {
         );
     }
 
-    //Search logic
     handleReceiveSingleHotel(message) {
         
         var response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
             if (response.allElements){
-                client.disconnect();
+                clientRef.disconnect();
                 this.setState({
                     isLoading: false,
                 });
@@ -392,43 +388,6 @@ class Property extends Component {
               }));
         }
       }
-
-      disconnected(){
-        if (this.state.listings.length <= 0){
-            this.setState({noResultsFound: true,})
-        }
-        this.setState({
-            isLoading: false,
-        });
-        if(clientRef){
-            clientRef.disconnect();
-        }
-      }
-
-      sendInitialWebsocketRequest() {
-        let query = mainUrl;
-        const msg = {
-          query: query,
-          uuid: 'cf74a9bc-7dd4-11e8-adc0-fa7ae01bbebc'
-        };
-        this.setState({
-            isLoading: true,
-        });  
-        if (clientRef) {
-            //clientRef.sendMessage(`/app/all/cf74a9bc-7dd4-11e8-adc0-fa7ae01bbebc${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
-        }
-        else{
-            console.log('3');
-        }
-      }
-}
-
-function SeparatorDot(props) {
-    return (
-        <View style={{height: props.height, width: props.width, alignItems: 'center', justifyContent: 'center'}}>
-            <View style={{height: 3, width: 3, backgroundColor: '#000', borderRadius: 1.5}}></View>
-        </View>
-    )
 }
 
 
