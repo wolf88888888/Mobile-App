@@ -6,7 +6,6 @@ import SplashScreen from 'react-native-smart-splash-screen';
 import { withNavigation } from 'react-navigation';
 import SockJsClient from 'react-stomp';
 import { apiHost, imgHost } from '../../../config';
-import { getRegionsBySearchParameter, getTopHomes } from '../../../utils/requester';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -14,7 +13,10 @@ import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 
+var stomp = require('stomp-websocket-js');
+
 var clientRef = '';
+var client = undefined;
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
 let uid = '';
@@ -128,19 +130,25 @@ class Property extends Component {
     }
 
     componentWillMount(){
-        //Remove Splash
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 0,
-            delay: 0,
-        })
+
+        onmi = function(message){
+            console.log(message.body);
+        }
+
+        client = stomp.client('wss://alpha.locktrip.com/socket');
+        client.connect({}, (frame) => {
+            var headers = {'content-length': false};
+            client.subscribe("search/62fb14a4-8f6a-11e8-9eb6-529269fb1459", this.handleReceiveSingleHotel);
+            client.send("search",
+                headers,
+                JSON.stringify({uuid: '62fb14a4-8f6a-11e8-9eb6-529269fb1459', query : mainUrl})
+            )
+            }, (error) => {
+                alert("Nayy");
+            });
     }
 
     componentDidMount() {
-        getTopHomes().then((topHomes) => {
-            const truncated = topHomes.content.slice(0, 4);
-            this.setState({ topHomes: truncated });
-        });
     }
 
     onChangeHandler(property) {
@@ -164,10 +172,6 @@ class Property extends Component {
     onSearchChange(value){
         setSearchValue({ value });
         clearSelected();
-        getRegionsBySearchParameter(value).then((res) => {
-             setSearchRegions(res);
-             setAutocomplete(value);
-        });
     }
 
     renderHomes() {
@@ -325,13 +329,18 @@ class Property extends Component {
                             data={this.state.listings}
                             renderItem={
                                 ({item}) =>
+                                
+                                
+
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
+                            
                                 <View style={styles.card}>
-                                {console.log('**####**')}
-                                {console.log(item)}
+                                
+                                
                                 <Image 
-                                source={{uri : imgHost + item.photos[0]}} 
+                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url}} 
                                 style={styles.popularHotelsImage}/>
+
                                 <TouchableOpacity style={styles.favoritesButton}>
                                     <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
                                 </TouchableOpacity>
@@ -359,30 +368,23 @@ class Property extends Component {
                             }
                         />
                 </View>
-                <SockJsClient 
-                    url={apiHost + 'handler'} 
-                    topics={[`/topic/all/cf74a9bc-7dd4-11e8-adc0-fa7ae01bbebc${binaryToBase64(utf8.encode(mainUrl))}`]}
-                    onMessage={this.handleReceiveSingleHotel} 
-                    ref={(client) => { clientRef = client }}
-                    onConnect={this.sendInitialWebsocketRequest.bind(this)}
-                    getRetryInterval={() => { return 3000; }}
-                    debug={true}
-                    />
             </View>
         );
     }
 
     //Search logic
-    handleReceiveSingleHotel(response) {
-        if (response.hasOwnProperty('allElements')) { 
+    handleReceiveSingleHotel(message) {
+        
+        var response = JSON.parse(message.body);
+        if (response.hasOwnProperty('allElements')) {
+            if (response.allElements){
+                client.disconnect();
+                this.setState({
+                    isLoading: false,
+                });
+            }
             if (this.state.listings.length <= 0){
                 this.setState({noResultsFound: true,})
-            }
-            this.setState({
-                isLoading: false,
-            });
-            if(clientRef){
-                clientRef.disconnect();
             }
         } else {
             this.setState(prevState => ({
@@ -413,7 +415,7 @@ class Property extends Component {
             isLoading: true,
         });  
         if (clientRef) {
-            clientRef.sendMessage(`/app/all/cf74a9bc-7dd4-11e8-adc0-fa7ae01bbebc${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
+            //clientRef.sendMessage(`/app/all/cf74a9bc-7dd4-11e8-adc0-fa7ae01bbebc${binaryToBase64(utf8.encode(query))}`, JSON.stringify(msg));
         }
         else{
             console.log('3');

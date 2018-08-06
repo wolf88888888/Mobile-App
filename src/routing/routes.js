@@ -62,6 +62,8 @@ import PropertyList from '../components/screens/PropertyList';
 import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 
+import PropertySock from '../components/screens/PropertySock';
+
 export const LoginNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
@@ -136,6 +138,7 @@ export const FullNavigator = StackNavigator(
         SingleWishlist: {screen: SingleWishlist},
         Debug : {screen: Debug},
         Chat: {screen: Chat},
+        PropertySock: {screen: PropertySock},
     },
     {
         initialRouteName: 'MainScreen',
