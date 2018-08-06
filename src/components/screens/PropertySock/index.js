@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform } from 'react-native';
 import Image from 'react-native-remote-svg';
-import SplashScreen from 'react-native-smart-splash-screen';
 import { withNavigation } from 'react-navigation';
-import SockJsClient from 'react-stomp';
-import { apiHost, imgHost } from '../../../config';
+import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -18,7 +16,6 @@ var stomp = require('stomp-websocket-js');
 
 var clientRef = undefined;
 let uid = '';
-
 const mainUrl = '';
 
 class Property extends Component {
@@ -128,7 +125,19 @@ class Property extends Component {
     }
 
     componentWillMount(){
+        if (Platform.OS === 'ios'){
+            this.stompIos();
+        }
+        else if (Platform.OS === 'android'){
 
+        }
+    }
+
+    componentDidMount() {
+
+    }
+
+    stompIos(){
         clientRef = stomp.client('wss://alpha.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
@@ -143,10 +152,6 @@ class Property extends Component {
                     isLoading: false,
                 });
             });
-    }
-
-    componentDidMount() {
-
     }
 
     onChangeHandler(property) {
