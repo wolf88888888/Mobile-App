@@ -1,5 +1,3 @@
 # ninja log v5
-0	197	0	CMakeFiles/crypto_bridge.dir/crypto_bridge.cpp.o	aa6decc284ffa50
-198	274	0	/Users/Mac/Work/React Native/Locktrip/Mobile-App/library/react-native-fast-crypto/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libcrypto_bridge.so	14024367a9dc5b79
-4	134	0	CMakeFiles/crypto_bridge.dir/crypto_bridge.cpp.o	aa6decc284ffa50
-135	255	0	/Users/Mac/Work/React Native/Locktrip/Mobile-App/library/react-native-fast-crypto/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libcrypto_bridge.so	14024367a9dc5b79
+1	618	0	CMakeFiles/crypto_bridge.dir/crypto_bridge.cpp.o	a5a0e6b37b66d5eb
+620	1542	0	D:/React Native/Mobile-App/library/react-native-fast-crypto/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libcrypto_bridge.so	d9da2f69bd8d001e
