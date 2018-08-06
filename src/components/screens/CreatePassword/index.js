@@ -86,7 +86,7 @@ class CreatePassword extends Component {
                 style={styles.container}
                 enableOnAndroid={true}
                 enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
-            <View style={styles.container}>
+            <View style={styles.main_container}>
                 <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 
                 <View style={styles.lowOpacity}>
@@ -110,7 +110,7 @@ class CreatePassword extends Component {
                             autoCapitalize="none"
                             value={password}
                             onChangeText={this.onChangeHandler('password')}
-                            placeholder="Password (8 chars with a digit and a symbol)"
+                            placeholder="8 chars with a digit and a symbol"
                             placeholderTextColor="#fff"
                             rightIcon={validatePassword(password) ? 'check' : null}
                         />
@@ -125,7 +125,7 @@ class CreatePassword extends Component {
                             autoCapitalize="none"
                             value={confirmPassword}
                             onChangeText={this.onChangeHandler('confirmPassword')}
-                            placeholder="Password (8 chars with a digit and a symbol)"
+                            placeholder="8 chars with a digit and a symbol"
                             placeholderTextColor="#fff"
                             rightIcon={validateConfirmPassword(password, confirmPassword) ? 'check' : null}
                         />

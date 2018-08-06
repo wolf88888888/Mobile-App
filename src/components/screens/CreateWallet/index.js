@@ -3,7 +3,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    View
+    View,
+    StatusBar
 } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
@@ -142,6 +143,11 @@ class CreateWallet extends Component {
                 style={styles.container}
                 enableOnAndroid={true}
                 enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
+                <StatusBar
+                    backgroundColor="rgba(0,0,0,0)"
+                    translucent
+                    barStyle="light-content"
+                />
                 <View style={styles.container}>
                     <WhiteBackButton style={styles.closeButton} onPress={() => goBack()}/>
 

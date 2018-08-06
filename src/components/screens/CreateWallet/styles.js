@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
     },
     inputView: {
         width: '100%',
-        margin: 11,
+        marginTop: 11,
+        marginBottom: 11,
         paddingLeft: 18,
         paddingRight: 18
     },

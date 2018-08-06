@@ -64,6 +64,8 @@ class EditLocationModal extends Component {
                     })
                 }
             });
+        }).catch(err => {
+            console.log('error: ', err);
         });
     }
 
@@ -94,9 +96,12 @@ class EditLocationModal extends Component {
                             items={this.state.cities}
                             placeholder={{
                                 label: 'Choose your city',
-                                value: this.state.selectedCityId,
+                                value: null,
                             }}
                             onValueChange={(value) => {
+                                index = _.findIndex(this.state.cities, function (o) {
+                                    return o.value == value;
+                                })
                                 this.setState({
                                     selectedCityName: this.state.cities[index].label,
                                     selectedCityId: value,
