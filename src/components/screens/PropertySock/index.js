@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform } from 'react-native';
+import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { withNavigation } from 'react-navigation';
 import { imgHost } from '../../../config';
@@ -11,6 +11,7 @@ import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 
+var androidStomp = NativeModules.StompModule;
 var stomp = require('stomp-websocket-js');
 
 
@@ -129,7 +130,12 @@ class Property extends Component {
             this.stompIos();
         }
         else if (Platform.OS === 'android'){
-
+            console.log("anadroid");
+            androidStomp.startSession(uid, mainUrl);
+            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+                console.log(JSON.parse(message)),
+                this.handleAndroidSingleHotel(JSON.parse(message))
+              ));
         }
     }
 
@@ -375,8 +381,25 @@ class Property extends Component {
         );
     }
 
+    handleAndroidSingleHotel(object){
+        if (object.hasOwnProperty('allElements')) {
+            if (object.allElements){
+                this.setState({
+                    isLoading: false,
+                });
+            }
+            if (this.state.listings.length <= 0){
+                this.setState({noResultsFound: true,})
+            }
+        } else {
+            this.setState(prevState => ({
+                listings: [...prevState.listings, object]
+              }));
+        }
+    }
+
     handleReceiveSingleHotel(message) {
-        
+        console.log("yess");
         var response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
             if (response.allElements){
