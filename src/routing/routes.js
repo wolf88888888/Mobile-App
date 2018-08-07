@@ -141,7 +141,7 @@ export const FullNavigator = StackNavigator(
         PropertySock: {screen: PropertySock},
     },
     {
-        initialRouteName: 'Notifications',
+        initialRouteName: 'MainScreen',
         headerMode: 'none'
     }
 );
