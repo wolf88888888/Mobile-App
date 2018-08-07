@@ -9,12 +9,25 @@ import Switch from 'react-native-customisable-switch';
 import { connect } from 'react-redux';
 
 class Notifications extends Component {
+    state = {
+        recieveEmailMessage: false,
+        recieveTextMessage: true,
+        recievePushNotificationMessages: true,
+        recieveEmail: true,
+        recieveText: true,
+        recievePushNotification: true,
+        checkZIndex: 1, // zIndex of switchCheckView
+    }
     constructor(props) {
         super(props);
     }
 
     render() {
         const { navigate } = this.props.navigation;
+        const {
+            recieveEmailMessage, recieveTextMessage, recievePushNotificationMessages, recieveEmail, recieveText,
+            recievePushNotification, checkZIndex
+        } = this.state;
         return (
             <View style={styles.container}>
 
@@ -36,7 +49,7 @@ class Notifications extends Component {
                         <TouchableOpacity style={styles.navItem}>
                             <View>
                                 <Text style={styles.navItemText}>Messages</Text>
-                                <Text style={styles.navText}>Recieves messages from holtels and Guests</Text>
+                                <Text style={styles.navText}>Recieves messages from holtels and guests</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -44,113 +57,211 @@ class Notifications extends Component {
                         <TouchableOpacity style={styles.navItem}>
                             <Text style={styles.navItemText}>Email</Text>
 
-                            <Switch style={styles.navIcon}
-
-
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
-                            />
+                            <View>
+                                {recieveEmailMessage ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    :
+                                    <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.unSwitchCheckText}>
+                                            <FontAwesome>{Icons.times}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    }
+                                <Switch
+                                    value={recieveEmailMessage}
+                                    onChangeValue={() => {
+                                        this.setState({ recieveEmailMessage: !recieveEmailMessage, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#FFF"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#f0f1f3"
+                                    switchWidth={62}
+                                    switchBorderColor={recieveEmailMessage ? "#e4a193" : "#cccccc"}
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
+                            </View>
 
                         </TouchableOpacity>
 
 
                         <TouchableOpacity style={styles.navItem}>
                             <Text style={styles.navItemText}>Text Message</Text>
-                            <Switch style={styles.navIcon}
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
-                            />
+                            <View>
+                                {recieveTextMessage ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    :
+                                    <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.unSwitchCheckText}>
+                                            <FontAwesome>{Icons.times}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    }
+                                <Switch
+                                    value={recieveTextMessage}
+                                    onChangeValue={() => {
+                                        this.setState({ recieveTextMessage: !recieveTextMessage, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#FFF"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#f0f1f3"
+                                    switchWidth={62}
+                                    switchBorderColor={recieveTextMessage ? "#e4a193" : "#cccccc"}
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
+                            </View>
                         </TouchableOpacity>
 
 
                         <TouchableOpacity style={styles.navItem}>
 
 
-                            <Text style={styles.navItemText}>Push Notifications{"\n"}<Text style={styles.navText}> To your mobile or tablet device </Text></Text>
+                            <Text style={styles.navItemText}>Push Notifications{"\n"}{"\n"}<Text style={styles.navText}>To your mobile or tablet device </Text></Text>
 
-                            <Switch style={styles.navIcon}
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
-                            />
+                            <View>
+                                {recievePushNotificationMessages ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    :
+                                    <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.unSwitchCheckText}>
+                                            <FontAwesome>{Icons.times}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    }
+                                <Switch
+                                    value={recievePushNotificationMessages}
+                                    onChangeValue={() => {
+                                        this.setState({ recievePushNotificationMessages: !recievePushNotificationMessages, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#FFF"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#f0f1f3"
+                                    switchWidth={62}
+                                    switchBorderColor={recievePushNotificationMessages ? "#e4a193" : "#cccccc"}
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
+                            </View>
 
                         </TouchableOpacity>
 
 
                         <TouchableOpacity style={styles.navItem}>
                             <View>
-                                <Text style={styles.navItemText}>Reminder & Text</Text>
-                                <Text style={styles.navText}>Recieve reminders,helpful tips to improve your trip and other messages related to your activites on lockChain</Text>
+                                <Text style={styles.navItemText}>Reminder & Suggestions</Text>
+                                <Text style={styles.navText}>Recieve reminders,helpful tips to improve your trip and other messages related to your activites on LockChain.</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.navItem}>
                             <Text style={styles.navItemText}>Email</Text>
-                            <Switch style={styles.navIcon}
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
-                            />
+                            <View>
+                                {recieveEmail ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    :
+                                    <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.unSwitchCheckText}>
+                                            <FontAwesome>{Icons.times}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    }
+                                <Switch
+                                    value={recieveEmail}
+                                    onChangeValue={() => {
+                                        this.setState({ recieveEmail: !recieveEmail, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#FFF"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#f0f1f3"
+                                    switchWidth={62}
+                                    switchBorderColor={recieveEmail ? "#e4a193" : "#cccccc"}
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
+                            </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.navItem}>
                             <Text style={styles.navItemText}>Text Message</Text>
-                            <Switch style={styles.navIcon}
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
-                            />
+                            <View>
+                                {recieveText ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    :
+                                    <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.unSwitchCheckText}>
+                                            <FontAwesome>{Icons.times}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    }
+                                <Switch
+                                    value={recieveText}
+                                    onChangeValue={() => {
+                                        this.setState({ recieveText: !recieveText, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#FFF"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#f0f1f3"
+                                    switchWidth={62}
+                                    switchBorderColor={recieveText ? "#e4a193" : "#cccccc"}
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
+                            </View>
                         </TouchableOpacity>
 
 
@@ -159,21 +270,41 @@ class Notifications extends Component {
 
                             <Text style={styles.navItemText}>Push Notifications{"\n"}<Text style={styles.navText}> To your mobile or tablet device </Text></Text>
 
-                            <Switch style={styles.navIcon}
-                                activeTextColor="#DA7B61"
-                                activeBackgroundColor="#e4a193"
-                                inactiveBackgroundColor="#DA7B61"
-                                switchWidth={62}
-                                switchBorderColor="#e4a193"
-                                switchBorderWidth={1}
-                                buttonWidth={30}
-                                buttonHeight={30}
-                                buttonBorderRadius={15}
-                                buttonBorderColor="#fff"
-                                buttonBorderWidth={0}
-                                animationTime={this.animationTime}
-                                padding={false}
-                            />
+                            <View>
+                                {recievePushNotification ?
+                                    <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.switchCheckText}>
+                                            <FontAwesome>{Icons.check}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    :
+                                    <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
+                                        <Text style={styles.unSwitchCheckText}>
+                                            <FontAwesome>{Icons.times}</FontAwesome>
+                                        </Text>
+                                    </View>
+                                    }
+                                <Switch
+                                    value={recievePushNotification}
+                                    onChangeValue={() => {
+                                        this.setState({ recievePushNotification: !recievePushNotification, checkZIndex: 0 });
+                                        setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
+                                    }}
+                                    activeTextColor="#FFF"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#f0f1f3"
+                                    switchWidth={62}
+                                    switchBorderColor={recievePushNotification ? "#e4a193" : "#cccccc"}
+                                    switchBorderWidth={1}
+                                    buttonWidth={30}
+                                    buttonHeight={30}
+                                    buttonBorderRadius={15}
+                                    buttonBorderColor="#fff"
+                                    buttonBorderWidth={0}
+                                    animationTime={this.animationTime}
+                                    padding={false}
+                                />
+                            </View>
 
                         </TouchableOpacity>
 
@@ -336,5 +467,24 @@ const styles = StyleSheet.create({
         color: '#da7b60',
         fontFamily: 'FuturaStd-Light',
         fontSize: 18
-    }
+    },
+    switchCheckView: {
+        position: 'absolute',
+        top: 10,
+        left: 10
+    },
+    switchUnCheckView: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        justifyContent: 'flex-end'
+    },
+    switchCheckText: {
+        color: '#FFF',
+        fontSize: 10.5
+    },
+    unSwitchCheckText: {
+        color: '#cccccc',
+        fontSize: 10.5
+    },
 });

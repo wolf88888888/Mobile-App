@@ -193,8 +193,8 @@ class CreateAccount extends Component {
                                         setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
                                     }}
                                     activeTextColor="#DA7B61"
-                                    activeBackgroundColor="#e4a193"
-                                    inactiveBackgroundColor="#DA7B61"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#e4a193"
                                     switchWidth={62}
                                     switchBorderColor="#e4a193"
                                     switchBorderWidth={1}
