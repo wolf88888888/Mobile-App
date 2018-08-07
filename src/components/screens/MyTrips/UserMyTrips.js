@@ -3,7 +3,6 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 import { domainPrefix, imgHost } from '../../../config';
 
-import BackButton from '../../atoms/BackButton';
 import Dash from 'react-native-dash';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -105,8 +104,6 @@ class UserMyTrips extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.chatToolbar}>
-                    <BackButton onPress={this.onBackPress} />
-
                     <Text style={styles.title}>Your Trips</Text>
                 </View>
 
@@ -154,11 +151,6 @@ class UserMyTrips extends Component {
                 />
             </View>
         )
-    }
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
-        this.props.navigation.state.params.gotoBooking();
     }
 }
 

@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#f0f1f3',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        paddingTop: 40,
     },
     placeholderImageView: {
         marginTop: 40
