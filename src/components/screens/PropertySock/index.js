@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
 import Image from 'react-native-remote-svg';
-import SplashScreen from 'react-native-smart-splash-screen';
 import { withNavigation } from 'react-navigation';
-import SockJsClient from 'react-stomp';
-import { apiHost, imgHost } from '../../../config';
+import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
+var androidStomp = NativeModules.StompModule;
 var stomp = require('stomp-websocket-js');
 
 
 var clientRef = undefined;
 let uid = '';
-
 const mainUrl = '';
 
 class Property extends Component {
@@ -81,6 +81,7 @@ class Property extends Component {
         this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.alterMap = this.alterMap.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
@@ -105,7 +106,9 @@ class Property extends Component {
             isLoading: true,
             noResultsFound: false,
             locRate: 0,
-            currencyIcon : ''
+            currencyIcon : '',
+            showResultsOnMap: false,
+            //initialLat : 040°52′N 34°34′E
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -128,7 +131,23 @@ class Property extends Component {
     }
 
     componentWillMount(){
+        if (Platform.OS === 'ios'){
+            this.stompIos();
+        }
+        else if (Platform.OS === 'android'){
+            androidStomp.startSession(uid, mainUrl);
+            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+                console.log(message),
+                this.handleAndroidSingleHotel(message)
+            ));
+        }
+    }
 
+    componentDidMount() {
+
+    }
+
+    stompIos(){
         clientRef = stomp.client('wss://alpha.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
@@ -145,8 +164,8 @@ class Property extends Component {
             });
     }
 
-    componentDidMount() {
-
+    alterMap(){
+        this.setState({showResultsOnMap : !this.state.showResultsOnMap});
     }
 
     onChangeHandler(property) {
@@ -222,10 +241,11 @@ class Property extends Component {
     }
     
     gotoHotelDetailsPage = (item) =>{
+        console.log(item);
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+        //this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
     }
 
     renderAutocomplete() {
@@ -303,6 +323,13 @@ class Property extends Component {
                     />
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
+
+                <TouchableOpacity onPress={this.alterMap}>
+                    <View style={styles.searchButtonView}>
+                        <Text style={styles.searchButtonText}>{this.state.showResultsOnMap ? "See Results List" : "See Results on Map"}</Text>
+                    </View>
+                </TouchableOpacity>
+
                 {this.state.isLoading && this.renderLoader()}
                 {this.state.noResultsFound && this.renderInfoTv()}
 
@@ -322,7 +349,7 @@ class Property extends Component {
                         />
 
 
-                    <FlatList style={styles.flatList}
+                    {/* <FlatList style={styles.flatList}
                             data={this.state.listings}
                             renderItem={
                                 ({item}) =>
@@ -363,14 +390,57 @@ class Property extends Component {
                                 </View>
                                 </TouchableOpacity>
                             }
-                        />
+                        /> */}
+
+                    <MapView
+                            style={styles.map}
+                            region={{
+                              latitude: 51.5074,
+                              longitude:  0.1278,
+                              latitudeDelta: 3,
+                              longitudeDelta: 3,
+                            }}
+                            debug={false}>
+                            {this.state.listings.map(marker => marker.lat != null && (
+                            <Marker
+                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
+                                title={marker.title}
+                                description={marker.description}
+                                />
+                            ))}
+
+                    </MapView>
                 </View>
             </View>
         );
     }
 
+    handleAndroidSingleHotel(message){
+        try {
+            var object = JSON.parse(message);
+            if (object.hasOwnProperty('allElements')) {
+                if (object.allElements){
+                    this.setState({
+                        isLoading: false,
+                    });
+                }
+                if (this.state.listings.length <= 0){
+                    this.setState({noResultsFound: true,})
+                }
+            } else {
+                console.log(object);
+                this.setState(prevState => ({
+                    listings: [...prevState.listings, object]
+                  }));
+                  console.log(`checking it    lat: ${object.lat} long: ${object.lon}`)
+            }
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
     handleReceiveSingleHotel(message) {
-        
+        console.log("yess");
         var response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
             if (response.allElements){

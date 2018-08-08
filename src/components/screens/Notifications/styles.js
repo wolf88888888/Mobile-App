@@ -1,122 +1,169 @@
 import { StyleSheet } from 'react-native';
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#eee',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        backgroundColor: '#f0f1f3'
     },
-    placeholderImageView: {
+    heading: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        width: '100%',
+        padding: 20,
+        marginLeft: 10,
         marginTop: 20
     },
-    placeholderImage: {
-        width: 250,
-        height: 210,
-        marginTop: 30
-    },
-    hotelImage: {
-        marginBottom: 10,
-        marginTop: 10,
-        height: 150,
-    },
-    title: {
-        fontFamily: 'futura',
-        fontSize: 24,
-        color: '#1f2427',
-        marginLeft: 14,
-        marginTop: 30
-    },
-    subtitle: {
-        fontFamily: 'futura',
-        fontSize: 16,
-        marginRight: 10,
-        color: '#1f2427'
-    },
-    subtext: {
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 12,
-        marginTop: 8,
-        color: '#767b7d'
-    },
-    hoteltext: {
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 12,
+    text: {
         color: '#000'
     },
-    buttonExplore: {
-        backgroundColor: '#cc8068',
-        paddingHorizontal: 60,
-        paddingVertical: 15,
-        marginTop: 90
+    cardBox: {
+        backgroundColor: '#da7b60',
+        marginTop: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        borderRadius: 10,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        paddingTop: 5,
+        paddingBottom: 15
     },
-    exploreBtnText: {
+    walletAddres: {
+        color: '#fff',
         fontFamily: 'FuturaStd-Light',
-        fontSize: 18,
-        color: '#fff'
+        fontSize: 11.5,
+        margin: 20,
+        marginTop: 10,
+        marginBottom: 30
     },
-    btn_backImage:{
-        height: 28,
-        width: 28,
-        marginTop: 44,
-        marginLeft: 16
-      },
-    btn_ImageNumber:{
-        height: 58,
-        width: 58,
-        marginTop: 34,
-        marginLeft: 6
-      },
-      senderImage:{
-        height: 50,
-        width: 50,
-        borderRadius: 25,
-        borderColor: 'white',
-        borderWidth: 1,
+    logo: {
+        width: 80,
+        height: 55,
+        borderRadius: 10,
+        marginLeft: 10
+    },
+    logoBackground: {
         position: 'absolute',
-      },
-      flatList:{
-        width : '100%',
+        bottom: -5,
+        left: -35,
+        opacity: 0.1,
+        width: '60%',
+        height: '60%'
     },
-    List:{
-        marginLeft: 4
-   
+
+    titleText: {
+        color: '#000',
+        fontSize: 22,
+        fontFamily: 'FuturaStd-Light',
+        marginLeft: 20
     },
-    img_round:{
-        margin: 10,
-        height:50,
-        width: 50,
-        borderRadius: 25,
-        backgroundColor:'#cc8068',
-        flexDirection : 'row',
+
+    titleView: {
+        display: 'flex',
+        width: '100%',
+        marginTop: 26
+    },
+    btn_backImage: {
+        height: 28,
+        width: 28
+    },
+
+    balanceLabel: {
+        fontSize: 10,
+        color: '#fff',
+        marginLeft: 20,
+        fontFamily: 'FuturaStd-Light'
+    },
+    balanceText: {
+        fontSize: 20,
+        color: '#fff',
+        marginLeft: 20,
+        fontFamily: 'FuturaStd-Light'
+    },
+    addMore: {
+        position: 'absolute',
+        bottom: 15,
+        right: 20,
+        width: 43,
+        height: 43,
+        borderRadius: 50,
+        backgroundColor: '#213742',
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    img_round_text:{
-        color : 'white',
-        textAlign: 'center'
-    },
-    innertext:{
+    addMorePlus: {
         color: '#fff',
-        fontSize: 30,
-        marginTop: 5
+        fontSize: 16
     },
-    Listcontainer:{
-        marginBottom: 30
-       // marginTop :30
+    copyBox: {
+        backgroundColor: '#fff',
+        marginLeft: 40,
+        marginRight: 40,
+        padding: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10
     },
-    chatToolbar: {
-        alignSelf: 'flex-start',
-        marginBottom: 30
+    copyText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 13,
+        color: '#000'
     },
-    imageViewWrapper: {
-        position: 'relative',
+    navItem: {
+        borderBottomWidth: 0.5,
+        borderColor: '#e2e4e3',
+        padding: 10,
+        paddingBottom: 20,
+        paddingTop: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row'
     },
-    flatListMainView : {width: '100%', flex: 1, flexDirection: 'row'},
-    flatListDataView : {width: '75%',},
-    flatListTitleView : {marginTop: 8},
-    flatListBottomView : {flex: 1, flexDirection: 'row'},
-    flatListUserProfileView : {height: 50, width:50, position: "absolute", bottom: 5, right: 5}
+    navIcon: {
+        width: 20,
+        height: 23
+    },
+    navItemText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 21,
+        color: '#000'
+    },
+    navText: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 15
+    },
+    navCurrency: {
+        color: '#da7b60',
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 18
+    },
+    switchCheckView: {
+        position: 'absolute',
+        top: 10,
+        left: 10
+    },
+    switchUnCheckView: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        justifyContent: 'flex-end'
+    },
+    switchCheckText: {
+        color: '#FFF',
+        fontSize: 10.5
+    },
+    unSwitchCheckText: {
+        color: '#cccccc',
+        fontSize: 10.5
+    }
 });
-
 export default styles;
