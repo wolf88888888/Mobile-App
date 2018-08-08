@@ -108,7 +108,8 @@ class Property extends Component {
             locRate: 0,
             currencyIcon : '',
             showResultsOnMap: false,
-            //initialLat : 040°52′N 34°34′E
+            initialLat : 0.40,
+            initialLon: 34,
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -347,14 +348,34 @@ class Property extends Component {
                             gotoSettings={this.gotoSettings}
                             showSearchButton= {false}
                         />
+                    {
+                        this.state.showResultsOnMap ? 
 
+                        <MapView
+                            style={styles.map}
+                            region={{
+                              latitude: this.state.listings[0].lat != null ? this.state.listings[0].lat : this.state.initialLat ,
+                              longitude:  this.state.listings[0].lon != null ? this.state.listings[0].lon : this.state.initialLon,
+                              latitudeDelta: 1,
+                              longitudeDelta: 1,
+                            }}
+                            debug={false}>
+                            {this.state.listings.map(marker => marker.lat != null && (
+                            <Marker
+                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
+                                title={marker.title}
+                                description={marker.description}
+                                />
+                            ))}
+                        </MapView>
 
-                    {/* <FlatList style={styles.flatList}
+                        :
+
+                        <FlatList
+                            style={styles.flatList}
                             data={this.state.listings}
                             renderItem={
                                 ({item}) =>
-                                
-                                
 
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
                             
@@ -390,26 +411,12 @@ class Property extends Component {
                                 </View>
                                 </TouchableOpacity>
                             }
-                        /> */}
+                        />
+                    }
 
-                    <MapView
-                            style={styles.map}
-                            region={{
-                              latitude: 51.5074,
-                              longitude:  0.1278,
-                              latitudeDelta: 3,
-                              longitudeDelta: 3,
-                            }}
-                            debug={false}>
-                            {this.state.listings.map(marker => marker.lat != null && (
-                            <Marker
-                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                title={marker.title}
-                                description={marker.description}
-                                />
-                            ))}
+                    
 
-                    </MapView>
+                    
                 </View>
             </View>
         );
@@ -428,11 +435,9 @@ class Property extends Component {
                     this.setState({noResultsFound: true,})
                 }
             } else {
-                console.log(object);
                 this.setState(prevState => ({
                     listings: [...prevState.listings, object]
                   }));
-                  console.log(`checking it    lat: ${object.lat} long: ${object.lon}`)
             }
         } catch(e) {
             console.log(e);
@@ -440,7 +445,6 @@ class Property extends Component {
     }
 
     handleReceiveSingleHotel(message) {
-        console.log("yess");
         var response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
             if (response.allElements){
