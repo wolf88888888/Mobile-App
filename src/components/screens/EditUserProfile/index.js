@@ -29,7 +29,7 @@ import  { userInstance } from '../../../utils/userInstance';
 import requester from '../../../initDependencies';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { imgHost } from '../../../config.js';
+import { imgHost, apiHost, domainPrefix } from '../../../config.js';
 import styles from './styles';
 
 class EditUserProfile extends Component {
@@ -183,7 +183,7 @@ class EditUserProfile extends Component {
         return new File([u8arr], filename, { type: mime });
     }
 
-    onPhoto() {
+    async onPhoto() {
         let options = {
             title: 'Select profile image',
             storageOptions: {
@@ -191,6 +191,7 @@ class EditUserProfile extends Component {
                 path: '/'
             }
         };
+        const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -204,22 +205,37 @@ class EditUserProfile extends Component {
             else {
                 this.setState({
                     showProgress: true,
-                })
-
-                requester.uploadPhoto(response.uri).then(res => {
-                    if (res.success) {
-                        res.body.then(data => {
-                            console.log('upload result', data.thumbnail)
-                            userInstance.setProfileImage(data.thumbnail);
-                            this.setState({
-                                image: data.thumbnail
-                            })
+                });
+                var data = new FormData();
+                data.append('image', {
+                    uri: response.uri,
+                    name: 'selfie.jpg',
+                    type: 'image/jpg'
+                });
+                fetch(`${apiHost}users/me/images/upload`, {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data;',
+                        'Authorization': token_value
+                      },
+                    body: data
+                }).then(res => { res.json().
+                    then(data => {
+                        this.setState({
+                            showProgress: false,
+                            image: data.thumbnail
                         });
-                    }
+                        userInstance.setProfileImage(data.thumbnail);
+                    }).catch(err => {
+                        console.log('upload error', err);
+                    })
+                }).catch(err => {
                     this.setState({
                         showProgress: false,
                     })
-                })
+                    console.log('upload error', err);
+                });
             }
         });
     }

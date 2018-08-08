@@ -82,11 +82,22 @@ export const LoginNavigator = StackNavigator(
     }
 );
 
+export const MyTripNavigator = StackNavigator(
+    {
+        MY_TRIPS: { screen: MyTrips },
+        UserMyTrips : { screen: UserMyTrips},
+    },
+    {
+        initialRouteName: 'MY_TRIPS',
+        headerMode: 'none'
+    }
+);
+
 export const MainNavigator = TabNavigator(
     {
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
-        MY_TRIPS: { screen: MyTrips },
+        MY_TRIPS: { screen: MyTripNavigator },
         FAVORITES: { screen: Favourites},
 
         EXPLORE: { screen: Explore }
@@ -110,8 +121,6 @@ export const FullNavigator = StackNavigator(
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
-
-        UserMyTrips : { screen: UserMyTrips},
 
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },

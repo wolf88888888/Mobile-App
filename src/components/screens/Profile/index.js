@@ -49,25 +49,13 @@ class Profile extends Component {
     }
 
      async componentDidMount() {
-        AsyncStorage.getItem('currentCurrency', (err, result) => {
-            if (result) {
-                console.log("currentCurrencycurrentCurrency " + result);
-                this.setState({ currentCurrency: result });
-            }
-            if (err) console.error(`Error currencyLocPrice: ${err}`);
-        });
-
-        AsyncStorage.getItem('currencyLocPrice', (err, result) => {
-            console.log("currencyLocPricecurrencyLocPrice " + result);
-            if (result) {
-                this.setState({ currencyLocPrice: result });
-            }
-            if (err) console.error(`Error currencyLocPrice: ${err}`);
-        });
-
+        let currentCurrency = await AsyncStorage.getItem('currentCurrency');
+        let currencyLocPrice = await AsyncStorage.getItem('currencyLocPrice');
         let walletAddress = await userInstance.getLocAddress();
         let preferredCurrency = await userInstance.getCurrency();
         this.setState({
+            currentCurrency: currentCurrency,
+            currencyLocPrice: currencyLocPrice,
             walletAddres: walletAddress,
             preferredCurrency: preferredCurrency,
         });
@@ -246,9 +234,6 @@ class Profile extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={styles.titleConatiner}>
-                    <BackButton style={styles.closeButton} onPress={() => navigate('EXPLORE')} />
-                </View>
                 <Toast
                     ref="toast"
                     style={{ backgroundColor: '#DA7B61' }}
