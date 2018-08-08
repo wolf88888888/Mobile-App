@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+const dimensionWindows = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
@@ -309,5 +310,25 @@ const styles = StyleSheet.create({
         width: 24,
         resizeMode: 'contain'
       },
+      searchButtonView: {
+        margin: 10,
+        marginLeft: 18,
+        marginRight: 18,
+        alignItems: 'center',
+        backgroundColor: '#cc8068'
+    },
+    searchButtonText: {
+        color: '#fff',
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 17,
+        padding: 14
+    },
+    map: {
+        zIndex: -1,
+        marginTop:-65,
+        alignSelf: 'stretch',
+        width: dimensionWindows.width,
+        height: dimensionWindows.width * 5 / 6.5,
+    },
 });
 export default styles;

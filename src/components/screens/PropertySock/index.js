@@ -10,6 +10,8 @@ import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 var androidStomp = NativeModules.StompModule;
 var stomp = require('stomp-websocket-js');
@@ -79,6 +81,7 @@ class Property extends Component {
         this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
+        this.alterMap = this.alterMap.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
@@ -103,7 +106,9 @@ class Property extends Component {
             isLoading: true,
             noResultsFound: false,
             locRate: 0,
-            currencyIcon : ''
+            currencyIcon : '',
+            showResultsOnMap: false,
+            //initialLat : 040°52′N 34°34′E
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -130,7 +135,6 @@ class Property extends Component {
             this.stompIos();
         }
         else if (Platform.OS === 'android'){
-            console.log("anadroid");
             androidStomp.startSession(uid, mainUrl);
             DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
                 console.log(message),
@@ -158,6 +162,10 @@ class Property extends Component {
                     isLoading: false,
                 });
             });
+    }
+
+    alterMap(){
+        this.setState({showResultsOnMap : !this.state.showResultsOnMap});
     }
 
     onChangeHandler(property) {
@@ -315,6 +323,13 @@ class Property extends Component {
                     />
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
+
+                <TouchableOpacity onPress={this.alterMap}>
+                    <View style={styles.searchButtonView}>
+                        <Text style={styles.searchButtonText}>{this.state.showResultsOnMap ? "See Results List" : "See Results on Map"}</Text>
+                    </View>
+                </TouchableOpacity>
+
                 {this.state.isLoading && this.renderLoader()}
                 {this.state.noResultsFound && this.renderInfoTv()}
 
@@ -334,7 +349,7 @@ class Property extends Component {
                         />
 
 
-                    <FlatList style={styles.flatList}
+                    {/* <FlatList style={styles.flatList}
                             data={this.state.listings}
                             renderItem={
                                 ({item}) =>
@@ -375,7 +390,26 @@ class Property extends Component {
                                 </View>
                                 </TouchableOpacity>
                             }
-                        />
+                        /> */}
+
+                    <MapView
+                            style={styles.map}
+                            region={{
+                              latitude: 51.5074,
+                              longitude:  0.1278,
+                              latitudeDelta: 3,
+                              longitudeDelta: 3,
+                            }}
+                            debug={false}>
+                            {this.state.listings.map(marker => marker.lat != null && (
+                            <Marker
+                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
+                                title={marker.title}
+                                description={marker.description}
+                                />
+                            ))}
+
+                    </MapView>
                 </View>
             </View>
         );
@@ -394,10 +428,11 @@ class Property extends Component {
                     this.setState({noResultsFound: true,})
                 }
             } else {
-                console.log("2");
+                console.log(object);
                 this.setState(prevState => ({
                     listings: [...prevState.listings, object]
                   }));
+                  console.log(`checking it    lat: ${object.lat} long: ${object.lon}`)
             }
         } catch(e) {
             console.log(e);
