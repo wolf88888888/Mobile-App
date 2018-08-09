@@ -252,8 +252,11 @@ class Property extends Component {
         this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
     }
 
-    calloutClick(){
-        window.alert('Under development');
+    calloutClick = (item) =>{
+        if (clientRef) {
+            clientRef.disconnect();
+        }
+        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
     }
 
     renderAutocomplete() {
@@ -370,7 +373,7 @@ class Property extends Component {
                             {this.state.listings.map(marker => marker.lat != null && (
                             <Marker
                                 coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                onCalloutPress={()=> this.calloutClick()}
+                                onCalloutPress={this.calloutClick.bind(this, marker)}
                                 >
                                 <MapView.Callout
                                     tooltip={true}>

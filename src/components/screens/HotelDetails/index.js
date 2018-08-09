@@ -49,7 +49,7 @@ class HotelDetails extends Component {
 
         this.state = {
             hotel: {},
-            hotelFullDetails: {},
+            hotelFullDetails: [],
             dataSourcePreview: [],
             description: '',
             rooms: [],
@@ -69,17 +69,17 @@ class HotelDetails extends Component {
         this.state.urlForService = params ? params.urlForService : '';
         this.state.locRate = params ? params.locRate : '';
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
-        this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
-        this.state.countryName = params.hotelDetail.country;
-        this.state.latitude = params.hotelDetail.latitude;
-        this.state.longitude = params.hotelDetail.longitude;
-        this.state.hotelFullDetails = params;
+        // this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
+        // this.state.countryName = params.hotelDetail.country;
+        // this.state.latitude = params.hotelDetail.latitude;
+        // this.state.longitude = params.hotelDetail.longitude;
+        //this.state.hotelFullDetails = params;
         const hotelPhotos = [];
 
 
-        for (var i = 0; i < params.hotelDetail.hotelPhotos.length; i++) {
-            hotelPhotos.push({ uri: imgHost + params.hotelDetail.hotelPhotos[i]["url"] })
-        }
+        // for (var i = 0; i < params.hotelDetail.hotelPhotos.length; i++) {
+        //     hotelPhotos.push({ uri: imgHost + params.hotelDetail.hotelPhotos[i]["url"] })
+        // }
 
         this.state.description = this.state.hotel.description;
         // for (let i = 0; i < this.state.hotel.descriptions.length; i ++) {
@@ -89,14 +89,17 @@ class HotelDetails extends Component {
         //     }
         // }
 
-        this.state.dataSourcePreview = hotelPhotos;
+        
     }
 
     componentDidMount() {
         requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then(res => {
             // here you set the response in to json
             res.body.then(data => {
-                console.log(`hotel details ${data}`)
+                const hotelPhotos = [];
+                for (var i = 0; i < data.hotelPhotos.length; i++) {
+                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i]["url"] })
+                }
                 // here you parse your json
                 // here you set you data from json into your variables
                 this.setState({
@@ -107,6 +110,7 @@ class HotelDetails extends Component {
                     description: data.generalDescription,
                     latitude: data.latitude,
                     longitude: data.longitude,
+                    dataSourcePreview: hotelPhotos
                 });
             }).catch(err => {
                 console.log(err);
@@ -135,6 +139,7 @@ class HotelDetails extends Component {
                         <WhiteBackButton onPress={this.onClose} />
                     </View>
                     <View style={styles.body}>
+                        
                         <HotelDetailView
                             dataSourcePreview={this.state.dataSourcePreview}
                             title={this.state.hotel.name}
@@ -145,6 +150,7 @@ class HotelDetails extends Component {
                             description={this.state.description}
                             onBooking={this.onBooking}
                         />
+                        
 
                         <FacilitiesView
                             style={styles.roomfacility}
@@ -170,7 +176,6 @@ class HotelDetails extends Component {
                             hotelName={this.state.hotel.name}
                             hotelPrice={`LOC ${this.state.hotelFullDetails.locRate}`}
                             description={this.state.hotel.generalDescription}
-                            image={this.state.dataSourcePreview[0]['uri']}
                             lat={parseFloat(this.state.latitude)}
                             lon={parseFloat(this.state.longitude)}
                             radius={200} />
