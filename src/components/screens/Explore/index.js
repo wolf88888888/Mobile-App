@@ -82,6 +82,7 @@ class Explore extends Component {
                 adults: 2,
                 children: []
             }],
+            filter: {"showUnavailable":true,"name":"","minPrice":1,"maxPrice":5000,"stars":[0,1,2,3,4,5]},
             count: {
                 beds: 2,
                 bedrooms: 0,
@@ -272,7 +273,8 @@ class Explore extends Component {
                 locRate: this.state.locPrice,
                 currencyIcon: this.state.currencyIcon,
                 email: this.state.email,
-                token: this.state.token
+                token: this.state.token,
+                filter: encodeURI(JSON.stringify(this.state.filter)),
             });
         }
         else if (shouldBeNative) {

@@ -110,6 +110,7 @@ class Property extends Component {
             showResultsOnMap: false,
             initialLat : 0.40,
             initialLon: 34,
+            filter: undefined
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -126,9 +127,11 @@ class Property extends Component {
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
         this.state.locRate = params ? params.locRate : 0;
         this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
+        this.state.filter = params?params.filter:[];
 
-        this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-        mainUrl = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        
+        mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData+'&filters='+this.state.filter+'&page=0&sort=priceForSort,asc';
+        this.state.urlForService = mainUrl;
     }
 
     componentWillMount(){
@@ -246,7 +249,7 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        //this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
     }
 
     calloutClick(){

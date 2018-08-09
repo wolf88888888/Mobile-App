@@ -92,7 +92,7 @@ export default class GuestFormRow extends Component {
                             <Picker 
                                 selectedValue={this.state.gender}
                                 style={{ height: '100%', width: '100%', }}
-                                itemStyle={{backgroundColor: 'red', height: '100%', fontFamily: 'FuturaStd-Light', fontSize:17}}
+                                itemStyle={{backgroundColor: '#fff', height: '100%', fontFamily: 'FuturaStd-Light', fontSize:17}}
                                 onValueChange={this.onValueChange}>
                                 <Item label="Mr" value="Mr" />
                                 <Item label="Mrs" value="Mrs" />

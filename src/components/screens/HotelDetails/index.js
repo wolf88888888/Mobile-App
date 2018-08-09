@@ -96,6 +96,7 @@ class HotelDetails extends Component {
         requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then(res => {
             // here you set the response in to json
             res.body.then(data => {
+                console.log(`hotel details ${data}`)
                 // here you parse your json
                 // here you set you data from json into your variables
                 this.setState({
