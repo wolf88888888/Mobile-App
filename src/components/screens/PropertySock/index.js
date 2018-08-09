@@ -249,6 +249,10 @@ class Property extends Component {
         //this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
     }
 
+    calloutClick(){
+        window.alert('Under development');
+    }
+
     renderAutocomplete() {
         return (
             <ScrollView
@@ -363,9 +367,29 @@ class Property extends Component {
                             {this.state.listings.map(marker => marker.lat != null && (
                             <Marker
                                 coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                title={marker.title}
-                                description={marker.description}
-                                />
+                                onCalloutPress={()=> this.calloutClick()}
+                                >
+                                <MapView.Callout
+                                    tooltip={true}>
+                                    <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' ,backgroundColor: '#fff'}}>
+                                        <Image
+                                            style={{width: 100, height: 60}}
+                                            source={ marker.thumbnail !== null && {uri : imgHost + marker.thumbnail.url} } 
+                                        />
+                                        <Text style={styles.location}>
+                                            {marker.name}
+                                        </Text>
+                                        <Text style={styles.description}>
+                                            LOC {marker.price} / Night
+                                        </Text>
+                                        <Text style={styles.ratingsMap}>
+                                        {
+                                            Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                                        }
+                                        </Text>
+                                    </View>
+                                </MapView.Callout>
+                            </Marker>
                             ))}
                         </MapView>
 
@@ -383,7 +407,7 @@ class Property extends Component {
                                 
                                 
                                 <Image 
-                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url}} 
+                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url} } 
                                 style={styles.popularHotelsImage}/>
 
                                 <TouchableOpacity style={styles.favoritesButton}>

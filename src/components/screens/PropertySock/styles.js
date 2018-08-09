@@ -330,5 +330,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: '100%',
     },
+    location: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 13,
+        color: '#000000',
+        marginTop: 5,
+    },
+
+    description: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 10,
+        lineHeight:15,
+        fontWeight: 'bold',
+        color: '#000000',
+    },
+    ratingsMap: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 10,
+        lineHeight:15,
+        color: 'grey',
+    }
 });
 export default styles;
