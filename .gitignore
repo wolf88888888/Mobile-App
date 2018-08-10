@@ -69,4 +69,7 @@ yarn-error.log*
 
 # Builds
 build/
-.externalNativeBuild
+
+#library
+.externalNativeBuild/*
+/library/react-native-fast-crypto/android/.externalNativeBuild/*
