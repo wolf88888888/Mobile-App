@@ -1,4 +1,4 @@
-import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import React, { Component } from 'react';
 
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-easy-toast';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
@@ -123,12 +122,6 @@ class Explore extends Component {
         this.setState({
             token: token_value,
             email: email_value,
-        });
-
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 0,
-            delay: 0
         });
     }
 

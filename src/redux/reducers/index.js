@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import { payment } from '../common/reducers';
-import explore from '../../components/screens/Explore/reducer';
+import { RootNavigator } from '../../routing';
 
+function nav(state, action) {
+    const newState = RootNavigator.router.getStateForAction(action, state);
+    return newState || state;
+}
 const rootReducer = combineReducers({
-    paymentInfo: payment,
-    explore
+    nav,
 });
 
 export default rootReducer;

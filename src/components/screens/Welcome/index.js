@@ -139,7 +139,7 @@ class Welcome extends Component {
     }
 
     render() {
-        const { navigate, goBack } = this.props.navigation;
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
 

@@ -1,12 +1,10 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import rootReducer from '../reducers';
+import reducers from '../reducers';
+import {middleware} from '../../routing'
 
-
-const middlewares = [
-    thunk
-];
+const middlewares = [thunk, middleware];
 
 const enchancer = composeWithDevTools({
     serialize: true,
@@ -20,8 +18,8 @@ const enchancer = composeWithDevTools({
     }
 })(applyMiddleware(...middlewares));
 
-let store = createStore(rootReducer, enchancer); // eslint-disable-line
-
+let store = createStore(reducers, enchancer); // eslint-disable-line
+  
 if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     const acceptCallback = () => {

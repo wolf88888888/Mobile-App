@@ -1,18 +1,7 @@
-import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-
-import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import Icon from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
-import RNPickerSelect from 'react-native-picker-select';
-import SearchBar from '../../molecules/SearchBar';
-import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import SplashScreen from 'react-native-smart-splash-screen';
-import Toast from 'react-native-simple-toast';
-import _ from 'lodash';
-import { domainPrefix } from '../../../config';
-import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
