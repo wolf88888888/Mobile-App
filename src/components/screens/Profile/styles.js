@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#f0f1f3'
+    backgroundColor: '#f0f1f3',
+    paddingTop: 40,
   },
   titleConatiner: {
       width:'100%',

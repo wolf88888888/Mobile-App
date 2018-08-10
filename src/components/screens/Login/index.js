@@ -4,10 +4,12 @@ import {
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View
+    View,
+    KeyboardAvoidingView
 } from 'react-native';
 import React, { Component } from 'react';
 import { validateEmail, validatePassword, validatePassword1 } from '../../../utils/validation';
+import { setEmail } from '../../../utils/userInstance';
 
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';

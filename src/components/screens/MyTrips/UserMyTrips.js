@@ -3,12 +3,12 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 import { domainPrefix, imgHost } from '../../../config';
 
-import BackButton from '../../atoms/BackButton';
 import Dash from 'react-native-dash';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import requester from '../../../initDependencies';
+import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
 
 class UserMyTrips extends Component {
@@ -55,17 +55,11 @@ class UserMyTrips extends Component {
         return true;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         //Loading user info for user image
-        requester.getUserInfo().then(res => {
-            res.body.then(data => {
-                this.setState({
-                    userImageUrl: data.image,
-                });
-            }).catch(err => {
-                //if error arises in getting user info
-                console.log(err);
-            });
+        let profileImage = await userInstance.getProfileImage();
+        this.setState({
+            userImageUrl: profileImage==null? '' : profileImage,
         });
     }
 
@@ -110,8 +104,6 @@ class UserMyTrips extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.chatToolbar}>
-                    <BackButton onPress={this.onBackPress} />
-
                     <Text style={styles.title}>Your Trips</Text>
                 </View>
 
@@ -159,11 +151,6 @@ class UserMyTrips extends Component {
                 />
             </View>
         )
-    }
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
-        this.props.navigation.state.params.gotoBooking();
     }
 }
 

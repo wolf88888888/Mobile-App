@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView
+    ScrollView,
+    StatusBar
 } from 'react-native';
 import Image from 'react-native-remote-svg';
 import { autobind } from 'core-decorators';
@@ -53,6 +54,11 @@ class CongratsWallet extends Component {
         const { navigate } = this.props.navigation;
         return (
             <TouchableWithoutFeedback>
+                <StatusBar
+                    backgroundColor="rgba(0,0,0,0)"
+                    translucent
+                    barStyle="light-content"
+                />
                 <View style={styles.container}>
                     <View style={styles.main}>
                         <Image

@@ -105,9 +105,9 @@ class CreateAccount extends Component {
                 enableOnAndroid={true} //eslint-disable-line
                 enableAutoAutomaticScroll={(Platform.OS === 'ios')}
             >
-                <View style={styles.container}>
+                <View style={styles.main_container}>
                     <WhiteBackButton style={styles.closeButton} onPress={() => goBack()} />
-
+                    
                     <View style={styles.lowOpacity}>
                         <Image
                             source={require('../../../assets/get-started-white-outline.png')}
@@ -193,8 +193,8 @@ class CreateAccount extends Component {
                                         setTimeout(() => this.setState({ checkZIndex: 1 }), 150);
                                     }}
                                     activeTextColor="#DA7B61"
-                                    activeBackgroundColor="#e4a193"
-                                    inactiveBackgroundColor="#DA7B61"
+                                    activeBackgroundColor="#DA7B61"
+                                    inactiveBackgroundColor="#e4a193"
                                     switchWidth={62}
                                     switchBorderColor="#e4a193"
                                     switchBorderWidth={1}
@@ -251,7 +251,21 @@ const pickerSelectStyles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 25,
         height: 50,
-    }
+    },
+    icon: {
+		position: 'absolute',
+		backgroundColor: 'transparent',
+		borderTopWidth: 5,
+		borderTopColor: 'white',
+		borderRightWidth: 5,
+		borderRightColor: 'transparent',
+		borderLeftWidth: 5,
+		borderLeftColor: 'transparent',
+		width: 0,
+		height: 0,
+		top: 20,
+		right: 15,
+	},
 });
 
 export default CreateAccount;

@@ -62,6 +62,8 @@ import PropertyList from '../components/screens/PropertyList';
 import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 
+import PropertySock from '../components/screens/PropertySock';
+
 export const LoginNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
@@ -80,11 +82,22 @@ export const LoginNavigator = StackNavigator(
     }
 );
 
+export const MyTripNavigator = StackNavigator(
+    {
+        MY_TRIPS: { screen: MyTrips },
+        UserMyTrips : { screen: UserMyTrips},
+    },
+    {
+        initialRouteName: 'MY_TRIPS',
+        headerMode: 'none'
+    }
+);
+
 export const MainNavigator = TabNavigator(
     {
         PROFILE: { screen: Profile },
         MESSAGES: { screen: Inbox },
-        MY_TRIPS: { screen: MyTrips },
+        MY_TRIPS: { screen: MyTripNavigator },
         FAVORITES: { screen: Favourites},
 
         EXPLORE: { screen: Explore }
@@ -108,8 +121,6 @@ export const FullNavigator = StackNavigator(
         PropertyFacilitesScreen: { screen: PropertyFacilites },
         PropertyRulesScreen: { screen: PropertyRules },
         PropertyPricesScreen: { screen: PropertyPrices },
-
-        UserMyTrips : { screen: UserMyTrips},
 
         ReviewHouseScreen: { screen: ReviewHouse },
         ReviewPayScreen: { screen: ReviewPay },
@@ -136,6 +147,7 @@ export const FullNavigator = StackNavigator(
         SingleWishlist: {screen: SingleWishlist},
         Debug : {screen: Debug},
         Chat: {screen: Chat},
+        PropertySock: {screen: PropertySock},
     },
     {
         initialRouteName: 'MainScreen',

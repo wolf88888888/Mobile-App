@@ -15,9 +15,10 @@ import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
+import { userInstance } from '../../../utils/userInstance';
 
-const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
-
+const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const openPropertySock = true;
 class Explore extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
@@ -39,7 +40,7 @@ class Explore extends Component {
             .add(1, 'day');
         const endDate = moment()
             .add(2, 'day');
-
+        
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
@@ -125,6 +126,13 @@ class Explore extends Component {
             animationType: SplashScreen.animationType.scale,
             duration: 0,
             delay: 0
+        });
+        requester.getUserInfo().then(res => {
+            res.body.then(data => {
+                userInstance.setUserData(data);
+            }).catch(err => {
+                console.log(err);
+            });
         });
     }
 
@@ -253,7 +261,29 @@ class Explore extends Component {
     }
 
     gotoSearch() {
-        if (shouldBeNative) {
+        //Open new property screen that uses sock-js
+        if (shouldBeNative && openPropertySock){
+            this.props.navigation.navigate('PropertySock', {
+                searchedCity: this.state.search,
+                searchedCityId: 72,
+                checkInDate: this.state.checkInDate,
+                checkOutDate: this.state.checkOutDate,
+                guests: this.state.guests,
+                children: this.state.children,
+                countryId: this.state.countryId,
+                regionId: this.state.regionId,
+                isHotelSelected: this.state.isHotelSelected,
+                currency: this.state.language,
+                checkOutDateFormated: this.state.checkOutDateFormated,
+                checkInDateFormated: this.state.checkInDateFormated,
+                roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+                locRate: this.state.locPrice,
+                currencyIcon: this.state.currencyIcon,
+                email: this.state.email,
+                token: this.state.token
+            });
+        }
+        else if (shouldBeNative) {
             if (!this.state.searchHotel) {
                 //user searched for home
                 this.props.navigation.navigate('PropertyList', {
@@ -278,23 +308,9 @@ class Explore extends Component {
                     startDate: this.state.checkInDateFormated,
                     endDate: this.state.checkOutDateFormated
                 });
-                // this.props.navigation.navigate('Debug', {
-                //     searchedCity: this.state.search,
-                //     searchedCityId: 72,
-                //     checkInDate: this.state.checkInDate,
-                //     checkOutDate: this.state.checkOutDate,
-                //     guests: this.state.guests,
-                //     children: this.state.children,
-                //     regionId: this.state.regionId,
-                //     currency: this.state.language,
-                //     checkOutDateFormated: this.state.checkOutDateFormated,
-                //     checkInDateFormated: this.state.checkInDateFormated,
-                //     roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                //     locRate : this.state.locPrice,
-                //     currencyIcon: this.state.currencyIcon
-                // });
             }
         }
+        
         else {
             if (!this.state.searchHotel) {
                 this.props.navigation.navigate('PropertyList', {

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import requester from '../../../initDependencies';
+import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
 
 export default class GuestFormRow extends Component {
@@ -11,6 +12,7 @@ export default class GuestFormRow extends Component {
         super(props);
 
         this.handleGuestInfo = this.handleGuestInfo.bind(this);
+        this.getUserName = this.getUserName.bind(this);
 
         this.state = {
             gender: [
@@ -30,20 +32,19 @@ export default class GuestFormRow extends Component {
             },
             guestRecord: {}
         }
-        if (this.props.itemIndex == 0) {
-            requester.getUserInfo().then(res => {
-                res.body.then(data => {
-                    this.setState({
-                        guest: { ...this.state.guest, firstName: data.firstName == null ? '' : data.firstName, lastName: data.lastName == null ? '' : data.lastName },
-                    });
-                    this.props.onFirstNameChange(0, data.firstName == null ? '' : data.firstName);
-                    this.props.onLastNameChange(0, data.lastName == null ? '' : data.lastName)
-                }).catch(err => {
-                    console.log(err);
-                });
-            });
-        }
+        this.getUserName();
+    }
 
+    async getUserName() {
+        if (this.props.itemIndex == 0) {
+            let firstName = await userInstance.getFirstName();
+            let lastName = await userInstance.getLastName();
+            this.setState({
+                guest: { ...this.state.guest, firstName: firstName == null ? '' : firstName, lastName: lastName == null ? '' : lastName },
+            });
+            this.props.onFirstNameChange(0, firstName == null ? '' : firstName);
+            this.props.onLastNameChange(0, lastName == null ? '' : lastName);
+        }
     }
 
     handleGuestInfo() {
@@ -65,10 +66,7 @@ export default class GuestFormRow extends Component {
     }
 
     onValueChange = value => {
-        this.setState({
-            gender: value,
-            genderRepresentation: value
-        });
+        this.setState({ guest: { ...this.state.guest, genderRepresentation: value } })
     }
 
     textDone() {
@@ -92,11 +90,11 @@ export default class GuestFormRow extends Component {
                     <View style={styles.genderFlex}>
                         <View style={[styles.gender, styles.spaceRight]}>
 
-                            <Picker selectedValue={this.state.gender}
+                            <Picker 
+                                selectedValue={this.state.gender}
                                 style={{ height: '100%', width: '100%', }}
-                                itemStyle={{ height: '100%', fontFamily: 'FuturaStd-Light', }}
+                                itemStyle={{backgroundColor: 'red', height: '100%', fontFamily: 'FuturaStd-Light', fontSize:17}}
                                 onValueChange={this.onValueChange}>
-
                                 <Item label="Mr" value="Mr" />
                                 <Item label="Mrs" value="Mrs" />
                             </Picker>
@@ -106,7 +104,6 @@ export default class GuestFormRow extends Component {
                         <TextInput
                             style={[styles.formField, styles.spaceRight]}
                             onChangeText={(text) => { this.props.onFirstNameChange(this.props.itemIndex, text), this.setState({ guest: { ...this.state.guest, firstName: text } }) }}
-                            //onBlur={() => this.textDone()}
                             placeholder={this.props.itemIndex == 0 ? "First Name" : "Optional"}
                             underlineColorAndroid="#fff"
                             value={this.state.guest.firstName}

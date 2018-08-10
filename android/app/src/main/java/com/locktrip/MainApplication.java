@@ -48,7 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MapsPackage(),
           new ImagePickerPackage(),
           new FBSDKPackage(mCallbackManager),
-          new RNFastCryptoPackage()
+          new RNFastCryptoPackage(),
+          new StompPackage()
       );
     }
 
