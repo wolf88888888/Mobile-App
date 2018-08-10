@@ -15,6 +15,7 @@ import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
+import { userInstance } from '../../../utils/userInstance';
 
 const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
@@ -39,7 +40,7 @@ class Explore extends Component {
             .add(1, 'day');
         const endDate = moment()
             .add(2, 'day');
-
+        
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
@@ -126,6 +127,13 @@ class Explore extends Component {
             animationType: SplashScreen.animationType.scale,
             duration: 0,
             delay: 0
+        });
+        requester.getUserInfo().then(res => {
+            res.body.then(data => {
+                userInstance.setUserData(data);
+            }).catch(err => {
+                console.log(err);
+            });
         });
     }
 

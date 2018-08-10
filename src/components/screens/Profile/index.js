@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
 import requester from '../../../initDependencies';
+import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
 
 class Profile extends Component {
@@ -26,10 +27,14 @@ class Profile extends Component {
             ethBalance: '0.0',
             preferredCurrency: '',
             currentCurrency: 'EUR',
-            currencies: [],
+            currencies: [
+                {code: "USD", id: 1},
+                {code: "GBP", id: 2},
+                {code: "EUR", id: 3},
+            ],
             currencyLocPrice: 0,
             modalVisible: false,
-            showProgress: true,
+            showProgress: false,
             loadMessage: 'Loading...'
         }
         this.showModal = this.showModal.bind(this);
@@ -43,50 +48,27 @@ class Profile extends Component {
         this.getCurrencyRate = this.getCurrencyRate.bind(this);
     }
 
-    componentDidMount() {
-        AsyncStorage.getItem('currentCurrency', (err, result) => {
-            if (result) {
-                console.log("currentCurrencycurrentCurrency " + result);
-                this.setState({ currentCurrency: result });
-            }
-            if (err) console.error(`Error currencyLocPrice: ${err}`);
+     async componentDidMount() {
+        let currentCurrency = await AsyncStorage.getItem('currentCurrency');
+        let currencyLocPrice = await AsyncStorage.getItem('currencyLocPrice');
+        let walletAddress = await userInstance.getLocAddress();
+        let preferredCurrency = await userInstance.getCurrency();
+        this.setState({
+            currentCurrency: currentCurrency,
+            currencyLocPrice: currencyLocPrice,
+            walletAddres: walletAddress,
+            preferredCurrency: preferredCurrency,
         });
-
-        AsyncStorage.getItem('currencyLocPrice', (err, result) => {
-            console.log("currencyLocPricecurrencyLocPrice " + result);
-            if (result) {
-                this.setState({ currencyLocPrice: result });
-            }
-            if (err) console.error(`Error currencyLocPrice: ${err}`);
-        });
-
-        requester.getUserInfo().then(res => {
-            res.body.then(data => {
-                this.setState({
-                    showProgress: false,
-                    info: data,
-                    currencies: data.currencies,
-                    walletAddress: data.locAddress == null ? '' : data.locAddress,
-                    preferredCurrency: data.preferredCurrency == null ? data.currencies[0] : data.preferredCurrency,
-                });
-                console.log('userINFO-------', data);
-                console.log(data.locAddress);
-                if (data.locAddress != null && data.locAddress != '') {
-                    console.log("start ");
-                    Wallet.getBalance(data.locAddress).then(x => {
-                        const ethBalance = x / (Math.pow(10, 18));
-                        this.setState({ ethBalance: ethBalance });
-                    });
-                    Wallet.getTokenBalance(data.locAddress).then(y => {
-                        const locBalance = y / (Math.pow(10, 18));
-                        this.setState({ locBalance: locBalance });
-                    });
-                }
-            }).catch(err => {
-                this.hideProgressView();
-                console.log(err);
+        if (walletAddress != '') {
+            Wallet.getBalance(walletAddress).then(x => {
+                const ethBalance = x / (Math.pow(10, 18));
+                this.setState({ ethBalance: ethBalance });
             });
-        });
+            Wallet.getTokenBalance(walletAddress).then(y => {
+                const locBalance = y / (Math.pow(10, 18));
+                this.setState({ locBalance: locBalance });
+            });
+        }
     }
     componentDidCatch(errorString, errorInfo) {
         console.log("componentDidCatch");
@@ -105,12 +87,11 @@ class Profile extends Component {
         this.showModal();
     }
 
-    onSaveCurrency(currency) {
+    async onSaveCurrency(currency) {
         index = _.findIndex(this.state.currencies, function (o) {
             return o.id == currency.id;
         })
         currency.code = this.state.currencies[index < 0 ? 1 : index].code
-        console.log('currency_code', currency.code);
         AsyncStorage.setItem('currentCurrency', currency.code);
         this.setState({
             loadMessage: 'Updating user data...',
@@ -118,38 +99,44 @@ class Profile extends Component {
             preferredCurrency: currency,
             currentCurrency: currency.code,
         })
-
+        let firstName = await userInstance.getFirstName();
+        let lastName = await userInstance.getLastName();
+        let phoneNumber = await userInstance.getPhoneNumber();
+        let preferredLanguage = await userInstance.getLanguage();
+        let gender = await userInstance.getGender();
+        let country = await userInstance.getCountry();
+        let city = await userInstance.getCity();
+        let locAddress = await userInstance.getLocAddress();
+        let jsonFile = await userInstance.getJsonFile();
         let day = '00';
         let month = '00';
         let year = '0000';
-
-        if (this.state.info.birthday !== null) {
-            let birthday = moment.utc(this.state.info.birthday);
+        let birth = await userInstance.getBirthday();
+        if (birth !== null) {
+            let birthday = moment.utc(parseInt(birth, 10));
             day = birthday.format('DD');
             month = birthday.format('MM');
             year = birthday.format('YYYY');
         }
 
         let userInfo = {
-            firstName: this.state.info.firstName,
-            lastName: this.state.info.lastName,
-            phoneNumber: this.state.info.phoneNumber,
-            preferredLanguage: this.state.info.preferredLanguage,
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            preferredLanguage: preferredLanguage,
             preferredCurrency: parseInt(currency.id, 10),
-            gender: this.state.info.gender,
-            country: parseInt(this.state.info.country.id, 10),
-            city: parseInt(this.state.info.city.id, 10),
+            gender: gender,
+            country: parseInt(country.id, 10),
+            city: parseInt(city.id, 10),
             birthday: `${day}/${month}/${year}`,
-            locAddress: this.state.info.locAddress,
-            jsonFile: this.state.info.jsonFile
+            locAddress: locAddress,
+            jsonFile: jsonFile
         };
-
         Object.keys(userInfo).forEach((key) => (userInfo[key] === null || userInfo[key] === '') && delete userInfo[key]);
         this.showProgressView();
         requester.updateUserInfo(userInfo, null).then(res => {
             if (res.success) {
                 this.getCurrencyRate(currency.code);
-                console.log('success updating userdata')
             }
             else {
                 this.hideProgressView();
@@ -247,9 +234,6 @@ class Profile extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={styles.titleConatiner}>
-                    <BackButton style={styles.closeButton} onPress={() => navigate('EXPLORE')} />
-                </View>
                 <Toast
                     ref="toast"
                     style={{ backgroundColor: '#DA7B61' }}

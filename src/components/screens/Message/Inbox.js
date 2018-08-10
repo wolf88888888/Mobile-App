@@ -10,7 +10,6 @@ import {
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
-import BackButton from '../../atoms/BackButton';
 import InboxMessagesView from './InboxMessagesView';
 import { ListView } from 'react-native';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
@@ -103,15 +102,13 @@ class Inbox extends Component {
         return (
             <View style={styles.InboxView}>
                 {/* Main Container Start */}
-
-                <BackButton onPress={this.onBackPress} />
+                <View style={[styles.topText]}>
+                    {/* Top Text Start */}
+                    <Text style={[styles.heading]}>Inbox</Text>
+                    <Text style={styles.subHeading}>You have {this.state.inboxMessages.length} unread messages</Text>
+                    {/* Top Text end */}
+                </View>
                 <ScrollView>
-                    <View style={[styles.topText]}>
-                        {/* Top Text Start */}
-                        <Text style={[styles.heading]}>Inbox</Text>
-                        <Text style={styles.subHeading}>You have {this.state.inboxMessages.length} unread messages</Text>
-                        {/* Top Text end */}
-                    </View>
                     <FlatList data={this.state.inboxMessages} // Data source
                         // List Start
                         renderItem={({ item, index }) => (
@@ -139,15 +136,5 @@ class Inbox extends Component {
             </View>
         );
     }
-
-    // to go back on the previous screen use this function start
-    onBackPress = () => {
-
-        this
-            .props
-            .navigation
-            .navigate('PROFILE');
-    }
-    // to go back on the previous screen use this function end
 }
 export default Inbox;

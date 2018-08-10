@@ -16,18 +16,20 @@ import EditSchoolModal from '../../atoms/EditSchoolModal';
 import EditWorkModal from '../../atoms/EditWorkModal';
 import Footer from '../../atoms/Footer';
 import Image from 'react-native-remote-svg';
-import ImagePicker from 'react-native-image-picker'
+import ImagePicker from 'react-native-image-picker';
 import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import UserProfileHomes from '../../organisms/UserProfileHomes'
-import UserProfileReviews from '../../organisms/UserProfileReviews'
-import UserProfileSummary from '../../organisms/UserProfileSummary'
-import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction'
-import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo'
+import UserProfileHomes from '../../organisms/UserProfileHomes';
+import UserProfileReviews from '../../organisms/UserProfileReviews';
+import UserProfileSummary from '../../organisms/UserProfileSummary';
+import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction';
+import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo';
+import  { userInstance } from '../../../utils/userInstance';
+import requester from '../../../initDependencies';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { imgHost } from '../../../config.js'
+import { imgHost, apiHost, domainPrefix } from '../../../config.js';
 import styles from './styles';
 
 class EditUserProfile extends Component {
@@ -104,53 +106,63 @@ class EditUserProfile extends Component {
     }
 
     async componentDidMount() {
-        let about = await AsyncStorage.getItem('aboutme');
-        let governmentId = await AsyncStorage.getItem('governmentId');
-        let school = await AsyncStorage.getItem('school');
-        let work = await AsyncStorage.getItem('work');
+        let firstName = await userInstance.getFirstName();
+        let lastName = await userInstance.getLastName();
+        let email = await userInstance.getEmail();
+        let phoneNumber = await userInstance.getPhoneNumber();
+        let preferredLanguage = await userInstance.getLanguage();
+        let preferredCurrency = await userInstance.getCurrency();
+        let gender = await userInstance.getGender();
+        let country = await userInstance.getCountry();
+        let city = await userInstance.getCity();
+        let locAddress = await userInstance.getLocAddress();
+        let jsonFile = await userInstance.getJsonFile();
+        let profileImage = await userInstance.getProfileImage();
+        let about = await userInstance.getAbout();
+        let governmentId = await userInstance.getGovernmentId();
+        let school = await userInstance.getSchool();
+        let work = await userInstance.getWork();
+        let day = '00';
+        let month = '00';
+        let year = '0000';
+        let birth = await userInstance.getBirthday();
+        if (birth !== null) {
+            let birthday = moment.utc(parseInt(birth, 10));
+            day = birthday.format('DD');
+            month = birthday.format('MM');
+            year = birthday.format('YYYY');
+        }
 
         this.setState({
-            about: about != null ? about : '',
-            governmentId: governmentId != null ? governmentId : '',
-            school: school != null ? school : '',
-            work: work != null ? work : '',
-        })
-
-        requester.getUserInfo().then(res => {
+            about: about,
+            governmentId: governmentId,
+            school: school,
+            work: work,
+            city: city,
+            countries: [],
+            country: country,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            gender: gender,
+            image: profileImage,
+            locAddress: locAddress,
+            phoneNumber: phoneNumber,
+            preferredCurrency: preferredCurrency == null ? 0 : preferredCurrency.id,
+            preferredLanguage: preferredLanguage == null ? 'English' : preferredLanguage,
+            jsonFile: jsonFile,
+            day: day,
+            month: month,
+            year: year,
+        });
+        requester.getCountries().then(res => {
             res.body.then(data => {
-
-                let day = '00';
-                let month = '00';
-                let year = '0000';
-
-                if (data.birthday !== null) {
-                    let birthday = moment.utc(data.birthday);
-                    day = birthday.format('DD');
-                    month = birthday.format('MM');
-                    year = birthday.format('YYYY');
-                }
-
                 this.setState({
-                    city: data.city == null ? '' : data.city,
-                    countries: data.countries == null ? [] : data.countries,
-                    country: data.country == null ? data.countries[0] : data.country,
-                    email: data.email == null ? '' : data.email,
-                    firstName: data.firstName == null ? '' : data.firstName,
-                    lastName: data.lastName == null ? '' : data.lastName,
-                    gender: data.gender == null ? 'men' : data.gender,
-                    image: data.image == null ? '' : data.image,
-                    locAddress: data.locAddress == null ? '' : data.locAddress,
-                    phoneNumber: data.phoneNumber == null ? '' : data.phoneNumber,
-                    preferredCurrency: data.preferredCurrency == null ? data.currencies[0].id : data.preferredCurrency.id,
-                    preferredLanguage: data.preferredLanguage == null ? 'English' : data.preferredLanguage,
-                    jsonFile: data.jsonFile == null ? '' : data.jsonFile,
-                    day: day,
-                    month: month,
-                    year: year,
-                });
+                    countries: data.content,
+                })
             })
         }).catch(err => {
-            console.log(err);
+            console.log('countries--error--', err);
         });
     }
 
@@ -171,7 +183,7 @@ class EditUserProfile extends Component {
         return new File([u8arr], filename, { type: mime });
     }
 
-    onPhoto() {
+    async onPhoto() {
         let options = {
             title: 'Select profile image',
             storageOptions: {
@@ -179,6 +191,7 @@ class EditUserProfile extends Component {
                 path: '/'
             }
         };
+        const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -192,21 +205,37 @@ class EditUserProfile extends Component {
             else {
                 this.setState({
                     showProgress: true,
-                })
-
-                requester.uploadPhoto(response.uri).then(res => {
-                    if (res.success) {
-                        res.body.then(data => {
-                            console.log('upload result', data.thumbnail)
-                            this.setState({
-                                image: data.thumbnail
-                            })
+                });
+                var data = new FormData();
+                data.append('image', {
+                    uri: response.uri,
+                    name: 'selfie.jpg',
+                    type: 'image/jpg'
+                });
+                fetch(`${apiHost}users/me/images/upload`, {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data;',
+                        'Authorization': token_value
+                      },
+                    body: data
+                }).then(res => { res.json().
+                    then(data => {
+                        this.setState({
+                            showProgress: false,
+                            image: data.thumbnail
                         });
-                    }
+                        userInstance.setProfileImage(data.thumbnail);
+                    }).catch(err => {
+                        console.log('upload error', err);
+                    })
+                }).catch(err => {
                     this.setState({
                         showProgress: false,
                     })
-                })
+                    console.log('upload error', err);
+                });
             }
         });
     }
@@ -443,11 +472,10 @@ class EditUserProfile extends Component {
             showProgress: true
         });
 
-        AsyncStorage.setItem('aboutme', this.state.about);
-        AsyncStorage.setItem('governmentId', this.state.governmentId);
-        AsyncStorage.setItem('school', this.state.school);
-        AsyncStorage.setItem('work', this.state.work);
-
+        userInstance.setAbout(this.state.about==null? '' : this.state.about);
+        userInstance.setGovernmentId(this.state.governmentId==null? '' : this.state.governmentId);
+        userInstance.setSchool(this.state.school==null? '' : this.state.school);
+        userInstance.setWork(this.state.work==null? '' : this.state.work);
 
         let userInfo = {
             firstName: this.state.firstName,
@@ -467,6 +495,14 @@ class EditUserProfile extends Component {
 
         requester.updateUserInfo(userInfo, null).then(res => {
             if (res.success) {
+                userInstance.setFirstName(userInfo.firstName);
+                userInstance.setLastName(userInfo.lastName);
+                userInstance.setPhoneNumber(userInfo.phoneNumber);
+                userInstance.setLanguage(userInfo.preferredLanguage);
+                userInstance.setGender(userInfo.gender);
+                userInstance.setCountry(this.state.country);
+                userInstance.setCity(this.state.city);
+                userInstance.setBirthday(new Date(`${this.state.year}/${this.state.month}/${this.state.day} 00:00:00`).getTime());
                 this.setState({
                     showProgress: false
                 });

@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 
     InboxView: {
         flex: 1,
+        paddingTop: 40,
     },
 
     tr:{

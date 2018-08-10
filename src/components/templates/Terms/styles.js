@@ -2,8 +2,10 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'space-between',
         backgroundColor: '#f0f1f3',
         padding: 15
     },
@@ -25,7 +27,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-between',
-        marginTop: '10%'
+        marginTop: '10%',
+        marginBottom: 10
     },
     acceptButtonView: {
         display: 'flex',
