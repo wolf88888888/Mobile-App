@@ -1,3 +1,0 @@
-D:/React Native/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/release/x86/CMakeFiles/edit_cache.dir
-D:/React Native/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/release/x86/CMakeFiles/crypto_bridge.dir
-D:/React Native/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/release/x86/CMakeFiles/rebuild_cache.dir
