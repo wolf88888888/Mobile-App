@@ -16,7 +16,7 @@ import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
 
-const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 
 class Explore extends Component {
     static propTypes = {
