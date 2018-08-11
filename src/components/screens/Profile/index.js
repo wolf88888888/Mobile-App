@@ -25,7 +25,7 @@ class Profile extends Component {
             walletAddress: '',
             locBalance: 0,
             ethBalance: '0.0',
-            preferredCurrency: '',
+            preferredCurrency: { code: "EUR", id: 3 },
             currentCurrency: { code: "EUR", id: 3 },
             currencies: [
                 {code: "USD", id: 1},
@@ -49,10 +49,11 @@ class Profile extends Component {
     }
 
      async componentDidMount() {
-        let currentCurrency = await userInstance.getCurrency();
-        let currencyLocPrice = await AsyncStorage.getItem('currencyLocPrice');
+        let currentCurrency = await userInstance.getCurrency() || this.state.currentCurrency;
+        let currencyLocPrice = await AsyncStorage.getItem('currencyLocPrice') || this.state.currencyLocPrice;
         let walletAddress = await userInstance.getLocAddress();
-        let preferredCurrency = await userInstance.getCurrency();
+        let preferredCurrency = await userInstance.getCurrency() || this.state.preferredCurrency;
+        console.log('current----currency', currentCurrency);
         this.setState({
             currentCurrency: currentCurrency,
             currencyLocPrice: currencyLocPrice,
