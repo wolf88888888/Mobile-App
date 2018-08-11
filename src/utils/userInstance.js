@@ -58,7 +58,7 @@ export const userInstance = {
     },
 
     setBirthday: function(birthday) {
-        AsyncStorage.setItem(birthday_key, birthday.toString());
+        AsyncStorage.setItem(birthday_key, birthday==null? '' : birthday.toString());
     },
 
     getBirthday: async function() {
