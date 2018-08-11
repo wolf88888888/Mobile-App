@@ -26,7 +26,7 @@ class Profile extends Component {
             locBalance: 0,
             ethBalance: '0.0',
             preferredCurrency: '',
-            currentCurrency: 'EUR',
+            currentCurrency: { code: "EUR", id: 3 },
             currencies: [
                 {code: "USD", id: 1},
                 {code: "GBP", id: 2},
@@ -49,7 +49,7 @@ class Profile extends Component {
     }
 
      async componentDidMount() {
-        let currentCurrency = await AsyncStorage.getItem('currentCurrency');
+        let currentCurrency = await userInstance.getCurrency();
         let currencyLocPrice = await AsyncStorage.getItem('currencyLocPrice');
         let walletAddress = await userInstance.getLocAddress();
         let preferredCurrency = await userInstance.getCurrency();
@@ -69,6 +69,8 @@ class Profile extends Component {
                 this.setState({ locBalance: locBalance });
             });
         }
+        this.showProgressView();
+        this.getCurrencyRate(currentCurrency);
     }
     componentDidCatch(errorString, errorInfo) {
         console.log("componentDidCatch");
@@ -92,12 +94,12 @@ class Profile extends Component {
             return o.id == currency.id;
         })
         currency.code = this.state.currencies[index < 0 ? 1 : index].code
-        AsyncStorage.setItem('currentCurrency', currency.code);
+        AsyncStorage.setItem('currentCurrency', currency);
         this.setState({
             loadMessage: 'Updating user data...',
             modalVisible: false,
             preferredCurrency: currency,
-            currentCurrency: currency.code,
+            currentCurrency: currency,
         })
         let firstName = await userInstance.getFirstName();
         let lastName = await userInstance.getLastName();
@@ -136,7 +138,7 @@ class Profile extends Component {
         this.showProgressView();
         requester.updateUserInfo(userInfo, null).then(res => {
             if (res.success) {
-                this.getCurrencyRate(currency.code);
+                this.getCurrencyRate(currency);
             }
             else {
                 this.hideProgressView();
@@ -145,28 +147,32 @@ class Profile extends Component {
         });
     }
 
-    getCurrencyRate(currencyCode) {
-        requester.getLocRateByCurrency(currencyCode).then(res => {
+    getCurrencyRate(currency) {
+        
+        requester.getLocRateByCurrency(currency.code).then(res => {
             res.body.then(data => {
                 this.hideProgressView();
-                if (currencyCode == 'EUR') {
-                    AsyncStorage.setItem('currentCurrency', 'EUR');
-                    AsyncStorage.setItem('currencyLocPrice', data[0].price_eur);
+                if (currency.code == 'EUR') {
+                    userInstance.setCurrency(currency);
+                    AsyncStorage.setItem('currencyLocPrice', data[0].price_eur.toString());
                     this.setState({
+                        currentCurrency: currency,
                         currencyLocPrice: data[0].price_eur,
                     });
                 }
-                else if (currencyCode == 'USD') {
-                    AsyncStorage.setItem('currentCurrency', 'USD');
-                    AsyncStorage.setItem('currencyLocPrice', data[0].price_usd);
+                else if (currency.code == 'USD') {
+                    userInstance.setCurrency(currency);
+                    AsyncStorage.setItem('currencyLocPrice', data[0].price_usd.toString());
                     this.setState({
+                        currentCurrency: currency,
                         currencyLocPrice: data[0].price_usd,
                     });
                 }
-                else if (currencyCode == 'GBP') {
-                    AsyncStorage.setItem('currentCurrency', 'GBP');
-                    AsyncStorage.setItem('currencyLocPrice', data[0].price_gbp);
+                else if (currency.code == 'GBP') {
+                    userInstance.setCurrency(currency);
+                    AsyncStorage.setItem('currencyLocPrice', data[0].price_gbp.toString());
                     this.setState({
+                        currentCurrency: currency,
                         currencyLocPrice: data[0].price_gbp,
                     });
 
@@ -221,13 +227,13 @@ class Profile extends Component {
         console.log("locPrice: " + currencyLocPrice);
         let price = locBalance * currencyLocPrice;
         var displayPrice = '';
-        if (currentCurrency == "EUR") {
+        if (currentCurrency.code == "EUR") {
             displayPrice = '€';
         }
-        else if (currentCurrency == "USD") {
+        else if (currentCurrency.code == "USD") {
             displayPrice = '$';
         }
-        else if (currentCurrency == "GBP") {
+        else if (currentCurrency.code == "GBP") {
             displayPrice = '£';
         }
         displayPrice += price.toFixed(2);
