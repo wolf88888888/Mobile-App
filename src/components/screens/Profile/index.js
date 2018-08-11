@@ -53,7 +53,6 @@ class Profile extends Component {
         let currencyLocPrice = await AsyncStorage.getItem('currencyLocPrice') || this.state.currencyLocPrice;
         let walletAddress = await userInstance.getLocAddress();
         let preferredCurrency = await userInstance.getCurrency() || this.state.preferredCurrency;
-        console.log('current----currency', currentCurrency);
         this.setState({
             currentCurrency: currentCurrency,
             currencyLocPrice: currencyLocPrice,
