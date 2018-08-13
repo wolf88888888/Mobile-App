@@ -9,7 +9,6 @@ class App extends Component {
     componentDidMount() {
         console.disableYellowBox = true;
     }
-
     render() {
         return (
             <View style={{ flex: 1 }}>

@@ -10,7 +10,6 @@ import React, { Component } from 'react';
 import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';

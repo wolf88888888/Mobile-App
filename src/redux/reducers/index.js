@@ -2,11 +2,12 @@ import { combineReducers } from 'redux';
 import { RootNavigator } from '../../routing';
 
 function nav(state, action) {
-    const newState = RootNavigator.router.getStateForAction(action, state);
-    return newState || state;
+    const nextState = RootNavigator.router.getStateForAction(action, state);
+    return nextState || state;
 }
-const rootReducer = combineReducers({
+
+const appReducers = combineReducers({
     nav,
 });
 
-export default rootReducer;
+export default appReducers;

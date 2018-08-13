@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import {
     createStackNavigator,
@@ -72,11 +72,6 @@ import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
-const middleware = createReactNavigationReduxMiddleware(
-    'root',
-    state => state.nav
-);
-
 const MainNavigator = createBottomTabNavigator(
     {
         PROFILE: { screen: Profile },
@@ -142,57 +137,43 @@ const RootNavigator = createStackNavigator(
     }
 );
 
-const mapStateToProps = state => ({
-    state: state.nav,
-});
+const middleware = createReactNavigationReduxMiddleware(
+    'root',
+    state => state.nav
+);
 
-// const AppWithNavigationState = reduxifyNavigator(RootNavigator, 'root');
-// const AppNavigator = connect(mapStateToProps)(AppWithNavigationState);
+const AppWithNavigationState = reduxifyNavigator(RootNavigator, 'root');
 
-class ReduxNavigation extends React.Component {
-
-    static propTypes = {
-        dispatch: PropTypes.func.isRequired,
-        nav: PropTypes.object.isRequired,
-    };
-
-    constructor (props) {
-      super(props)
-      console.log("ReduxNavigation", props);
-    //   this.onBackPress = this.onBackPress.bind(this)
+// create nav component
+class ReduxNavigation extends PureComponent {
+    componentDidMount() {
+      BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
     }
-
-    componentWillMount () {
-        console.log("ReduxNavigation componentWillMount");
-        Platform.OS !== 'ios' ? BackHandler.addEventListener('hardwareBackPress', this.onBackPress) : void 0 ;
-    }
-
-    componentWillUnmount () {
-        console.log("ReduxNavigation componentWillUnmount");
-        Platform.OS !== 'ios' ? BackHandler.removeEventListener('hardwareBackPress', this.onBackPress) : void 0 ;
+  
+    componentWillUnmount() {
+      BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
     }
   
     onBackPress = () => {
-        console.log("onBackPress ----------");
-        const { dispatch, nav } = this.props;
-        if (nav.index === 0) {
-            return false;
-        }
-
-        dispatch(NavigationActions.back());
-        return true;
+      const { dispatch, navigation } = this.props;
+      if (navigation.index === 0) {
+        return false;
+      }
+  
+      dispatch(NavigationActions.back());
+      return true;
     };
   
     render() {
-      /* more setup code here! this is not a runnable snippet */ 
-      console.log("-------2", this.props.nav);
-        return (
-            <RootNavigator
-                ref={nav => { this.navigator = nav; }}
-            />
-        );
+      const { dispatch, navigation } = this.props;
+      return <AppWithNavigationState dispatch={dispatch} state={navigation}/>;
     }
 }
-const AppNavigator = connect(mapStateToProps)(ReduxNavigation);
 
+const mapNavStateProps = state => ({
+    navigation: state.nav
+});
+
+const AppNavigator = connect(mapNavStateProps)(ReduxNavigation);
+  
 export { RootNavigator, AppNavigator, middleware };
