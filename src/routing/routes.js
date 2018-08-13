@@ -52,6 +52,7 @@ import GuestInfoForm from '../components/screens/GuestInfoForm';
 import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
+import HotelFilters from '../components/screens/HotelFilters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
@@ -128,6 +129,7 @@ export const FullNavigator = StackNavigator(
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
+        HotelFilterScreen: { screen: HotelFilters },
         AvailableRoomsView: { screen: AvailableRoomsView},
 
         Notifications: { screen: Notifications},

@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet} from 'react-native';
 import Image from 'react-native-remote-svg';
 import styles from './styles';
 import PropTypes from 'prop-types';
+import CheckBox from 'react-native-checkbox';
+import RNPickerSelect from 'react-native-picker-select';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
-export default class Filters extends Component {
+
+export default class HotelFilters extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -17,20 +21,55 @@ export default class Filters extends Component {
     }
     constructor(props) {
         super(props);
+
         this.state = {
-            isHotelSelected: false,
+            isHotelSelected: true,
             selectedRating: 4,
+            showUnAvailable: false,
+            hotelName: '',
             count: {
                 beds: 2,
                 bedrooms: 0,
                 bathrooms: 0
             },
-            rooms : [{ adults: 2, children: [] }]
+            rooms : [{ adults: 2, children: [] }],
+            priceSort: 'priceForSort,asc',
+            selectedRating: [false,false,false,false,false],
+            sliderValue: [1,5000],
+            priceItems: [
+                {
+                    label: 'Lowest price',
+                    value: 'priceForSort,asc'
+                },
+                {
+                    label: 'Highest price',
+                    value: 'priceForSort,desc'
+                }
+            ]
         }
         const { params } = this.props.navigation.state
-        this.state.isHotelSelected = params.isHotelSelected
+        this.state.selectedRating = params.selectedRating
+        this.state.showUnAvailable = params.showUnAvailable
+        this.state.hotelName = params.hotelName
         //this.state.count = params.count
     }
+
+    handleRatingChange(index, status){
+        console.log(status);
+        const items = this.state.selectedRating;
+        items[index] = status;
+
+        // update state
+        this.setState({
+            items,
+        });
+    }
+
+    multiSliderValuesChange = (values) => {
+        this.setState({
+            sliderValue: values,
+        });
+      }
 
     addCount(type) {
         let count = Object.assign({}, this.state.count);
@@ -90,17 +129,7 @@ export default class Filters extends Component {
                 </TouchableOpacity>
                 <View style={styles.header}>
                     <View style={styles.residenceView}>
-                        <TouchableOpacity onPress={() => this.setState({isHotelSelected: false})} style={[styles.residence, !this.state.isHotelSelected? styles.selected: '']}>
-                            {
-                                !this.state.isHotelSelected &&
-                                <Image source={require('../../../assets/png/Filters/check.png')} style={styles.tick}/>
-                            }
-                            <Image source={require('../../../assets/png/Filters/home.png')} style={styles.headerIcons}/>
-                        </TouchableOpacity>
-                        <Text style={styles.residenceType}>Home</Text>
-                    </View>
-                    <View style={styles.residenceView}>
-                        <TouchableOpacity onPress={() => this.setState({isHotelSelected: true})} style={[styles.residence, this.state.isHotelSelected? styles.selected: '']}>
+                        <TouchableOpacity style={[styles.residence, this.state.isHotelSelected? styles.selected: '']}>
                             {
                                 this.state.isHotelSelected &&
                                 <Image source={require('../../../assets/png/Filters/check.png')} style={styles.tick}/>
@@ -112,40 +141,118 @@ export default class Filters extends Component {
                 </View>
                 <ScrollView>
                 <View style={{height: '100%',}}>
-                       {/* <View style={styles.starRatingView}>
+                    <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                       <Text style={styles.pricingText}>Name</Text>
+                    </View>                                
+                    <TextInput
+                        value={this.state.hotelName}
+                        ref={(i) => { this.input = i; }}
+                        underlineColorAndroid="#ffffff"
+                        onChangeText={(text) => this.setState({hotelName: text})}
+                        style={{height: 40, margin: 15, borderColor: 'grey', borderWidth: 1, borderRadius: 5, paddingLeft: 5}}
+                    />
+                    <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                       <Text style={styles.pricingText}>Availibility</Text>
+                    </View>
+                    <CheckBox
+                        checkboxStyle={{height: 15, width: 15, marginLeft: 15}}
+                        label='Show Unavailable'
+                        checked={this.state.showUnAvailable}
+                        onChange={(checked) => this.setState({showUnAvailable: !checked})}
+                    />
+                    <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                       <Text style={styles.pricingText}>Order By</Text>
+                    </View>
+                    <View style={styles.SearchAndPickerwarp}>
+                    <View style={styles.pickerWrap}>
+                        <RNPickerSelect
+                            items={this.state.priceItems}
+                            onValueChange={(value) => {
+                                //console.log(value);
+                                this.setState({priceSort: value})
+                            }}
+                            value={this.state.priceSort}
+                            style={{ ...pickerSelectStyles }}
+                        >
+                        </RNPickerSelect>
+                    </View>
+                    </View>
+                    <View style={styles.starRatingView}>
+
                            <Text style={styles.starRatingText}>Star Rating</Text>
+                           
                            <View style={styles.starView}>
-                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 1? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 1})}>
-                                   <Text style={[styles.ratingNumber, this.state.selectedRating === 1? styles.activeRatingText: '']}>0, 1</Text>
-                                   <Image source={require('../../../assets/empty-star.png')} style={styles.star}/>
+                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating[0] === true ? styles.activeRating: '']} 
+                               onPress={() => this.handleRatingChange(0, this.state.selectedRating[0] ? false : true)}>
+                                   <Text style={[styles.ratingNumber, this.state.selectedRating[0] === true ? styles.activeRatingText: '']}>0, 1</Text>
+                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
-                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 2? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 2})}>
-                                   <Text style={[styles.ratingNumber, this.state.selectedRating === 2? styles.activeRatingText: '']}>2</Text>
-                                   <Image source={require('../../../assets/empty-star.png')} style={styles.star}/>
+
+                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating[1] === true ? styles.activeRating: '']} 
+                               onPress={() => this.handleRatingChange(1, this.state.selectedRating[1] ? false : true)}>
+                                   <Text style={[styles.ratingNumber, this.state.selectedRating[1] === true ? styles.activeRatingText: '']}>2</Text>
+                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
-                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 3? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 3})}>
-                                   <Text style={[styles.ratingNumber, this.state.selectedRating === 3? styles.activeRatingText: '']}>3</Text>
-                                   <Image source={require('../../../assets/empty-star.png')} style={styles.star}/>
+
+                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating[2] === true ? styles.activeRating: '']} 
+                               onPress={() => this.handleRatingChange(2, this.state.selectedRating[2] ? false : true)}>
+                                   <Text style={[styles.ratingNumber, this.state.selectedRating[2] === true ? styles.activeRatingText: '']}>3</Text>
+                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
-                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 4? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 4})}>
-                                   <Text style={[styles.ratingNumber, this.state.selectedRating === 4? styles.activeRatingText: '']}>4</Text>
-                                   <Image source={require('../../../assets/empty-star.png')} style={styles.star}/>
+
+                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating[3] === true ? styles.activeRating: '']} 
+                               onPress={() => this.handleRatingChange(3, this.state.selectedRating[3] ? false : true)}>
+                                   <Text style={[styles.ratingNumber, this.state.selectedRating[3] === true ? styles.activeRatingText: '']}>4</Text>
+                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
-                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating === 5? styles.activeRating: '']} onPress={() => this.setState({selectedRating: 5})}>
-                                   <Text style={[styles.ratingNumber, this.state.selectedRating === 5? styles.activeRatingText: '']}>5</Text>
-                                   <Image source={require('../../../assets/empty-star.png')} style={styles.star}/>
+
+                               <TouchableOpacity style={[styles.starBox, this.state.selectedRating[4] === true ? styles.activeRating: '']} 
+                               onPress={() => this.handleRatingChange(4, this.state.selectedRating[4] ? false : true)}>
+                                   <Text style={[styles.ratingNumber, this.state.selectedRating[4] === true ? styles.activeRatingText: '']}>5</Text>
+                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
                            </View>
-                       </View> */}
+                       </View>
+
+                        <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                            <Text style={styles.pricingText}>Pricing</Text>
+                        </View>
+                        
+                        <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
+                            <View style={{width: '80%', flexDirection: 'row', justifyContent: 'space-between'}}>
+                                <Text>{this.state.sliderValue[0]}</Text>
+                                <Text>{this.state.sliderValue[1]}</Text>
+                            </View>
+                            <MultiSlider
+                            isMarkersSeparated={true}
+                            selectedStyle={{
+                                backgroundColor: '#cc8068',
+                            }}
+                            unselectedStyle={{
+                                backgroundColor: 'silver',
+                            }}
+                            values={[this.state.sliderValue[0], this.state.sliderValue[1]]}
+                            min={1}
+                            max={5000}
+                            step={1}
+                            onValuesChangeFinish={this.multiSliderValuesChange}
+                            />
+                            <View style={{width: '80%', flexDirection: 'row', justifyContent: 'space-between'}}>
+                                <Text>$0.000</Text>
+                                <Text>$5.000</Text>
+                            </View>
+                        </View>
+
+
 
                        {/* <View style={styles.pricingView}>
                            <Text style={styles.pricingText}>Pricing</Text>
                        </View> */}
 
-                       <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
+                       {/* <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
                            <Text style={styles.pricingText}>Room</Text>
-                       </View>
-                       <View style={this.state.isHotelSelected ? styles.set : styles.emptyPricingView}>
+                       </View> */}
+                       {/* <View style={this.state.isHotelSelected ? styles.set : styles.emptyPricingView}> */}
                            {/* <View style={[styles.group, styles.borderBottom]}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Beds</Text>
@@ -160,7 +267,7 @@ export default class Filters extends Component {
                                    </TouchableOpacity>
                                </View>
                            </View> */}
-                           <View style={this.state.isHotelSelected ? [styles.group, styles.borderBottom]:styles.emptyPricingView}>
+                           {/* <View style={this.state.isHotelSelected ? [styles.group, styles.borderBottom]:styles.emptyPricingView}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Rooms</Text>
                                </View>
@@ -173,7 +280,7 @@ export default class Filters extends Component {
                                        <Text style={styles.plusText}>+</Text>
                                    </TouchableOpacity>
                                </View>
-                           </View>
+                           </View> */}
                            {/* <View style={styles.group}>
                                <View style={styles.type}>
                                    <Text style={styles.typeText}>Bathrooms</Text>
@@ -188,7 +295,7 @@ export default class Filters extends Component {
                                    </TouchableOpacity>
                                </View>
                            </View> */}
-                       </View>
+                       {/* </View> */}
                     </View>
                        
                 </ScrollView>
@@ -254,3 +361,14 @@ export default class Filters extends Component {
         });
     }
 }
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        height: 50,
+        fontSize: 16,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        color: 'black'
+    }
+});
