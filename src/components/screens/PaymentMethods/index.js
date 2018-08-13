@@ -36,22 +36,6 @@ class PaymentMethods extends Component {
           </TouchableOpacity>
             </View>
           </View>
-           
-            {/* <View style={styles.heading}>
-                
-                <View><Text style={styles.titleText}>Payment Methods</Text></View>
-
-            </View>
-
-            <View style={styles.subHeading}>
-                <Text style={styles.navItemText}>Set Up a Payment Method</Text>
-                <Text style={styles.navText}>Use your payment methods to make a purchage on lockChain</Text>
-            </View>
-            <TouchableOpacity style={styles.ButtonView} onPress={() => navigate('AddPaymentMethod')}>
-                <View>
-                  <Text style={styles.ButtonText}>Add Payment Methods</Text>
-                </View>
-            </TouchableOpacity> */}
         </View>
     );
   }
