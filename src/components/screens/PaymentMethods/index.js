@@ -23,10 +23,7 @@ class PaymentMethods extends Component {
 
           <Text style={styles.navItemText}>Set up a payment method</Text>
           <Text style={styles.navText}>Use your payment methods to make purchases on LockChain</Text>
-
-           
           
-
           <View style={styles.searchButtonView}>
             <View style={{backgroundColor: '#cc8068', height: 50, justifyContent: 'center'}}>
             <TouchableOpacity onPress={() => navigate('AddPaymentMethod')}>

@@ -152,7 +152,7 @@ export const FullNavigator = StackNavigator(
         PropertySock: {screen: PropertySock},
     },
     {
-        initialRouteName: 'MainScreen',
+        initialRouteName: 'AddPaymentMethod',
         headerMode: 'none'
     }
 );
