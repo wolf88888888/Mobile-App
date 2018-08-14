@@ -32,7 +32,7 @@ class HotelDetailView extends Component {
         rateVal: RNPropTypes.number.isRequired,
         reviewNum: RNPropTypes.number.isRequired,
         address: RNPropTypes.string.isRequired,
-        dataSourcePreview: RNPropTypes.array
+        dataSourcePreview: RNPropTypes.array.isRequired
     };
 
     static defaultProps = {
@@ -51,9 +51,6 @@ class HotelDetailView extends Component {
             interval: null,
             dataSource: [],
         };
-
-        console.log(props.dataSourcePreview);
-        this.state.dataSource = props.dataSourcePreview;
     }
 
     componentDidMount() {
@@ -67,8 +64,6 @@ class HotelDetailView extends Component {
         //     });
         //     }, 2000)
         // });
-        console.log("width : " + logoWidth);
-        console.log("height : " + logoHeight);
     }
 
     componentWillUnmount() {
@@ -89,7 +84,7 @@ class HotelDetailView extends Component {
                   indicatorSize={12.5}
                   indicatorOffset={20}
                   indicatorColor="#D87A61"
-                  images={this.state.dataSource} />
+                  images={this.props.dataSourcePreview} />
               </View>
               <CardView style={styles.topView}
                   cardElevation={1.5}

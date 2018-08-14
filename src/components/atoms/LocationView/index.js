@@ -24,7 +24,6 @@ class LocationView extends Component {
         radius: PropTypes.number.isRequired,
         hotelName: PropTypes.string.isRequired,
         hotelPrice: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -37,7 +36,6 @@ class LocationView extends Component {
         radius: 200,
         hotelName: '',
         hotelPrice: '',
-        image: ''
     };
 
     calloutClick(){
@@ -86,23 +84,7 @@ class LocationView extends Component {
                                 coordinate={{latitude: this.props.lat, longitude: this.props.lon}}
                                 title={this.props.hotelName}
                                 description={this.props.hotelPrice}
-                                onCalloutPress={()=> this.calloutClick()}
                             >
-                                <MapView.Callout
-                                    tooltip={true}>
-                                    <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center' ,backgroundColor: '#FFF'}}>
-                                        <Text style={styles.location}>
-                                            {this.props.hotelName}
-                                        </Text>
-                                        <Text style={styles.description}>
-                                            {this.props.hotelPrice}
-                                        </Text>
-                                        <Image
-                                            style={{width: 66, height: 58}}
-                                            source={{uri: this.props.image}}
-                                        />
-                                    </View>
-                                </MapView.Callout>
                             </MapView.Marker>
                             <MapView.Circle
                                     center={{latitude: this.props.lat, longitude: this.props.lon}}
