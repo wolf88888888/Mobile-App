@@ -152,7 +152,7 @@ export const FullNavigator = StackNavigator(
         PropertySock: {screen: PropertySock},
     },
     {
-        initialRouteName: 'AddPaymentMethod',
+        initialRouteName: 'CreditCard',
         headerMode: 'none'
     }
 );
