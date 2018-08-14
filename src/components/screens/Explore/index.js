@@ -83,6 +83,7 @@ class Explore extends Component {
                 adults: 2,
                 children: []
             }],
+            filter: {"showUnavailable":true,"name":"","minPrice":1,"maxPrice":5000,"stars":[0,1,2,3,4,5]},
             count: {
                 beds: 2,
                 bedrooms: 0,
@@ -280,7 +281,8 @@ class Explore extends Component {
                 locRate: this.state.locPrice,
                 currencyIcon: this.state.currencyIcon,
                 email: this.state.email,
-                token: this.state.token
+                token: this.state.token,
+                filter: encodeURI(JSON.stringify(this.state.filter)),
             });
         }
         else if (shouldBeNative) {
@@ -361,24 +363,18 @@ class Explore extends Component {
             res.body.then(data => {
                 console.log('spinnerValueJson----', data[0], value);
                 if (value == 'EUR') {
-                    // AsyncStorage.setItem('currentCurrency', 'EUR');
-                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
                     this.setState({
                         locPrice: data[0].price_eur,
                         currencyIcon: Icons.euro
                     });
                 }
                 else if (value == 'USD') {
-                    // AsyncStorage.setItem('currentCurrency', 'USD');
-                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_usd);
                     this.setState({
                         locPrice: data[0].price_usd,
                         currencyIcon: Icons.usd
                     });
                 }
                 else if (value == 'GBP') {
-                    // AsyncStorage.setItem('currentCurrency', 'GBP');
-                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
                     this.setState({
                         locPrice: data[0].price_gbp,
                         currencyIcon: Icons.gbp

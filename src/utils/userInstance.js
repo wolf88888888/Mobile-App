@@ -12,7 +12,7 @@ const profileimage_key = 'profileimage_key';
 const jsonfile_key = 'jsonfile_key';
 const locaddredss_key = 'locaddress_key';
 const phonenumber_key = 'phonenumber_key';
-const currency_key = 'currency_key';
+const currency_key = 'currentCurrency';
 const language_key = 'language_key';
 const about_key = 'about_key';
 const governmentid_key = 'governmentid_key';
@@ -58,7 +58,7 @@ export const userInstance = {
     },
 
     setBirthday: function(birthday) {
-        AsyncStorage.setItem(birthday_key, birthday.toString());
+        AsyncStorage.setItem(birthday_key, birthday==null? '' : birthday.toString());
     },
 
     getBirthday: async function() {

@@ -52,11 +52,13 @@ import GuestInfoForm from '../components/screens/GuestInfoForm';
 import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
+import HotelFilters from '../components/screens/HotelFilters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
+import CongratsCreditCard from '../components/screens/CongratsCreditCard';
 
 import PropertyList from '../components/screens/PropertyList';
 import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
@@ -128,6 +130,7 @@ export const FullNavigator = StackNavigator(
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
+        HotelFilterScreen: { screen: HotelFilters },
         AvailableRoomsView: { screen: AvailableRoomsView},
 
         Notifications: { screen: Notifications},
@@ -135,6 +138,8 @@ export const FullNavigator = StackNavigator(
         CreditCard :  { screen: CreditCard},
 
         CreditCardFilled : { screen: CreditCardFilled},
+
+        CongratsCreditCard: {screen: CongratsCreditCard},
 
         PaymentMethods :{ screen:PaymentMethods},
 
