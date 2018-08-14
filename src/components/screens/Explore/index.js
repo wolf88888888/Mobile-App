@@ -363,24 +363,18 @@ class Explore extends Component {
             res.body.then(data => {
                 console.log('spinnerValueJson----', data[0], value);
                 if (value == 'EUR') {
-                    // AsyncStorage.setItem('currentCurrency', 'EUR');
-                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_eur);
                     this.setState({
                         locPrice: data[0].price_eur,
                         currencyIcon: Icons.euro
                     });
                 }
                 else if (value == 'USD') {
-                    // AsyncStorage.setItem('currentCurrency', 'USD');
-                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_usd);
                     this.setState({
                         locPrice: data[0].price_usd,
                         currencyIcon: Icons.usd
                     });
                 }
                 else if (value == 'GBP') {
-                    // AsyncStorage.setItem('currentCurrency', 'GBP');
-                    // AsyncStorage.setItem('currencyLocPrice', json[0].price_gbp);
                     this.setState({
                         locPrice: data[0].price_gbp,
                         currencyIcon: Icons.gbp

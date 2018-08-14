@@ -135,9 +135,9 @@ class SimpleUserProfile extends Component {
                             <Text style={styles.name}>{this.state.firstName} {this.state.lastName}</Text>
                             {
                                 this.state.city == '' ?
-                                    <Text style={styles.location}>{this.state.country.name}</Text>
+                                    <Text style={styles.location}>{this.state.country==null? '' : this.state.country.name}</Text>
                                     :
-                                    <Text style={styles.location}>{this.state.city.name} {this.state.country.name}</Text>
+                                    <Text style={styles.location}>{this.state.city==null? '' : this.state.city.name} {this.state.country==null? '' : this.state.country.name}</Text>
                             }
                         </View>
 

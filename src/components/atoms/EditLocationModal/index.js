@@ -42,12 +42,13 @@ class EditLocationModal extends Component {
         });
         this.setState({
             countries: countryArr,
-            selectedCityId: this.props.city.id,
-            selectedCountryId: this.props.country.id,
-            selectedCountryName: this.props.country.name,
+            selectedCityId: this.props.city==null? null: this.props.city.id,
+            selectedCountryId: this.props.country==null? null : this.props.country.id,
+            selectedCountryName: this.props.country==null? null : this.props.country.name,
         });
-
-        this.getCities(this.props.country.id);
+        if (this.props.country != null){
+            this.getCities(this.props.country.id );
+        }
     }
 
     getCities(countryId) {

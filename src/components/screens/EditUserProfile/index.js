@@ -536,10 +536,12 @@ class EditUserProfile extends Component {
 
         let location = '';
         if (this.state.city == '') {
-            location = this.state.country.name;
+            location = this.state.country==null? '' : this.state.country.name;
         }
         else {
-            location = this.state.city.name + " " + this.state.country.name;
+            let city_name = this.state.city==null? '' : this.state.city.name;
+            let country_name = this.state.country==null? '' : this.state.country.name;
+            location = city_name + " " + country_name;
         }
 
         return (
@@ -622,7 +624,7 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title="Location"
-                            info={this.state.country.name + ', ' + this.state.city.name}
+                            info={location}
                             onPress={this.onLocation} />
                         <View style={styles.lineStyle} />
 
