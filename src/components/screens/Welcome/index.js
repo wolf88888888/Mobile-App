@@ -19,19 +19,8 @@ const FBSDK = require('react-native-fbsdk');
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
 
-let self;
 class Welcome extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        }
-    }
+    static self;
 
     constructor(props) {
         super(props);
@@ -39,10 +28,7 @@ class Welcome extends Component {
         this.state = {
             showProgress: false
         }
-    }
-
-    componentDidMount() {
-        self = this;
+        Welcome.self = this;
     }
 
     tryLogin(fbInfo) {
@@ -68,7 +54,7 @@ class Welcome extends Component {
                                 alert("You already registered using email, so please try to login using email.");
                             }
                             else {
-                                self.tryRegister(fbInfo);
+                                Welcome.self.tryRegister(fbInfo);
                             }
                             // alert(errors[key].message);
                             console.log('Error logging in  :', errors[key].message);
@@ -95,7 +81,7 @@ class Welcome extends Component {
                 alert('Error fetching data: ' + error.toString());
             }
             else {
-                self.tryLogin(result);
+                Welcome.self.tryLogin(result);
             }
         }
 
@@ -127,7 +113,7 @@ class Welcome extends Component {
                 else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            self.doLoginViaFb(data)
+                            Welcome.self.doLoginViaFb(data)
                         }
                     )
                 }
