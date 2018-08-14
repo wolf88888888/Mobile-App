@@ -58,6 +58,7 @@ import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
+import CongratsCreditCard from '../components/screens/CongratsCreditCard';
 
 import PropertyList from '../components/screens/PropertyList';
 import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
@@ -138,6 +139,8 @@ export const FullNavigator = StackNavigator(
 
         CreditCardFilled : { screen: CreditCardFilled},
 
+        CongratsCreditCard: {screen: CongratsCreditCard},
+
         PaymentMethods :{ screen:PaymentMethods},
 
         AddPaymentMethod :{screen:AddPaymentMethod},
@@ -152,7 +155,7 @@ export const FullNavigator = StackNavigator(
         PropertySock: {screen: PropertySock},
     },
     {
-        initialRouteName: 'CreditCard',
+        initialRouteName: 'MainScreen',
         headerMode: 'none'
     }
 );
