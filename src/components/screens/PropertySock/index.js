@@ -112,8 +112,8 @@ class Property extends Component {
             locRate: 0,
             currencyIcon : '',
             showResultsOnMap: false,
-            initialLat : 0.40,
-            initialLon: 34,
+            initialLat : 51.5074,
+            initialLon: 0.1278,
             filter: undefined,
             nameFilter: '',
             showUnAvailable: false,
@@ -494,8 +494,8 @@ class Property extends Component {
                         <MapView
                             style={styles.map}
                             region={{
-                              latitude: this.state.listings[0].lat != null ? this.state.listings[0].lat : this.state.initialLat ,
-                              longitude:  this.state.listings[0].lon != null ? this.state.listings[0].lon : this.state.initialLon,
+                              latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat ,
+                              longitude:  this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
                               latitudeDelta: 1,
                               longitudeDelta: 1,
                             }}
