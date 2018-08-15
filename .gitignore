@@ -53,6 +53,7 @@ buck-out
 
 # Android
 local.properties
+.externalNativeBuild
 
 # Node
 node_modules
@@ -69,4 +70,3 @@ yarn-error.log*
 
 # Builds
 build/
-.externalNativeBuild
