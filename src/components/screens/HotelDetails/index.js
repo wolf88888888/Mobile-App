@@ -198,8 +198,8 @@ class HotelDetails extends Component {
                             hotelName={this.state.hotel.name}
                             hotelPrice={`LOC ${this.state.hotelFullDetails.locRate}`}
                             description={this.state.hotel.generalDescription}
-                            lat={parseFloat(this.state.latitude)}
-                            lon={parseFloat(this.state.longitude)}
+                            lat={this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0}
+                            lon={this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0}
                             radius={200} />
                         <View style={{ marginBottom: 50 }} />
                     </View>

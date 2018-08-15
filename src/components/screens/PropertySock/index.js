@@ -536,12 +536,8 @@ class Property extends Component {
                             data={this.state.listings}
                             renderItem={
                                 ({item}) =>
-
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
-                            
                                 <View style={styles.card}>
-                                
-                                
                                 <Image 
                                 source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url} } 
                                 style={styles.popularHotelsImage}/>
