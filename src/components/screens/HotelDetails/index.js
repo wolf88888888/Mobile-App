@@ -25,6 +25,10 @@ import WhiteBackButton from '../../atoms/WhiteBackButton';
 import { imgHost } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import ImageCarousel from '../../atoms/ImagePage';
+const dimensionWindows = Dimensions.get('window');
+const logoWidth = dimensionWindows.width;
+const logoHeight = logoWidth * 35 / 54;
 
 class HotelDetails extends Component {
 
@@ -81,7 +85,7 @@ class HotelDetails extends Component {
         //     hotelPhotos.push({ uri: imgHost + params.hotelDetail.hotelPhotos[i]["url"] })
         // }
 
-        this.state.description = this.state.hotel.description;
+        //this.state.description = this.state.hotel.description;
         // for (let i = 0; i < this.state.hotel.descriptions.length; i ++) {
         //     if (this.state.hotel.descriptions[i].type == "PropertyInformation") {
         //         this.state.description = this.state.hotel.descriptions[i].text;
@@ -92,14 +96,16 @@ class HotelDetails extends Component {
         
     }
 
-    componentDidMount() {
+    componentWillMount(){
         requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then(res => {
             // here you set the response in to json
             res.body.then(data => {
+                
                 const hotelPhotos = [];
                 for (var i = 0; i < data.hotelPhotos.length; i++) {
                     hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i]["url"] })
                 }
+                this.state.dataSourcePreview = hotelPhotos;
                 // here you parse your json
                 // here you set you data from json into your variables
                 this.setState({
@@ -110,12 +116,15 @@ class HotelDetails extends Component {
                     description: data.generalDescription,
                     latitude: data.latitude,
                     longitude: data.longitude,
-                    dataSourcePreview: hotelPhotos
                 });
             }).catch(err => {
                 console.log(err);
             });
         });
+    }
+
+    componentDidMount() {
+        
     }
 
 
@@ -138,7 +147,20 @@ class HotelDetails extends Component {
                     <View style={styles.topButtonContainer}>
                         <WhiteBackButton onPress={this.onClose} />
                     </View>
-                    <View style={styles.body}>
+                    <View style={styles.body}> 
+                        <View style={{width: logoWidth, height: logoHeight}}>
+                            {this.state.dataSourcePreview.length > 0 &&
+                            <ImageCarousel
+                            delay={1500}
+                            style={styles.logoImage}
+                            width={logoWidth}
+                            height={logoHeight}
+                            indicatorSize={12.5}
+                            indicatorOffset={20}
+                            indicatorColor="#D87A61"
+                            images={this.state.dataSourcePreview}>
+                            </ImageCarousel>}
+                        </View>
                         
                         <HotelDetailView
                             dataSourcePreview={this.state.dataSourcePreview}
