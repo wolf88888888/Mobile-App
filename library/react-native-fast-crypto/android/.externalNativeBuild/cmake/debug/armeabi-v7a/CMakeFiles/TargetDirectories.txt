@@ -1,3 +1,0 @@
-H:/Net/2018/LockTrip/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
-H:/Net/2018/LockTrip/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/crypto_bridge.dir
-H:/Net/2018/LockTrip/Mobile-App/library/react-native-fast-crypto/android/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
