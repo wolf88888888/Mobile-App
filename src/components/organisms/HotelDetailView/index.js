@@ -32,7 +32,7 @@ class HotelDetailView extends Component {
         rateVal: RNPropTypes.number.isRequired,
         reviewNum: RNPropTypes.number.isRequired,
         address: RNPropTypes.string.isRequired,
-        dataSourcePreview: RNPropTypes.array.isRequired
+        dataSourcePreview: RNPropTypes.array
     };
 
     static defaultProps = {
@@ -51,6 +51,7 @@ class HotelDetailView extends Component {
             interval: null,
             dataSource: [],
         };
+        this.state.dataSource = props.dataSourcePreview;
     }
 
     componentDidMount() {
@@ -75,17 +76,6 @@ class HotelDetailView extends Component {
         const ratingSize = 8;
         return (
           <View style={styles.container}>
-            <View style={{width: logoWidth, height: logoHeight}}>
-                <ImageCarousel
-                  delay={1500}
-                  style={styles.logoImage}
-                  width={logoWidth}
-                  height={logoHeight}
-                  indicatorSize={12.5}
-                  indicatorOffset={20}
-                  indicatorColor="#D87A61"
-                  images={this.props.dataSourcePreview} />
-              </View>
               <CardView style={styles.topView}
                   cardElevation={1.5}
                   cardMaxElevation={1.5}
