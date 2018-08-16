@@ -1,21 +1,22 @@
 import { AsyncStorage, Clipboard, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import BackButton from '../../atoms/BackButton';
-import EditCurrencyModal from '../../atoms/EditCurrencyModal';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast'
 import { Wallet } from '../../../services/blockchain/wallet';
 import _ from 'lodash';
-import { connect } from 'react-redux';
-import { domainPrefix } from '../../../config';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
+import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog'
+
+const BASIC_CURRENCY_LIST = ['USD', 'GBP', 'EUR'];
 
 class Profile extends Component {
     constructor(props) {
@@ -35,7 +36,9 @@ class Profile extends Component {
             currencyLocPrice: 0,
             modalVisible: false,
             showProgress: false,
-            loadMessage: 'Loading...'
+            loadMessage: 'Loading...',
+            currencySelectionVisible: false,
+            currentCurrency: 'EUR',
         }
         this.showModal = this.showModal.bind(this);
         this.onCurrency = this.onCurrency.bind(this);
@@ -46,6 +49,7 @@ class Profile extends Component {
         this.hideProgressView = this.hideProgressView.bind(this);
         this.showToast = this.showToast.bind(this);
         this.getCurrencyRate = this.getCurrencyRate.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
      async componentDidMount() {
@@ -77,16 +81,17 @@ class Profile extends Component {
     }
 
     onCurrency() {
-        this.setState({
-            modalVisible: true,
-            modalView: <EditCurrencyModal
-                onSave={(currency) => this.onSaveCurrency(currency)}
-                onCancel={() => this.onCancel()}
-                currencies={this.state.currencies}
-                currency={this.state.preferredCurrency}
-            />
-        });
-        this.showModal();
+        // this.setState({
+        //     modalVisible: true,
+        //     modalView: <EditCurrencyModal
+        //         onSave={(currency) => this.onSaveCurrency(currency)}
+        //         onCancel={() => this.onCancel()}
+        //         currencies={this.state.currencies}
+        //         currency={this.state.preferredCurrency}
+        //     />
+        // });
+        // this.showModal();
+        this.setState({ currencySelectionVisible: true });
     }
 
     async onSaveCurrency(currency) {
@@ -215,6 +220,18 @@ class Profile extends Component {
         })
     }
 
+    logout() {
+        AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+        // this.props.navigation.navigate('Login');
+		// let resetAction = StackActions.reset({
+		// 	index: 0,
+		// 	actions: [
+		// 		NavigationActions.navigate({routeName: 'Welcome'})
+		// 	]
+		// });
+		// this.props.navigation.dispatch(resetAction);
+    }
+
     showToast() {
         this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
@@ -318,14 +335,23 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Switch to Hosting</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
-                            this.props.navigation.navigate('Login');
-                        }} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.logout} style={styles.navItem}>
                             <Text style={styles.navItemText}>Log Out</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
+
+                <SingleSelectMaterialDialog
+                    title={'Select Currency'}
+                    items={BASIC_CURRENCY_LIST.map((row, index) => ({ value: index, label: row }))}
+                    visible={this.state.currencySelectionVisible}
+                    onCancel={() => this.setState({ currencySelectionVisible: false })}
+                    onOk={result => {
+                        this.setState({ currencySelectionVisible: false });
+                        this.setState({ currentCurrency: result.selectedItem });
+                        this.onSaveCurrency(result.selectedItem);
+                    }}
+                />
             </View>
         );
     }

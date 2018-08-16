@@ -1,4 +1,4 @@
-import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import React, { Component } from 'react';
 
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -7,18 +7,19 @@ import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-easy-toast';
-import _ from 'lodash';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
 import { userInstance } from '../../../utils/userInstance';
+import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog'
 
 const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
+const BASIC_CURRENCY_LIST = ['USD', 'GBP', 'EUR'];
+
 class Explore extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
@@ -110,7 +111,9 @@ class Explore extends Component {
                     label: 'GBP',
                     value: 'GBP'
                 }
-            ]
+            ],
+            currencySelectionVisible: false,
+            currentCurrency: 'EUR',
         };
         this.getCountryValues();
     }
@@ -123,24 +126,28 @@ class Explore extends Component {
             email: email_value,
         });
 
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 0,
-            delay: 0
-        });
+        // SplashScreen.close({
+        //     animationType: SplashScreen.animationType.scale,
+        //     duration: 0,
+        //     delay: 0
+        // });
+        console.log("componentWillMount", token_value, email_value);
         requester.getUserInfo().then(res => {
             res.body.then(data => {
+                console.log("componentWillMount", data);
                 userInstance.setUserData(data);
             }).catch(err => {
-                console.log(err);
+                console.log("componentWillMount", err);
             });
         });
     }
 
     async componentDidMount() {
         console.disableYellowBox = true;
+        console.log("componentDidMount");
         requester.getTopListings().then(res => {
             res.body.then(data => {
+                console.log("componentDidMount", data);
                 const truncated = data.content.slice(0, 4);
                 this.setState({ topHomes: truncated });
             });
@@ -461,19 +468,6 @@ class Explore extends Component {
                         leftIcon="search"
                         onLeftPress={this.gotoSearch}
                     />
-
-                </View>
-                <View style={styles.pickerWrap}>
-                    <RNPickerSelect
-                        items={this.state.items}
-                        onValueChange={(value) => {
-                            console.log(value);
-                            this.spinnerValueChange(value);
-                        }}
-                        value={this.state.language}
-                        style={{ ...pickerSelectStyles }}
-                    >
-                    </RNPickerSelect>
                 </View>
             </View>
         );
@@ -515,13 +509,6 @@ class Explore extends Component {
                         style={{ ...pickerSelectStyles }}
                     >
                     </RNPickerSelect>
-                    {/* <Picker style={{width: '100%', height: 50}} itemStyle={{height: 50}}
-                        selectedValue={this.state.language}
-                        onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
-                        <Picker.Item label="EUR" value="EUR" />
-                        <Picker.Item label="USD" value="USD" />
-                        <Picker.Item label="GBP" value="GBP" />
-                    </Picker> */}
                 </View>
             </View>
         );
@@ -637,7 +624,7 @@ class Explore extends Component {
 
                     <View style={styles.scrollViewContent}>
 
-                        <Text style={styles.scrollViewTitles}>Discover</Text>
+                        <Text style={[styles.scrollViewTitles, {marginBottom:5}]}>Discover</Text>
 
                         <View style={styles.viewDiscover}>
 
@@ -668,12 +655,11 @@ class Explore extends Component {
 
                         </View>
 
-                        <Text style={styles.scsrollViewTitles}>Popular Destinations</Text>
+                        <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
 
                         <View style={styles.divsider} />
 
                         <View style={styles.viewPopularHotels}>
-
                             <TouchableOpacity onPsress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
                                 style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
@@ -723,11 +709,24 @@ class Explore extends Component {
 
                     </View>
                 </ScrollView>
+                                
+                <TouchableWithoutFeedback onPress={() => this.setState({ currencySelectionVisible: true })}>
+                    <View style={styles.fab}>
+                        <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice)
+                            .toFixed(2)}</Text>
+                    </View>
+                </TouchableWithoutFeedback>
 
-                <View style={styles.fab}>
-                    <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice)
-                        .toFixed(2)}</Text>
-                </View>
+                <SingleSelectMaterialDialog
+                    title={'Select Currency'}
+                    items={BASIC_CURRENCY_LIST.map((row, index) => ({ value: index, label: row }))}
+                    visible={this.state.currencySelectionVisible}
+                    onCancel={() => this.setState({ currencySelectionVisible: false })}
+                    onOk={result => {
+                        this.setState({ currencySelectionVisible: false });
+                        this.setState({ currentCurrency: result.selectedItem });
+                    }}
+                />
             </View>
         );
     }

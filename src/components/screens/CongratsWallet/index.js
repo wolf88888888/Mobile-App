@@ -3,21 +3,12 @@ import PropTypes from 'prop-types';
 import {
     Text,
     View,
-    AsyncStorage,
-    TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard,
-    ScrollView,
-    StatusBar
 } from 'react-native';
 import Image from 'react-native-remote-svg';
-import { autobind } from 'core-decorators';
 
 import GoBack from '../../atoms/GoBack';
-import SmartInput from '../../atoms/SmartInput';
-import { domainPrefix } from '../../../config';
 import styles from './styles';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Button from '../../atoms/Button';
 
 

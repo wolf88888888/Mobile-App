@@ -9,29 +9,18 @@ import Button from '../../atoms/Button';
 import GetStartedImage from '../../atoms/GetStartedImage';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
 import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 
+import SplashScreen from 'react-native-smart-splash-screen';
 const FBSDK = require('react-native-fbsdk');
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
 
-let self;
 class Welcome extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        }
-    }
+    static self;
 
     constructor(props) {
         super(props);
@@ -39,10 +28,16 @@ class Welcome extends Component {
         this.state = {
             showProgress: false
         }
+        Welcome.self = this;
     }
 
     componentDidMount() {
-        self = this;
+        console.log("AppLoading - componentDidMount")
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 100
+        });
     }
 
     tryLogin(fbInfo) {
@@ -68,7 +63,7 @@ class Welcome extends Component {
                                 alert("You already registered using email, so please try to login using email.");
                             }
                             else {
-                                self.tryRegister(fbInfo);
+                                Welcome.self.tryRegister(fbInfo);
                             }
                             // alert(errors[key].message);
                             console.log('Error logging in  :', errors[key].message);
@@ -95,7 +90,7 @@ class Welcome extends Component {
                 alert('Error fetching data: ' + error.toString());
             }
             else {
-                self.tryLogin(result);
+                Welcome.self.tryLogin(result);
             }
         }
 
@@ -127,7 +122,7 @@ class Welcome extends Component {
                 else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            self.doLoginViaFb(data)
+                            Welcome.self.doLoginViaFb(data)
                         }
                     )
                 }
@@ -139,7 +134,7 @@ class Welcome extends Component {
     }
 
     render() {
-        const { navigate, goBack } = this.props.navigation;
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
 
@@ -170,7 +165,6 @@ class Welcome extends Component {
                 </Text>
 
                 <GetStartedImage />
-
 
                 <ProgressDialog
                    visible={this.state.showProgress}

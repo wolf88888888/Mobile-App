@@ -6,17 +6,17 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     ButtonView: {
-        marginTop: 40,
+        marginTop: 45,
         marginLeft: 18,
-        width: 24,
-        height: 24,
+        width: 27,
+        height: 27,
         alignItems: 'center',
         justifyContent: 'center',
     },
 
     ButtonImage: {
-        width: 24,
-        height: 24,
+        width: 27,
+        height: 27,
     },
 });
 

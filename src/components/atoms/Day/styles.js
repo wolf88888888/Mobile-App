@@ -4,10 +4,11 @@ import {
 } from 'react-native';
 
 const { scale, width } = Dimensions.get('window');
-let dayWidth = width / 7;
-const mod = (scale * width) % 7;
+let paddingH = 30;
+let dayWidth = (width - paddingH) / 7;
+const mod = (scale * (width - paddingH)) % 7;
 if (mod) {
-    dayWidth = (((7 - mod) / scale) + width) / 7;
+    dayWidth = (((7 - mod) / scale) + (width - paddingH)) / 7;
 }
 export default StyleSheet.create({
     dayContainer: {
@@ -37,13 +38,12 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     dayText: {
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 18,
-        fontWeight: '400',
         textAlign: 'center'
     },
     dayTextDisabled: {
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 18,
         color: '#898c8d',
         textAlign: 'center'
