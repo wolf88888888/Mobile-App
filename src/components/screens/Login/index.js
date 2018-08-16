@@ -7,7 +7,8 @@ import {
     View
 } from 'react-native';
 import React, { Component } from 'react';
-import { validateEmail, validatePassword, validatePassword1 } from '../../../utils/validation';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { validateEmail, validatePassword1 } from '../../../utils/validation';
 
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
@@ -59,7 +60,15 @@ class Login extends Component {
                     AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
-                    this.props.navigation.navigate('MainScreen');
+                    // this.props.navigation.navigate('MainScreen');
+                    let resetAction = StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({routeName: 'MainScreen'})
+                        ]
+                    });
+                    this.props.navigation.dispatch(resetAction);
+
                 });
             } else {
                 res.errors.then(data => {

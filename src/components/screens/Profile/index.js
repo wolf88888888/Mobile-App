@@ -1,4 +1,5 @@
 import { AsyncStorage, Clipboard, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
@@ -42,6 +43,7 @@ class Profile extends Component {
         this.hideProgressView = this.hideProgressView.bind(this);
         this.showToast = this.showToast.bind(this);
         this.getCurrencyRate = this.getCurrencyRate.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
@@ -224,6 +226,18 @@ class Profile extends Component {
         })
     }
 
+    logout() {
+        AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+        // this.props.navigation.navigate('Login');
+		let resetAction = StackActions.reset({
+			index: 0,
+			actions: [
+				NavigationActions.navigate({routeName: 'Welcome'})
+			]
+		});
+		this.props.navigation.dispatch(resetAction);
+    }
+
     showToast() {
         this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
@@ -330,10 +344,7 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Switch to Hosting</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
-                            this.props.navigation.navigate('Login');
-                        }} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.logout} style={styles.navItem}>
                             <Text style={styles.navItemText}>Log Out</Text>
                         </TouchableOpacity>
                     </View>

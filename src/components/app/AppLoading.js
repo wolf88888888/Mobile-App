@@ -32,6 +32,7 @@ class AppLoading extends Component {
     }
 
     componentDidMount() {
+        console.log("AppLoading - componentDidMount")
         SplashScreen.close({
             animationType: SplashScreen.animationType.scale,
             duration: 150,

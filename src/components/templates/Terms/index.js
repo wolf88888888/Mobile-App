@@ -1,4 +1,5 @@
-import { AsyncStorage, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
 import React, {Component} from 'react';
 
 import PropTypes from 'prop-types';
@@ -29,14 +30,13 @@ class Terms extends Component {
     }
 
     onDecline() {
-        const { params } = this.props.navigation.state;
-        const { pop } = this.props.navigation;
-        if (params.isFB) {
-            pop(2);
-        }
-        else {
-            pop(3);
-        }
+		let resetAction = StackActions.reset({
+			index: 0,
+			actions: [
+				NavigationActions.navigate({routeName: 'Welcome'})
+			]
+		});
+		this.props.navigation.dispatch(resetAction);
     }
 
     render() {

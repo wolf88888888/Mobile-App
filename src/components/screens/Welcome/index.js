@@ -9,12 +9,12 @@ import Button from '../../atoms/Button';
 import GetStartedImage from '../../atoms/GetStartedImage';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
 import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 
+import SplashScreen from 'react-native-smart-splash-screen';
 const FBSDK = require('react-native-fbsdk');
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
@@ -29,6 +29,15 @@ class Welcome extends Component {
             showProgress: false
         }
         Welcome.self = this;
+    }
+
+    componentDidMount() {
+        console.log("AppLoading - componentDidMount")
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 100
+        });
     }
 
     tryLogin(fbInfo) {
@@ -156,7 +165,6 @@ class Welcome extends Component {
                 </Text>
 
                 <GetStartedImage />
-
 
                 <ProgressDialog
                    visible={this.state.showProgress}
