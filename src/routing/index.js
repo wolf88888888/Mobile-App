@@ -78,11 +78,11 @@ import PropertySock from '../components/screens/PropertySock';
 
 export const MyTripNavigator = createStackNavigator(
     {
-        MY_TRIPS: { screen: MyTrips },
+        WELCOME_TRIPS: { screen: MyTrips },
         UserMyTrips : { screen: UserMyTrips},
     },
     {
-        initialRouteName: 'MY_TRIPS',
+        initialRouteName: 'WELCOME_TRIPS',
         headerMode: 'none'
     }
 );
@@ -164,26 +164,26 @@ const AppWithNavigationState = reduxifyNavigator(RootNavigator, 'root');
 // create nav component
 class ReduxNavigation extends PureComponent {
     componentDidMount() {
-      BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+        BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
     }
   
     componentWillUnmount() {
-      BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+        BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
     }
   
     onBackPress = () => {
-      const { dispatch, navigation } = this.props;
-      if (navigation.index === 0) {
-        return false;
-      }
-  
-      dispatch(NavigationActions.back());
-      return true;
+         const { dispatch, navigation } = this.props;
+        if (navigation.index === 0) {
+            return false;
+        }
+    
+        dispatch(NavigationActions.back());
+        return true;
     };
   
     render() {
-      const { dispatch, navigation } = this.props;
-      return <AppWithNavigationState dispatch={dispatch} state={navigation}/>;
+        const { dispatch, navigation } = this.props;
+        return <AppWithNavigationState dispatch={dispatch} state={navigation}/>;
     }
 }
 

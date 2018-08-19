@@ -1,7 +1,6 @@
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import {
     Platform,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View
@@ -21,17 +20,6 @@ import requester from '../../../initDependencies';
 import styles from './styles';
 
 class CreateAccount extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => { }
-        }
-    }
 
     constructor(props) {
         super(props);

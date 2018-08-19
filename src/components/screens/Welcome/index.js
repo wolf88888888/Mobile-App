@@ -1,7 +1,8 @@
 import {
     AsyncStorage,
     Text,
-    View
+    View,
+    StatusBar
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -24,7 +25,6 @@ class Welcome extends Component {
 
     constructor(props) {
         super(props);
-        this.onFBLogin = this.onFBLogin.bind(this);
         this.state = {
             showProgress: false
         }
@@ -42,7 +42,6 @@ class Welcome extends Component {
 
     tryLogin(fbInfo) {
         this.setState({ showProgress: true });
-        // fbInfo.email = "test1231@test.com";
         requester.login({email:fbInfo.email, password:fbInfo.id+"!a123"}, null).then(res => {
             this.setState({ showProgress: false });
             if (res.success) {
@@ -80,7 +79,15 @@ class Welcome extends Component {
     }
 
     tryRegister(fbInfo) {
-        this.props.navigation.navigate('Terms', {firstName:fbInfo.first_name, lastName:fbInfo.last_name, email:fbInfo.email, userWantsPromo: true, password:fbInfo.id+"!a123", isFB:true})
+        this.props.navigation.navigate('Terms', 
+                {
+                    firstName:fbInfo.first_name, 
+                    lastName:fbInfo.last_name, 
+                    email:fbInfo.email,
+                    userWantsPromo: true, 
+                    password:fbInfo.id+"!a123"
+                }
+            );
     }
 
     doLoginViaFb(data) {
@@ -110,10 +117,7 @@ class Welcome extends Component {
         new GraphRequestManager().addRequest(infoRequest).start();
     }
 
-    onFBLogin() {
-        // const { navigate, goBack } = this.props.navigation;
-        // navigate('App');
-
+    gotoFB = () =>  {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
             function(result) {
                 if (result.isCancelled) {
@@ -133,10 +137,22 @@ class Welcome extends Component {
         );
     }
 
+    gotoLogin = () => {
+        this.props.navigation.navigate('Login');
+    }
+
+    gotoSignup = () => {
+        this.props.navigation.navigate('CreateAccount');
+    }
+
     render() {
-        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor="rgba(0,0,0,0)"
+                    translucent
+                    barStyle="light-content"
+                />
 
                 <Image source={SplashPNG} resizeMode='contain' style={styles.splashImage} />
 
@@ -144,18 +160,18 @@ class Welcome extends Component {
 
                 <View style={styles.buttonCollectionWrap}>
                     <Button
-                        onPress={() => navigate('Login')}
+                        onPress={ this.gotoLogin }
                         text="Log In"
                         wrapStyle={styles.logInButton}
                     />
                     <Button
                         wrapStyle={styles.facebookButton}
                         text="Continue with Facebook"
-                        onPress={this.onFBLogin}
+                        onPress={ this.gotoFB }
                     />
                     <Button
                         wrapStyle={styles.createAccountButton}
-                        onPress={() => navigate('CreateAccount')}
+                        onPress={ this.gotoSignup }
                         text="Create an Account"
                     />
                 </View>

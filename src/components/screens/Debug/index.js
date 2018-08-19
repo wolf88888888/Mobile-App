@@ -192,7 +192,7 @@ class Explore extends Component {
         amenitiesId: "42,49,8",
         amenitiesIdArray: "42,49,8".split(','),
         amenities: [],
-        language: 'EUR',
+        currency: 'EUR',
         currencyIcon: Icons.eur,
         locPrice: 0,
 
@@ -219,7 +219,7 @@ class Explore extends Component {
         const { params } = this.props.navigation.state;
         console.log(params.regionId);
         this.state.regionId = params.regionId;
-        this.state.language = params ? params.language : 'EUR';
+        this.state.currency = params ? params.currency : 'EUR';
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
         this.state.locPrice = params ? params.locRate : 0;
 
@@ -249,7 +249,7 @@ class Explore extends Component {
     }
 
     spinnerValueChange(value) {
-        this.setState({ language: value });
+        this.setState({ currency: value });
         if (value == "EUR") {
             this.setState({ currencyIcon: Icons.euro })
         }
@@ -263,10 +263,10 @@ class Explore extends Component {
 
     assembleJson() {
         const roomsDummyData = [{ adults: 2, children: [] }];
-        const urlForService = "region=" + this.state.regionId + "&currency=" + this.state.language + "&startDate=" + this.state.startDate + "&endDate=" + this.state.endDate + "&rooms=" + encodeURI(JSON.stringify(roomsDummyData));
+        const urlForService = "region=" + this.state.regionId + "&currency=" + this.state.currency + "&startDate=" + this.state.startDate + "&endDate=" + this.state.endDate + "&rooms=" + encodeURI(JSON.stringify(roomsDummyData));
 
         let searchTermParams = [];
-        searchTermParams.push(`region=${this.state.regionId}`, `currency=${this.state.language}`, `startDate=${this.state.startDate}`, `endDate=${this.state.endDate}`, `rooms=${encodeURI(JSON.stringify(roomsDummyData))}`);
+        searchTermParams.push(`region=${this.state.regionId}`, `currency=${this.state.currency}`, `startDate=${this.state.startDate}`, `endDate=${this.state.endDate}`, `rooms=${encodeURI(JSON.stringify(roomsDummyData))}`);
         requester.getHotelById(this.state.hotelId, searchTermParams).then(res => {
             res.body.then(data => {
                 this.setState({ hotelJson: data });
@@ -293,7 +293,7 @@ class Explore extends Component {
 
                     <Text style={{ marginTop: 10 }}>Currency:</Text>
                     <Text
-                        style={{ height: 40, }}>{this.state.language}
+                        style={{ height: 40, }}>{this.state.currency}
                     </Text>
 
                     <Text style={{ marginTop: 10 }}>Start Date (dd/mm/yyy):</Text>

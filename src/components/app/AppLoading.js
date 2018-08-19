@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
+import { setCurrency, setLocRate } from '../../redux/action/Currency'
 
-import PropTypes from 'prop-types';
 import SplashScreen from 'react-native-smart-splash-screen';
 import { domainPrefix } from '../../config';
 
@@ -14,25 +14,16 @@ const styles = StyleSheet.create({
 });
 
 class AppLoading extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        }
-    }
 
     constructor(props) {
         super(props);
+        console.log("AppLoading - constructor")
         this.bootstrapAsync();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         console.log("AppLoading - componentDidMount")
+        
         SplashScreen.close({
             animationType: SplashScreen.animationType.scale,
             duration: 150,
@@ -42,6 +33,21 @@ class AppLoading extends Component {
 
     // Fetch the token from storage then navigate to our appropriate place
     bootstrapAsync = async () => {
+        let currency = await AsyncStorage.getItem('currency');
+        // this.props.navigation.dispatch(setCurrency(currency));
+        let locRate = await AsyncStorage.getItem('locRate');
+        locRate = JSON.parse(locRate)
+
+        if (currency != undefined && currency != null) {
+            console.log("currency--------------", currency);
+            this.props.navigation.dispatch(setCurrency({currency}));
+        }
+        if (locRate != undefined && locRate != null) {
+            this.props.navigation.dispatch(setLocRate({locRate}));
+        }
+        console.log("currency", currency);
+        console.log("locRate", locRate);
+
         const keys = await AsyncStorage.getAllKeys();
         const isLoggedIn = keys.includes(`${domainPrefix}.auth.locktrip`) &&
                         keys.includes(`${domainPrefix}.auth.username`);

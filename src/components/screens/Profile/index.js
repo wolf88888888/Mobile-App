@@ -3,7 +3,6 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
-import BackButton from '../../atoms/BackButton';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
@@ -60,7 +59,7 @@ class Profile extends Component {
         this.setState({
             currentCurrency: currentCurrency,
             currencyLocPrice: currencyLocPrice,
-            walletAddres: walletAddress,
+            walletAddress: walletAddress,
             preferredCurrency: preferredCurrency,
         });
         if (walletAddress != '') {
@@ -221,15 +220,20 @@ class Profile extends Component {
     }
 
     logout() {
+        const nestedNavigation = NavigationActions.navigate({
+            routeName: 'Welcome',
+            action: NavigationActions.navigate({routeName: "WELCOME_TRIPS"})
+        });
+        this.props.navigation.dispatch(nestedNavigation);
+
+		let resetAction = StackActions.reset({
+			index: 0,
+			actions: [
+				NavigationActions.navigate({routeName: 'Welcome'})
+			]
+		});
+		this.props.navigation.dispatch(resetAction);
         AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
-        // this.props.navigation.navigate('Login');
-		// let resetAction = StackActions.reset({
-		// 	index: 0,
-		// 	actions: [
-		// 		NavigationActions.navigate({routeName: 'Welcome'})
-		// 	]
-		// });
-		// this.props.navigation.dispatch(resetAction);
     }
 
     showToast() {
@@ -240,8 +244,9 @@ class Profile extends Component {
         const { navigate } = this.props.navigation;
         const { currentCurrency, currencyLocPrice, locBalance, walletAddress, preferredCurrency, ethBalance } = this.state;
 
-        console.log("currency: " + currentCurrency);
-        console.log("locPrice: " + currencyLocPrice);
+        console.log("profile walletAddress: ", walletAddress);
+        console.log("profile currency: ", currentCurrency);
+        console.log("profile locPrice: ", currencyLocPrice);
         let price = locBalance * currencyLocPrice;
         var displayPrice = '';
         if (currentCurrency.code == "EUR") {
@@ -356,10 +361,5 @@ class Profile extends Component {
         );
     }
 }
-
-Profile.propTypes = {
-    // start react-navigation props
-    navigation: PropTypes.object.isRequired
-};
 
 export default Profile;

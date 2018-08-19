@@ -1,17 +1,8 @@
 import {
-    Button,
     Dimensions,
-    FlatList,
-    Keyboard,
-    ListView,
-    ProgressBarAndroid,
     ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
     View
 } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import AvailableRoomsView from '../../molecules/AvailableRoomsView'
@@ -64,15 +55,17 @@ class HotelDetails extends Component {
             countryName: '',
             latitude: 37.78825,
             longitude: -122.4324,
+            currency: 'EUR',
+            currencySign : '€',
             locRate: 0,
-            currencyIcon: ''
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
         this.state.urlForService = params ? params.urlForService : '';
+        this.state.currency = params ? params.currency : [];
+        this.state.currencySign = params ? params.currencySign: '€';
         this.state.locRate = params ? params.locRate : '';
-        this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
         // this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
         // this.state.countryName = params.hotelDetail.country;
         // this.state.latitude = params.hotelDetail.latitude;
@@ -187,7 +180,8 @@ class HotelDetails extends Component {
                             onBooking={this.onBooking}
                             guests={this.state.guests}
                             hotelDetails={this.state.hotelFullDetails}
-                            currencyIcon={this.state.currencyIcon}
+                            currency={this.state.currency}
+                            currencySign={this.state.currencySign}
                             locRate={this.state.locRate} />
 
                         <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 }]} />

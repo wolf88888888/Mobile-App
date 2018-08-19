@@ -2,22 +2,9 @@ import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import React, {Component} from 'react';
 
-import PropTypes from 'prop-types';
-import { domainPrefix } from '../../../config';
 import styles from './styles';
 
 class Terms extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        }
-    }
 
     constructor(props) {
         super(props);
@@ -40,7 +27,7 @@ class Terms extends Component {
     }
 
     render() {
-        const { navigate, goBack, pop } = this.props.navigation;
+        const { navigate } = this.props.navigation;
         const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>

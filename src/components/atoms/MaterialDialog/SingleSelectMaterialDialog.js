@@ -9,6 +9,7 @@ import colors from './colors';
 export default class SingleSelectMaterialDialog extends Component {
   constructor(props) {
     super(props);
+    console.log("SingleSelectMaterialDialog construct", props);
 
     const { items, selectedItem } = props;
 
@@ -66,7 +67,7 @@ export default class SingleSelectMaterialDialog extends Component {
 
     this.setState({ dataSource, rows, selectedIndex: rowID });
     this.props.onOk({
-      selectedItem: this.state.rows[this.state.selectedIndex],
+      selectedItem: this.state.rows[rowID],
     });
   }
 

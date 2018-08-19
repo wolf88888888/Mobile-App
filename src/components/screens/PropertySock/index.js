@@ -18,16 +18,12 @@ import requester from '../../../initDependencies';
 var androidStomp = NativeModules.StompModule;
 var stomp = require('stomp-websocket-js');
 
-
 var clientRef = undefined;
 let uid = '';
 const mainUrl = '';
 
 class Property extends Component {
     static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        }),
         search: PropTypes.string,
         checkInDate: PropTypes.string,
         checkOutDate: PropTypes.string,
@@ -47,9 +43,6 @@ class Property extends Component {
     }
 
     static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        },
         load: () => {},
         search: '',
         checkInDate: '',
@@ -102,7 +95,6 @@ class Property extends Component {
             searchedCityId: 0,
             //these state are for paramerters in urlForService
             regionId: '',
-            currency: 'EUR',
             checkInDateFormated: '',
             checkOutDateFormated: '',
             roomsDummyData: [],
@@ -110,7 +102,8 @@ class Property extends Component {
             isLoading: true,
             noResultsFound: false,
             locRate: 0,
-            currencyIcon : '',
+            currency: 'EUR',
+            currencySign : '€',
             showResultsOnMap: false,
             initialLat : 51.5074,
             initialLon: 0.1278,
@@ -130,12 +123,12 @@ class Property extends Component {
         this.state.children = params ? params.children : 0;
 
         this.state.regionId = params ? params.regionId : [];
-        this.state.currency = params ? params.currency : [];
         this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
         this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
+        this.state.currency = params ? params.currency : [];
+        this.state.currencySign = params ? params.currencySign: '€';
         this.state.locRate = params ? params.locRate : 0;
-        this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
         this.state.filter = params?params.filter:[];
 
         
@@ -363,14 +356,30 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+        this.props.navigation.navigate('HotelDetails', 
+            {
+                guests : this.state.guests, 
+                hotelDetail: item, 
+                urlForService: this.state.urlForService, 
+                locRate: this.state.locRate,
+                currency: this.state.currency,
+                currencySign: this.state.currencySign
+            });
     }
 
     calloutClick = (item) =>{
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+        this.props.navigation.navigate('HotelDetails',
+            {
+                guests : this.state.guests, 
+                hotelDetail: item, 
+                urlForService: this.state.urlForService, 
+                locRate: this.state.locRate,
+                currency: this.state.currency,
+                currencySign: this.state.currencySign
+            });
     }
 
     renderAutocomplete() {
@@ -560,7 +569,7 @@ class Property extends Component {
                                                 <Text style={styles.totalReviews}>73 Reviews</Text>
                                             </View>
                                             <View style={styles.costView}>
-                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{params ? params.currencyIcon: Icons.euro}</FontAwesome> {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
+                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{this.state.currencySign} {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>

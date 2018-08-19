@@ -3,7 +3,6 @@ import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
-import SplashScreen from 'react-native-smart-splash-screen';
 
 export default class NavTabBar extends Component {
     static propTypes = {
