@@ -45,7 +45,7 @@ class DateAndGuestPicker extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={showSearchButton ? styles.pickerRow : {display:'none'}}>
+                <View style={styles.pickerRow}>
                     <View style={{flex:1}}>
                         <TouchableOpacity
                             onPress={this.onCalendar}

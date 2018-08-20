@@ -1,61 +1,40 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+import queryString from 'query-string';
 import Image from 'react-native-remote-svg';
 import { withNavigation } from 'react-navigation';
 import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
+import HotelItemView from '../../organisms/HotelItemView';
 import styles from './styles';
 import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import queryString from 'query-string';
 import requester from '../../../initDependencies';
 
-var androidStomp = NativeModules.StompModule;
-var stomp = require('stomp-websocket-js');
+const androidStomp = NativeModules.StompModule;
+const stomp = require('stomp-websocket-js');
 
-var clientRef = undefined;
+const clientRef = undefined;
 let uid = '';
-const mainUrl = '';
+var mainUrl = '';
 
 class Property extends Component {
     static propTypes = {
-        search: PropTypes.string,
-        checkInDate: PropTypes.string,
-        checkOutDate: PropTypes.string,
-        topHomes: PropTypes.array, // eslint-disable-line
-        onDatesSelect: PropTypes.func,
-        onSearchChange: PropTypes.func,
         onAutocompleteSelect: PropTypes.func,
         autocomplete: PropTypes.arrayOf(PropTypes.shape({
             id: PropTypes.number,
             name: PropTypes.string
-        })),
-        load: PropTypes.func,
-        propertyType: PropTypes.oneOf('hotels', 'homes'),
-        searchedCity: PropTypes.string,
-        searchedCityId: PropTypes.number,
-        guests : PropTypes.number
+        }))
     }
 
     static defaultProps = {
-        load: () => {},
-        search: '',
-        checkInDate: '',
-        checkOutDate: '',
         autocomplete: [],
-        onAutocompleteSelect: () => {},
-        topHomes: [],
-        propertyType: 'homes',
-        onDatesSelect: () => {},
-        onSearchChange: () => {},
-        searchedCity: 'Discover your next experience',
-        searchedCityId: 0,
-        guests : 0
+        onAutocompleteSelect: () => {}
     }
 
     constructor(props) {
@@ -79,21 +58,20 @@ class Property extends Component {
         this.alterMap = this.alterMap.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
         this.applyFilters = this.applyFilters.bind(this);
+        this.gotoHotelDetailsPage = this.gotoHotelDetailsPage.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
             checkOutDate: '',
             guests: 0,
             adults: 2,
-            childrenBool: false,
             children: 1,
             infants: 0,
             topHomes: [],
-            listings : [],
-            listings2 : [],
+            listings: [],
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
-            //these state are for paramerters in urlForService
+            // these state are for paramerters in urlForService
             regionId: '',
             checkInDateFormated: '',
             checkOutDateFormated: '',
@@ -103,16 +81,16 @@ class Property extends Component {
             noResultsFound: false,
             locRate: 0,
             currency: 'EUR',
-            currencySign : '€',
+            currencySign: '€',
             showResultsOnMap: false,
-            initialLat : 51.5074,
+            initialLat: 51.5074,
             initialLon: 0.1278,
             filter: undefined,
             nameFilter: '',
             showUnAvailable: false,
-            selectedRating: [false,false,false,false,false],
+            selectedRating: [false, false, false, false, false],
             orderBy: 'priceForSort,asc',
-            sliderValue: [1,5000]
+            sliderValue: [1, 5000]
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -123,29 +101,29 @@ class Property extends Component {
         this.state.children = params ? params.children : 0;
 
         this.state.regionId = params ? params.regionId : [];
-        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
-        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
+        this.state.checkInDateFormated = params ? params.checkInDateFormated : '';
+        this.state.checkOutDateFormated = params ? params.checkOutDateFormated : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
         this.state.currency = params ? params.currency : [];
-        this.state.currencySign = params ? params.currencySign: '€';
+        this.state.currencySign = params ? params.currencySign : '€';
         this.state.locRate = params ? params.locRate : 0;
-        this.state.filter = params?params.filter:[];
+        this.state.filter = params ? params.filter : [];
 
-        
-        mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData; //eslint-disable-line
         this.state.urlForService = mainUrl;
     }
 
-    componentWillMount(){
-        if (Platform.OS === 'ios'){
+    componentWillMount() {
+        if (Platform.OS === 'ios') {
             this.stompIos();
-        }
-        else if (Platform.OS === 'android'){
-            androidStomp.startSession(uid, mainUrl);
-            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                console.log(message),
-                this.handleAndroidSingleHotel(message)
-            ));
+        } else if (Platform.OS === 'android') {
+            androidStomp.startSession(uid, mainUrl, () => {
+                this.applyFilters();
+            });
+            // DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+            //     console.log(message)
+            //     //this.handleAndroidSingleHotel(message)
+            // ));
         }
     }
 
@@ -153,7 +131,7 @@ class Property extends Component {
 
     }
 
-    stompIos(){
+    stompIos() {
         clientRef = stomp.client('wss://alpha.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
@@ -170,7 +148,7 @@ class Property extends Component {
             });
     }
 
-    alterMap(){
+    alterMap() {
         this.setState({showResultsOnMap : !this.state.showResultsOnMap});
     }
 
@@ -180,19 +158,19 @@ class Property extends Component {
         };
     }
 
-    onDatesSelect({ startDate, endDate }){
-        this.setState({
-            search : '',
-            checkInDate : startDate,
-            checkOutDate : endDate,
-        });
+    onDatesSelect({ startDate, endDate }) {
+        // this.setState({
+        //     search : '',
+        //     checkInDate : startDate,
+        //     checkOutDate : endDate,
+        // });
     }
 
     onSearchHandler(value) {
         this.onSearchChange(value);
     }
 
-    onSearchChange(value){
+    onSearchChange(value) {
         setSearchValue({ value });
         clearSelected();
     }
@@ -215,6 +193,12 @@ class Property extends Component {
         this.setState({ adults: data.adults, children: data.children, infants: data.infants});
     }
 
+    loadMore = () => {
+        // this.setState({pageForFilter : 1}, () => {
+        //     this.applyFilters();
+        // });
+    }
+
     updateFilter(data) {
         this.setState({
             listings: [],
@@ -229,10 +213,9 @@ class Property extends Component {
         });
     }
 
-    applyFilters(){
+    applyFilters() {
         const search = this.getSearchString();
         const filters = this.getFilterString();
-        console.log(filters);
         const page = this.state.page ? this.state.page : 0;
         requester.getStaticHotelsByFilter(search, filters).then(res => {
         if (res.success) {
@@ -252,18 +235,16 @@ class Property extends Component {
                 this.setState({
                     isLoading: false,
                     listings: mapInfo
-                },() => {
-                    if (this.state.listings.length <= 0){
+                }, () => {
+                    if (this.state.listings.length <= 0) {
                         this.setState({noResultsFound: true})
-                    }
-                    else {
+                    } else {
                         this.setState({noResultsFound: false})
                     }
                 });
             });
-        }
-        else {
-            console.log("BBBBB");
+        } else {
+                
             }
         });
     }
@@ -321,24 +302,24 @@ class Property extends Component {
     }
 
     gotoGuests() {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
+        // if (clientRef) {
+        //     clientRef.disconnect();
+        // }
+        // this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelFilterScreen' , {isHotelSelected: true, updateFilter: this.updateFilter, selectedRating: this.state.selectedRating, showUnAvailable: this.state.showUnAvailable, hotelName: this.state.nameFilter});
+        this.props.navigation.navigate('HotelFilterScreen', {isHotelSelected: true, updateFilter: this.updateFilter, selectedRating: this.state.selectedRating, showUnAvailable: this.state.showUnAvailable, hotelName: this.state.nameFilter});
     }
 
     gotoSearch() {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-      this.props.navigation.navigate('PropertyScreen');
+    //     if (clientRef) {
+    //         clientRef.disconnect();
+    //     }
+    //   this.props.navigation.navigate('PropertyScreen');
     }
 
     handleAutocompleteSelect(id, name) {
@@ -347,12 +328,11 @@ class Property extends Component {
         };
     }
 
-    onBackPress(){
+    onBackPress() {
         this.props.navigation.goBack();
     }
     
-    gotoHotelDetailsPage = (item) =>{
-        console.log(item);
+    gotoHotelDetailsPage(item) {
         if (clientRef) {
             clientRef.disconnect();
         }
@@ -367,7 +347,7 @@ class Property extends Component {
             });
     }
 
-    calloutClick = (item) =>{
+    calloutClick = (item) => {
         if (clientRef) {
             clientRef.disconnect();
         }
@@ -402,7 +382,7 @@ class Property extends Component {
         );
     }
 
-    renderLoader(){
+    renderLoader() {
         return(
             <View style={{ flex: 1,
                 flexDirection: 'row',
@@ -413,7 +393,7 @@ class Property extends Component {
         );
     }
 
-    renderInfoTv(){
+    renderInfoTv() {
         return(
             <View style={{ flex: 1,
                 flexDirection: 'row',
@@ -424,7 +404,7 @@ class Property extends Component {
         );
     }
 
-    renderLog(){
+    renderLog() {
         return(
             <View style={{ flex: 1,
                 flexDirection: 'row',
@@ -434,7 +414,7 @@ class Property extends Component {
         );
     }
 
-    renderFilterText(){
+    renderFilterText() {
         return(
             <View style={{flexDirection: 'column', alignItems: 'center'}}>
             <Text style={{marginTop: 18, width: '100%', textAlign: 'center'}}>Search in progress, filtering will be possible after it is completed</Text>
@@ -443,21 +423,26 @@ class Property extends Component {
         );
     }
 
-    renderFilter(){
+    
+
+    renderFilter() {
         return(
-            <DateAndGuestPicker
-                checkInDate={this.state.checkInDate}
-                checkOutDate={this.state.checkOutDate}
-                adults={this.state.guests}
-                children={0}
-                guests = {0}
-                infants={0}
-                gotoGuests={this.gotoGuests}
-                gotoSearch={this.gotoSearch}
-                onDatesSelect={this.onDatesSelect}
-                gotoSettings={this.gotoSettings}
-                showSearchButton= {false}
-            />
+            <View style={{width: '100%', height: 90}}>
+                <DateAndGuestPicker
+                    checkInDate={this.state.checkInDate}
+                    checkOutDate={this.state.checkOutDate}
+                    adults={this.state.guests}
+                    children={0}
+                    guests = {0}
+                    infants={0}
+                    gotoGuests={this.gotoGuests}
+                    gotoSearch={this.gotoSearch}
+                    onDatesSelect={this.onDatesSelect}
+                    gotoSettings={this.gotoSettings}
+                    showSearchButton= {false}
+                    />
+            </View>
+            
         );
     }
 
@@ -503,7 +488,7 @@ class Property extends Component {
                         <MapView
                             style={styles.map}
                             region={{
-                              latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat ,
+                              latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat,
                               longitude:  this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
                               latitudeDelta: 1,
                               longitudeDelta: 1,
@@ -516,7 +501,7 @@ class Property extends Component {
                                 >
                                 <MapView.Callout
                                     tooltip={true}>
-                                    <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' ,backgroundColor: '#fff'}}>
+                                    <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',backgroundColor: '#fff'}}>
                                         <Image
                                             style={{width: 100, height: 60}}
                                             source={ marker.thumbnail !== null && {uri : imgHost + marker.thumbnail.url} } 
@@ -543,38 +528,15 @@ class Property extends Component {
                         <FlatList
                             style={styles.flatList}
                             data={this.state.listings}
+                            onScroll={this.loadMore}
                             renderItem={
                                 ({item}) =>
-                                <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
-                                <View style={styles.card}>
-                                <Image 
-                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url} } 
-                                style={styles.popularHotelsImage}/>
-
-                                <TouchableOpacity style={styles.favoritesButton}>
-                                    <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
-                                </TouchableOpacity>
-                                        <View style={styles.cardContent}>
-                                            <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                                            <View style={styles.aboutPlaceView}>
-                                                <Text style={styles.placeReviewText}>Excellent</Text>
-                                                <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
-                                                <View style={styles.ratingIconsWrapper}>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                </View>
-                                                <Text style={styles.totalReviews}>73 Reviews</Text>
-                                            </View>
-                                            <View style={styles.costView}>
-                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{this.state.currencySign} {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
-                                                <Text style={styles.perNight}>per night</Text>
-                                            </View>
-                                        </View>
-                                </View>
-                                </TouchableOpacity>
+                                <HotelItemView
+                                    item={item}
+                                    currencySign={this.state.currencySign}
+                                    locRate={this.state.locRate}
+                                    gotoHotelDetailsPage={this.gotoHotelDetailsPage}
+                                />
                             }
                         />
                     }
@@ -587,11 +549,12 @@ class Property extends Component {
         );
     }
 
-    handleAndroidSingleHotel(message){
+    handleAndroidSingleHotel(message) {
+        //this.applyFilters();
         try {
             var object = JSON.parse(message);
             if (object.hasOwnProperty('allElements')) {
-                if (object.allElements){
+                if (object.allElements) {
                     this.applyFilters();
                 }
             } else {
@@ -607,7 +570,7 @@ class Property extends Component {
     handleReceiveSingleHotel(message) {
         var response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
-            if (response.allElements){
+            if (response.allElements) {
                 clientRef.disconnect();
                 this.applyFilters();
             }
