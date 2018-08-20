@@ -1,7 +1,8 @@
 import {
     AsyncStorage,
     Text,
-    View
+    View,
+    StatusBar
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -9,45 +10,38 @@ import Button from '../../atoms/Button';
 import GetStartedImage from '../../atoms/GetStartedImage';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
 import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 
+import SplashScreen from 'react-native-smart-splash-screen';
 const FBSDK = require('react-native-fbsdk');
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
 
-let self;
 class Welcome extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        }
-    }
+    static self;
 
     constructor(props) {
         super(props);
-        this.onFBLogin = this.onFBLogin.bind(this);
         this.state = {
             showProgress: false
         }
+        Welcome.self = this;
     }
 
     componentDidMount() {
-        self = this;
+        console.log("AppLoading - componentDidMount")
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 100
+        });
     }
 
     tryLogin(fbInfo) {
         this.setState({ showProgress: true });
-        // fbInfo.email = "test1231@test.com";
         requester.login({email:fbInfo.email, password:fbInfo.id+"!a123"}, null).then(res => {
             this.setState({ showProgress: false });
             if (res.success) {
@@ -68,7 +62,7 @@ class Welcome extends Component {
                                 alert("You already registered using email, so please try to login using email.");
                             }
                             else {
-                                self.tryRegister(fbInfo);
+                                Welcome.self.tryRegister(fbInfo);
                             }
                             // alert(errors[key].message);
                             console.log('Error logging in  :', errors[key].message);
@@ -85,7 +79,15 @@ class Welcome extends Component {
     }
 
     tryRegister(fbInfo) {
-        this.props.navigation.navigate('Terms', {firstName:fbInfo.first_name, lastName:fbInfo.last_name, email:fbInfo.email, userWantsPromo: true, password:fbInfo.id+"!a123", isFB:true})
+        this.props.navigation.navigate('Terms', 
+                {
+                    firstName:fbInfo.first_name, 
+                    lastName:fbInfo.last_name, 
+                    email:fbInfo.email,
+                    userWantsPromo: true, 
+                    password:fbInfo.id+"!a123"
+                }
+            );
     }
 
     doLoginViaFb(data) {
@@ -95,7 +97,7 @@ class Welcome extends Component {
                 alert('Error fetching data: ' + error.toString());
             }
             else {
-                self.tryLogin(result);
+                Welcome.self.tryLogin(result);
             }
         }
 
@@ -115,10 +117,7 @@ class Welcome extends Component {
         new GraphRequestManager().addRequest(infoRequest).start();
     }
 
-    onFBLogin() {
-        // const { navigate, goBack } = this.props.navigation;
-        // navigate('App');
-
+    gotoFB = () =>  {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
             function(result) {
                 if (result.isCancelled) {
@@ -127,7 +126,7 @@ class Welcome extends Component {
                 else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            self.doLoginViaFb(data)
+                            Welcome.self.doLoginViaFb(data)
                         }
                     )
                 }
@@ -138,10 +137,22 @@ class Welcome extends Component {
         );
     }
 
+    gotoLogin = () => {
+        this.props.navigation.navigate('Login');
+    }
+
+    gotoSignup = () => {
+        this.props.navigation.navigate('CreateAccount');
+    }
+
     render() {
-        const { navigate, goBack } = this.props.navigation;
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor="rgba(0,0,0,0)"
+                    translucent
+                    barStyle="light-content"
+                />
 
                 <Image source={SplashPNG} resizeMode='contain' style={styles.splashImage} />
 
@@ -149,18 +160,18 @@ class Welcome extends Component {
 
                 <View style={styles.buttonCollectionWrap}>
                     <Button
-                        onPress={() => navigate('Login')}
+                        onPress={ this.gotoLogin }
                         text="Log In"
                         wrapStyle={styles.logInButton}
                     />
                     <Button
                         wrapStyle={styles.facebookButton}
                         text="Continue with Facebook"
-                        onPress={this.onFBLogin}
+                        onPress={ this.gotoFB }
                     />
                     <Button
                         wrapStyle={styles.createAccountButton}
-                        onPress={() => navigate('CreateAccount')}
+                        onPress={ this.gotoSignup }
                         text="Create an Account"
                     />
                 </View>
@@ -170,7 +181,6 @@ class Welcome extends Component {
                 </Text>
 
                 <GetStartedImage />
-
 
                 <ProgressDialog
                    visible={this.state.showProgress}

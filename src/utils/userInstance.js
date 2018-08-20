@@ -195,6 +195,7 @@ export const userInstance = {
         this.setProfileImage(data.image);
         this.setJsonFile(data.jsonFile);
         this.setLocAddress(data.locAddress);
+        console.log("setUserData", data.locAddress);
         this.setPhoneNumber(data.phoneNumber);
         this.setCurrency(data.preferredCurrency);
         this.setLanguage(data.preferredLanguage);

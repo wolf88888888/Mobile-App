@@ -12,10 +12,11 @@ import UUIDGenerator from 'react-native-uuid-generator';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+import queryString from 'query-string';
+import requester from '../../../initDependencies';
 
 var androidStomp = NativeModules.StompModule;
 var stomp = require('stomp-websocket-js');
-
 
 var clientRef = undefined;
 let uid = '';
@@ -23,9 +24,6 @@ const mainUrl = '';
 
 class Property extends Component {
     static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        }),
         search: PropTypes.string,
         checkInDate: PropTypes.string,
         checkOutDate: PropTypes.string,
@@ -45,9 +43,6 @@ class Property extends Component {
     }
 
     static defaultProps = {
-        navigation: {
-            navigate: () => {}
-        },
         load: () => {},
         search: '',
         checkInDate: '',
@@ -82,6 +77,8 @@ class Property extends Component {
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.alterMap = this.alterMap.bind(this);
+        this.updateFilter = this.updateFilter.bind(this);
+        this.applyFilters = this.applyFilters.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
@@ -98,7 +95,6 @@ class Property extends Component {
             searchedCityId: 0,
             //these state are for paramerters in urlForService
             regionId: '',
-            currency: '',
             checkInDateFormated: '',
             checkOutDateFormated: '',
             roomsDummyData: [],
@@ -106,9 +102,17 @@ class Property extends Component {
             isLoading: true,
             noResultsFound: false,
             locRate: 0,
-            currencyIcon : '',
+            currency: 'EUR',
+            currencySign : '€',
             showResultsOnMap: false,
-            //initialLat : 040°52′N 34°34′E
+            initialLat : 51.5074,
+            initialLon: 0.1278,
+            filter: undefined,
+            nameFilter: '',
+            showUnAvailable: false,
+            selectedRating: [false,false,false,false,false],
+            orderBy: 'priceForSort,asc',
+            sliderValue: [1,5000]
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -119,15 +123,17 @@ class Property extends Component {
         this.state.children = params ? params.children : 0;
 
         this.state.regionId = params ? params.regionId : [];
-        this.state.currency = params ? params.currency : [];
         this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
         this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
+        this.state.currency = params ? params.currency : [];
+        this.state.currencySign = params ? params.currencySign: '€';
         this.state.locRate = params ? params.locRate : 0;
-        this.state.currencyIcon = params ? params.currencyIcon: Icons.euro;
+        this.state.filter = params?params.filter:[];
 
-        this.state.urlForService = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
-        mainUrl = 'region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        
+        mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        this.state.urlForService = mainUrl;
     }
 
     componentWillMount(){
@@ -209,6 +215,111 @@ class Property extends Component {
         this.setState({ adults: data.adults, children: data.children, infants: data.infants});
     }
 
+    updateFilter(data) {
+        this.setState({
+            listings: [],
+            showUnAvailable: data.showUnAvailable,
+            nameFilter: data.hotelName,
+            selectedRating: data.selectedRating,
+            isLoading: true,
+            orderBy: data.priceSort,
+            sliderValue: data.sliderValue
+        }, () => {
+            this.applyFilters();
+        });
+    }
+
+    applyFilters(){
+        const search = this.getSearchString();
+        const filters = this.getFilterString();
+        console.log(filters);
+        const page = this.state.page ? this.state.page : 0;
+        requester.getStaticHotelsByFilter(search, filters).then(res => {
+        if (res.success) {
+            res.body.then(data => {
+                let mapInfo = [];
+                mapInfo = data.content.map(hotel => {
+                return {
+                    id: hotel.id,
+                    lat: hotel.latitude,
+                    lon: hotel.longitude,
+                    name: hotel.name,
+                    price: hotel.price,
+                    stars: hotel.star,
+                    thumbnail: { url: hotel.hotelPhoto }
+                };
+                });
+                this.setState({
+                    isLoading: false,
+                    listings: mapInfo
+                },() => {
+                    if (this.state.listings.length <= 0){
+                        this.setState({noResultsFound: true})
+                    }
+                    else {
+                        this.setState({noResultsFound: false})
+                    }
+                });
+            });
+        }
+        else {
+            console.log("BBBBB");
+            }
+        });
+    }
+
+    getSearchString() {
+        const queryParams = queryString.parse(mainUrl);
+        let search = `?region=${encodeURI(queryParams.region)}`;
+        search += `&currency=${encodeURI(queryParams.currency)}`;
+        search += `&startDate=${encodeURI(queryParams.startDate)}`;
+        search += `&endDate=${encodeURI(queryParams.endDate)}`;
+        search += `&rooms=${encodeURI(queryParams.rooms)}`;
+        return search;
+    }
+
+    getFilterString() {
+        const filtersObj = {
+          showUnavailable: this.state.showUnAvailable,
+          name: this.state.nameFilter,
+          minPrice: this.state.sliderValue[0],
+          maxPrice: this.state.sliderValue[1],
+          stars: this.mapStars(this.state.selectedRating)
+        };
+    
+        const page = 0;
+        const sort = this.state.orderBy;
+        const pagination = `&page=${page}&sort=${sort}`;
+    
+        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination;
+        return filters;
+    }
+
+    mapStars(stars) {
+        let hasStars = false;
+        let mappedStars = [];
+        stars.forEach(s => {
+          if (s) {
+            hasStars = true;
+          }
+        });
+    
+        if (!hasStars) {
+          for (let i = 0; i <= 5; i++) {
+            mappedStars.push(i);
+          }
+        } else {
+          mappedStars.push(0);
+          stars.forEach((s, i) => {
+            if (s) {
+              mappedStars.push(i + 1);
+            }
+          });
+        }
+    
+        return mappedStars;
+    }
+
     gotoGuests() {
         if (clientRef) {
             clientRef.disconnect();
@@ -220,7 +331,7 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('FilterScreen');
+        this.props.navigation.navigate('HotelFilterScreen' , {isHotelSelected: true, updateFilter: this.updateFilter, selectedRating: this.state.selectedRating, showUnAvailable: this.state.showUnAvailable, hotelName: this.state.nameFilter});
     }
 
     gotoSearch() {
@@ -245,7 +356,30 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        //this.props.navigation.navigate('HotelDetails', {guests : this.state.guests, hotelDetail: item, urlForService: this.state.urlForService, locRate: this.state.locRate, currencyIcon: this.state.currencyIcon});
+        this.props.navigation.navigate('HotelDetails', 
+            {
+                guests : this.state.guests, 
+                hotelDetail: item, 
+                urlForService: this.state.urlForService, 
+                locRate: this.state.locRate,
+                currency: this.state.currency,
+                currencySign: this.state.currencySign
+            });
+    }
+
+    calloutClick = (item) =>{
+        if (clientRef) {
+            clientRef.disconnect();
+        }
+        this.props.navigation.navigate('HotelDetails',
+            {
+                guests : this.state.guests, 
+                hotelDetail: item, 
+                urlForService: this.state.urlForService, 
+                locRate: this.state.locRate,
+                currency: this.state.currency,
+                currencySign: this.state.currencySign
+            });
     }
 
     renderAutocomplete() {
@@ -300,6 +434,33 @@ class Property extends Component {
         );
     }
 
+    renderFilterText(){
+        return(
+            <View style={{flexDirection: 'column', alignItems: 'center'}}>
+            <Text style={{marginTop: 18, width: '100%', textAlign: 'center'}}>Search in progress, filtering will be possible after it is completed</Text>
+            <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
+            </View>
+        );
+    }
+
+    renderFilter(){
+        return(
+            <DateAndGuestPicker
+                checkInDate={this.state.checkInDate}
+                checkOutDate={this.state.checkOutDate}
+                adults={this.state.guests}
+                children={0}
+                guests = {0}
+                infants={0}
+                gotoGuests={this.gotoGuests}
+                gotoSearch={this.gotoSearch}
+                onDatesSelect={this.onDatesSelect}
+                gotoSettings={this.gotoSettings}
+                showSearchButton= {false}
+            />
+        );
+    }
+
     render() {
         const {
             adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
@@ -324,45 +485,70 @@ class Property extends Component {
                 </View>
                 {!this.props.autocomplete.length && this.renderAutocomplete()}
 
+                {this.state.isLoading ? this.renderFilterText() : this.renderFilter()}
+
                 <TouchableOpacity onPress={this.alterMap}>
                     <View style={styles.searchButtonView}>
                         <Text style={styles.searchButtonText}>{this.state.showResultsOnMap ? "See Results List" : "See Results on Map"}</Text>
                     </View>
                 </TouchableOpacity>
-
-                {this.state.isLoading && this.renderLoader()}
+                
                 {this.state.noResultsFound && this.renderInfoTv()}
 
                 <View style={styles.itemView}>
-                    <DateAndGuestPicker
-                            checkInDate={checkInDate}
-                            checkOutDate={checkOutDate}
-                            adults={guests}
-                            children={0}
-                            guests = {0}
-                            infants={0}
-                            gotoGuests={this.gotoGuests}
-                            gotoSearch={this.gotoSearch}
-                            onDatesSelect={this.onDatesSelect}
-                            gotoSettings={this.gotoSettings}
-                            showSearchButton= {false}
-                        />
+                    
+                    {
+                        this.state.showResultsOnMap ? 
 
+                        <MapView
+                            style={styles.map}
+                            region={{
+                              latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat ,
+                              longitude:  this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
+                              latitudeDelta: 1,
+                              longitudeDelta: 1,
+                            }}
+                            debug={false}>
+                            {this.state.listings.map(marker => marker.lat != null && (
+                            <Marker
+                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
+                                onCalloutPress={this.calloutClick.bind(this, marker)}
+                                >
+                                <MapView.Callout
+                                    tooltip={true}>
+                                    <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' ,backgroundColor: '#fff'}}>
+                                        <Image
+                                            style={{width: 100, height: 60}}
+                                            source={ marker.thumbnail !== null && {uri : imgHost + marker.thumbnail.url} } 
+                                        />
+                                        <Text style={styles.location}>
+                                            {marker.name}
+                                        </Text>
+                                        <Text style={styles.description}>
+                                            LOC {marker.price} / Night
+                                        </Text>
+                                        <Text style={styles.ratingsMap}>
+                                        {
+                                            Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                                        }
+                                        </Text>
+                                    </View>
+                                </MapView.Callout>
+                            </Marker>
+                            ))}
+                        </MapView>
 
-                    {/* <FlatList style={styles.flatList}
+                        :
+
+                        <FlatList
+                            style={styles.flatList}
                             data={this.state.listings}
                             renderItem={
                                 ({item}) =>
-                                
-                                
-
                                 <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
-                            
                                 <View style={styles.card}>
-                                
-                                
                                 <Image 
-                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url}} 
+                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url} } 
                                 style={styles.popularHotelsImage}/>
 
                                 <TouchableOpacity style={styles.favoritesButton}>
@@ -383,33 +569,19 @@ class Property extends Component {
                                                 <Text style={styles.totalReviews}>73 Reviews</Text>
                                             </View>
                                             <View style={styles.costView}>
-                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{params ? params.currencyIcon: Icons.euro}</FontAwesome> {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
+                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{this.state.currencySign} {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
                                                 <Text style={styles.perNight}>per night</Text>
                                             </View>
                                         </View>
                                 </View>
                                 </TouchableOpacity>
                             }
-                        /> */}
+                        />
+                    }
 
-                    <MapView
-                            style={styles.map}
-                            region={{
-                              latitude: 51.5074,
-                              longitude:  0.1278,
-                              latitudeDelta: 3,
-                              longitudeDelta: 3,
-                            }}
-                            debug={false}>
-                            {this.state.listings.map(marker => marker.lat != null && (
-                            <Marker
-                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                title={marker.title}
-                                description={marker.description}
-                                />
-                            ))}
+                    
 
-                    </MapView>
+                    
                 </View>
             </View>
         );
@@ -420,19 +592,12 @@ class Property extends Component {
             var object = JSON.parse(message);
             if (object.hasOwnProperty('allElements')) {
                 if (object.allElements){
-                    this.setState({
-                        isLoading: false,
-                    });
-                }
-                if (this.state.listings.length <= 0){
-                    this.setState({noResultsFound: true,})
+                    this.applyFilters();
                 }
             } else {
-                console.log(object);
                 this.setState(prevState => ({
                     listings: [...prevState.listings, object]
                   }));
-                  console.log(`checking it    lat: ${object.lat} long: ${object.lon}`)
             }
         } catch(e) {
             console.log(e);
@@ -440,17 +605,11 @@ class Property extends Component {
     }
 
     handleReceiveSingleHotel(message) {
-        console.log("yess");
         var response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
             if (response.allElements){
                 clientRef.disconnect();
-                this.setState({
-                    isLoading: false,
-                });
-            }
-            if (this.state.listings.length <= 0){
-                this.setState({noResultsFound: true,})
+                this.applyFilters();
             }
         } else {
             this.setState(prevState => ({

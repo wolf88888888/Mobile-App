@@ -1,36 +1,17 @@
 import {
     FlatList,
-    Image,
     ScrollView,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View
 } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import InboxMessagesView from './InboxMessagesView';
-import { ListView } from 'react-native';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
-import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-simple-toast';
-import { imgHost } from '../../../config'
 import requester from '../../../initDependencies';
 import styles from './inboxStyle';
-
-// import Image from 'react-native-remote-svg'; import GoBack from
-// '../common/GoBack';
-
-
-
-
-
-
-
-
-// You will find all component related to style in this class
 
 
 class Inbox extends Component {

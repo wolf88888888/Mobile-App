@@ -29,7 +29,7 @@ export default class Filters extends Component {
         }
         const { params } = this.props.navigation.state
         this.state.isHotelSelected = params.isHotelSelected
-        this.state.count = params.count
+        //this.state.count = params.count
     }
 
     addCount(type) {

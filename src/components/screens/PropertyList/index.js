@@ -31,7 +31,7 @@ class PropertyList extends React.Component {
         urlForHomes: '',
         locRate: 0,
         currencyIcon: '',
-        language: "EUR",
+        currency: "EUR",
     };
 
     static propTypes = {
@@ -56,7 +56,7 @@ class PropertyList extends React.Component {
         this.state.guests = params ? params.guests : 2;
         this.state.locRate = params ? params.locRate : 0;
         this.state.currencyIcon = params ? params.currencyIcon : Icons.euro;
-        this.state.language = params ? params.language : 'EUR';
+        this.state.currency = params ? params.currency : 'EUR';
 
         let urlForHomes = [];
         urlForHomes.push(`countryId=${params.countryId}`, `startDate=${params.startDate}`, `endDate=${params.endDate}`, `guests=${params.guests}`, 'priceMin=0', 'priceMax=5000')
@@ -101,17 +101,17 @@ class PropertyList extends React.Component {
     }
 
     renderCurrency(eur, usd, gbp) {
-        if (this.state.language == "EUR") {
+        if (this.state.currency == "EUR") {
             return (
                 <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{Icons.euro}</FontAwesome> EUR {eur} LOC {parseFloat(eur / this.state.locRate).toFixed(2)} </Text>
             );
         }
-        else if (this.state.language == "USD") {
+        else if (this.state.currency == "USD") {
             return (
                 <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{Icons.usd}</FontAwesome> USD {usd} LOC {parseFloat(usd / this.state.locRate).toFixed(2)} </Text>
             );
         }
-        else if (this.state.language == "GBP") {
+        else if (this.state.currency == "GBP") {
             return (
                 <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail"><FontAwesome>{Icons.gbp}</FontAwesome> GBP {gbp} LOC {parseFloat(gbp / this.state.locRate).toFixed(2)} </Text>
             );

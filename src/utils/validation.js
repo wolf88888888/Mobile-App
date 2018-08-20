@@ -1,3 +1,4 @@
+var valid = require('card-validator');
 export const validateName = name => !!name;
 
 export const validateEmail = (email) => {
@@ -34,5 +35,19 @@ export const validateNumberic = (number) => {
 export const validateEmptyString = (str) => {
     return (!str || /^\s*$/.test(str));
 }
+export const validateCardNumber = (card) => {
+    var cardNumber = valid.number(card);
+    return cardNumber.isValid;
+};
+
+export const validateCardExpiry = (cardExpiry) => {
+    var expirationDateValidation = valid.expirationDate(cardExpiry);
+    return expirationDateValidation.isValid;
+};
+
+export const validateCVV = (cvv) => {
+    var cvv = valid.cvv(cvv);
+    return cvv.isValid;
+};
 
 export const validateConfirmPassword = (password, confirmPassword) => !!password && !!confirmPassword && password === confirmPassword;

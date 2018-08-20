@@ -4,7 +4,6 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-
 export default class NavTabBar extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
@@ -16,19 +15,9 @@ export default class NavTabBar extends Component {
                 }))
             })
         }),
-        paymentInfo: PropTypes.shape({
-            currency: PropTypes.string
-        }),
-        loadInitialData: PropTypes.func
     }
 
     static defaultProps = {
-        paymentInfo: {
-            currency: 'USD',
-            currencySign: '$',
-            locRate: null
-        },
-        reloadTab: true,
         navigation: {
             navigate: () => {},
             state: {
@@ -36,12 +25,11 @@ export default class NavTabBar extends Component {
                 routes: []
             }
         },
-        loadInitialData: () => {}
     }
 
     async componentDidMount() {
-        const { currency } = this.props.paymentInfo;
-        await this.props.loadInitialData({ currency });
+        //const { currency } = this.props.paymentInfo;
+        //console.log("Nav - componentDidMount", currency);
     }
 
     render() {
