@@ -36,7 +36,7 @@ export default StyleSheet.create({
     inactiveTextStyle: {
         fontSize: 8.5,
         fontFamily: 'FuturaStd-Light',
-        color: '#646467',
+        color: '#646464',
         marginTop: 6
     }
 

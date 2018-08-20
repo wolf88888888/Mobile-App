@@ -1,6 +1,5 @@
 import {
     AsyncStorage,
-    Keyboard,
     ScrollView,
     Text,
     TouchableOpacity,
@@ -11,21 +10,13 @@ import {
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
-import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
-import { autobind } from 'core-decorators';
-import { domainPrefix } from '../../../config';
-import { imgHost } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
-
-// import DialogProgress from 'react-native-dialog-progress'
-
-
 
 class SaveWallet extends Component {
     static propTypes = {

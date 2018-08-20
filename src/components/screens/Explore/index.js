@@ -1,37 +1,28 @@
-import { AsyncStorage, Image, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
+import SplashScreen from 'react-native-smart-splash-screen';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import { Icons } from 'react-native-fontawesome';
-import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
-import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-easy-toast';
-import _ from 'lodash';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
-import { withNavigation } from 'react-navigation';
 import { userInstance } from '../../../utils/userInstance';
+import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog'
+
+import * as currencyActions from '../../../redux/action/Currency'
 
 const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
-class Explore extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    };
+const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];
 
-    static defaultProps = {
-        navigation: {
-            navigate: () => {
-            }
-        }
-    };
+class Explore extends Component {
+    static self;
 
     constructor(props) {
         super(props);
@@ -53,7 +44,6 @@ class Explore extends Component {
         this.handlePopularCities = this.handlePopularCities.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
-        this.spinnerValueChange = this.spinnerValueChange.bind(this);
         this.showToast = this.showToast.bind(this);
         this.state = {
             searchHotel: true,
@@ -65,20 +55,14 @@ class Explore extends Component {
             cities: [],
             search: '',
             regionId: '',
-            currency: 'EUR',
-            checkInDate: startDate.format('ddd, DD MMM')
-                .toString(),
-            checkInDateFormated: startDate.format('DD/MM/YYYY')
-                .toString(),
-            checkOutDate: endDate.format('ddd, DD MMM')
-                .toString(),
-            checkOutDateFormated: endDate.format('DD/MM/YYYY')
-                .toString(),
+            checkInDate: startDate.format('ddd, DD MMM').toString(),
+            checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
+            checkOutDate: endDate.format('ddd, DD MMM').toString(),
+            checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
             guests: 2,
             adults: 2,
             children: 0,
             infants: 0,
-            topHomes: [],
             roomsDummyData: [{
                 adults: 2,
                 children: []
@@ -90,29 +74,18 @@ class Explore extends Component {
                 bathrooms: 0
             },
             childrenBool: false,
-            locPrice: 0,
-            language: 'EUR',
-            locRates: [],
-            currencyIcon: Icons.euro,
+            locRate: props.locRate,
+            currency: props.currency,
+            currencySign: props.currencySign,
             email: '',
             token: '',
             countriesLoaded: false,
-            items: [
-                {
-                    label: 'EUR',
-                    value: 'EUR'
-                },
-                {
-                    label: 'USD',
-                    value: 'USD'
-                },
-                {
-                    label: 'GBP',
-                    value: 'GBP'
-                }
-            ]
+            currencySelectionVisible: false,
         };
-        this.getCountryValues();
+        
+        this.props.actions.getCurrency(props.currency);
+
+        Explore.self = this;
     }
 
     async componentWillMount() {
@@ -128,24 +101,29 @@ class Explore extends Component {
             duration: 0,
             delay: 0
         });
+        console.log("componentWillMount", token_value, email_value);
         requester.getUserInfo().then(res => {
             res.body.then(data => {
+                console.log("componentWillMount", data);
                 userInstance.setUserData(data);
             }).catch(err => {
-                console.log(err);
+                console.log("componentWillMount", err);
             });
         });
     }
+    
+
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
+            this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
+        }
+    }
+    
 
     async componentDidMount() {
         console.disableYellowBox = true;
-        requester.getTopListings().then(res => {
-            res.body.then(data => {
-                const truncated = data.content.slice(0, 4);
-                this.setState({ topHomes: truncated });
-            });
-        });
-        this.spinnerValueChange(this.state.language);
+        console.log("componentDidMount");
     }
 
     showToast() {
@@ -254,7 +232,7 @@ class Explore extends Component {
             adults: this.state.adults,
             children: this.state.children,
             regionId: this.state.regionId,
-            currency: this.state.language,
+            currency: this.state.currency,
             checkOutDateFormated: this.state.checkOutDateFormated,
             checkInDateFormated: this.state.checkInDateFormated,
             roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
@@ -274,12 +252,12 @@ class Explore extends Component {
                 countryId: this.state.countryId,
                 regionId: this.state.regionId,
                 isHotelSelected: this.state.isHotelSelected,
-                currency: this.state.language,
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
                 roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                locRate: this.state.locPrice,
-                currencyIcon: this.state.currencyIcon,
+                currency: this.state.currency,
+                currencySign: this.state.currencySign,
+                locRate: this.state.locRate,
                 email: this.state.email,
                 token: this.state.token,
                 filter: encodeURI(JSON.stringify(this.state.filter)),
@@ -289,9 +267,8 @@ class Explore extends Component {
             if (!this.state.searchHotel) {
                 //user searched for home
                 this.props.navigation.navigate('PropertyList', {
-                    language: this.state.language,
-                    currencyIcon: this.state.currencyIcon,
-                    locRate: this.state.locPrice,
+                    currency: this.state.currency,
+                    locRate: this.state.locRate,
                     countryId: this.state.countryId,
                     countryName: this.state.countryName,
                     startDate: this.state.checkInDateFormated,
@@ -302,9 +279,8 @@ class Explore extends Component {
             else {
                 this.props.navigation.navigate('Debug', {
                     regionId: this.state.regionId,
-                    language: this.state.language,
-                    currencyIcon: this.state.currencyIcon,
-                    locRate: this.state.locPrice,
+                    currency: this.state.currency,
+                    locRate: this.state.locRate,
                     startDate: this.state.checkInDateFormated,
                     endDate: this.state.checkOutDateFormated,
                     startDate: this.state.checkInDateFormated,
@@ -316,9 +292,8 @@ class Explore extends Component {
         else {
             if (!this.state.searchHotel) {
                 this.props.navigation.navigate('PropertyList', {
-                    language: this.state.language,
-                    currencyIcon: this.state.currencyIcon,
-                    locRate: this.state.locPrice,
+                    currency: this.state.currency,
+                    locRate: this.state.locRate,
                     countryId: this.state.countryId,
                     countryName: this.state.countryName,
                     startDate: this.state.checkInDateFormated,
@@ -343,47 +318,17 @@ class Explore extends Component {
                         countryId: this.state.countryId,
                         regionId: this.state.regionId,
                         isHotelSelected: this.state.isHotelSelected,
-                        currency: this.state.language,
+                        currency: this.state.currency,
                         checkOutDateFormated: this.state.checkOutDateFormated,
                         checkInDateFormated: this.state.checkInDateFormated,
                         roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                        locRate: this.state.locPrice,
-                        currencyIcon: this.state.currencyIcon,
+                        locRate: this.state.locRate,
                         email: this.state.email,
                         token: this.state.token
                     });
                 }
             }
         }
-    }
-
-    spinnerValueChange(value) {
-        this.setState({ language: value });
-        requester.getLocRateByCurrency(value).then(res => {
-            res.body.then(data => {
-                console.log('spinnerValueJson----', data[0], value);
-                if (value == 'EUR') {
-                    this.setState({
-                        locPrice: data[0].price_eur,
-                        currencyIcon: Icons.euro
-                    });
-                }
-                else if (value == 'USD') {
-                    this.setState({
-                        locPrice: data[0].price_usd,
-                        currencyIcon: Icons.usd
-                    });
-                }
-                else if (value == 'GBP') {
-                    this.setState({
-                        locPrice: data[0].price_gbp,
-                        currencyIcon: Icons.gbp
-                    });
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        });
     }
 
     handleAutocompleteSelect(id, name) {
@@ -401,21 +346,6 @@ class Explore extends Component {
             regionId: id,
             searchHotel: true
         });
-    }
-
-    renderHomes() {
-        return (
-            <View style={styles.sectionView}>
-                <View style={styles.subtitleView}>
-                    <Text style={styles.subtitleText}>Popular Homes</Text>
-                </View>
-
-                <View style={styles.tilesView}>
-                    {this.state.topHomes.map(listing => <SmallPropertyTile listingsType="homes" listing={listing}
-                        key={listing.id} />)}
-                </View>
-            </View>
-        );
     }
 
     renderAutocomplete() {
@@ -461,19 +391,6 @@ class Explore extends Component {
                         leftIcon="search"
                         onLeftPress={this.gotoSearch}
                     />
-
-                </View>
-                <View style={styles.pickerWrap}>
-                    <RNPickerSelect
-                        items={this.state.items}
-                        onValueChange={(value) => {
-                            console.log(value);
-                            this.spinnerValueChange(value);
-                        }}
-                        value={this.state.language}
-                        style={{ ...pickerSelectStyles }}
-                    >
-                    </RNPickerSelect>
                 </View>
             </View>
         );
@@ -504,7 +421,7 @@ class Explore extends Component {
                         </RNPickerSelect>
                     </View>
                 </View>
-                <View style={styles.pickerWrap}>
+                {/* <View style={styles.pickerWrap}>
                     <RNPickerSelect
                         items={this.state.items}
                         onValueChange={(value) => {
@@ -515,14 +432,7 @@ class Explore extends Component {
                         style={{ ...pickerSelectStyles }}
                     >
                     </RNPickerSelect>
-                    {/* <Picker style={{width: '100%', height: 50}} itemStyle={{height: 50}}
-                        selectedValue={this.state.language}
-                        onValueChange={(itemValue, itemIndex) => this.spinnerValueChange(itemValue)}>
-                        <Picker.Item label="EUR" value="EUR" />
-                        <Picker.Item label="USD" value="USD" />
-                        <Picker.Item label="GBP" value="GBP" />
-                    </Picker> */}
-                </View>
+                </View> */}
             </View>
         );
     }
@@ -601,7 +511,7 @@ class Explore extends Component {
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, countries
+            checkInDate, checkOutDate, guests
         } = this.state;
         return (
 
@@ -637,7 +547,7 @@ class Explore extends Component {
 
                     <View style={styles.scrollViewContent}>
 
-                        <Text style={styles.scrollViewTitles}>Discover</Text>
+                        <Text style={[styles.scrollViewTitles, {marginBottom:5}]}>Discover</Text>
 
                         <View style={styles.viewDiscover}>
 
@@ -668,12 +578,11 @@ class Explore extends Component {
 
                         </View>
 
-                        <Text style={styles.scsrollViewTitles}>Popular Destinations</Text>
+                        <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
 
                         <View style={styles.divsider} />
 
                         <View style={styles.viewPopularHotels}>
-
                             <TouchableOpacity onPsress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
                                 style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
@@ -723,11 +632,31 @@ class Explore extends Component {
 
                     </View>
                 </ScrollView>
+                                
+                <TouchableWithoutFeedback onPress={() => this.setState({ currencySelectionVisible: true })}>
+                    <View style={styles.fab}>
+                    {
+                        this.state.locRate != 0 ? 
+                            (<Text style={styles.fabText}>LOC/{this.state.currency} {parseFloat(this.state.locRate).toFixed(2)}</Text>)
+                            :
+                            (<Text style={styles.fabText}>LOC/{this.state.currency}    </Text>)
+                    }
+                        
+                    </View>
+                </TouchableWithoutFeedback>
 
-                <View style={styles.fab}>
-                    <Text style={styles.fabText}>LOC/{this.state.language} {parseFloat(this.state.locPrice)
-                        .toFixed(2)}</Text>
-                </View>
+                <SingleSelectMaterialDialog
+                    title = { 'Select Currency' }
+                    items = { BASIC_CURRENCY_LIST.map((row, index) => ({ value: index, label: row })) }
+                    visible = { this.state.currencySelectionVisible }
+                    onCancel = { () =>this.setState({ currencySelectionVisible: false }) }
+                    onOk = { result => {
+                        console.log("select country", result);
+                        this.setState({ currencySelectionVisible: false });
+                        this.props.actions.getCurrency(result.selectedItem.label);
+                        // this.setState({ singlePickerSelectedItem: result.selectedItem });
+                    }}
+                />
             </View>
         );
     }
@@ -745,4 +674,16 @@ const pickerSelectStyles = StyleSheet.create({
     }
 });
 
-export default withNavigation(Explore);
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+        locRate: state.currency.locRate
+    };
+}
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(currencyActions, dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Explore);

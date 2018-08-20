@@ -10,30 +10,12 @@ import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePasswor
 
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import styles from './styles';
 
 class CreatePassword extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func,
-            state: PropTypes.shape({
-                params: PropTypes.object //eslint-disable-line
-            })
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => {},
-            state: {
-                params: {}
-            }
-        }
-    }
     constructor(props) {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -69,18 +51,14 @@ class CreatePassword extends Component {
             return;
         }
         const { params } = this.props.navigation.state;
-        const { password, confirmPassword } = this.state;
+        const { password } = this.state;
 
-        this.props.navigation.navigate('Terms', { ...params, password, isFB:false })
+        this.props.navigation.navigate('Terms', { ...params, password})
     }
 
     render() {
         const { password, confirmPassword } = this.state;
-        const { navigate, goBack } = this.props.navigation;
-        const { params } = this.props.navigation.state;
-
-        console.log(params);
-
+        const { goBack } = this.props.navigation;
         return (
             <KeyboardAwareScrollView
                 style={styles.container}

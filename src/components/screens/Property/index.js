@@ -1,16 +1,11 @@
-import { BackHandler, FlatList, Platform, ScrollView, Text, TouchableOpacity, View, WebView } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { BackHandler, Platform, ScrollView, Text, TouchableOpacity, View, WebView } from 'react-native';
+import { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-import { apiHost, imgHost } from '../../../config';
 
 import BackButton from '../../atoms/BackButton';
-import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
-import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
-import SockJsClient from 'react-stomp';
-import SplashScreen from 'react-native-smart-splash-screen';
 import UUIDGenerator from 'react-native-uuid-generator';
 import requester from '../../../initDependencies';
 import styles from './styles';
@@ -74,7 +69,7 @@ class Property extends Component {
 
         UUIDGenerator.getRandomUUID((uuid) => {
             uid = uuid;
-        });
+        }); 
         console.disableYellowBox = true;
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -148,12 +143,6 @@ class Property extends Component {
     }
 
     componentWillMount(){
-        //Remove Splash
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 0,
-            delay: 0,
-        });
         if (Platform.OS === 'android') {
             BackHandler.addEventListener('hardwareBackPress', this.onAndroidBackPress);
         }
