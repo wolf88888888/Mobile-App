@@ -1,7 +1,8 @@
 import {
     Dimensions,
     ScrollView,
-    View
+    View,
+    FlatList
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -45,6 +46,7 @@ class HotelDetails extends Component {
         this.state = {
             hotel: {},
             hotelFullDetails: [],
+            hotelAmenities: [],
             dataSourcePreview: [],
             description: '',
             rooms: [],
@@ -93,7 +95,9 @@ class HotelDetails extends Component {
         requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then(res => {
             // here you set the response in to json
             res.body.then(data => {
-                
+                console.log("****");
+                console.log(data);
+                console.log("****");
                 const hotelPhotos = [];
                 for (var i = 0; i < data.hotelPhotos.length; i++) {
                     hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i]["url"] })
@@ -103,6 +107,7 @@ class HotelDetails extends Component {
                 // here you set you data from json into your variables
                 this.setState({
                     hotelFullDetails: data,
+                    hotelAmenities: data.hotelAmenities,
                     mainAddress: data.additionalInfo.mainAddress,
                     regionName: data.city,
                     countryName: data.country,
@@ -119,7 +124,6 @@ class HotelDetails extends Component {
     componentDidMount() {
         
     }
-
 
     onClose() {
         this.props.navigation.goBack();
@@ -165,10 +169,14 @@ class HotelDetails extends Component {
                             description={this.state.description}
                             onBooking={this.onBooking}
                         />
-                        
 
-                        <FacilitiesView
+                        
+                        {/* { this.state.hotelAmenities.map
+                        (listing => <FacilityView image={require('../../../assets/Facilities/Homes/BathTub.png')}/>) } */}
+                        
+                            <FacilitiesView
                             style={styles.roomfacility}
+                            data={this.state.hotelAmenities}
                             onFacilityMore={this.onFacilityMore} />
 
                         <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 }]} />
