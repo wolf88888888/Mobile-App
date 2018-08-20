@@ -108,8 +108,8 @@ class Profile extends Component {
         console.log("profile locPrice: ", locRate);
         let price = locBalance * locRate;
         var displayPrice = currencySign;
-        if (price != 0)
-            displayPrice += price.toFixed(2);
+        if (locBalance == 0 || price != 0)
+            displayPrice += " " + price.toFixed(2);
 
         return (
             <View style={styles.container}>

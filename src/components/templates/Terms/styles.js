@@ -11,15 +11,17 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#000',
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 22,
     },
+
     paragraph: {
         color: '#444',
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
         lineHeight: 20,
     },
+
     buttonsView: {
         display: 'flex',
         flexDirection: 'row',
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
     acceptButtonView: {
         display: 'flex',
         flexDirection: 'row',
-        width: 150,
+        width: 140,
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
     declineButtonView: {
         display: 'flex',
         flexDirection: 'row',
-        width: 150,
+        width: 140,
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,

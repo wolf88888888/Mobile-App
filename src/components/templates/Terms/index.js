@@ -34,8 +34,7 @@ class Terms extends Component {
                 <StatusBar
                     backgroundColor="rgba(0,0,0,0)"
                     translucent
-                    barStyle="dark-content"
-                />
+                    barStyle="dark-content"/>
 
                 <Text style={styles.title}>Before continuing</Text>
                 <Text style={styles.paragraph}>I accept the terms and conditions found on https://locktrip.com/terms.html</Text>
