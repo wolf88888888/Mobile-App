@@ -175,7 +175,7 @@ class Profile extends Component {
                         currentCurrency: currency,
                         currencyLocPrice: data[0].price_gbp,
                     });
-
+                    
                 }
             });
         }).catch(err => {
@@ -316,6 +316,10 @@ class Profile extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.showToast} style={styles.navItem}>
                             <Text style={styles.navItemText}>Switch to Hosting</Text>
+                            <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigate('SendToken', { locBalance: locBalance.toFixed(6), ethBalance: parseFloat(ethBalance).toFixed(6)})} style={styles.navItem}>
+                            <Text style={styles.navItemText}>Send Tokens</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {

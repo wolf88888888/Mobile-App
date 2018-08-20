@@ -26,4 +26,13 @@ export const validatePassword1 = (password) => {
     return re.test(password);
 };
 
+export const validateNumberic = (number) => {
+    const re =  /^-{0,1}\d*\.{0,1}\d+$/; // eslint-disable-line
+    return re.test(number);
+}
+
+export const validateEmptyString = (str) => {
+    return (!str || /^\s*$/.test(str));
+}
+
 export const validateConfirmPassword = (password, confirmPassword) => !!password && !!confirmPassword && password === confirmPassword;
