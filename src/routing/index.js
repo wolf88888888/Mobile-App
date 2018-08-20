@@ -67,6 +67,7 @@ import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
 import EditUserProfile from '../components/screens/EditUserProfile';
 import UpdateProfileInfo from '../components/screens/UpdateProfileInfo';
+import SendToken from '../components/screens/SendToken';
 import CongratsCreditCard from '../components/screens/CongratsCreditCard';
 
 import PropertyList from '../components/screens/PropertyList';
@@ -143,6 +144,7 @@ const RootNavigator = createStackNavigator(
         EditUserProfile: { screen: EditUserProfile },
         UpdateProfileInfo: { screen: UpdateProfileInfo },
         SimpleUserProfile: {screen: SimpleUserProfile},
+        SendToken: {screen: SendToken},
         SingleWishlist: {screen: SingleWishlist},
         Debug : {screen: Debug},
         Chat: {screen: Chat},
