@@ -1,14 +1,12 @@
 import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import SplashScreen from 'react-native-smart-splash-screen';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import { Icons } from 'react-native-fontawesome';
-import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
-import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import Toast from 'react-native-easy-toast';
 import { domainPrefix } from '../../../config';
 import moment from 'moment';
@@ -18,7 +16,6 @@ import { userInstance } from '../../../utils/userInstance';
 import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog'
 
 import * as currencyActions from '../../../redux/action/Currency'
-import { bindActionCreators } from 'redux'
 
 const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
@@ -77,16 +74,16 @@ class Explore extends Component {
                 bathrooms: 0
             },
             childrenBool: false,
-            locRate: 0,
-            currency: 'EUR',
-            currencySign: '€',
+            locRate: props.locRate,
+            currency: props.currency,
+            currencySign: props.currencySign,
             email: '',
             token: '',
             countriesLoaded: false,
             currencySelectionVisible: false,
         };
         
-        this.props.actions.getCurrency(this.props.currency);
+        this.props.actions.getCurrency(props.currency);
 
         Explore.self = this;
     }
