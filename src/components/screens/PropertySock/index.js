@@ -140,12 +140,12 @@ class Property extends Component {
                 headers,
                 JSON.stringify({uuid: uid, query : mainUrl})
             )
-            }, (error) => {
-                clientRef.disconnect();
-                this.setState({
-                    isLoading: false,
-                });
+        }, (error) => {
+            clientRef.disconnect();
+            this.setState({
+                isLoading: false,
             });
+        });
     }
 
     alterMap() {
@@ -216,35 +216,35 @@ class Property extends Component {
     applyFilters() {
         const search = this.getSearchString();
         const filters = this.getFilterString();
-        const page = this.state.page ? this.state.page : 0;
-        requester.getStaticHotelsByFilter(search, filters).then(res => {
-        if (res.success) {
-            res.body.then(data => {
-                let mapInfo = [];
-                mapInfo = data.content.map(hotel => {
-                return {
-                    id: hotel.id,
-                    lat: hotel.latitude,
-                    lon: hotel.longitude,
-                    name: hotel.name,
-                    price: hotel.price,
-                    stars: hotel.star,
-                    thumbnail: { url: hotel.hotelPhoto }
-                };
+        // const page = this.state.page ? this.state.page : 0;
+        requester.getStaticHotelsByFilter(search, filters).then((res) => {
+            if (res.success) {
+                res.body.then((data) => {
+                    let mapInfo = [];
+                    mapInfo = data.content.map((hotel) => {
+                        return {
+                            id: hotel.id,
+                            lat: hotel.latitude,
+                            lon: hotel.longitude,
+                            name: hotel.name,
+                            price: hotel.price,
+                            stars: hotel.star,
+                            thumbnail: { url: hotel.hotelPhoto }
+                        };
+                    });
+                    this.setState({
+                        isLoading: false,
+                        listings: mapInfo
+                    }, () => {
+                        if (this.state.listings.length <= 0) {
+                            this.setState({ noResultsFound: true });
+                        } else {
+                            this.setState({ noResultsFound: false });
+                        }
+                    });
                 });
-                this.setState({
-                    isLoading: false,
-                    listings: mapInfo
-                }, () => {
-                    if (this.state.listings.length <= 0) {
-                        this.setState({noResultsFound: true})
-                    } else {
-                        this.setState({noResultsFound: false})
-                    }
-                });
-            });
-        } else {
-                
+            } else {
+                // error
             }
         });
     }
@@ -261,43 +261,42 @@ class Property extends Component {
 
     getFilterString() {
         const filtersObj = {
-          showUnavailable: this.state.showUnAvailable,
-          name: this.state.nameFilter,
-          minPrice: this.state.sliderValue[0],
-          maxPrice: this.state.sliderValue[1],
-          stars: this.mapStars(this.state.selectedRating)
+            showUnavailable: this.state.showUnAvailable,
+            name: this.state.nameFilter,
+            minPrice: this.state.sliderValue[0],
+            maxPrice: this.state.sliderValue[1],
+            stars: this.mapStars(this.state.selectedRating)
         };
-    
+
         const page = 0;
         const sort = this.state.orderBy;
         const pagination = `&page=${page}&sort=${sort}`;
-    
-        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination;
+        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
         return filters;
     }
 
     mapStars(stars) {
         let hasStars = false;
-        let mappedStars = [];
-        stars.forEach(s => {
-          if (s) {
-            hasStars = true;
-          }
-        });
-    
-        if (!hasStars) {
-          for (let i = 0; i <= 5; i++) {
-            mappedStars.push(i);
-          }
-        } else {
-          mappedStars.push(0);
-          stars.forEach((s, i) => {
+        const mappedStars = [];
+        stars.forEach((s) => {
             if (s) {
-              mappedStars.push(i + 1);
+                hasStars = true;
             }
-          });
+        });
+
+        if (!hasStars) {
+            for (let i = 0; i <= 5; i++) {
+                mappedStars.push(i);
+            }
+        } else {
+            mappedStars.push(0);
+            stars.forEach((s, i) => {
+                if (s) {
+                    mappedStars.push(i + 1);
+                }
+            });
         }
-    
+
         return mappedStars;
     }
 
@@ -331,7 +330,7 @@ class Property extends Component {
     onBackPress() {
         this.props.navigation.goBack();
     }
-    
+
     gotoHotelDetailsPage(item) {
         if (clientRef) {
             clientRef.disconnect();
@@ -394,40 +393,47 @@ class Property extends Component {
     }
 
     renderInfoTv() {
-        return(
-            <View style={{ flex: 1,
+        return (
+            <View style={{
+                flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                marginBottom: 10}}>
-                <Text style={{width: '100%', height: 35, fontSize: 20, textAlign: 'center'}}>No Results Found</Text>
+                marginBottom: 10
+            }}
+            >
+                <Text style={{
+                    width: '100%', height: 35, fontSize: 20, textAlign: 'center'
+                }}
+                >
+                No Results Found
+                </Text>
             </View>
         );
     }
 
     renderLog() {
-        return(
-            <View style={{ flex: 1,
+        return (
+            <View style={{
+                flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                marginBottom: 10}}>   
-            </View>
+                marginBottom: 10
+            }}
+            />
         );
     }
 
     renderFilterText() {
-        return(
-            <View style={{flexDirection: 'column', alignItems: 'center'}}>
-            <Text style={{marginTop: 18, width: '100%', textAlign: 'center'}}>Search in progress, filtering will be possible after it is completed</Text>
-            <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
+        return (
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Text style={{ marginTop: 18, width: '100%', textAlign: 'center' }}>Search in progress, filtering will be possible after it is completed</Text>
+                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://alpha.locktrip.com/images/loader.gif' }} />
             </View>
         );
     }
-
-    
-
     renderFilter() {
-        return(
-            <View style={{width: '100%', height: 90}}>
+        return (
+            <View style={{ width: '100%', height: 90 }}>
                 <DateAndGuestPicker
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
@@ -439,18 +445,16 @@ class Property extends Component {
                     gotoSearch={this.gotoSearch}
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
-                    showSearchButton= {false}
-                    />
+                    showSearchButton={false}
+                />
             </View>
-            
         );
     }
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
+            search, searchedCity
         } = this.state;
-        const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
 
@@ -472,87 +476,100 @@ class Property extends Component {
 
                 {this.state.isLoading ? this.renderFilterText() : this.renderFilter()}
 
+                {this.state.showResultsOnMap && 
                 <TouchableOpacity onPress={this.alterMap}>
                     <View style={styles.searchButtonView}>
-                        <Text style={styles.searchButtonText}>{this.state.showResultsOnMap ? "See Results List" : "See Results on Map"}</Text>
+                        <Text style={styles.searchButtonText}>See Results List</Text>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity>}
                 
+
                 {this.state.noResultsFound && this.renderInfoTv()}
 
                 <View style={styles.itemView}>
-                    
+
                     {
-                        this.state.showResultsOnMap ? 
+                        this.state.showResultsOnMap ?
 
-                        <MapView
-                            style={styles.map}
-                            region={{
-                              latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat,
-                              longitude:  this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
-                              latitudeDelta: 1,
-                              longitudeDelta: 1,
-                            }}
-                            debug={false}>
-                            {this.state.listings.map(marker => marker.lat != null && (
-                            <Marker
-                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                onCalloutPress={this.calloutClick.bind(this, marker)}
-                                >
-                                <MapView.Callout
-                                    tooltip={true}>
-                                    <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',backgroundColor: '#fff'}}>
-                                        <Image
-                                            style={{width: 100, height: 60}}
-                                            source={ marker.thumbnail !== null && {uri : imgHost + marker.thumbnail.url} } 
-                                        />
-                                        <Text style={styles.location}>
-                                            {marker.name}
-                                        </Text>
-                                        <Text style={styles.description}>
+                            <MapView
+                                style={styles.map}
+                                region={{
+                                    latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat,
+                                    longitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
+                                    latitudeDelta: 1,
+                                    longitudeDelta: 1
+                                }}
+                                debug={false}>
+                                {this.state.listings.map(marker => marker.lat != null && (
+                                    <Marker
+                                        coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
+                                        onCalloutPress={this.calloutClick.bind(this, marker)}
+                                    >
+                                        <MapView.Callout
+                                            tooltip
+                                        >
+                                            <View style={
+                                                {
+                                                    paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',backgroundColor: '#fff' 
+                                                }
+                                            }
+                                            >
+                                                <Image
+                                                    style={{ width: 100, height: 60 }}
+                                                    source={marker.thumbnail !== null && { uri: imgHost + marker.thumbnail.url }}
+                                                />
+                                                <Text style={styles.location}>
+                                                    {marker.name}
+                                                </Text>
+                                                <Text style={styles.description}>
                                             LOC {marker.price} / Night
-                                        </Text>
-                                        <Text style={styles.ratingsMap}>
-                                        {
-                                            Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-                                        }
-                                        </Text>
-                                    </View>
-                                </MapView.Callout>
-                            </Marker>
-                            ))}
-                        </MapView>
+                                                </Text>
+                                                <Text style={styles.ratingsMap}>
+                                                    {
+                                                        Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                                                    }
+                                                </Text>
+                                            </View>
+                                        </MapView.Callout>
+                                    </Marker>
+                                ))}
+                            </MapView>
 
-                        :
+                            :
 
-                        <FlatList
-                            style={styles.flatList}
-                            data={this.state.listings}
-                            onScroll={this.loadMore}
-                            renderItem={
-                                ({item}) =>
-                                <HotelItemView
-                                    item={item}
-                                    currencySign={this.state.currencySign}
-                                    locRate={this.state.locRate}
-                                    gotoHotelDetailsPage={this.gotoHotelDetailsPage}
-                                />
-                            }
-                        />
+                            <FlatList
+                                style={styles.flatList}
+                                data={this.state.listings}
+                                onScroll={this.loadMore}
+                                ListHeaderComponent={
+                                    <TouchableOpacity onPress={this.alterMap}>
+                                        <View style={{
+                                            marginLeft: 18, alignItems: 'center',backgroundColor: '#cc8068'
+                                        }}>
+                                            <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                }
+                                renderItem={
+                                    ({ item }) =>
+                                        (<HotelItemView
+                                            item={item}
+                                            currencySign={this.state.currencySign}
+                                            locRate={this.state.locRate}
+                                            gotoHotelDetailsPage={this.gotoHotelDetailsPage}
+                                        />)
+                                }
+                            />
                     }
-
-                    
-
-                    
                 </View>
             </View>
         );
     }
 
     handleAndroidSingleHotel(message) {
-        //this.applyFilters();
+        // this.applyFilters();
         try {
-            var object = JSON.parse(message);
+            const object = JSON.parse(message);
             if (object.hasOwnProperty('allElements')) {
                 if (object.allElements) {
                     this.applyFilters();
@@ -560,15 +577,15 @@ class Property extends Component {
             } else {
                 this.setState(prevState => ({
                     listings: [...prevState.listings, object]
-                  }));
+                }));
             }
-        } catch(e) {
-            console.log(e);
+        } catch (e) {
+            // Error
         }
     }
 
     handleReceiveSingleHotel(message) {
-        var response = JSON.parse(message.body);
+        const response = JSON.parse(message.body);
         if (response.hasOwnProperty('allElements')) {
             if (response.allElements) {
                 clientRef.disconnect();
@@ -577,10 +594,9 @@ class Property extends Component {
         } else {
             this.setState(prevState => ({
                 listings: [...prevState.listings, response]
-              }));
+            }));
         }
-      }
+    }
 }
-
 
 export default withNavigation(Property);
