@@ -176,7 +176,14 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Switch to Hosting</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.logout} style={styles.navItem}>
+                        <TouchableOpacity onPress={() => navigate('SendToken', { locBalance: locBalance.toFixed(6), ethBalance: parseFloat(ethBalance).toFixed(6)})} style={styles.navItem}>
+                            <Text style={styles.navItemText}>Send Tokens</Text>
+                            <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+                            this.props.navigation.navigate('Login');
+                        }} style={styles.navItem}>
                             <Text style={styles.navItemText}>Log Out</Text>
                         </TouchableOpacity>
                     </View>
