@@ -22,6 +22,7 @@ const stomp = require('stomp-websocket-js');
 const clientRef = undefined;
 let uid = '';
 var mainUrl = '';
+let countIos;
 
 class Property extends Component {
     static propTypes = {
@@ -92,7 +93,8 @@ class Property extends Component {
             selectedRating: [false, false, false, false, false],
             orderBy: 'priceForSort,asc',
             sliderValue: [1, 5000],
-            page: 0
+            page: 0,
+            totalPages: 0
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -134,6 +136,7 @@ class Property extends Component {
     }
 
     stompIos() {
+        countIos = 0;
         clientRef = stomp.client('wss://alpha.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
@@ -196,15 +199,17 @@ class Property extends Component {
     }
 
     loadMore = () => {
-        this.setState(
-            {
-                isLoading: true,
-                page: this.state.page + 1,
-            },
-            () =>{
-                this.applyFilters(true);
-            }
-        );
+        if ( this.state.page < this.state.totalPages-1){
+            this.setState(
+                {
+                    isLoading: true,
+                    page: this.state.page + 1,
+                },
+                () =>{
+                    this.applyFilters(true);
+                }
+            );
+        }
     }
 
     updateFilter(data) {
@@ -223,7 +228,6 @@ class Property extends Component {
     }
 
     applyFilters(loadMore) {
-        console.log(`loadmore${loadMore}`);
         const search = this.getSearchString();
         const filters = this.getFilterString();
         // const page = this.state.page ? this.state.page : 0;
@@ -260,7 +264,8 @@ class Property extends Component {
                         this.setState({
                             isFilterLoaded: true,
                             isLoading: false,
-                            listings: mapInfo
+                            listings: mapInfo,
+                            totalPages: data.totalPages
                         }, () => {
                             if (this.state.listings.length <= 0) {
                                 this.setState({ noResultsFound: true });
@@ -423,14 +428,13 @@ class Property extends Component {
     renderInfoTv() {
         return (
             <View style={{
-                flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 marginBottom: 10
             }}
             >
                 <Text style={{
-                    width: '100%', height: 35, fontSize: 20, textAlign: 'center'
+                    width: '100%', height: 35, fontSize: 20, textAlign: 'center', 
                 }}
                 >
                 No Results Found
@@ -567,6 +571,7 @@ class Property extends Component {
                             :
 
                             <FlatList
+                                bounces={false}
                                 style={styles.flatList}
                                 data={this.state.listings}
                                 onEndReachedThreshold={0.5}
@@ -626,17 +631,22 @@ class Property extends Component {
     }
 
     handleReceiveSingleHotel(message) {
-        const response = JSON.parse(message.body);
-        if (response.hasOwnProperty('allElements')) {
-            if (response.allElements) {
-                clientRef.disconnect();
-                this.applyFilters();
-            }
-        } else {
-            this.setState(prevState => ({
-                listings: [...prevState.listings, response]
-            }));
+        if (countIos == 0){
+            clientRef.disconnect();
+            this.applyFilters(false);
         }
+        countIos = 1;
+        // const response = JSON.parse(message.body);
+        // if (response.hasOwnProperty('allElements')) {
+        //     if (response.allElements) {
+        //         
+        //         this.applyFilters();
+        //     }
+        // } else {
+        //     this.setState(prevState => ({
+        //         listings: [...prevState.listings, response]
+        //     }));
+        // }
     }
 }
 

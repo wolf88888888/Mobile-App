@@ -102,14 +102,14 @@ class Explore extends Component {
             delay: 0
         });
         console.log("componentWillMount", token_value, email_value);
-        requester.getUserInfo().then(res => {
-            res.body.then(data => {
-                console.log("componentWillMount", data);
-                userInstance.setUserData(data);
-            }).catch(err => {
-                console.log("componentWillMount", err);
-            });
-        });
+        // requester.getUserInfo().then(res => {
+        //     res.body.then(data => {
+        //         console.log("componentWillMount", data);
+        //         userInstance.setUserData(data);
+        //     }).catch(err => {
+        //         console.log("componentWillMount", err);
+        //     });
+        // });
     }
     
 
