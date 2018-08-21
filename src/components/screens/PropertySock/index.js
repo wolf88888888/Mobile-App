@@ -393,7 +393,7 @@ class Property extends Component {
             }}
             >
                 <Text style={{
-                    width: '100%', height: 35, fontSize: 20, textAlign: 'center', 
+                    width: '100%', height: 35, fontSize: 20, textAlign: 'center'
                 }}
                 >
                 No Results Found
@@ -504,7 +504,7 @@ class Property extends Component {
                                     >
                                         <View style={
                                             {
-                                                paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',backgroundColor: '#fff' 
+                                                paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'
                                             }
                                         }
                                         >
