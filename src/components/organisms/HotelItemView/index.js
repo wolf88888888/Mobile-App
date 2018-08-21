@@ -66,13 +66,6 @@ class HotelItemView extends Component {
                         <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon} />
                     </TouchableOpacity>
 
-<<<<<<< HEAD
-            {/* <TouchableOpacity style={styles.favoritesButton}>
-                <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
-            </TouchableOpacity> */}
-                    
-=======
->>>>>>> aba87c7f5ffaea0b87c717cddf107ba41de32f94
                     <View style={styles.cardContent}>
 
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>

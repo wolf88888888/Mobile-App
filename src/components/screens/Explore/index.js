@@ -102,14 +102,15 @@ class Explore extends Component {
             delay: 0
         });
         console.log("componentWillMount", token_value, email_value);
-        // requester.getUserInfo().then(res => {
-        //     res.body.then(data => {
-        //         console.log("componentWillMount", data);
-        //         userInstance.setUserData(data);
-        //     }).catch(err => {
-        //         console.log("componentWillMount", err);
-        //     });
-        // });
+        // Below line gives null cannot be casted to string error on ios please look into it
+        requester.getUserInfo().then(res => {
+            res.body.then(data => {
+                console.log("componentWillMount", data);
+                userInstance.setUserData(data);
+            }).catch(err => {
+                console.log("componentWillMount", err);
+            });
+        });
     }
     
 
