@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         paddingRight: 17
     },
     itemView:{
+        marginTop: 10,
         flex: 1
     },
     sectionView: {

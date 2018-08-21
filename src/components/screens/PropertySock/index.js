@@ -36,11 +36,10 @@ class Property extends Component {
         
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.updateData = this.updateData.bind(this);
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
-        this.onDatesSelect = this.onDatesSelect.bind(this);
+        //this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.alterMap = this.alterMap.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
@@ -424,7 +423,7 @@ class Property extends Component {
     }
     renderFilter() {
         return (
-            <View style={{ width: '100%', height: 90 }}>
+            <View style={{ width: '100%', height: 80 }}>
                 <DateAndGuestPicker
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
