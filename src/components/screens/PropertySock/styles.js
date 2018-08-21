@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
         marginLeft: 18,
         marginRight: 18,
         alignItems: 'center',
-        backgroundColor: 'yellow'
+        backgroundColor: '#cc8068'
     },
     searchButtonText: {
         color: '#fff',

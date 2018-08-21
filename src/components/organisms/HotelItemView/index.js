@@ -68,9 +68,9 @@ class HotelItemView extends Component {
             source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url} } 
             style={styles.popularHotelsImage}/>
 
-            <TouchableOpacity style={styles.favoritesButton}>
+            {/* <TouchableOpacity style={styles.favoritesButton}>
                 <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
                     
                     <View style={styles.cardContent}>
                         
