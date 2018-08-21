@@ -1,29 +1,25 @@
 import {
     Dimensions,
     ScrollView,
-    View,
-    FlatList
+    View
 } from 'react-native';
 import React, { Component } from 'react';
-
-import AvailableRoomsView from '../../molecules/AvailableRoomsView'
+import PropTypes from 'prop-types';
+import AvailableRoomsView from '../../molecules/AvailableRoomsView';
 import FacilitiesView from '../../molecules/FacilitiesView';
 import HotelDetailView from '../../organisms/HotelDetailView';
-import Icon from 'react-native-fontawesome';
-import Image from 'react-native-remote-svg';
 import LocationView from '../../atoms/LocationView';
-import PropTypes from 'prop-types';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import { imgHost } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import ImageCarousel from '../../atoms/ImagePage';
+
 const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;
 const logoHeight = logoWidth * 35 / 54;
 
 class HotelDetails extends Component {
-
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -49,58 +45,50 @@ class HotelDetails extends Component {
             hotelAmenities: [],
             dataSourcePreview: [],
             description: '',
-            rooms: [],
             urlForService: '',
             guests: 0,
             mainAddress: '',
-            regionName: '',
             countryName: '',
             latitude: 37.78825,
             longitude: -122.4324,
             currency: 'EUR',
-            currencySign : '€',
-            locRate: 0,
+            currencySign: '€',
+            locRate: 0
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
         this.state.urlForService = params ? params.urlForService : '';
         this.state.currency = params ? params.currency : [];
-        this.state.currencySign = params ? params.currencySign: '€';
+        this.state.currencySign = params ? params.currencySign : '€';
         this.state.locRate = params ? params.locRate : '';
         // this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
         // this.state.countryName = params.hotelDetail.country;
         // this.state.latitude = params.hotelDetail.latitude;
         // this.state.longitude = params.hotelDetail.longitude;
-        //this.state.hotelFullDetails = params;
-        const hotelPhotos = [];
+        // this.state.hotelFullDetails = params;
 
 
         // for (var i = 0; i < params.hotelDetail.hotelPhotos.length; i++) {
         //     hotelPhotos.push({ uri: imgHost + params.hotelDetail.hotelPhotos[i]["url"] })
         // }
 
-        //this.state.description = this.state.hotel.description;
+        // this.state.description = this.state.hotel.description;
         // for (let i = 0; i < this.state.hotel.descriptions.length; i ++) {
         //     if (this.state.hotel.descriptions[i].type == "PropertyInformation") {
         //         this.state.description = this.state.hotel.descriptions[i].text;
         //         break;
         //     }
         // }
-
-        
     }
 
-    componentWillMount(){
-        requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then(res => {
+    componentWillMount() {
+        requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then((res) => {
             // here you set the response in to json
-            res.body.then(data => {
-                console.log("****");
-                console.log(data);
-                console.log("****");
+            res.body.then((data) => {
                 const hotelPhotos = [];
-                for (var i = 0; i < data.hotelPhotos.length; i++) {
-                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i]["url"] })
+                for (let i = 0; i < data.hotelPhotos.length; i++) {
+                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });
                 }
                 this.state.dataSourcePreview = hotelPhotos;
                 // here you parse your json
@@ -113,16 +101,12 @@ class HotelDetails extends Component {
                     countryName: data.country,
                     description: data.generalDescription,
                     latitude: data.latitude,
-                    longitude: data.longitude,
+                    longitude: data.longitude
                 });
-            }).catch(err => {
+            }).catch((err) => {
                 console.log(err);
             });
         });
-    }
-
-    componentDidMount() {
-        
     }
 
     onClose() {
@@ -144,25 +128,24 @@ class HotelDetails extends Component {
                     <View style={styles.topButtonContainer}>
                         <WhiteBackButton onPress={this.onClose} />
                     </View>
-                    <View style={styles.body}> 
-                        <View style={{width: logoWidth, height: logoHeight}}>
+                    <View style={styles.body}>
+                        <View style={{ width: logoWidth, height: logoHeight }}>
                             {this.state.dataSourcePreview.length > 0 &&
                             <ImageCarousel
-                            delay={1500}
-                            style={styles.logoImage}
-                            width={logoWidth}
-                            height={logoHeight}
-                            indicatorSize={12.5}
-                            indicatorOffset={20}
-                            indicatorColor="#D87A61"
-                            images={this.state.dataSourcePreview}>
-                            </ImageCarousel>}
+                                delay={1500}
+                                style={styles.logoImage}
+                                width={logoWidth}
+                                height={logoHeight}
+                                indicatorSize={12.5}
+                                indicatorOffset={20}
+                                indicatorColor="#D87A61"
+                                images={this.state.dataSourcePreview} 
+                            />}
                         </View>
-                        
+
                         <HotelDetailView
                             dataSourcePreview={this.state.dataSourcePreview}
                             title={this.state.hotel.name}
-                            rateExp={""}
                             rateVal={this.state.hotel.star}
                             reviewNum={0}
                             address={this.state.mainAddress}
@@ -170,16 +153,19 @@ class HotelDetails extends Component {
                             onBooking={this.onBooking}
                         />
 
-                        
                         {/* { this.state.hotelAmenities.map
                         (listing => <FacilityView image={require('../../../assets/Facilities/Homes/BathTub.png')}/>) } */}
-                        
-                            <FacilitiesView
+
+                        <FacilitiesView
                             style={styles.roomfacility}
                             data={this.state.hotelAmenities}
-                            onFacilityMore={this.onFacilityMore} />
+                            onFacilityMore={this.onFacilityMore}
+                        />
 
-                        <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 }]} />
+                        <View style={[styles.lineStyle, {
+                            marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 
+                        }]}
+                        />
 
                         <AvailableRoomsView
                             id={this.state.hotel.id}
@@ -195,14 +181,15 @@ class HotelDetails extends Component {
                         <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 }]} />
 
                         <LocationView
-                            location={this.state.mainAddress + ", " + this.state.countryName}
+                            location={`${this.state.mainAddress}, ${this.state.countryName}`}
                             titleStyle={{ fontSize: 17 }}
                             hotelName={this.state.hotel.name}
                             hotelPrice={`LOC ${this.state.hotelFullDetails.locRate}`}
                             description={this.state.hotel.generalDescription}
                             lat={this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0}
                             lon={this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0}
-                            radius={200} />
+                            radius={200} 
+                        />
                         <View style={{ marginBottom: 50 }} />
                     </View>
                 </ScrollView>
