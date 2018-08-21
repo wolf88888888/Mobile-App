@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+import UUIDGenerator from 'react-native-uuid-generator';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import queryString from 'query-string';
 import Image from 'react-native-remote-svg';
 import { withNavigation } from 'react-navigation';
+
 import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HotelItemView from '../../organisms/HotelItemView';
 import styles from './styles';
-import UUIDGenerator from 'react-native-uuid-generator';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import requester from '../../../initDependencies';
 
 const androidStomp = NativeModules.StompModule;
@@ -25,35 +26,20 @@ var mainUrl = '';
 let countIos;
 
 class Property extends Component {
-    static propTypes = {
-        onAutocompleteSelect: PropTypes.func,
-        autocomplete: PropTypes.arrayOf(PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string
-        }))
-    }
-
-    static defaultProps = {
-        autocomplete: [],
-        onAutocompleteSelect: () => {}
-    }
-
     constructor(props) {
         super(props);
 
         UUIDGenerator.getRandomUUID((uuid) => {
             uid = uuid;
         });
-      
         console.disableYellowBox = true;
+        
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
-        this.renderAutocomplete = this.renderAutocomplete.bind(this);
-        this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.alterMap = this.alterMap.bind(this);
@@ -65,9 +51,7 @@ class Property extends Component {
             checkInDate: '',
             checkOutDate: '',
             guests: 0,
-            adults: 2,
             children: 1,
-            infants: 0,
             topHomes: [],
             listings: [],
             searchedCity: 'Discover your next experience',
@@ -77,7 +61,7 @@ class Property extends Component {
             checkInDateFormated: '',
             checkOutDateFormated: '',
             roomsDummyData: [],
-            urlForService:'',
+            urlForService: '',
             isLoading: true,
             isFilterLoaded: false,
             noResultsFound: false,
@@ -96,7 +80,7 @@ class Property extends Component {
             page: 0,
             totalPages: 0
         };
-        const { params } = this.props.navigation.state;
+        const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
         this.state.searchedCityId = params ? params.searchedCityId : 0;
         this.state.checkInDate = params ? params.checkInDate : '';
@@ -131,10 +115,6 @@ class Property extends Component {
         }
     }
 
-    componentDidMount() {
-        
-    }
-
     stompIos() {
         countIos = 0;
         clientRef = stomp.client('wss://alpha.locktrip.com/socket');
@@ -154,7 +134,7 @@ class Property extends Component {
     }
 
     alterMap() {
-        this.setState({showResultsOnMap : !this.state.showResultsOnMap});
+        this.setState({ showResultsOnMap: !this.state.showResultsOnMap });
     }
 
     onChangeHandler(property) {
@@ -163,22 +143,22 @@ class Property extends Component {
         };
     }
 
-    onDatesSelect({ startDate, endDate }) {
-        // this.setState({
-        //     search : '',
-        //     checkInDate : startDate,
-        //     checkOutDate : endDate,
-        // });
-    }
+    // onDatesSelect({ startDate, endDate }) {
+    //     this.setState({
+    //         search : '',
+    //         checkInDate : startDate,
+    //         checkOutDate : endDate,
+    //     });
+    // }
 
     onSearchHandler(value) {
         this.onSearchChange(value);
     }
 
-    onSearchChange(value) {
-        setSearchValue({ value });
-        clearSelected();
-    }
+    // onSearchChange(value) {
+    //     setSearchValue({ value });
+    //     clearSelected();
+    // }
 
     renderHomes() {
         return (
@@ -194,18 +174,14 @@ class Property extends Component {
         );
     }
 
-    updateData(data) {
-        this.setState({ adults: data.adults, children: data.children, infants: data.infants});
-    }
-
     loadMore = () => {
-        if ( this.state.page < this.state.totalPages-1){
+        if (this.state.page < this.state.totalPages - 1) {
             this.setState(
                 {
                     isLoading: true,
-                    page: this.state.page + 1,
+                    page: this.state.page + 1
                 },
-                () =>{
+                () => {
                     this.applyFilters(true);
                 }
             );
@@ -246,21 +222,20 @@ class Property extends Component {
                             thumbnail: { url: hotel.hotelPhoto }
                         };
                     });
-                    if (loadMore){
-                        //Add to existing data
-                        this.setState(prevState => ({
+                    if (loadMore) {
+                        // Add to existing data
+                        this.setState({
                             isFilterLoaded: true,
                             isLoading: false,
                             listings: [...this.state.listings, ...mapInfo] 
-                        }), () => {
+                        }, () => {
                             if (this.state.listings.length <= 0) {
                                 this.setState({ noResultsFound: true });
                             } else {
                                 this.setState({ noResultsFound: false });
                             }
                         });
-                    }
-                    else{
+                    } else {
                         this.setState({
                             isFilterLoaded: true,
                             isLoading: false,
@@ -343,7 +318,13 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelFilterScreen', {isHotelSelected: true, updateFilter: this.updateFilter, selectedRating: this.state.selectedRating, showUnAvailable: this.state.showUnAvailable, hotelName: this.state.nameFilter});
+        this.props.navigation.navigate('HotelFilterScreen', {
+            isHotelSelected: true,
+            updateFilter: this.updateFilter,
+            selectedRating: this.state.selectedRating,
+            showUnAvailable: this.state.showUnAvailable,
+            hotelName: this.state.nameFilter
+        });
     }
 
     gotoSearch() {
@@ -351,12 +332,6 @@ class Property extends Component {
     //         clientRef.disconnect();
     //     }
     //   this.props.navigation.navigate('PropertyScreen');
-    }
-
-    handleAutocompleteSelect(id, name) {
-        return () => {
-            this.props.onAutocompleteSelect(id, name);
-        };
     }
 
     onBackPress() {
@@ -367,60 +342,44 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', 
-            {
-                guests : this.state.guests, 
-                hotelDetail: item, 
-                urlForService: this.state.urlForService, 
-                locRate: this.state.locRate,
-                currency: this.state.currency,
-                currencySign: this.state.currencySign
-            });
+        this.props.navigation.navigate('HotelDetails', {
+            guests: this.state.guests,
+            hotelDetail: item,
+            urlForService: this.state.urlForService,
+            locRate: this.state.locRate,
+            currency: this.state.currency,
+            currencySign: this.state.currencySign
+        });
     }
 
     calloutClick = (item) => {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails',
-            {
-                guests : this.state.guests, 
-                hotelDetail: item, 
-                urlForService: this.state.urlForService, 
-                locRate: this.state.locRate,
-                currency: this.state.currency,
-                currencySign: this.state.currencySign
-            });
-    }
-
-    renderAutocomplete() {
-        return (
-            <ScrollView
-                style={{backgroundColor: 'green'}}
-                contentContainerStyle={{ flex: 1 }}
-            >
-                {
-                    this.props.autocomplete.map(result => (
-                        <TouchableOpacity
-                            key={result.id}
-                            style={styles.autocompleteTextWrapper}
-                            onPress={this.handleAutocompleteSelect(result.id, result.name)}
-                        >
-                            <Text style={styles.autocompleteText} >{result.name}</Text>
-                        </TouchableOpacity>
-                    ))
-                }
-            </ScrollView>
-        );
+        this.props.navigation.navigate('HotelDetails', {
+            guests: this.state.guests,
+            hotelDetail: item,
+            urlForService: this.state.urlForService,
+            locRate: this.state.locRate,
+            currency: this.state.currency,
+            currencySign: this.state.currencySign
+        });
     }
 
     renderLoader() {
-        return(
-            <View style={{ flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginBottom: 10}}>
-                <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
+        return (
+            <View style={{
+                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
+            }}
+            >
+                <Image
+                    style={{
+                        height: 35, width: 35
+                    }}
+                    source={{
+                        uri: 'https://alpha.locktrip.com/images/loader.gif'
+                    }}
+                />
             </View>
         );
     }
@@ -470,8 +429,8 @@ class Property extends Component {
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
                     adults={this.state.guests}
-                    children={0}
-                    guests = {0}
+                    children={0} //eslint-disable-line
+                    guests={0}
                     infants={0}
                     gotoGuests={this.gotoGuests}
                     gotoSearch={this.gotoSearch}
@@ -489,11 +448,11 @@ class Property extends Component {
         } = this.state;
         return (
             <View style={styles.container}>
-
+                {/* Back Button */}
                 <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
                 </TouchableOpacity>
-
+                {/* Search Text Field */}
                 <View style={styles.searchAreaView}>
                     <SearchBar
                         autoCorrect={false}
@@ -504,142 +463,143 @@ class Property extends Component {
                         leftIcon="search"
                     />
                 </View>
-                
-                {/* {!this.props.autocomplete.length && this.renderAutocomplete()} */}
-
+                {/* Filter Box */}
                 {this.state.isFilterLoaded && this.renderFilter() }
-
-                {this.state.showResultsOnMap && 
+                {/* Show map button */}
+                {this.state.showResultsOnMap &&
                 <TouchableOpacity onPress={this.alterMap}>
                     <View style={styles.searchButtonView}>
                         <Text style={styles.searchButtonText}>See Results List</Text>
                     </View>
                 </TouchableOpacity>}
-                
-
+                {/* No Results Text */}
                 {this.state.noResultsFound && this.renderInfoTv()}
-
+                {/* View for map and list */}
                 <View style={styles.itemView}>
-
-                    {
-                        this.state.showResultsOnMap ?
-
-                            <MapView
-                                style={styles.map}
-                                region={{
-                                    latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat,
-                                    longitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
-                                    latitudeDelta: 1,
-                                    longitudeDelta: 1
-                                }}
-                                debug={false}>
-                                {this.state.listings.map(marker => marker.lat != null && (
-                                    <Marker
-                                        coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                        onCalloutPress={this.calloutClick.bind(this, marker)}
+                    {this.state.showResultsOnMap ?
+                        // MapView
+                        <MapView
+                            style={styles.map}
+                            region={{
+                                latitude: this.state.listings.length >= 1 ?
+                                    parseFloat(this.state.listings[0].lat) : this.state.initialLat,
+                                longitude: this.state.listings.length >= 1 ?
+                                    parseFloat(this.state.listings[0].lon) : this.state.initialLon,
+                                latitudeDelta: 1,
+                                longitudeDelta: 1
+                            }}
+                        >
+                            {/* Marker */}
+                            {this.state.listings.map(marker => marker.lat != null && (
+                                <Marker
+                                    coordinate={{
+                                        latitude: parseFloat(marker.lat),
+                                        longitude: parseFloat(marker.lon)
+                                    }}
+                                    onCalloutPress={this.calloutClick.bind(this, marker)} //eslint-disable-line
+                                >
+                                    {/* Marker click */}
+                                    <MapView.Callout
+                                        tooltip
                                     >
-                                        <MapView.Callout
-                                            tooltip
-                                        >
-                                            <View style={
-                                                {
-                                                    paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',backgroundColor: '#fff' 
-                                                }
+                                        <View style={
+                                            {
+                                                paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',backgroundColor: '#fff' 
                                             }
-                                            >
-                                                <Image
-                                                    style={{ width: 100, height: 60 }}
-                                                    source={marker.thumbnail !== null && { uri: imgHost + marker.thumbnail.url }}
-                                                />
-                                                <Text style={styles.location}>
-                                                    {marker.name}
-                                                </Text>
-                                                <Text style={styles.description}>
-                                            LOC {marker.price} / Night
-                                                </Text>
-                                                <Text style={styles.ratingsMap}>
-                                                    {
-                                                        Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-                                                    }
-                                                </Text>
-                                            </View>
-                                        </MapView.Callout>
-                                    </Marker>
-                                ))}
-                            </MapView>
-
-                            :
-
-                            <FlatList
-                                bounces={false}
-                                style={styles.flatList}
-                                data={this.state.listings}
-                                onEndReachedThreshold={0.5}
-                                onEndReached={() => {
-                                    if (!this.onEndReachedCalledDuringMomentum) {
-                                            this.loadMore();
-                                            this.onEndReachedCalledDuringMomentum = true;
                                         }
-                                    }
-                                }
-                                onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
-                                refreshing={false}
-                                ListHeaderComponent={
-                                    <TouchableOpacity onPress={this.alterMap}>
-                                        <View style={{
-                                            marginLeft: 18, alignItems: 'center',backgroundColor: '#cc8068'
-                                        }}>
-                                            <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        >
+                                            <Image
+                                                style={{ width: 100, height: 60 }}
+                                                source={marker.thumbnail !== null && { uri: imgHost + marker.thumbnail.url }}
+                                            />
+                                            <Text style={styles.location}>
+                                                {marker.name}
+                                            </Text>
+                                            <Text style={styles.description}>
+                                        LOC {marker.price} / Night
+                                            </Text>
+                                            <Text style={styles.ratingsMap}>
+                                                {
+                                                    Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                                                }
+                                            </Text>
                                         </View>
-                                    </TouchableOpacity>
+                                    </MapView.Callout>
+                                </Marker>
+                            ))}
+                        </MapView>
+                        :
+                        // FlatList
+                        <FlatList
+                            bounces={false}
+                            style={styles.flatList}
+                            data={this.state.listings}
+                            onEndReachedThreshold={0.5}
+                            onEndReached={() => {
+                                if (!this.onEndReachedCalledDuringMomentum) {
+                                    this.loadMore();
+                                    this.onEndReachedCalledDuringMomentum = true;
                                 }
-                                ListFooterComponent={
-                                    this.state.isLoading && this.renderLoader()
-                                }
-                                renderItem={
-                                    ({ item }) =>
-                                        (<HotelItemView
-                                            item={item}
-                                            currencySign={this.state.currencySign}
-                                            locRate={this.state.locRate}
-                                            gotoHotelDetailsPage={this.gotoHotelDetailsPage}
-                                        />)
-                                }
-                            />
+                            }
+                            }
+                            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+                            refreshing={false}
+                            ListHeaderComponent={
+                                <TouchableOpacity onPress={this.alterMap}>
+                                    <View style={{
+                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#cc8068'
+                                    }}
+                                    >
+                                        <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            }
+                            ListFooterComponent={
+                                this.state.isLoading && this.renderLoader()
+                            }
+                            renderItem={
+                                ({ item }) =>
+                                    (<HotelItemView
+                                        item={item}
+                                        currencySign={this.state.currencySign}
+                                        locRate={this.state.locRate}
+                                        gotoHotelDetailsPage={this.gotoHotelDetailsPage}
+                                    />)
+                            }
+                        />
                     }
                 </View>
             </View>
         );
     }
 
-    handleAndroidSingleHotel(message) {
-        // this.applyFilters();
-        try {
-            const object = JSON.parse(message);
-            if (object.hasOwnProperty('allElements')) {
-                if (object.allElements) {
-                    this.applyFilters();
-                }
-            } else {
-                this.setState(prevState => ({
-                    listings: [...prevState.listings, object]
-                }));
-            }
-        } catch (e) {
-            // Error
-        }
-    }
+    // handleAndroidSingleHotel(message) {
+    //     // this.applyFilters();
+    //     try {
+    //         const object = JSON.parse(message);
+    //         if (object.hasOwnProperty('allElements')) {
+    //             if (object.allElements) {
+    //                 this.applyFilters();
+    //             }
+    //         } else {
+    //             this.setState(prevState => ({
+    //                 listings: [...prevState.listings, object]
+    //             }));
+    //         }
+    //     } catch (e) {
+    //         // Error
+    //     }
+    // }
 
     handleReceiveSingleHotel(message) {
-        if (countIos == 0){
+        if (countIos === 0) {
             clientRef.disconnect();
             this.applyFilters(false);
         }
         countIos = 1;
         // const response = JSON.parse(message.body);
         // if (response.hasOwnProperty('allElements')) {
-        //     if (response.allElements) {
-        //         
+        //     if (response.allElements) {         
         //         this.applyFilters();
         //     }
         // } else {
