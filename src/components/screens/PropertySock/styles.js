@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'stretch',
         backgroundColor: '#f0f1f3'
     },
     searchAreaView: {
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
         paddingRight: 17
     },
     itemView:{
-        height: '100%'
+        flex: 1
     },
     sectionView: {
         width: '100%',
@@ -24,6 +23,7 @@ const styles = StyleSheet.create({
         paddingRight: 17
     },
     subtitleView: {
+        backgroundColor: 'green',
         width: '100%',
         paddingTop: 18,
         paddingBottom: 5,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
         
     },
     flatList:{
-        marginRight: 18
+        marginRight: 18,
     },
     card: {
         height: 230,
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
         marginLeft: 18,
         marginRight: 18,
         alignItems: 'center',
-        backgroundColor: '#cc8068'
+        backgroundColor: 'yellow'
     },
     searchButtonText: {
         color: '#fff',

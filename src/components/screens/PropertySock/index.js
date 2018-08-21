@@ -78,6 +78,7 @@ class Property extends Component {
             roomsDummyData: [],
             urlForService:'',
             isLoading: true,
+            isFilterLoaded: false,
             noResultsFound: false,
             locRate: 0,
             currency: 'EUR',
@@ -90,7 +91,8 @@ class Property extends Component {
             showUnAvailable: false,
             selectedRating: [false, false, false, false, false],
             orderBy: 'priceForSort,asc',
-            sliderValue: [1, 5000]
+            sliderValue: [1, 5000],
+            page: 0
         };
         const { params } = this.props.navigation.state;
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -118,7 +120,7 @@ class Property extends Component {
             this.stompIos();
         } else if (Platform.OS === 'android') {
             androidStomp.startSession(uid, mainUrl, () => {
-                this.applyFilters();
+                this.applyFilters(false);
             });
             // DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
             //     console.log(message)
@@ -194,9 +196,15 @@ class Property extends Component {
     }
 
     loadMore = () => {
-        // this.setState({pageForFilter : 1}, () => {
-        //     this.applyFilters();
-        // });
+        this.setState(
+            {
+                isLoading: true,
+                page: this.state.page + 1,
+            },
+            () =>{
+                this.applyFilters(true);
+            }
+        );
     }
 
     updateFilter(data) {
@@ -207,13 +215,15 @@ class Property extends Component {
             selectedRating: data.selectedRating,
             isLoading: true,
             orderBy: data.priceSort,
-            sliderValue: data.sliderValue
+            sliderValue: data.sliderValue,
+            page: 0
         }, () => {
-            this.applyFilters();
+            this.applyFilters(false);
         });
     }
 
-    applyFilters() {
+    applyFilters(loadMore) {
+        console.log(`loadmore${loadMore}`);
         const search = this.getSearchString();
         const filters = this.getFilterString();
         // const page = this.state.page ? this.state.page : 0;
@@ -232,16 +242,33 @@ class Property extends Component {
                             thumbnail: { url: hotel.hotelPhoto }
                         };
                     });
-                    this.setState({
-                        isLoading: false,
-                        listings: mapInfo
-                    }, () => {
-                        if (this.state.listings.length <= 0) {
-                            this.setState({ noResultsFound: true });
-                        } else {
-                            this.setState({ noResultsFound: false });
-                        }
-                    });
+                    if (loadMore){
+                        //Add to existing data
+                        this.setState(prevState => ({
+                            isFilterLoaded: true,
+                            isLoading: false,
+                            listings: [...this.state.listings, ...mapInfo] 
+                        }), () => {
+                            if (this.state.listings.length <= 0) {
+                                this.setState({ noResultsFound: true });
+                            } else {
+                                this.setState({ noResultsFound: false });
+                            }
+                        });
+                    }
+                    else{
+                        this.setState({
+                            isFilterLoaded: true,
+                            isLoading: false,
+                            listings: mapInfo
+                        }, () => {
+                            if (this.state.listings.length <= 0) {
+                                this.setState({ noResultsFound: true });
+                            } else {
+                                this.setState({ noResultsFound: false });
+                            }
+                        });
+                    }
                 });
             } else {
                 // error
@@ -268,7 +295,7 @@ class Property extends Component {
             stars: this.mapStars(this.state.selectedRating)
         };
 
-        const page = 0;
+        const page = this.state.page;
         const sort = this.state.orderBy;
         const pagination = `&page=${page}&sort=${sort}`;
         const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
@@ -364,6 +391,7 @@ class Property extends Component {
     renderAutocomplete() {
         return (
             <ScrollView
+                style={{backgroundColor: 'green'}}
                 contentContainerStyle={{ flex: 1 }}
             >
                 {
@@ -472,9 +500,10 @@ class Property extends Component {
                         leftIcon="search"
                     />
                 </View>
-                {!this.props.autocomplete.length && this.renderAutocomplete()}
+                
+                {/* {!this.props.autocomplete.length && this.renderAutocomplete()} */}
 
-                {this.state.isLoading ? this.renderFilterText() : this.renderFilter()}
+                {this.state.isFilterLoaded && this.renderFilter() }
 
                 {this.state.showResultsOnMap && 
                 <TouchableOpacity onPress={this.alterMap}>
@@ -540,7 +569,16 @@ class Property extends Component {
                             <FlatList
                                 style={styles.flatList}
                                 data={this.state.listings}
-                                onScroll={this.loadMore}
+                                onEndReachedThreshold={0.5}
+                                onEndReached={() => {
+                                    if (!this.onEndReachedCalledDuringMomentum) {
+                                            this.loadMore();
+                                            this.onEndReachedCalledDuringMomentum = true;
+                                        }
+                                    }
+                                }
+                                onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+                                refreshing={false}
                                 ListHeaderComponent={
                                     <TouchableOpacity onPress={this.alterMap}>
                                         <View style={{
@@ -549,6 +587,9 @@ class Property extends Component {
                                             <Text style={styles.searchButtonText}>See Results on Map</Text>
                                         </View>
                                     </TouchableOpacity>
+                                }
+                                ListFooterComponent={
+                                    this.state.isLoading && this.renderLoader()
                                 }
                                 renderItem={
                                     ({ item }) =>
