@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { HotelReservation } from '../../../services/blockchain/hotelReservation';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-easy-toast';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
@@ -64,7 +64,7 @@ export default class RoomDetailsReview extends Component {
                 });
             })
                 .catch((err) => {
-                    Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
+                    //Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
                     console.log(err); //eslint-disable-line
                 });
         });
@@ -102,8 +102,7 @@ export default class RoomDetailsReview extends Component {
     handleSubmit() {
 
         this.setState({ modalVisible: false });
-
-        Toast.showWithGravity('We are working on your transaction this might take some time.', Toast.SHORT, Toast.CENTER);
+        this.refs.toast.show('We are working on your transaction this might take some time.', 1500);
 
         requester.getCancellationFees(this.state.bookingId).then(res => {
             res.body.then(data => {
@@ -140,19 +139,19 @@ export default class RoomDetailsReview extends Component {
                                 numberOfTravelers.toString()
                             )
                                 .then(transaction => {
-                                    Toast.showWithGravity('' + transaction, Toast.SHORT, Toast.CENTER);
+                                    this.refs.toast.show('' + transaction, 1500);
                                 })
                                 .catch((err) => {
-                                    Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                                    this.refs.toast.show('' + err, 1500);
                                 });
                         }, 3000);
                     }).catch((err) => {
-                        Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                        this.refs.toast.show('' + err, 1500);
                     });
                 });
             });
         }).catch((err) => {
-            Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+            this.refs.toast.show('' + err, 1500);
         });
     }
 
@@ -163,6 +162,16 @@ export default class RoomDetailsReview extends Component {
         const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
+                <Toast
+                    ref="toast"
+                    style={{ backgroundColor: '#DA7B61' }}
+                    position='bottom'
+                    positionValue={150}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
+                />
                 <View style={{ height: 0 }}>
                     <WebView
                         ref={el => this.webView = el}
