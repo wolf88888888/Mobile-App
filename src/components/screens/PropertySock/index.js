@@ -1,120 +1,85 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+import UUIDGenerator from 'react-native-uuid-generator';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import queryString from 'query-string';
 import Image from 'react-native-remote-svg';
 import { withNavigation } from 'react-navigation';
+
 import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
+import HotelItemView from '../../organisms/HotelItemView';
 import styles from './styles';
-import UUIDGenerator from 'react-native-uuid-generator';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import queryString from 'query-string';
 import requester from '../../../initDependencies';
 
-var androidStomp = NativeModules.StompModule;
-var stomp = require('stomp-websocket-js');
+const androidStomp = NativeModules.StompModule;
+const stomp = require('stomp-websocket-js');
 
-var clientRef = undefined;
+const clientRef = undefined;
 let uid = '';
-const mainUrl = '';
+var mainUrl = '';
+let countIos;
 
 class Property extends Component {
-    static propTypes = {
-        search: PropTypes.string,
-        checkInDate: PropTypes.string,
-        checkOutDate: PropTypes.string,
-        topHomes: PropTypes.array, // eslint-disable-line
-        onDatesSelect: PropTypes.func,
-        onSearchChange: PropTypes.func,
-        onAutocompleteSelect: PropTypes.func,
-        autocomplete: PropTypes.arrayOf(PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string
-        })),
-        load: PropTypes.func,
-        propertyType: PropTypes.oneOf('hotels', 'homes'),
-        searchedCity: PropTypes.string,
-        searchedCityId: PropTypes.number,
-        guests : PropTypes.number
-    }
-
-    static defaultProps = {
-        load: () => {},
-        search: '',
-        checkInDate: '',
-        checkOutDate: '',
-        autocomplete: [],
-        onAutocompleteSelect: () => {},
-        topHomes: [],
-        propertyType: 'homes',
-        onDatesSelect: () => {},
-        onSearchChange: () => {},
-        searchedCity: 'Discover your next experience',
-        searchedCityId: 0,
-        guests : 0
-    }
-
     constructor(props) {
         super(props);
 
         UUIDGenerator.getRandomUUID((uuid) => {
             uid = uuid;
         });
-      
         console.disableYellowBox = true;
+        
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.updateData = this.updateData.bind(this);
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
-        this.renderAutocomplete = this.renderAutocomplete.bind(this);
-        this.handleAutocompleteSelect = this.handleAutocompleteSelect.bind(this);
-        this.onDatesSelect = this.onDatesSelect.bind(this);
+        //this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.alterMap = this.alterMap.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
         this.applyFilters = this.applyFilters.bind(this);
+        this.gotoHotelDetailsPage = this.gotoHotelDetailsPage.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
             checkOutDate: '',
             guests: 0,
-            adults: 2,
-            childrenBool: false,
             children: 1,
-            infants: 0,
             topHomes: [],
-            listings : [],
-            listings2 : [],
+            listings: [],
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
-            //these state are for paramerters in urlForService
+            // these state are for paramerters in urlForService
             regionId: '',
             checkInDateFormated: '',
             checkOutDateFormated: '',
             roomsDummyData: [],
-            urlForService:'',
+            urlForService: '',
             isLoading: true,
+            isFilterLoaded: false,
             noResultsFound: false,
             locRate: 0,
             currency: 'EUR',
-            currencySign : '€',
+            currencySign: '€',
             showResultsOnMap: false,
-            initialLat : 51.5074,
+            initialLat: 51.5074,
             initialLon: 0.1278,
             filter: undefined,
             nameFilter: '',
             showUnAvailable: false,
-            selectedRating: [false,false,false,false,false],
+            selectedRating: [false, false, false, false, false],
             orderBy: 'priceForSort,asc',
-            sliderValue: [1,5000]
+            sliderValue: [1, 5000],
+            page: 0,
+            totalPages: 0
         };
-        const { params } = this.props.navigation.state;
+        const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
         this.state.searchedCityId = params ? params.searchedCityId : 0;
         this.state.checkInDate = params ? params.checkInDate : '';
@@ -123,37 +88,34 @@ class Property extends Component {
         this.state.children = params ? params.children : 0;
 
         this.state.regionId = params ? params.regionId : [];
-        this.state.checkInDateFormated = params ? params.checkInDateFormated  : '';
-        this.state.checkOutDateFormated = params ? params.checkOutDateFormated  : '';
+        this.state.checkInDateFormated = params ? params.checkInDateFormated : '';
+        this.state.checkOutDateFormated = params ? params.checkOutDateFormated : '';
         this.state.roomsDummyData = params ? params.roomsDummyData : [];
         this.state.currency = params ? params.currency : [];
-        this.state.currencySign = params ? params.currencySign: '€';
+        this.state.currencySign = params ? params.currencySign : '€';
         this.state.locRate = params ? params.locRate : 0;
-        this.state.filter = params?params.filter:[];
+        this.state.filter = params ? params.filter : [];
 
-        
-        mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData;
+        mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData; //eslint-disable-line
         this.state.urlForService = mainUrl;
     }
 
-    componentWillMount(){
-        if (Platform.OS === 'ios'){
+    componentWillMount() {
+        if (Platform.OS === 'ios') {
             this.stompIos();
-        }
-        else if (Platform.OS === 'android'){
-            androidStomp.startSession(uid, mainUrl);
-            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                console.log(message),
-                this.handleAndroidSingleHotel(message)
-            ));
+        } else if (Platform.OS === 'android') {
+            androidStomp.startSession(uid, mainUrl, () => {
+                this.applyFilters(false);
+            });
+            // DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+            //     console.log(message)
+            //     //this.handleAndroidSingleHotel(message)
+            // ));
         }
     }
 
-    componentDidMount() {
-
-    }
-
-    stompIos(){
+    stompIos() {
+        countIos = 0;
         clientRef = stomp.client('wss://alpha.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
@@ -162,16 +124,16 @@ class Property extends Component {
                 headers,
                 JSON.stringify({uuid: uid, query : mainUrl})
             )
-            }, (error) => {
-                clientRef.disconnect();
-                this.setState({
-                    isLoading: false,
-                });
+        }, (error) => {
+            clientRef.disconnect();
+            this.setState({
+                isLoading: false,
             });
+        });
     }
 
-    alterMap(){
-        this.setState({showResultsOnMap : !this.state.showResultsOnMap});
+    alterMap() {
+        this.setState({ showResultsOnMap: !this.state.showResultsOnMap });
     }
 
     onChangeHandler(property) {
@@ -180,22 +142,22 @@ class Property extends Component {
         };
     }
 
-    onDatesSelect({ startDate, endDate }){
-        this.setState({
-            search : '',
-            checkInDate : startDate,
-            checkOutDate : endDate,
-        });
-    }
+    // onDatesSelect({ startDate, endDate }) {
+    //     this.setState({
+    //         search : '',
+    //         checkInDate : startDate,
+    //         checkOutDate : endDate,
+    //     });
+    // }
 
     onSearchHandler(value) {
         this.onSearchChange(value);
     }
 
-    onSearchChange(value){
-        setSearchValue({ value });
-        clearSelected();
-    }
+    // onSearchChange(value) {
+    //     setSearchValue({ value });
+    //     clearSelected();
+    // }
 
     renderHomes() {
         return (
@@ -211,8 +173,18 @@ class Property extends Component {
         );
     }
 
-    updateData(data) {
-        this.setState({ adults: data.adults, children: data.children, infants: data.infants});
+    loadMore = () => {
+        if (this.state.page < this.state.totalPages - 1) {
+            this.setState(
+                {
+                    isLoading: true,
+                    page: this.state.page + 1
+                },
+                () => {
+                    this.applyFilters(true);
+                }
+            );
+        }
     }
 
     updateFilter(data) {
@@ -223,47 +195,62 @@ class Property extends Component {
             selectedRating: data.selectedRating,
             isLoading: true,
             orderBy: data.priceSort,
-            sliderValue: data.sliderValue
+            sliderValue: data.sliderValue,
+            page: 0
         }, () => {
-            this.applyFilters();
+            this.applyFilters(false);
         });
     }
 
-    applyFilters(){
+    applyFilters(loadMore) {
         const search = this.getSearchString();
         const filters = this.getFilterString();
-        console.log(filters);
-        const page = this.state.page ? this.state.page : 0;
-        requester.getStaticHotelsByFilter(search, filters).then(res => {
-        if (res.success) {
-            res.body.then(data => {
-                let mapInfo = [];
-                mapInfo = data.content.map(hotel => {
-                return {
-                    id: hotel.id,
-                    lat: hotel.latitude,
-                    lon: hotel.longitude,
-                    name: hotel.name,
-                    price: hotel.price,
-                    stars: hotel.star,
-                    thumbnail: { url: hotel.hotelPhoto }
-                };
-                });
-                this.setState({
-                    isLoading: false,
-                    listings: mapInfo
-                },() => {
-                    if (this.state.listings.length <= 0){
-                        this.setState({noResultsFound: true})
+        // const page = this.state.page ? this.state.page : 0;
+        requester.getStaticHotelsByFilter(search, filters).then((res) => {
+            if (res.success) {
+                res.body.then((data) => {
+                    let mapInfo = [];
+                    mapInfo = data.content.map((hotel) => {
+                        return {
+                            id: hotel.id,
+                            lat: hotel.latitude,
+                            lon: hotel.longitude,
+                            name: hotel.name,
+                            price: hotel.price,
+                            stars: hotel.star,
+                            thumbnail: { url: hotel.hotelPhoto }
+                        };
+                    });
+                    if (loadMore) {
+                        // Add to existing data
+                        this.setState({
+                            isFilterLoaded: true,
+                            isLoading: false,
+                            listings: [...this.state.listings, ...mapInfo] 
+                        }, () => {
+                            if (this.state.listings.length <= 0) {
+                                this.setState({ noResultsFound: true });
+                            } else {
+                                this.setState({ noResultsFound: false });
+                            }
+                        });
+                    } else {
+                        this.setState({
+                            isFilterLoaded: true,
+                            isLoading: false,
+                            listings: mapInfo,
+                            totalPages: data.totalPages
+                        }, () => {
+                            if (this.state.listings.length <= 0) {
+                                this.setState({ noResultsFound: true });
+                            } else {
+                                this.setState({ noResultsFound: false });
+                            }
+                        });
                     }
-                    else {
-                        this.setState({noResultsFound: false})
-                    }
                 });
-            });
-        }
-        else {
-            console.log("BBBBB");
+            } else {
+                // error
             }
         });
     }
@@ -280,199 +267,191 @@ class Property extends Component {
 
     getFilterString() {
         const filtersObj = {
-          showUnavailable: this.state.showUnAvailable,
-          name: this.state.nameFilter,
-          minPrice: this.state.sliderValue[0],
-          maxPrice: this.state.sliderValue[1],
-          stars: this.mapStars(this.state.selectedRating)
+            showUnavailable: this.state.showUnAvailable,
+            name: this.state.nameFilter,
+            minPrice: this.state.sliderValue[0],
+            maxPrice: this.state.sliderValue[1],
+            stars: this.mapStars(this.state.selectedRating)
         };
-    
-        const page = 0;
+
+        const page = this.state.page;
         const sort = this.state.orderBy;
         const pagination = `&page=${page}&sort=${sort}`;
-    
-        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination;
+        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
         return filters;
     }
 
     mapStars(stars) {
         let hasStars = false;
-        let mappedStars = [];
-        stars.forEach(s => {
-          if (s) {
-            hasStars = true;
-          }
-        });
-    
-        if (!hasStars) {
-          for (let i = 0; i <= 5; i++) {
-            mappedStars.push(i);
-          }
-        } else {
-          mappedStars.push(0);
-          stars.forEach((s, i) => {
+        const mappedStars = [];
+        stars.forEach((s) => {
             if (s) {
-              mappedStars.push(i + 1);
+                hasStars = true;
             }
-          });
+        });
+
+        if (!hasStars) {
+            for (let i = 0; i <= 5; i++) {
+                mappedStars.push(i);
+            }
+        } else {
+            mappedStars.push(0);
+            stars.forEach((s, i) => {
+                if (s) {
+                    mappedStars.push(i + 1);
+                }
+            });
         }
-    
+
         return mappedStars;
     }
 
     gotoGuests() {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-        this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
+        // if (clientRef) {
+        //     clientRef.disconnect();
+        // }
+        // this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
 
     gotoSettings() {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelFilterScreen' , {isHotelSelected: true, updateFilter: this.updateFilter, selectedRating: this.state.selectedRating, showUnAvailable: this.state.showUnAvailable, hotelName: this.state.nameFilter});
+        this.props.navigation.navigate('HotelFilterScreen', {
+            isHotelSelected: true,
+            updateFilter: this.updateFilter,
+            selectedRating: this.state.selectedRating,
+            showUnAvailable: this.state.showUnAvailable,
+            hotelName: this.state.nameFilter
+        });
     }
 
     gotoSearch() {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-      this.props.navigation.navigate('PropertyScreen');
+    //     if (clientRef) {
+    //         clientRef.disconnect();
+    //     }
+    //   this.props.navigation.navigate('PropertyScreen');
     }
 
-    handleAutocompleteSelect(id, name) {
-        return () => {
-            this.props.onAutocompleteSelect(id, name);
-        };
-    }
-
-    onBackPress(){
+    onBackPress() {
         this.props.navigation.goBack();
     }
-    
-    gotoHotelDetailsPage = (item) =>{
-        console.log(item);
+
+    gotoHotelDetailsPage(item) {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', 
-            {
-                guests : this.state.guests, 
-                hotelDetail: item, 
-                urlForService: this.state.urlForService, 
-                locRate: this.state.locRate,
-                currency: this.state.currency,
-                currencySign: this.state.currencySign
-            });
+        this.props.navigation.navigate('HotelDetails', {
+            guests: this.state.guests,
+            hotelDetail: item,
+            urlForService: this.state.urlForService,
+            locRate: this.state.locRate,
+            currency: this.state.currency,
+            currencySign: this.state.currencySign
+        });
     }
 
-    calloutClick = (item) =>{
+    calloutClick = (item) => {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails',
-            {
-                guests : this.state.guests, 
-                hotelDetail: item, 
-                urlForService: this.state.urlForService, 
-                locRate: this.state.locRate,
-                currency: this.state.currency,
-                currencySign: this.state.currencySign
-            });
+        this.props.navigation.navigate('HotelDetails', {
+            guests: this.state.guests,
+            hotelDetail: item,
+            urlForService: this.state.urlForService,
+            locRate: this.state.locRate,
+            currency: this.state.currency,
+            currencySign: this.state.currencySign
+        });
     }
 
-    renderAutocomplete() {
+    renderLoader() {
         return (
-            <ScrollView
-                contentContainerStyle={{ flex: 1 }}
+            <View style={{
+                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
+            }}
             >
-                {
-                    this.props.autocomplete.map(result => (
-                        <TouchableOpacity
-                            key={result.id}
-                            style={styles.autocompleteTextWrapper}
-                            onPress={this.handleAutocompleteSelect(result.id, result.name)}
-                        >
-                            <Text style={styles.autocompleteText} >{result.name}</Text>
-                        </TouchableOpacity>
-                    ))
-                }
-            </ScrollView>
+                <Image
+                    style={{
+                        height: 35, width: 35
+                    }}
+                    source={{
+                        uri: 'https://alpha.locktrip.com/images/loader.gif'
+                    }}
+                />
+            </View>
         );
     }
 
-    renderLoader(){
-        return(
-            <View style={{ flex: 1,
+    renderInfoTv() {
+        return (
+            <View style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
-                marginBottom: 10}}>
-                <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
+                marginBottom: 10
+            }}
+            >
+                <Text style={{
+                    width: '100%', height: 35, fontSize: 20, textAlign: 'center'
+                }}
+                >
+                No Results Found
+                </Text>
             </View>
         );
     }
 
-    renderInfoTv(){
-        return(
-            <View style={{ flex: 1,
+    renderLog() {
+        return (
+            <View style={{
+                flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                marginBottom: 10}}>
-                <Text style={{width: '100%', height: 35, fontSize: 20, textAlign: 'center'}}>No Results Found</Text>
-            </View>
-        );
-    }
-
-    renderLog(){
-        return(
-            <View style={{ flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginBottom: 10}}>   
-            </View>
-        );
-    }
-
-    renderFilterText(){
-        return(
-            <View style={{flexDirection: 'column', alignItems: 'center'}}>
-            <Text style={{marginTop: 18, width: '100%', textAlign: 'center'}}>Search in progress, filtering will be possible after it is completed</Text>
-            <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
-            </View>
-        );
-    }
-
-    renderFilter(){
-        return(
-            <DateAndGuestPicker
-                checkInDate={this.state.checkInDate}
-                checkOutDate={this.state.checkOutDate}
-                adults={this.state.guests}
-                children={0}
-                guests = {0}
-                infants={0}
-                gotoGuests={this.gotoGuests}
-                gotoSearch={this.gotoSearch}
-                onDatesSelect={this.onDatesSelect}
-                gotoSettings={this.gotoSettings}
-                showSearchButton= {false}
+                marginBottom: 10
+            }}
             />
+        );
+    }
+
+    renderFilterText() {
+        return (
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Text style={{ marginTop: 18, width: '100%', textAlign: 'center' }}>Search in progress, filtering will be possible after it is completed</Text>
+                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://alpha.locktrip.com/images/loader.gif' }} />
+            </View>
+        );
+    }
+    renderFilter() {
+        return (
+            <View style={{ width: '100%', height: 80 }}>
+                <DateAndGuestPicker
+                    checkInDate={this.state.checkInDate}
+                    checkOutDate={this.state.checkOutDate}
+                    adults={this.state.guests}
+                    children={0} //eslint-disable-line
+                    guests={0}
+                    infants={0}
+                    gotoGuests={this.gotoGuests}
+                    gotoSearch={this.gotoSearch}
+                    onDatesSelect={this.onDatesSelect}
+                    gotoSettings={this.gotoSettings}
+                    showSearchButton={false}
+                />
+            </View>
         );
     }
 
     render() {
         const {
-            adults, children, infants, search, checkInDate, checkOutDate, guests, topHomes, onDatesSelect, searchedCity, checkInDateFormated, checkOutDateFormated, roomsDummyData
+            search, searchedCity
         } = this.state;
-        const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
-
+                {/* Back Button */}
                 <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
                 </TouchableOpacity>
-
+                {/* Search Text Field */}
                 <View style={styles.searchAreaView}>
                     <SearchBar
                         autoCorrect={false}
@@ -483,141 +462,151 @@ class Property extends Component {
                         leftIcon="search"
                     />
                 </View>
-                {!this.props.autocomplete.length && this.renderAutocomplete()}
-
-                {this.state.isLoading ? this.renderFilterText() : this.renderFilter()}
-
+                {/* Filter Box */}
+                {this.state.isFilterLoaded && this.renderFilter() }
+                {/* Show map button */}
+                {this.state.showResultsOnMap &&
                 <TouchableOpacity onPress={this.alterMap}>
                     <View style={styles.searchButtonView}>
-                        <Text style={styles.searchButtonText}>{this.state.showResultsOnMap ? "See Results List" : "See Results on Map"}</Text>
+                        <Text style={styles.searchButtonText}>See Results List</Text>
                     </View>
-                </TouchableOpacity>
-                
+                </TouchableOpacity>}
+                {/* No Results Text */}
                 {this.state.noResultsFound && this.renderInfoTv()}
-
+                {/* View for map and list */}
                 <View style={styles.itemView}>
-                    
-                    {
-                        this.state.showResultsOnMap ? 
-
+                    {this.state.showResultsOnMap ?
+                        // MapView
                         <MapView
                             style={styles.map}
                             region={{
-                              latitude: this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lat) : this.state.initialLat ,
-                              longitude:  this.state.listings.length >= 1 ? parseFloat(this.state.listings[0].lon) : this.state.initialLon,
-                              latitudeDelta: 1,
-                              longitudeDelta: 1,
+                                latitude: this.state.listings.length >= 1 ?
+                                    parseFloat(this.state.listings[0].lat) : this.state.initialLat,
+                                longitude: this.state.listings.length >= 1 ?
+                                    parseFloat(this.state.listings[0].lon) : this.state.initialLon,
+                                latitudeDelta: 1,
+                                longitudeDelta: 1
                             }}
-                            debug={false}>
+                        >
+                            {/* Marker */}
                             {this.state.listings.map(marker => marker.lat != null && (
-                            <Marker
-                                coordinate={{latitude: parseFloat(marker.lat), longitude: parseFloat(marker.lon)}}
-                                onCalloutPress={this.calloutClick.bind(this, marker)}
+                                <Marker
+                                    coordinate={{
+                                        latitude: parseFloat(marker.lat),
+                                        longitude: parseFloat(marker.lon)
+                                    }}
+                                    onCalloutPress={this.calloutClick.bind(this, marker)} //eslint-disable-line
                                 >
-                                <MapView.Callout
-                                    tooltip={true}>
-                                    <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' ,backgroundColor: '#fff'}}>
-                                        <Image
-                                            style={{width: 100, height: 60}}
-                                            source={ marker.thumbnail !== null && {uri : imgHost + marker.thumbnail.url} } 
-                                        />
-                                        <Text style={styles.location}>
-                                            {marker.name}
-                                        </Text>
-                                        <Text style={styles.description}>
-                                            LOC {marker.price} / Night
-                                        </Text>
-                                        <Text style={styles.ratingsMap}>
-                                        {
-                                            Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                                    {/* Marker click */}
+                                    <MapView.Callout
+                                        tooltip
+                                    >
+                                        <View style={
+                                            {
+                                                paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'
+                                            }
                                         }
-                                        </Text>
-                                    </View>
-                                </MapView.Callout>
-                            </Marker>
+                                        >
+                                            <Image
+                                                style={{ width: 100, height: 60 }}
+                                                source={marker.thumbnail !== null && { uri: imgHost + marker.thumbnail.url }}
+                                            />
+                                            <Text style={styles.location}>
+                                                {marker.name}
+                                            </Text>
+                                            <Text style={styles.description}>
+                                        LOC {marker.price} / Night
+                                            </Text>
+                                            <Text style={styles.ratingsMap}>
+                                                {
+                                                    Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                                                }
+                                            </Text>
+                                        </View>
+                                    </MapView.Callout>
+                                </Marker>
                             ))}
                         </MapView>
-
                         :
-
+                        // FlatList
                         <FlatList
+                            bounces={false}
                             style={styles.flatList}
                             data={this.state.listings}
+                            onEndReachedThreshold={0.5}
+                            onEndReached={() => {
+                                if (!this.onEndReachedCalledDuringMomentum) {
+                                    this.loadMore();
+                                    this.onEndReachedCalledDuringMomentum = true;
+                                }
+                            }
+                            }
+                            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+                            refreshing={false}
+                            ListHeaderComponent={
+                                <TouchableOpacity onPress={this.alterMap}>
+                                    <View style={{
+                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#cc8068'
+                                    }}
+                                    >
+                                        <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            }
+                            ListFooterComponent={
+                                this.state.isLoading && this.renderLoader()
+                            }
                             renderItem={
-                                ({item}) =>
-                                <TouchableOpacity onPress={this.gotoHotelDetailsPage.bind(this, item)}>
-                                <View style={styles.card}>
-                                <Image 
-                                source={ item.thumbnail !== null && {uri : imgHost + item.thumbnail.url} } 
-                                style={styles.popularHotelsImage}/>
-
-                                <TouchableOpacity style={styles.favoritesButton}>
-                                    <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon}/>
-                                </TouchableOpacity>
-                                        <View style={styles.cardContent}>
-                                            <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                                            <View style={styles.aboutPlaceView}>
-                                                <Text style={styles.placeReviewText}>Excellent</Text>
-                                                <Text style={styles.placeReviewNumber}>{item.stars}/5 </Text>
-                                                <View style={styles.ratingIconsWrapper}>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
-                                                </View>
-                                                <Text style={styles.totalReviews}>73 Reviews</Text>
-                                            </View>
-                                            <View style={styles.costView}>
-                                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{this.state.currencySign} {item.price} LOC {parseFloat(item.price/this.state.locRate).toFixed(2)} </Text>
-                                                <Text style={styles.perNight}>per night</Text>
-                                            </View>
-                                        </View>
-                                </View>
-                                </TouchableOpacity>
+                                ({ item }) =>
+                                    (<HotelItemView
+                                        item={item}
+                                        currencySign={this.state.currencySign}
+                                        locRate={this.state.locRate}
+                                        gotoHotelDetailsPage={this.gotoHotelDetailsPage}
+                                    />)
                             }
                         />
                     }
-
-                    
-
-                    
                 </View>
             </View>
         );
     }
 
-    handleAndroidSingleHotel(message){
-        try {
-            var object = JSON.parse(message);
-            if (object.hasOwnProperty('allElements')) {
-                if (object.allElements){
-                    this.applyFilters();
-                }
-            } else {
-                this.setState(prevState => ({
-                    listings: [...prevState.listings, object]
-                  }));
-            }
-        } catch(e) {
-            console.log(e);
-        }
-    }
+    // handleAndroidSingleHotel(message) {
+    //     // this.applyFilters();
+    //     try {
+    //         const object = JSON.parse(message);
+    //         if (object.hasOwnProperty('allElements')) {
+    //             if (object.allElements) {
+    //                 this.applyFilters();
+    //             }
+    //         } else {
+    //             this.setState(prevState => ({
+    //                 listings: [...prevState.listings, object]
+    //             }));
+    //         }
+    //     } catch (e) {
+    //         // Error
+    //     }
+    // }
 
     handleReceiveSingleHotel(message) {
-        var response = JSON.parse(message.body);
-        if (response.hasOwnProperty('allElements')) {
-            if (response.allElements){
-                clientRef.disconnect();
-                this.applyFilters();
-            }
-        } else {
-            this.setState(prevState => ({
-                listings: [...prevState.listings, response]
-              }));
+        if (countIos === 0) {
+            clientRef.disconnect();
+            this.applyFilters(false);
         }
-      }
+        countIos = 1;
+        // const response = JSON.parse(message.body);
+        // if (response.hasOwnProperty('allElements')) {
+        //     if (response.allElements) {         
+        //         this.applyFilters();
+        //     }
+        // } else {
+        //     this.setState(prevState => ({
+        //         listings: [...prevState.listings, response]
+        //     }));
+        // }
+    }
 }
-
 
 export default withNavigation(Property);

@@ -3,20 +3,20 @@ const dimensionWindows = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         flexDirection: 'column',
-        alignItems: 'stretch',
         backgroundColor: '#f0f1f3'
     },
     searchAreaView: {
         width: '100%',
-        height: 105,
         backgroundColor: '#f0f1f3',
-        paddingTop: 40,
+        paddingTop: 20,
         paddingLeft: 17,
         paddingRight: 17
     },
     itemView:{
-        height: '77%'
+        marginTop: 10,
+        flex: 1
     },
     sectionView: {
         width: '100%',
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
         paddingRight: 17
     },
     subtitleView: {
+        backgroundColor: 'green',
         width: '100%',
         paddingTop: 18,
         paddingBottom: 5,
@@ -160,8 +161,7 @@ const styles = StyleSheet.create({
         
     },
     flatList:{
-        marginLeft: 14,
-        marginRight: 18
+        marginRight: 18,
     },
     card: {
         height: 230,
@@ -311,7 +311,6 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
       },
       searchButtonView: {
-        margin: 10,
         marginLeft: 18,
         marginRight: 18,
         alignItems: 'center',
@@ -324,6 +323,7 @@ const styles = StyleSheet.create({
         padding: 14
     },
     map: {
+        marginTop: 18,
         zIndex: -1,
         marginLeft: 18,
         marginRight: 18,

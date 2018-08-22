@@ -35,7 +35,7 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 public class StompModule extends ReactContextBaseJavaModule {
 
     static ReactContext reactContext;
-    int count = 1;
+    int count;
 
     public StompModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -49,7 +49,8 @@ public class StompModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void startSession(String uid, String query) {
+    public void startSession(String uid, String query, Callback success) {
+        count = 0;
         ClientManager client = ClientManager.createClient();
 
         WebSocketClient transport = new StandardWebSocketClient(client);
@@ -59,28 +60,21 @@ public class StompModule extends ReactContextBaseJavaModule {
         String url = "wss://alpha.locktrip.com/socket";
 
         stompClient.connect(url, new StompSessionHandler() {
+
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
                 session.send("search","{\"uuid\":\""+uid+"\",\"query\":\""+query+"\"}");
-
                 session.subscribe("search/"+uid, this);
             }
 
             @Override
             public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-                Log.e("StompTest","A1");
-//                WritableMap event = Arguments.createMap();
-//                event.putString("message",exception.toString());
-//                emitDeviceEvent("SOCK_EXCEPTION", event);
+
             }
 
             @Override
             public void handleTransportError(StompSession session, Throwable exception) {
-                //Here
-                //error.invoke("went wrong");
-//                WritableMap event = Arguments.createMap();
-//                event.putString("message",exception.toString());
-//                emitDeviceEvent("SOCK_ERROR", event);
+
             }
 
             @Override
@@ -90,11 +84,12 @@ public class StompModule extends ReactContextBaseJavaModule {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                Log.e("StompTest","Working");
-                System.out.println("WORKING" + count);
-                WritableMap event = Arguments.createMap();
-                event.putString("message",payload.toString());
-                emitDeviceEvent("SOCK_EVENT", event);
+//                WritableMap event = Arguments.createMap();
+//                event.putString("message",payload.toString());
+//                emitDeviceEvent("SOCK_EVENT", event);
+                if (count == 0){
+                    success.invoke();
+                }
                 count ++;
             }
         });

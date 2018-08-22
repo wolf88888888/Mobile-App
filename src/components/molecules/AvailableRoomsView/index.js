@@ -49,13 +49,9 @@ class AvailableRoomsView extends Component {
     }
 
     componentDidMount() {
-        console.log("testingg");
-        console.log(this.props.id);
-        console.log(this.props.search);
         requester.getHotelRooms(this.props.id, this.props.search.split('&')).then(res => {
             if (res.success) {
                 res.body.then(data => {
-                    console.log(data);
                     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
                     this.setState({ rooms: ds.cloneWithRows(this.sortArray(data, 'price')) });
 
@@ -65,7 +61,6 @@ class AvailableRoomsView extends Component {
                     const { errors } = data;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            //console.log('Error:', errors[key].message);
                         }
                     });
                 });
@@ -75,7 +70,6 @@ class AvailableRoomsView extends Component {
 
     sortArray(array, key) {
         return array.sort(function (a, b) {
-            console.log(a.roomsResults[0].price)
             return b.roomsResults[0].price > a.roomsResults[0].price ? -1
                 : b.roomsResults[0].price < a.roomsResults[0].price ? 1
                     : 0
