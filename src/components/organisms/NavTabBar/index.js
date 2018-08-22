@@ -3,6 +3,7 @@ import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
+import SplashScreen from 'react-native-smart-splash-screen';
 
 export default class NavTabBar extends Component {
     static propTypes = {
@@ -27,9 +28,14 @@ export default class NavTabBar extends Component {
         },
     }
 
-    async componentDidMount() {
+    componentWillMount() {
         //const { currency } = this.props.paymentInfo;
         //console.log("Nav - componentDidMount", currency);
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 0
+        });
     }
 
     render() {

@@ -53,21 +53,21 @@ class EditLocationModal extends Component {
 
     getCities(countryId) {
         cityArr = [];
-        requester.getCities(countryId, false).then(res => {
-            res.body.then(data => {
-                if (data.content.length > 0) {
-                    data.content.map((item, i) => {
-                        cityArr.push({ 'label': item.name, 'value': item.id })
-                    })
-                    this.setState({
-                        cities: cityArr,
-                        selectedCityId: this.state.selectedCityId == null ? cityArr[0].value : this.state.selectedCityId,
-                    })
-                }
-            });
-        }).catch(err => {
-            console.log('error: ', err);
-        });
+        // requester.getCities(countryId, false).then(res => {
+        //     res.body.then(data => {
+        //         if (data.content.length > 0) {
+        //             data.content.map((item, i) => {
+        //                 cityArr.push({ 'label': item.name, 'value': item.id })
+        //             })
+        //             this.setState({
+        //                 cities: cityArr,
+        //                 selectedCityId: this.state.selectedCityId == null ? cityArr[0].value : this.state.selectedCityId,
+        //             })
+        //         }
+        //     });
+        // }).catch(err => {
+        //     console.log('error: ', err);
+        // });
     }
 
     render() {
@@ -120,10 +120,11 @@ class EditLocationModal extends Component {
                                 index = _.findIndex(this.state.cities, function (o) {
                                     return o.value == cId;
                                 })
-                                city = {
-                                    id: this.state.selectedCityId,
-                                    name: this.state.cities[index].label == null ? this.state.cities[0].label : this.state.cities[index].label,
-                                }
+                                // city = {
+                                //     id: this.state.selectedCityId,
+                                //     name: this.state.cities[index].label == null ? this.state.cities[0].label : this.state.cities[index].label,
+                                // }
+                                city = null;
                                 country = {
                                     id: this.state.selectedCountryId,
                                     name: this.state.selectedCountryName

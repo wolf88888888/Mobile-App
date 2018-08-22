@@ -31,7 +31,6 @@ class Profile extends Component {
         this.onCurrency = this.onCurrency.bind(this);
         this.updateGender = this.updateGender.bind(this);
         this.showToast = this.showToast.bind(this);
-        this.logout = this.logout.bind(this);
     }
 
      async componentDidMount() {
@@ -78,7 +77,7 @@ class Profile extends Component {
         })
     }
 
-    logout() {
+    logout = () => {
         const nestedNavigation = NavigationActions.navigate({
             routeName: 'Welcome',
             action: NavigationActions.navigate({routeName: "WELCOME_TRIPS"})
@@ -91,7 +90,7 @@ class Profile extends Component {
 				NavigationActions.navigate({routeName: 'Welcome'})
 			]
 		});
-		this.props.navigation.dispatch(resetAction);
+        this.props.navigation.dispatch(resetAction);
         AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
     }
 
@@ -180,10 +179,7 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Send Tokens</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
-                            this.props.navigation.navigate('Login');
-                        }} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.logout} style={styles.navItem}>
                             <Text style={styles.navItemText}>Log Out</Text>
                         </TouchableOpacity>
                     </View>

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import SplashScreen from 'react-native-smart-splash-screen';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import RNPickerSelect from 'react-native-picker-select';
 import SearchBar from '../../molecules/SearchBar';
@@ -84,7 +83,7 @@ class Explore extends Component {
         };
         
         this.props.actions.getCurrency(props.currency);
-
+        this.getCountryValues();
         Explore.self = this;
     }
 
@@ -96,11 +95,6 @@ class Explore extends Component {
             email: email_value,
         });
 
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 0,
-            delay: 0
-        });
         console.log("componentWillMount", token_value, email_value);
         // Below line gives null cannot be casted to string error on ios please look into it
         requester.getUserInfo().then(res => {
@@ -170,7 +164,7 @@ class Explore extends Component {
         requester.getCountries(true).then(res => {
             res.body.then(data => {
                 countryArr = [];
-                data.content.map((item, i) => {
+                data.map((item, i) => {
                     countryArr.push({
                         'label': item.name,
                         'value': item
