@@ -50,12 +50,14 @@ class CreateAccount extends Component {
     getCountriesForSignup() {
         requester.getCountries(true).then(res => {
             res.body.then(data => {
+                // console.log("getCountriesForSignup -------------- ", data);
                 countryArr = [];
-                data.content.map((item, i) => {
+                data.map((item, i) => {
                     countryArr.push({
                         'label': item.name,
                         'value': item
                     });
+                    
                 });
                 this.setState({
                     countries: countryArr,
@@ -151,7 +153,8 @@ class CreateAccount extends Component {
                                     this.setState({
                                         countryId: value.id,
                                         countryName: value.name,
-                                        country: value.name,
+                                        //country: value.name,
+                                        country: value.id,
                                         value: value
                                     });
                                 }}
@@ -200,8 +203,7 @@ class CreateAccount extends Component {
                         <View style={styles.nextButtonView}>
                             <TouchableOpacity
                                 disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
-                                onPress={() => this.goToCreatePassword()}
-                            >
+                                onPress={() => this.goToCreatePassword()}>
                                 <View style={styles.nextButton}>
                                     <Text style={styles.buttonText}>
                                         <FontAwesome>{Icons.arrowRight}</FontAwesome>

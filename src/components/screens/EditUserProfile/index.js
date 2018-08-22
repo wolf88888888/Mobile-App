@@ -1,5 +1,4 @@
-import { AsyncStorage, Clipboard, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { AsyncStorage, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
 import moment, { lang } from 'moment';
 
@@ -17,19 +16,12 @@ import EditWorkModal from '../../atoms/EditWorkModal';
 import Footer from '../../atoms/Footer';
 import Image from 'react-native-remote-svg';
 import ImagePicker from 'react-native-image-picker';
-import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import UserProfileHomes from '../../organisms/UserProfileHomes';
-import UserProfileReviews from '../../organisms/UserProfileReviews';
-import UserProfileSummary from '../../organisms/UserProfileSummary';
-import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction';
 import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo';
 import  { userInstance } from '../../../utils/userInstance';
 import requester from '../../../initDependencies';
 import _ from 'lodash';
-import { connect } from 'react-redux';
-import { imgHost, apiHost, domainPrefix } from '../../../config.js';
 import styles from './styles';
 
 class EditUserProfile extends Component {
@@ -158,7 +150,7 @@ class EditUserProfile extends Component {
         requester.getCountries().then(res => {
             res.body.then(data => {
                 this.setState({
-                    countries: data.content,
+                    countries: data,
                 })
             })
         }).catch(err => {
@@ -485,7 +477,7 @@ class EditUserProfile extends Component {
             preferredCurrency: parseInt(this.state.preferredCurrency, 10),
             gender: this.state.gender,
             country: parseInt(this.state.country.id, 10),
-            city: parseInt(this.state.city.id, 10),
+            // city: parseInt(this.state.city.id, 10),
             birthday: `${this.state.day}/${this.state.month}/${this.state.year}`,
             locAddress: this.state.locAddress,
             jsonFile: this.state.jsonFile
@@ -501,7 +493,7 @@ class EditUserProfile extends Component {
                 userInstance.setLanguage(userInfo.preferredLanguage);
                 userInstance.setGender(userInfo.gender);
                 userInstance.setCountry(this.state.country);
-                userInstance.setCity(this.state.city);
+                // userInstance.setCity(this.state.city);
                 userInstance.setBirthday(new Date(`${this.state.year}/${this.state.month}/${this.state.day} 00:00:00`).getTime());
                 this.setState({
                     showProgress: false
@@ -522,8 +514,6 @@ class EditUserProfile extends Component {
     }
 
     render() {
-        const { navigate, goBack } = this.props.navigation;
-
         let imageAvatar = '';
         if (this.state.image != '') {
             if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
@@ -535,7 +525,8 @@ class EditUserProfile extends Component {
         }
 
         let location = '';
-        if (this.state.city == '') {
+        console.log("location city", this.state.city);
+        if (this.state.city == undefined || this.state.city == null || this.state.city == '') {
             location = this.state.country==null? '' : this.state.country.name;
         }
         else {

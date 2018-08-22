@@ -22,6 +22,9 @@ const work_key = 'work_key';
 export const userInstance = {
 
     setId: function(userId) {
+        if (userId == undefined || userId == null) {
+            userId = '';
+        }
         AsyncStorage.setItem(id_key, userId.toString());
     },
 
@@ -31,6 +34,9 @@ export const userInstance = {
     },
 
     setEmail: function(email) {
+        if (email == undefined || email == null) {
+            email = '';
+        }
         AsyncStorage.setItem(email_key, email);
     },
 
@@ -40,6 +46,9 @@ export const userInstance = {
     },
 
     setFirstName: function(firstName) {
+        if (firstName == undefined || firstName == null) {
+            firstName = '';
+        }
         AsyncStorage.setItem(firstname_key, firstName);
     },
 
@@ -58,6 +67,9 @@ export const userInstance = {
     },
 
     setBirthday: function(birthday) {
+        if (birthday == undefined || birthday == null) {
+            birthday = '';
+        }
         AsyncStorage.setItem(birthday_key, birthday==null? '' : birthday.toString());
     },
 
@@ -67,6 +79,9 @@ export const userInstance = {
     },
 
     setGender: function(gender) {
+        if (gender == undefined || gender == null) {
+            gender = '';
+        }
         AsyncStorage.setItem(gender_key, gender);
     },
 
@@ -76,6 +91,9 @@ export const userInstance = {
     },
 
     setCity: function(city) {
+        if (city_key == undefined || city_key == null) {
+            city_key = '';
+        }
         AsyncStorage.setItem(city_key, JSON.stringify(city));
     },
 
@@ -85,6 +103,9 @@ export const userInstance = {
     },
 
     setCountry: function(country) {
+        if (country == undefined || country == null) {
+            country = '';
+        }
         AsyncStorage.setItem(country_key, JSON.stringify(country));
     },
 
@@ -94,6 +115,9 @@ export const userInstance = {
     },
 
     setProfileImage: function(profileImage) {
+        if (profileImage == undefined || profileImage == null) {
+            profileImage = '';
+        }
         AsyncStorage.setItem(profileimage_key, profileImage);
     },
 
@@ -103,6 +127,9 @@ export const userInstance = {
     },
 
     setJsonFile: function(jsonFile) {
+        if (jsonFile == undefined || jsonFile == null) {
+            jsonFile = '';
+        }
         AsyncStorage.setItem(jsonfile_key, jsonFile);
     },
 
@@ -112,6 +139,9 @@ export const userInstance = {
     },
 
     setLocAddress: function(locAddress) {
+        if (locAddress == undefined || locAddress == null) {
+            locAddress = '';
+        }
         AsyncStorage.setItem(locaddredss_key, locAddress);
     },
 
@@ -121,6 +151,9 @@ export const userInstance = {
     },
 
     setPhoneNumber: function(phoneNumber) {
+        if (phoneNumber == undefined || phoneNumber == null) {
+            phoneNumber = '';
+        }
         AsyncStorage.setItem(phonenumber_key, phoneNumber);
     },
 
@@ -130,6 +163,9 @@ export const userInstance = {
     },
 
     setCurrency: function(currency) {
+        if (currency == undefined || currency == null) {
+            currency = '';
+        }
         AsyncStorage.setItem(currency_key, JSON.stringify(currency));
     },
 
@@ -139,6 +175,9 @@ export const userInstance = {
     },
 
     setLanguage: function(language) {
+        if (language == undefined || language == null) {
+            language = '';
+        }
         AsyncStorage.setItem(language_key, language);
     },
 
@@ -148,6 +187,9 @@ export const userInstance = {
     },
 
     setAbout: function(about) {
+        if (about == undefined || about == null) {
+            about = '';
+        }
         AsyncStorage.setItem(about_key, about);
     },
 
@@ -157,6 +199,9 @@ export const userInstance = {
     },
 
     setGovernmentId: function(gId) {
+        if (gId == undefined || gId == null) {
+            gId = '';
+        }
         AsyncStorage.setItem(governmentid_key, gId);
     },
 
@@ -166,6 +211,9 @@ export const userInstance = {
     },
 
     setSchool: function(school) {
+        if (school == undefined || school == null) {
+            school = '';
+        }
         AsyncStorage.setItem(school_key, school);
     },
 
@@ -175,6 +223,9 @@ export const userInstance = {
     },
 
     setWork: function(work) {
+        if (work == undefined || work == null) {
+            work = '';
+        }
         AsyncStorage.setItem(work_key, work);
     },
 
@@ -195,7 +246,6 @@ export const userInstance = {
         this.setProfileImage(data.image);
         this.setJsonFile(data.jsonFile);
         this.setLocAddress(data.locAddress);
-        console.log("setUserData", data.locAddress);
         this.setPhoneNumber(data.phoneNumber);
         this.setCurrency(data.preferredCurrency);
         this.setLanguage(data.preferredLanguage);

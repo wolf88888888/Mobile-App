@@ -5,7 +5,6 @@ import {
     Dimensions
 } from 'react-native';
 import Moment from 'moment';
-import styles from '../../templates/Calendar/styles';
 import Month from '../../molecules/Month';
 
 const { width } = Dimensions.get('window');

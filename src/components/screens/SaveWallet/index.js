@@ -73,7 +73,7 @@ class SaveWallet extends Component {
             this.setState({ showProgress: false });
             if (res.success) {
                 console.log(res);
-                navigate('CongratsWallet', {isFB:params.isFB})
+                navigate('CongratsWallet')
             } else {
                 res.errors.then(data => {
                     const { errors } = data;
