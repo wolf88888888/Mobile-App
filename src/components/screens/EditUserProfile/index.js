@@ -463,7 +463,7 @@ class EditUserProfile extends Component {
         this.setState({
             showProgress: true
         });
-
+        
         userInstance.setAbout(this.state.about==null? '' : this.state.about);
         userInstance.setGovernmentId(this.state.governmentId==null? '' : this.state.governmentId);
         userInstance.setSchool(this.state.school==null? '' : this.state.school);
