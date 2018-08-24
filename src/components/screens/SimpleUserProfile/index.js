@@ -93,11 +93,12 @@ class SimpleUserProfile extends Component {
     render() {
         const { navigate, goBack } = this.props.navigation;
         let gender = '';
-        if (this.state.gender === 'man') {
+        if (this.state.gender === 'men') {
             gender = 'M';
-        }
-        else if (this.state.gender === 'women') {
+        }else if (this.state.gender === 'women') {
             gender = 'F';
+        }else{
+            gender = '?';
         }
 
         let image = '';

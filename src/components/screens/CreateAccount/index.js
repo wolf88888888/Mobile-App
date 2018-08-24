@@ -166,7 +166,7 @@ class CreateAccount extends Component {
                                 surveys and inspiration via email, SMS and phone.
                         </Text>
 
-                            <View style={{ flex: 0.2, alignSelf: 'flex-end', }}>
+                            <View style={styles.switchContainer}>
                                 {userWantsPromo ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
                                         <Text style={styles.switchCheckText}>
