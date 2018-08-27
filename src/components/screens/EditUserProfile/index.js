@@ -23,6 +23,7 @@ import  { userInstance } from '../../../utils/userInstance';
 import requester from '../../../initDependencies';
 import _ from 'lodash';
 import styles from './styles';
+import { apiHost, domainPrefix } from '../../../config';
 
 class EditUserProfile extends Component {
 
