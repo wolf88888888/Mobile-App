@@ -350,7 +350,8 @@ class Explore extends Component {
                     style={{
                         marginLeft: 17,
                         marginRight: 17,
-                        minHeight: 100
+                        minHeight: 100,
+                        zIndex: 99,
                     }}
                 >
                     {
@@ -522,9 +523,9 @@ class Explore extends Component {
                     textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
-                <ScrollView>
+                {this.renderAutocomplete()}
+                <ScrollView style={styles.scrollView}>
                     <View style={styles.scrollViewContentMain}>
-                        {this.renderAutocomplete()}
                         <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}

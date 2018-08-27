@@ -123,7 +123,7 @@ class SaveWallet extends Component {
                                     i++;
                                     return (
                                         <View key={i} style={styles.inputView}>
-                                            <SmartInput value={`${i}. ${value}`} placeholderTextColor="#fff" />
+                                            <SmartInput value={`${i}. ${value}`} placeholderTextColor="#fff" editable={false}/>
                                         </View>
                                     )
                                 })}
