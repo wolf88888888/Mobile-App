@@ -50,6 +50,23 @@ class HotelItemView extends Component {
         return indents;
     }
 
+    ratingTitle(count){
+        switch(count){
+            case 0:
+                return 'Poor'
+            case 1:
+                return 'Poor'
+            case 2:
+                return 'Fair'
+            case 3:
+                return 'Good'
+            case 4:
+                return 'Very Good'
+            case 5:
+                return 'Excellent'
+        }
+    }
+
     render() {
         const {
             item, currencySign, locRate
@@ -71,7 +88,7 @@ class HotelItemView extends Component {
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
 
                         <View style={styles.aboutPlaceView}>
-                            <Text style={styles.placeReviewText}>Excellent </Text>
+                            <Text style={styles.placeReviewText}>{this.ratingTitle(item.stars)}</Text>
                             <Text style={styles.placeReviewNumber}> {item.stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
                                 {this.checkStars(item.stars)}
