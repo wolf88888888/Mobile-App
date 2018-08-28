@@ -14,6 +14,7 @@ import { imgHost } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import ImageCarousel from '../../atoms/ImagePage';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;
@@ -53,7 +54,8 @@ class HotelDetails extends Component {
             longitude: -122.4324,
             currency: 'EUR',
             currencySign: '€',
-            locRate: 0
+            locRate: 0,
+            isLoadingHotelDetails: false
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
@@ -62,6 +64,15 @@ class HotelDetails extends Component {
         this.state.currency = params ? params.currency : [];
         this.state.currencySign = params ? params.currencySign : '€';
         this.state.locRate = params ? params.locRate : '';
+        this.state.hotelFullDetails = params ? params.hotelFullDetails : [];
+        this.state.hotelAmenities = params ? params.hotelFullDetails.hotelAmenities : [];
+        this.state.mainAddress = params ? params.hotelFullDetails.additionalInfo.mainAddress : '';
+        this.state.regionName = params ? params.hotelFullDetails.city : '';
+        this.state.countryName = params ? params.hotelFullDetails.country : '';
+        this.state.description = params ? params.hotelFullDetails.generalDescription : '';
+        this.state.latitude = params ? params.hotelFullDetails.latitude : 0.0;
+        this.state.longitude = params ? params.hotelFullDetails.longitude : 0.0;
+        this.state.dataSourcePreview = params ? params.dataSourcePreview : [];
         // this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
         // this.state.countryName = params.hotelDetail.country;
         // this.state.latitude = params.hotelDetail.latitude;
@@ -83,30 +94,31 @@ class HotelDetails extends Component {
     }
 
     componentWillMount() {
-        requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then((res) => {
-            // here you set the response in to json
-            res.body.then((data) => {
-                const hotelPhotos = [];
-                for (let i = 0; i < data.hotelPhotos.length; i++) {
-                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });
-                }
-                this.state.dataSourcePreview = hotelPhotos;
-                // here you parse your json
-                // here you set you data from json into your variables
-                this.setState({
-                    hotelFullDetails: data,
-                    hotelAmenities: data.hotelAmenities,
-                    mainAddress: data.additionalInfo.mainAddress,
-                    regionName: data.city,
-                    countryName: data.country,
-                    description: data.generalDescription,
-                    latitude: data.latitude,
-                    longitude: data.longitude
-                });
-            }).catch((err) => {
-                console.log(err);
-            });
-        });
+        // requester.getHotelById(this.state.hotel.id, this.state.urlForService.split('&')).then((res) => {
+        //     // here you set the response in to json
+        //     res.body.then((data) => {
+        //         const hotelPhotos = [];
+        //         for (let i = 0; i < data.hotelPhotos.length; i++) {
+        //             hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });
+        //         }
+        //         this.state.dataSourcePreview = hotelPhotos;
+        //         // here you parse your json
+        //         // here you set you data from json into your variables
+        //         this.setState({
+        //             hotelFullDetails: data,
+        //             hotelAmenities: data.hotelAmenities,
+        //             mainAddress: data.additionalInfo.mainAddress,
+        //             regionName: data.city,
+        //             countryName: data.country,
+        //             description: data.generalDescription,
+        //             latitude: data.latitude,
+        //             longitude: data.longitude,
+        //             isLoadingHotelDetails: false
+        //         });
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        // });
     }
 
     onClose() {
@@ -129,7 +141,7 @@ class HotelDetails extends Component {
                         <WhiteBackButton onPress={this.onClose} />
                     </View>
                     <View style={styles.body}>
-                        <View style={{ width: logoWidth, height: logoHeight }}>
+                        <View style={{ width: logoWidth, height: logoHeight }}>                            
                             {this.state.dataSourcePreview.length > 0 &&
                             <ImageCarousel
                                 delay={1500}
@@ -160,7 +172,11 @@ class HotelDetails extends Component {
                             style={styles.roomfacility}
                             data={this.state.hotelAmenities}
                             onFacilityMore={this.onFacilityMore}
-                        />
+                        >
+                            {console.log("******")}
+                            {console.log(this.state.hotelAmenities)}
+                            {console.log("******")}
+                        </FacilitiesView>
 
                         <View style={[styles.lineStyle, {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 
@@ -193,6 +209,13 @@ class HotelDetails extends Component {
                         <View style={{ marginBottom: 50 }} />
                     </View>
                 </ScrollView>
+                <ProgressDialog
+                    visible={this.state.isLoadingHotelDetails}
+                    title="Please Wait"
+                    message="Loading..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }

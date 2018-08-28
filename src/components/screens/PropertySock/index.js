@@ -19,6 +19,7 @@ import requester from '../../../initDependencies';
 
 const androidStomp = NativeModules.StompModule;
 const stomp = require('stomp-websocket-js');
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 const clientRef = undefined;
 let uid = '';
@@ -77,7 +78,8 @@ class Property extends Component {
             orderBy: 'priceForSort,asc',
             sliderValue: [1, 5000],
             page: 0,
-            totalPages: 0
+            totalPages: 0,
+            isLoadingHotelDetails: false
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -341,13 +343,30 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {
-            guests: this.state.guests,
-            hotelDetail: item,
-            urlForService: this.state.urlForService,
-            locRate: this.state.locRate,
-            currency: this.state.currency,
-            currencySign: this.state.currencySign
+        this.setState({isLoadingHotelDetails: true});
+        requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
+            // here you set the response in to json
+            res.body.then((data) => {
+                const hotelPhotos = [];
+                for (let i = 0; i < data.hotelPhotos.length; i++) {
+                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });
+                }
+                this.setState({
+                    isLoadingHotelDetails: false
+                });
+                this.props.navigation.navigate('HotelDetails', {
+                    guests: this.state.guests,
+                    hotelDetail: item,
+                    urlForService: this.state.urlForService,
+                    locRate: this.state.locRate,
+                    currency: this.state.currency,
+                    currencySign: this.state.currencySign,
+                    hotelFullDetails: data,
+                    dataSourcePreview: hotelPhotos,
+                });
+            }).catch((err) => {
+                console.log(err);
+            });
         });
     }
 
@@ -568,6 +587,13 @@ class Property extends Component {
                         />
                     }
                 </View>
+                <ProgressDialog
+                    visible={this.state.isLoadingHotelDetails}
+                    title="Please Wait"
+                    message="Loading..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }

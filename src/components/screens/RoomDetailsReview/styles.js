@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     steps: {
         fontSize: 12,
         fontFamily: 'FuturaStd-Light',
-        color: '#afafaf'
+        color: '#a3c5c0'
     },
     content: {
         paddingHorizontal: 20
