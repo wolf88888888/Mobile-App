@@ -36,10 +36,13 @@ class FacilitiesView extends Component {
     renderFacilitties(){
         var indents = [];
         for (var i =0; i < this.props.data.length; i++){
-            indents.push(<FacilityView image={{uri : imgHost + this.props.data[i].picture}}/>);
-            if (i == 4){
-                indents.push(<FacilityView more={this.props.data.length - 5} isMore={true} onPress={this.onFacilityMore}/>);
-                break;
+            let imgUrl = this.props.data[i].picture;
+            if (imgUrl != null && imgUrl != undefined){
+                indents.push(<FacilityView image={{uri : imgHost + imgUrl}}/>);
+                if (i == 4){
+                    indents.push(<FacilityView more={this.props.data.length - 5} isMore={true} onPress={this.onFacilityMore}/>);
+                    break;
+                }
             }
         }
         return indents;
