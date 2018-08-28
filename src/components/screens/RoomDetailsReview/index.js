@@ -8,6 +8,7 @@ import Toast from 'react-native-easy-toast';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 export default class RoomDetailsReview extends Component {
     constructor() {
@@ -27,7 +28,8 @@ export default class RoomDetailsReview extends Component {
             bookingId: '',
             hotelBooking: '',
             booking: '',
-            data: ''
+            data: '',
+            isLoading: false
         };
     }
 
@@ -101,7 +103,7 @@ export default class RoomDetailsReview extends Component {
 
     handleSubmit() {
 
-        this.setState({ modalVisible: false });
+        this.setState({ modalVisible: false, isLoading: true });
         this.refs.toast.show('We are working on your transaction this might take some time.', 1500);
 
         requester.getCancellationFees(this.state.bookingId).then(res => {
@@ -139,18 +141,22 @@ export default class RoomDetailsReview extends Component {
                                 numberOfTravelers.toString()
                             )
                                 .then(transaction => {
+                                    this.setState({isLoading: false});
                                     this.refs.toast.show('' + transaction, 1500);
                                 })
                                 .catch((err) => {
+                                    this.setState({isLoading: false});
                                     this.refs.toast.show('' + err, 1500);
                                 });
                         }, 3000);
                     }).catch((err) => {
+                        this.setState({isLoading: false});
                         this.refs.toast.show('' + err, 1500);
                     });
                 });
             });
         }).catch((err) => {
+            this.setState({isLoading: false});
             this.refs.toast.show('' + err, 1500);
         });
     }
@@ -345,6 +351,13 @@ export default class RoomDetailsReview extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <ProgressDialog
+                    visible={this.state.isLoading}
+                    title="Please Wait"
+                    message="Loading..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }

@@ -161,8 +161,7 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state;
-        console.log(this.props.roomDetail);
-        //this.props.navigation.navigate('RoomDetailsReview', {'roomDetails' : params.roomDetail, 'quoteId': params.roomDetail.quoteId,'guests': testingArray.length, 'hotelDetails': params.hotelDetails, 'price': params.price, 'priceLOC': params.priceLOC, 'guestRecord': testingArray});
+        this.props.navigation.navigate('RoomDetailsReview', {'roomDetails' : params.roomDetail, 'quoteId': params.roomDetail.quoteId,'guests': testingArray.length, 'hotelDetails': params.hotelDetails, 'price': params.price, 'priceLOC': params.priceLOC, 'guestRecord': testingArray});
     }
 }
 
