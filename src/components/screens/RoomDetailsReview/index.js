@@ -267,7 +267,7 @@ export default class RoomDetailsReview extends Component {
                     {/* Back Button */}
                     <TouchableOpacity onPress={() => {
                         this.props.navigation.goBack();
-                    }} style={styles.backButton}>
+                    }} >
                         <Image
                             style={styles.btn_backImage}
                             source={require('../../../../src/assets/png/arrow-back.png')}
@@ -275,7 +275,7 @@ export default class RoomDetailsReview extends Component {
                     </TouchableOpacity>
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 2 OF 2</Text>
-                        <Text style={styles.heading}>Review Room Details</Text>
+                        <Text style={styles.heading}>Review room details</Text>
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
                                 <Image source={require('../../../../src/assets/apartment.png')}

@@ -99,14 +99,14 @@ export default class GuestInfoForm extends Component {
         return (
             <View style={styles.container}>
                 <KeyboardAvoidingView style={{height: '100%', width:'100%'}}>
-                    <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.goBack()}}>
                         <Image style={styles.btn_backImage}
                                source={require('../../../../src/assets/png/arrow-back.png')}/>
                     </TouchableOpacity>
                     
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 1 OF 2</Text>
-                        <Text style={styles.heading}>Provide Guest Information</Text>
+                        <Text style={styles.heading}>Provide guest information</Text>
                         
                         
                         <View style={styles.hotelInfoContainer}>

@@ -10,10 +10,11 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     btn_backImage:{
-        width: 24,
         height: 24,
-        marginTop: 40,
-        marginLeft: 18,
+        width: 24,
+        marginTop: 44,
+        marginLeft: 16,
+        marginBottom: 32
     },
     steps: {
         fontSize: 12,
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     heading: {
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         marginTop: 5,
         fontSize: 24,
         fontWeight: '200',
@@ -90,7 +91,8 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     hotelName: {
-        fontFamily: 'FuturaStd-Light',
+        color: 'black',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 16,
         fontWeight: '200'
     },
