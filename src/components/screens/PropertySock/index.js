@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter,ImageBackground } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -484,12 +484,18 @@ class Property extends Component {
                 {/* Filter Box */}
                 {this.state.isFilterLoaded && this.renderFilter() }
                 {/* Show map button */}
+                
                 {this.state.showResultsOnMap &&
-                <TouchableOpacity onPress={this.alterMap}>
-                    <View style={styles.searchButtonView}>
-                        <Text style={styles.searchButtonText}>See Results List</Text>
-                    </View>
-                </TouchableOpacity>}
+                    <TouchableOpacity onPress={this.alterMap}>
+                        <View style={{
+                            marginLeft: 18, marginRight: 18,alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
+                        }}
+                        >
+                            <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                <Text style={styles.searchButtonText}>See Results List</Text>
+                            </ImageBackground>
+                        </View>
+                    </TouchableOpacity>}
                 {/* No Results Text */}
                 {this.state.noResultsFound && this.renderInfoTv()}
                 {/* View for map and list */}
@@ -565,10 +571,12 @@ class Property extends Component {
                             ListHeaderComponent={
                                 <TouchableOpacity onPress={this.alterMap}>
                                     <View style={{
-                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#cc8068'
+                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
                                     }}
                                     >
-                                        <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                            <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        </ImageBackground>
                                     </View>
                                 </TouchableOpacity>
                             }

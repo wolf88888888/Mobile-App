@@ -37,7 +37,7 @@ class FacilitiesView extends Component {
         var indents = [];
         for (var i =0; i < this.props.data.length; i++){
             let imgUrl = this.props.data[i].picture;
-            if (imgUrl != null && imgUrl != undefined){
+            if (imgUrl != null && imgUrl != undefined && imgUrl != ''){
                 indents.push(<FacilityView image={{uri : imgHost + imgUrl}}/>);
                 if (i == 4){
                     indents.push(<FacilityView more={this.props.data.length - 5} isMore={true} onPress={this.onFacilityMore}/>);

@@ -172,12 +172,7 @@ class HotelDetails extends Component {
                             style={styles.roomfacility}
                             data={this.state.hotelAmenities}
                             onFacilityMore={this.onFacilityMore}
-                        >
-                            {console.log("******")}
-                            {console.log(this.state.hotelAmenities)}
-                            {console.log("******")}
-                        </FacilitiesView>
-
+                        />
                         <View style={[styles.lineStyle, {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 
                         }]}
