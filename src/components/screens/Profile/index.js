@@ -31,6 +31,7 @@ class Profile extends Component {
         this.onCurrency = this.onCurrency.bind(this);
         this.updateGender = this.updateGender.bind(this);
         this.showToast = this.showToast.bind(this);
+        this.navigateToPaymentMethods = this.navigateToPaymentMethods.bind(this);
     }
 
      async componentDidMount() {
@@ -92,6 +93,10 @@ class Profile extends Component {
 		});
         this.props.navigation.dispatch(resetAction);
         AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+    }
+
+    navigateToPaymentMethods(){
+        this.props.navigation.navigate('PaymentMethods', {});
     }
 
     showToast() {
@@ -163,7 +168,7 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Notifications</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-bell.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.showToast} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.navigateToPaymentMethods} style={styles.navItem}>
                             <Text style={styles.navItemText}>Payment Methods</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-payment.png')} style={styles.navIcon} />
                         </TouchableOpacity>
