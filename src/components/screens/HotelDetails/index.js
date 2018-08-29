@@ -1,7 +1,9 @@
 import {
     Dimensions,
     ScrollView,
-    View
+    View,
+    Animated,
+    TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -123,6 +125,15 @@ class HotelDetails extends Component {
         // });
     }
 
+    onMapTap(){
+        this.props.navigation.navigate('MapFullScreen',{
+            'lat': this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0, 
+            'lng': this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0,
+            'name': this.state.hotel.name,
+            'address': `${this.state.mainAddress}, ${this.state.countryName}`
+        });
+    }
+
     onClose() {
         this.props.navigation.goBack();
     }
@@ -143,8 +154,7 @@ class HotelDetails extends Component {
                         <WhiteBackButton onPress={this.onClose} />
                     </View>
                     <View style={styles.body}>
-                        <View style={{ width: logoWidth, height: logoHeight }}>                            
-                            {this.state.dataSourcePreview.length > 0 &&
+                        <View style={{ width: logoWidth, height: logoHeight }}>    
                             <ImageCarousel
                                 delay={1500}
                                 style={styles.logoImage}
@@ -154,7 +164,7 @@ class HotelDetails extends Component {
                                 indicatorOffset={20}
                                 indicatorColor="#D87A61"
                                 images={this.state.dataSourcePreview} 
-                            />}
+                            />
                         </View>
 
                         <HotelDetailView
@@ -192,7 +202,7 @@ class HotelDetails extends Component {
                             locRate={this.state.locRate} />
 
                         <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 }]} />
-
+                        <TouchableOpacity activeOpacity={1} onPress={()=> this.onMapTap()}>
                         <LocationView
                             location={`${this.state.mainAddress}, ${this.state.countryName}`}
                             titleStyle={{ fontSize: 17 }}
@@ -203,16 +213,10 @@ class HotelDetails extends Component {
                             lon={this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0}
                             radius={200} 
                         />
+                        </TouchableOpacity>
                         <View style={{ marginBottom: 50 }} />
                     </View>
                 </ScrollView>
-                <ProgressDialog
-                    visible={this.state.isLoadingHotelDetails}
-                    title="Please Wait"
-                    message="Loading..."
-                    animationType="slide"
-                    activityIndicatorSize="large"
-                    activityIndicatorColor="black"/>
             </View>
         );
     }

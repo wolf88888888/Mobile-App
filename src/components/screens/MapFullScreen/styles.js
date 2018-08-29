@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const dimensionWindows = Dimensions.get('window');
 
 const styles = StyleSheet.create({
 
@@ -7,8 +8,11 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#f0f1f3',
-        alignItems: 'center',
-        justifyContent: 'flex-start'
+    },
+
+    btn_backImage:{
+        height: 28,
+        width: 28,
     },
 
     topButtonContainer: {
@@ -70,7 +74,11 @@ const styles = StyleSheet.create({
         right: 0,
         backgroundColor: "#FFFFFF",
         height: 100,
-    }
+    },
+    map: {
+        zIndex: -1,
+        height: '100%',
+    },
 });
 
 export default styles;
