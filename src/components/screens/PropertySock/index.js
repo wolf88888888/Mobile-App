@@ -111,7 +111,6 @@ class Property extends Component {
                 this.applyFilters(false);
             });
             DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                console.log(message),
                 this.handleAndroidSingleHotel(message)
             ));
         }
