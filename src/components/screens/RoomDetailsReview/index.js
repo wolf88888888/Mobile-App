@@ -332,7 +332,7 @@ export default class RoomDetailsReview extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, {fontWeight: '400'}, styles.fontFuturaStd]}>${params.price}</Text>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
                             <Text style={styles.period1}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>

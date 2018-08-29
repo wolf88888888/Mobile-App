@@ -138,19 +138,21 @@ export default class GuestInfoForm extends Component {
 
                 {/*Bottom Bar*/}
                 <View style={styles.floatingBar}>
+                    
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.bold400]}>${params.price}</Text>
-                            <Text style={styles.period1}> for 1 nights</Text>
+                            <Text style={[styles.price, styles.fontFuturaMed]}>${params.price}</Text>
+                            <Text style={[styles.period1, styles.fontFuturaStd]}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={styles.period2}> for 1 nights</Text>
+                            <Text style={[styles.period2, styles.fontFuturaStd]}> for 1 nights</Text>
                         </View>
                     </View>
+                    
                     <View style={styles.nextButtonView}>
                         <TouchableOpacity style={styles.nextButton} onPress={this.onProceedPress}>
-                            <Text style={styles.nextText}>Proceed</Text>
+                            <Text style={styles.nextText}>Next</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
