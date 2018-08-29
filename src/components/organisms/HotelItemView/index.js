@@ -51,19 +51,20 @@ class HotelItemView extends Component {
     }
 
     ratingTitle(count){
-        switch(count){
-            case 0:
-                return 'Poor'
-            case 1:
-                return 'Poor'
-            case 2:
-                return 'Fair'
-            case 3:
-                return 'Good'
-            case 4:
-                return 'Very Good'
-            case 5:
-                return 'Excellent'
+        if (count < 1){
+            return 'Poor'
+        }
+        else if (count >= 1 && count < 2){
+            return 'Fair'
+        }
+        else if (count >= 2 && count < 3){
+            return 'Good'
+        }
+        else if (count >= 3 && count < 4){
+            return 'Very Good'
+        }
+        else if (count >= 4 && count < 5){
+            return 'Excellent'
         }
     }
 

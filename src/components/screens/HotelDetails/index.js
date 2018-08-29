@@ -55,7 +55,8 @@ class HotelDetails extends Component {
             currency: 'EUR',
             currencySign: '€',
             locRate: 0,
-            isLoadingHotelDetails: false
+            isLoadingHotelDetails: false,
+            hotelRatingStars: 0,
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
@@ -73,6 +74,7 @@ class HotelDetails extends Component {
         this.state.latitude = params ? params.hotelFullDetails.latitude : 0.0;
         this.state.longitude = params ? params.hotelFullDetails.longitude : 0.0;
         this.state.dataSourcePreview = params ? params.dataSourcePreview : [];
+        this.state.hotelRatingStars = params ? params.hotelDetail.stars : 0;
         // this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
         // this.state.countryName = params.hotelDetail.country;
         // this.state.latitude = params.hotelDetail.latitude;
@@ -158,7 +160,7 @@ class HotelDetails extends Component {
                         <HotelDetailView
                             dataSourcePreview={this.state.dataSourcePreview}
                             title={this.state.hotel.name}
-                            rateVal={this.state.hotel.star}
+                            rateVal={this.state.hotelRatingStars}
                             reviewNum={0}
                             address={this.state.mainAddress}
                             description={this.state.description}
