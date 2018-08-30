@@ -587,9 +587,9 @@ class Property extends Component {
                             refreshing={false}
                             ListHeaderComponent={
                                 <TouchableOpacity onPress={this.alterMap}>
-                                    <View style={{
+                                    <View style={!this.state.isLoading ? {
                                         marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
-                                    }}
+                                    } : {height: 0}}
                                     >
                                         <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
                                             <Text style={styles.searchButtonText}>See Results on Map</Text>

@@ -3,18 +3,15 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       flexDirection: 'column',
-      alignItems: 'center',
+      alignItems: 'stretch',
       backgroundColor: '#f0f1f3'
       },
-      heading: {
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          width: '100%',
-          padding: 20,
-          marginTop: 25,
-          marginLeft: 15,
-      },
+      backButton:{
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginTop: 45,
+        marginLeft: 15,
+    },
       btn_backImage:{
           height: 28,
           width: 28,
@@ -32,25 +29,30 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     navItemText: {
-      fontFamily: 'FuturaStd-Light',
-      fontSize: 21,
+      fontFamily: 'FuturaStd',
+      fontSize: 22,
       color:'#000'
     },
     listItemText:{
       fontFamily: 'FuturaStd-Light',
-      fontSize: 21,
+      fontSize: 17,
       marginLeft:20,
       color:'#000'
   },
     navText:{
-      marginTop: 10,
+      marginTop: 12,
       fontFamily: 'FuturaStd-Light',
       fontSize: 15,
     },
   
     listItem:{flex:1,
       flexDirection:'row',
-      justifyContent:'flex-start'
+      justifyContent:'flex-start',
+      alignItems: 'center'
+  },
+  leftIcon:{
+    height: 30,
+    width: 30
   },
     arrowSvg:{
       height: 25,
