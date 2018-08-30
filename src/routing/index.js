@@ -76,6 +76,7 @@ import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
 import PropertySock from '../components/screens/PropertySock';
+import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
     {
@@ -149,6 +150,7 @@ const RootNavigator = createStackNavigator(
         Debug : {screen: Debug},
         Chat: {screen: Chat},
         PropertySock: {screen: PropertySock},
+        MapFullScreen: {screen: MapFullScreen}
     },
     {
         initialRouteName: 'AppLoading',

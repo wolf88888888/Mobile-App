@@ -99,14 +99,14 @@ export default class GuestInfoForm extends Component {
         return (
             <View style={styles.container}>
                 <KeyboardAvoidingView style={{height: '100%', width:'100%'}}>
-                    <TouchableOpacity onPress={() => {this.props.navigation.goBack()}} style={styles.backButton}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.goBack()}}>
                         <Image style={styles.btn_backImage}
                                source={require('../../../../src/assets/png/arrow-back.png')}/>
                     </TouchableOpacity>
                     
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 1 OF 2</Text>
-                        <Text style={styles.heading}>Provide Guest Information</Text>
+                        <Text style={styles.heading}>Provide guest information</Text>
                         
                         
                         <View style={styles.hotelInfoContainer}>
@@ -138,19 +138,21 @@ export default class GuestInfoForm extends Component {
 
                 {/*Bottom Bar*/}
                 <View style={styles.floatingBar}>
+                    
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.bold400]}>${params.price}</Text>
-                            <Text style={styles.period1}> for 1 nights</Text>
+                            <Text style={[styles.price, styles.fontFuturaMed]}>${params.price}</Text>
+                            <Text style={[styles.period1, styles.fontFuturaStd]}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={styles.period2}> for 1 nights</Text>
+                            <Text style={[styles.period2, styles.fontFuturaStd]}> for 1 nights</Text>
                         </View>
                     </View>
+                    
                     <View style={styles.nextButtonView}>
                         <TouchableOpacity style={styles.nextButton} onPress={this.onProceedPress}>
-                            <Text style={styles.nextText}>Proceed</Text>
+                            <Text style={styles.nextText}>Next</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

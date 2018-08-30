@@ -3,6 +3,7 @@ const dimensionWindows = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         flexDirection: 'column',
         alignItems: 'stretch',
         backgroundColor: '#f0f1f3'

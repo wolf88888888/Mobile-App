@@ -10,67 +10,75 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     btn_backImage:{
-        width: 24,
         height: 24,
-        marginTop: 40,
-        marginLeft: 18,
+        width: 24,
+        marginTop: 44,
+        marginLeft: 16,
+        marginBottom: 32
     },
     steps: {
-        fontSize: 12,
-        fontFamily: 'FuturaStd-Light',
-        color: '#afafaf'
+        fontSize: 10,
+        fontFamily: 'FuturaStd-Medium',
+        color: '#a2c5bf'
     },
     content: {
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        marginBottom: 10,
     },
     heading: {
-        fontFamily: 'FuturaStd-Light',
+        color: 'black',
+        fontFamily: 'FuturaStd-Medium',
         marginTop: 5,
-        fontSize: 24,
-        fontWeight: '200',
-        marginBottom: 25
+        fontSize: 20,
+        marginBottom: 30
     },
     hotelInfoContainer: {
         flex: 1,
         flexDirection: 'row'
     },
     hotelThumbView: {
-        flex: 0.3
+        flex: 0.38
     },
     hotelInfoView: {
         flexDirection: 'column',
+        justifyContent: 'flex-end',
         flex: 0.7,
         paddingTop: 7,
-        paddingHorizontal: 8,
-        justifyContent: 'flex-end'
+        paddingHorizontal: 12
     },
     hotelThumb: {
         resizeMode: 'cover',
         width: '100%',
-        height: 60
+        height: 90
     },
     floatingBar: {
-        height: 80,
+        padding: 17,
+        position:'absolute',
+        bottom:0,
+        alignSelf:'center',
+        height: 90,
+        width: '100%',
         backgroundColor: '#fff',
         flexDirection: 'row',
         alignItems: 'center'
     },
     detailsView: {
-        flex: 1,
-        padding: 8
+        flex: 1
     },
     payButtonView: {
-        flex: 1,
+        flex: 0.8,
         alignItems: 'center'
     },
     payButton: {
         backgroundColor: '#DA7B61',
-        padding: 12
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 16
     },
     confirmPayText: {
-        color: '#fff',
+        color: 'white',
         fontSize: 18,
-        fontWeight: '100',
         fontFamily: 'FuturaStd-Light'
     },
     pricePeriodWrapper: {
@@ -79,13 +87,14 @@ const styles = StyleSheet.create({
         paddingVertical: 2
     },
     price: {
-        fontSize: 16
+        color: 'black',
+        fontSize: 17
     },
     listItem: {
         flex: 1,
         alignContent: 'center',
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: 20,
+        marginRight: 20,
         borderBottomColor: '#e3e3e3',
         borderBottomWidth: 1,
         flexDirection: 'row'
@@ -108,31 +117,27 @@ const styles = StyleSheet.create({
     listItemText: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 16,
-        fontWeight: '100',
-        color: '#262626'
+        color: '#000'
     },
     hotelName: {
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 15,
-        fontWeight: '200'
+        color: 'black',
+        fontFamily: 'FuturaStd-Medium',
+        fontSize: 16,
     },
     hotelPlace: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 11,
-        color: '#7c7c7c',
-        fontWeight: '100'
+        fontSize: 10,
+        color: '#54585b',
     },
     period1: {
         marginTop: 5,
-        fontSize: 11,
-        color: '#535353',
-        fontWeight: '100'
+        fontSize: 10,
+        color: '#000',
     },
     period2: {
-        marginTop: 3,
-        fontSize: 11,
-        color: '#535353',
-        fontWeight: '100'
+        marginTop: 5,
+        fontSize: 10,
+        color: '#000',
     },
     bold400: {
         fontWeight: '400'
@@ -140,10 +145,13 @@ const styles = StyleSheet.create({
     fontFuturaStd: {
         fontFamily: 'FuturaStd-Light'
     },
+    fontFuturaMed: {
+        fontFamily: 'FuturaStd-Medium'
+    },
     rhs: {
         fontSize: 16,
         fontFamily: 'FuturaStd-Light',
-        color: '#DA7B61'
+        color: '#d97b61'
     },
     flatList: {
         marginTop: 15

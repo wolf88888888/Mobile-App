@@ -8,6 +8,7 @@ import Toast from 'react-native-easy-toast';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 export default class RoomDetailsReview extends Component {
     constructor() {
@@ -27,7 +28,8 @@ export default class RoomDetailsReview extends Component {
             bookingId: '',
             hotelBooking: '',
             booking: '',
-            data: ''
+            data: '',
+            isLoading: false
         };
     }
 
@@ -101,7 +103,7 @@ export default class RoomDetailsReview extends Component {
 
     handleSubmit() {
 
-        this.setState({ modalVisible: false });
+        this.setState({ modalVisible: false, isLoading: true });
         this.refs.toast.show('We are working on your transaction this might take some time.', 1500);
 
         requester.getCancellationFees(this.state.bookingId).then(res => {
@@ -139,18 +141,22 @@ export default class RoomDetailsReview extends Component {
                                 numberOfTravelers.toString()
                             )
                                 .then(transaction => {
+                                    this.setState({isLoading: false});
                                     this.refs.toast.show('' + transaction, 1500);
                                 })
                                 .catch((err) => {
+                                    this.setState({isLoading: false});
                                     this.refs.toast.show('' + err, 1500);
                                 });
                         }, 3000);
                     }).catch((err) => {
+                        this.setState({isLoading: false});
                         this.refs.toast.show('' + err, 1500);
                     });
                 });
             });
         }).catch((err) => {
+            this.setState({isLoading: false});
             this.refs.toast.show('' + err, 1500);
         });
     }
@@ -261,7 +267,7 @@ export default class RoomDetailsReview extends Component {
                     {/* Back Button */}
                     <TouchableOpacity onPress={() => {
                         this.props.navigation.goBack();
-                    }} style={styles.backButton}>
+                    }} >
                         <Image
                             style={styles.btn_backImage}
                             source={require('../../../../src/assets/png/arrow-back.png')}
@@ -269,7 +275,7 @@ export default class RoomDetailsReview extends Component {
                     </TouchableOpacity>
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 2 OF 2</Text>
-                        <Text style={styles.heading}>Review Room Details</Text>
+                        <Text style={styles.heading}>Review room details</Text>
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
                                 <Image source={require('../../../../src/assets/apartment.png')}
@@ -326,7 +332,7 @@ export default class RoomDetailsReview extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, {fontWeight: '400'}, styles.fontFuturaStd]}>${params.price}</Text>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
                             <Text style={styles.period1}> for 1 nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
@@ -345,6 +351,13 @@ export default class RoomDetailsReview extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <ProgressDialog
+                    visible={this.state.isLoading}
+                    title="Please Wait"
+                    message="Loading..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }
