@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         width: '100%',
     },
     finePrintText: {
@@ -52,6 +53,10 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontFamily: 'FuturaStd-Light',
         maxWidth: 280
+    },
+    switchContainer: {
+        alignSelf: 'center',
+        marginRight: 20,
     },
     switchCheckView: {
         position: 'absolute',

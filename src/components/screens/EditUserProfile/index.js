@@ -23,6 +23,7 @@ import  { userInstance } from '../../../utils/userInstance';
 import requester from '../../../initDependencies';
 import _ from 'lodash';
 import styles from './styles';
+import { apiHost, domainPrefix } from '../../../config';
 
 class EditUserProfile extends Component {
 
@@ -463,7 +464,7 @@ class EditUserProfile extends Component {
         this.setState({
             showProgress: true
         });
-
+        
         userInstance.setAbout(this.state.about==null? '' : this.state.about);
         userInstance.setGovernmentId(this.state.governmentId==null? '' : this.state.governmentId);
         userInstance.setSchool(this.state.school==null? '' : this.state.school);

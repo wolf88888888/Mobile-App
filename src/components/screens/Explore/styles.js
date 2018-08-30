@@ -11,6 +11,14 @@ const styles = StyleSheet.create({
         position:'relative',
         paddingBottom: 10
     },
+    scrollView: {
+        position: 'absolute',
+        top: 100,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+
     searchAreaView: {
         //width: '68%',
        // height: 105,
