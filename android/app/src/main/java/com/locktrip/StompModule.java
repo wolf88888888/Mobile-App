@@ -84,9 +84,9 @@ public class StompModule extends ReactContextBaseJavaModule {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-//                WritableMap event = Arguments.createMap();
-//                event.putString("message",payload.toString());
-//                emitDeviceEvent("SOCK_EVENT", event);
+                WritableMap event = Arguments.createMap();
+                event.putString("message",payload.toString());
+                emitDeviceEvent("SOCK_EVENT", event);
                 if (count == 0){
                     success.invoke();
                 }

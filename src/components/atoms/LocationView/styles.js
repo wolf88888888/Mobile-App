@@ -84,6 +84,15 @@ const styles = StyleSheet.create({
         width: dimensionWindows.width,
         height: dimensionWindows.width * 5 / 6.5,
     },
+
+    subView: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "red",
+        height: 500,
+    }
 });
 
 export default styles;

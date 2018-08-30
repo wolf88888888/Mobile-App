@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter,ImageBackground } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -19,6 +19,7 @@ import requester from '../../../initDependencies';
 
 const androidStomp = NativeModules.StompModule;
 const stomp = require('stomp-websocket-js');
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 const clientRef = undefined;
 let uid = '';
@@ -53,6 +54,7 @@ class Property extends Component {
             children: 1,
             topHomes: [],
             listings: [],
+            listingsMap: [],
             searchedCity: 'Discover your next experience',
             searchedCityId: 0,
             // these state are for paramerters in urlForService
@@ -77,7 +79,8 @@ class Property extends Component {
             orderBy: 'priceForSort,asc',
             sliderValue: [1, 5000],
             page: 0,
-            totalPages: 0
+            totalPages: 0,
+            isLoadingHotelDetails: false
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -107,10 +110,9 @@ class Property extends Component {
             androidStomp.startSession(uid, mainUrl, () => {
                 this.applyFilters(false);
             });
-            // DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-            //     console.log(message)
-            //     //this.handleAndroidSingleHotel(message)
-            // ));
+            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+                this.handleAndroidSingleHotel(message)
+            ));
         }
     }
 
@@ -341,13 +343,30 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {
-            guests: this.state.guests,
-            hotelDetail: item,
-            urlForService: this.state.urlForService,
-            locRate: this.state.locRate,
-            currency: this.state.currency,
-            currencySign: this.state.currencySign
+        this.setState({isLoadingHotelDetails: true});
+        requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
+            // here you set the response in to json
+            res.body.then((data) => {
+                const hotelPhotos = [];
+                for (let i = 0; i < data.hotelPhotos.length; i++) {
+                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });
+                }
+                this.setState({
+                    isLoadingHotelDetails: false
+                });
+                this.props.navigation.navigate('HotelDetails', {
+                    guests: this.state.guests,
+                    hotelDetail: item,
+                    urlForService: this.state.urlForService,
+                    locRate: this.state.locRate,
+                    currency: this.state.currency,
+                    currencySign: this.state.currencySign,
+                    hotelFullDetails: data,
+                    dataSourcePreview: hotelPhotos,
+                });
+            }).catch((err) => {
+                console.log(err);
+            });
         });
     }
 
@@ -355,13 +374,30 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        this.props.navigation.navigate('HotelDetails', {
-            guests: this.state.guests,
-            hotelDetail: item,
-            urlForService: this.state.urlForService,
-            locRate: this.state.locRate,
-            currency: this.state.currency,
-            currencySign: this.state.currencySign
+        this.setState({isLoadingHotelDetails: true});
+        requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
+            // here you set the response in to json
+            res.body.then((data) => {
+                const hotelPhotos = [];
+                for (let i = 0; i < data.hotelPhotos.length; i++) {
+                    hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });
+                }
+                this.setState({
+                    isLoadingHotelDetails: false
+                });
+                this.props.navigation.navigate('HotelDetails', {
+                    guests: this.state.guests,
+                    hotelDetail: item,
+                    urlForService: this.state.urlForService,
+                    locRate: this.state.locRate,
+                    currency: this.state.currency,
+                    currencySign: this.state.currencySign,
+                    hotelFullDetails: data,
+                    dataSourcePreview: hotelPhotos,
+                });
+            }).catch((err) => {
+                console.log(err);
+            });
         });
     }
 
@@ -465,12 +501,18 @@ class Property extends Component {
                 {/* Filter Box */}
                 {this.state.isFilterLoaded && this.renderFilter() }
                 {/* Show map button */}
+                
                 {this.state.showResultsOnMap &&
-                <TouchableOpacity onPress={this.alterMap}>
-                    <View style={styles.searchButtonView}>
-                        <Text style={styles.searchButtonText}>See Results List</Text>
-                    </View>
-                </TouchableOpacity>}
+                    <TouchableOpacity onPress={this.alterMap}>
+                        <View style={{
+                            marginLeft: 18, marginTop: 20, marginRight: 18,alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
+                        }}
+                        >
+                            <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                <Text style={styles.searchButtonText}>See Results List</Text>
+                            </ImageBackground>
+                        </View>
+                    </TouchableOpacity>}
                 {/* No Results Text */}
                 {this.state.noResultsFound && this.renderInfoTv()}
                 {/* View for map and list */}
@@ -480,16 +522,16 @@ class Property extends Component {
                         <MapView
                             style={styles.map}
                             region={{
-                                latitude: this.state.listings.length >= 1 ?
-                                    parseFloat(this.state.listings[0].lat) : this.state.initialLat,
-                                longitude: this.state.listings.length >= 1 ?
-                                    parseFloat(this.state.listings[0].lon) : this.state.initialLon,
+                                latitude: this.state.listingsMap.length >= 1 ?
+                                    parseFloat(this.state.listingsMap[0].lat) : this.state.initialLat,
+                                longitude: this.state.listingsMap.length >= 1 ?
+                                    parseFloat(this.state.listingsMap[0].lon) : this.state.initialLon,
                                 latitudeDelta: 1,
                                 longitudeDelta: 1
                             }}
                         >
                             {/* Marker */}
-                            {this.state.listings.map(marker => marker.lat != null && (
+                            {this.state.listingsMap.map(marker => marker.lat != null && (
                                 <Marker
                                     coordinate={{
                                         latitude: parseFloat(marker.lat),
@@ -546,10 +588,12 @@ class Property extends Component {
                             ListHeaderComponent={
                                 <TouchableOpacity onPress={this.alterMap}>
                                     <View style={{
-                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#cc8068'
+                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
                                     }}
                                     >
-                                        <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                            <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        </ImageBackground>
                                     </View>
                                 </TouchableOpacity>
                             }
@@ -568,44 +612,52 @@ class Property extends Component {
                         />
                     }
                 </View>
+                <ProgressDialog
+                    visible={this.state.isLoadingHotelDetails}
+                    title="Please Wait"
+                    message="Loading..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }
 
-    // handleAndroidSingleHotel(message) {
-    //     // this.applyFilters();
-    //     try {
-    //         const object = JSON.parse(message);
-    //         if (object.hasOwnProperty('allElements')) {
-    //             if (object.allElements) {
-    //                 this.applyFilters();
-    //             }
-    //         } else {
-    //             this.setState(prevState => ({
-    //                 listings: [...prevState.listings, object]
-    //             }));
-    //         }
-    //     } catch (e) {
-    //         // Error
-    //     }
-    // }
+    handleAndroidSingleHotel(message) {
+        // this.applyFilters();
+        try {
+            const object = JSON.parse(message);
+            if (object.hasOwnProperty('allElements')) {
+                if (object.allElements) {
+                    
+                }
+            } else {
+                this.setState(prevState => ({
+                    listingsMap: [...prevState.listingsMap, object]
+                }));
+            }
+        } catch (e) {
+            // Error
+        }
+    }
 
     handleReceiveSingleHotel(message) {
         if (countIos === 0) {
-            clientRef.disconnect();
             this.applyFilters(false);
         }
         countIos = 1;
-        // const response = JSON.parse(message.body);
-        // if (response.hasOwnProperty('allElements')) {
-        //     if (response.allElements) {         
-        //         this.applyFilters();
-        //     }
-        // } else {
-        //     this.setState(prevState => ({
-        //         listings: [...prevState.listings, response]
-        //     }));
-        // }
+        const response = JSON.parse(message.body);
+        if (response.hasOwnProperty('allElements')) {
+            if (response.allElements) {         
+                if (clientRef) {
+                    clientRef.disconnect();
+                }
+            }
+        } else {
+            this.setState(prevState => ({
+                listingsMap: [...prevState.listingsMap, response]
+            }));
+        }
     }
 }
 

@@ -62,6 +62,15 @@ const styles = StyleSheet.create({
         color: '#d97b61',
         fontSize: 15,
     },
+
+    subView: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "#FFFFFF",
+        height: 100,
+    }
 });
 
 export default styles;

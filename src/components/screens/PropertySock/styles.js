@@ -317,7 +317,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#cc8068'
     },
     searchButtonText: {
-        color: '#fff',
+        backgroundColor: '#fff',
+        color: '#000',
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
         padding: 14

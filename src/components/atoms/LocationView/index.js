@@ -72,6 +72,10 @@ class LocationView extends Component {
                             </View>
                         </View>
                         <MapView
+                            zoomEnabled={false}
+                            pitchEnabled={false}
+                            scrollEnabled={false}
+                            rotateEnabled={false}
                             style={styles.map}
                             region={{
                               latitude: this.props.lat,
