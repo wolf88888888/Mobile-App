@@ -586,16 +586,19 @@ class Property extends Component {
                             onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
                             refreshing={false}
                             ListHeaderComponent={
+                                !this.state.isLoading ? 
                                 <TouchableOpacity onPress={this.alterMap}>
-                                    <View style={!this.state.isLoading ? {
+                                    <View style={{
                                         marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
-                                    } : {height: 0}}
+                                    }}
                                     >
                                         <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
                                             <Text style={styles.searchButtonText}>See Results on Map</Text>
                                         </ImageBackground>
                                     </View>
                                 </TouchableOpacity>
+                                :
+                                <View></View>
                             }
                             ListFooterComponent={
                                 this.state.isLoading && this.renderLoader()
