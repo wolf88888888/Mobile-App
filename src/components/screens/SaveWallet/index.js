@@ -98,7 +98,7 @@ class SaveWallet extends Component {
         const { walletMnemonic } = this.state;
         let i = 0;
         return (
-            <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
+            <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%', backgroundColor:'#DA7B61' }}>
                 <StatusBar
                     backgroundColor="rgba(0,0,0,0)"
                     translucent

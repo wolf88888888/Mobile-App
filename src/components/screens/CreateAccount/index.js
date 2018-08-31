@@ -10,7 +10,6 @@ import { validateEmail, validateName } from '../../../utils/validation';
 
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SmartInput from '../../atoms/SmartInput';
 import Switch from 'react-native-customisable-switch';
