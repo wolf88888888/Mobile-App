@@ -32,17 +32,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     navItemText: {
-        fontWeight: '500',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 20,
+        fontFamily: 'Futura',
+        fontSize: 22,
         color: '#000',
-        marginLeft: 17,
+        marginLeft: 15,
         marginTop: 35,
     },
     navText: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 12,
-        marginLeft: 17,
+        marginLeft: 15,
         marginTop: 5,
     },
     subtitleView: {
@@ -326,7 +325,7 @@ const styles = StyleSheet.create({
     backButton:{
         alignItems: 'center',
         flexDirection: 'row',
-        marginTop: 25,
+        marginTop: 45,
         marginLeft: 15,
     },
     btn_backImage:{
@@ -338,15 +337,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start', 
         flexDirection: 'row',
         marginTop: 25,
-        margin: 6,
-        marginLeft: 17,
+        marginLeft: 15,
         alignItems: 'center',
     },
     searchButtonText: {
         color: '#fff',
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
-        padding: 6
+        padding: 15
     },
     map: {
         zIndex: -1,

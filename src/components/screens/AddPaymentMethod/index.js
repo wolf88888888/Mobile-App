@@ -20,13 +20,11 @@ class AddPaymentMethod extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-       
-        <View style={styles.heading}>
-           
+
+        <View style={styles.backButton}>
             <TouchableOpacity  onPress={() => navigate('PaymentMethods')}>
                 <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-black.png')}/>
             </TouchableOpacity>
-
         </View>
 
         <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
@@ -43,7 +41,7 @@ class AddPaymentMethod extends Component {
                 <TouchableOpacity style={styles.navItem} onPress={() => navigate('CreditCard')}>
                     <View style={styles.listItem}>
                         <View>
-                           <Image style={styles.arrowSvg} source={require('../../../../src/assets/svg/credit-card.svg')}/>
+                           <Image style={styles.leftIcon} source={require('../../../../src/assets/svg/credit-card.svg')}/>
                         </View>
                         <Text style={styles.listItemText}>Credit Card</Text>
                     </View>
@@ -57,7 +55,7 @@ class AddPaymentMethod extends Component {
                 <TouchableOpacity style={styles.navItem}>
                     <View style={styles.listItem}>
                         <View>
-                           <Image source={require('../../../../src/assets/svg/loc.svg')} style={styles.arrowSvg}/>
+                           <Image source={require('../../../../src/assets/svg/loc.svg')} style={styles.leftIcon}/>
                         </View>
                         <Text style={styles.listItemText}>LOC</Text>
                     </View>
