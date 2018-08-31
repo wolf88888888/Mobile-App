@@ -586,6 +586,7 @@ class Property extends Component {
                             onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
                             refreshing={false}
                             ListHeaderComponent={
+                                !this.state.isLoading ? 
                                 <TouchableOpacity onPress={this.alterMap}>
                                     <View style={{
                                         marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
@@ -596,6 +597,8 @@ class Property extends Component {
                                         </ImageBackground>
                                     </View>
                                 </TouchableOpacity>
+                                :
+                                <View></View>
                             }
                             ListFooterComponent={
                                 this.state.isLoading && this.renderLoader()

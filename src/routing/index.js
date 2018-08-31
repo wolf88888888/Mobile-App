@@ -153,7 +153,7 @@ const RootNavigator = createStackNavigator(
         MapFullScreen: {screen: MapFullScreen}
     },
     {
-        initialRouteName: 'AppLoading',
+        initialRouteName: 'MainScreen',
         headerMode: 'none'
     }
 );
