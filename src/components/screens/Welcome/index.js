@@ -19,7 +19,6 @@ import SplashScreen from 'react-native-smart-splash-screen';
 const FBSDK = require('react-native-fbsdk');
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
-
 class Welcome extends Component {
     static self;
 
@@ -79,15 +78,24 @@ class Welcome extends Component {
     }
 
     tryRegister(fbInfo) {
-        this.props.navigation.navigate('Terms', 
-                {
-                    firstName:fbInfo.first_name, 
-                    lastName:fbInfo.last_name, 
-                    email:fbInfo.email,
-                    userWantsPromo: true, 
-                    password:fbInfo.id+"!a123"
+        requester.getEmailFreeResponse(fbInfo.email).then(res => {
+            res.body.then(data => {
+                if (data.exist) {
+                    Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
+                } else {
+                    this.props.navigation.navigate('Terms', 
+                        {
+                            firstName:fbInfo.first_name, 
+                            lastName:fbInfo.last_name, 
+                            email:fbInfo.email,
+                            userWantsPromo: true, 
+                            password:fbInfo.id+"!a123"
+                        }
+                    );
                 }
-            );
+            });
+        });
+        
     }
 
     doLoginViaFb(data) {

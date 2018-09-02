@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setCurrency, setLocRate } from '../../redux/action/Currency'
 
 import SplashScreen from 'react-native-smart-splash-screen';
 import { domainPrefix } from '../../config';
+import { bindActionCreators } from 'redux';
+
+import * as countryActions from '../../redux/action/Country'
 
 const styles = StyleSheet.create({
     container: {
@@ -18,6 +22,7 @@ class AppLoading extends Component {
     constructor(props) {
         super(props);
         console.log("AppLoading - constructor")
+        this.props.actions.getCountries();
         this.bootstrapAsync();
     }
 
@@ -36,7 +41,6 @@ class AppLoading extends Component {
         let currency = await AsyncStorage.getItem('currency');
         // this.props.navigation.dispatch(setCurrency(currency));
         let locRate = await AsyncStorage.getItem('locRate');
-        locRate = JSON.parse(locRate)
 
         if (currency != undefined && currency != null) {
             console.log("currency--------------", currency);
@@ -61,7 +65,6 @@ class AppLoading extends Component {
         });
         this.props.navigation.dispatch(resetAction);
         // this.props.navigation.navigate(isLoggedIn ? 'MainScreen' : 'Welcome');
-
     };
 
     render() {
@@ -77,4 +80,11 @@ class AppLoading extends Component {
     }
 }
 
-export default AppLoading;
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(countryActions, dispatch)
+})
+
+
+export default connect(undefined, mapDispatchToProps)(AppLoading);
+// export default AppLoading;

@@ -6,9 +6,11 @@ const currencyInfo = {
     SET_LOC_RATE: 'SET_LOC_RATE'
 };
 
-export const getCurrency = (currency) => {
+export const getCurrency = (currency, isRefresh = true) => {
     return dispatch => {
-        dispatch(setCurrency({currency}));
+        if (isRefresh) {
+            dispatch(setCurrency({currency}));
+        }
         requester.getLocRateByCurrency(currency).then(res => {
             res.body.then(data => {
                 console.log("action getCurrency data", data);

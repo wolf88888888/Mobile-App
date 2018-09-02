@@ -14,7 +14,7 @@ import {
 import colors from './colors';
 import { material } from 'react-native-typography';
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 // TODO: Don't rely on Dimensions for the actions footer layout
 // TODO: Support custom actions
@@ -39,6 +39,7 @@ const MaterialDialog = ({
   colorAccent,
   backgroundColor,
   addPadding,
+  isVisibleBottomBar,
   onOk,
   onCancel,
   okLabel,
@@ -50,10 +51,10 @@ const MaterialDialog = ({
     transparent
     hardwareAccelerated
     visible={visible}
-    onRequestClose={onCancel}
+    onRequestClose={onCancel != undefined? onCancel: ()=>{}}
     supportedOrientations={['portrait', 'landscape']}
   >
-    <TouchableWithoutFeedback onPress={onCancel}>
+    <TouchableWithoutFeedback onPress={onCancel != undefined? onCancel: ()=>{}}>
       <View style={styles.backgroundOverlay}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
           <View
@@ -82,22 +83,27 @@ const MaterialDialog = ({
                 >
                   {children}
                 </View>
-                {onOk != null && onCancel != null ? (
+                {isVisibleBottomBar ? ( //onOk != null && onCancel != null
                   <View
                     style={scrolled ? styles.actionsContainerScrolled : styles.actionsContainer}
                   >
+                    {onCancel != null ? (
                     <ActionButton
                       testID="dialog-cancel-button"
                       colorAccent={colorAccent}
                       onPress={onCancel}
                       label={cancelLabel}
-                    />
+                    />) : null
+                    }
+                    {
+                    onOk ?
                     <ActionButton
                       testID="dialog-ok-button"
                       colorAccent={colorAccent}
                       onPress={onOk}
                       label={okLabel}
-                    />
+                    /> : null
+                    }
                   </View>
                 ) : null}
               </View>
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     marginHorizontal: 16,
     marginVertical: 106,
-    minWidth: 280,
+    minWidth: width * 0.8,
     borderRadius: 2,
     elevation: 24,
     overflow: 'hidden',
@@ -188,7 +194,7 @@ const styles = StyleSheet.create({
 MaterialDialog.propTypes = {
   visible: PropTypes.bool.isRequired,
   children: PropTypes.element.isRequired,
-  onCancel: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   onOk: PropTypes.func,
   cancelLabel: PropTypes.string,
   okLabel: PropTypes.string,
