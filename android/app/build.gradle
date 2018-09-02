@@ -200,6 +200,7 @@ dependencies {
     implementation project(':react-native-uuid-generator')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-image-picker')
+    implementation project(':react-native-image-resizer')
     implementation project(':react-native-fast-crypto')
     implementation group: 'org.springframework', name: 'spring-framework-bom', version: '4.2.2.RELEASE'
     implementation group: 'org.springframework', name: 'spring-messaging', version: '4.2.2.RELEASE'

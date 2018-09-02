@@ -3,6 +3,7 @@ package com.locktrip;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new RNCardViewPackage(),
           new MainReactPackage(),
+          new ImageResizerPackage(),
           new RNUUIDGeneratorPackage(),
           new RCTSplashScreenPackage(),    //register Module
           new MapsPackage(),
