@@ -364,7 +364,8 @@ class Explore extends Component {
     }
 
     renderAutocomplete() {
-        if (this.state.cities.length > 0) {
+        const nCities = this.state.cities.length;
+        if (nCities > 0) {
             return (
                 <ScrollView
                     style={{
@@ -375,11 +376,11 @@ class Explore extends Component {
                     }}
                 >
                     {
-                        this.state.cities.map(result => { //eslint-disable-line
+                        this.state.cities.map((result, i) => { //eslint-disable-line
                             return (//eslint-disable-line
                                 <TouchableOpacity
                                     key={result.id}
-                                    style={styles.autocompleteTextWrapper}
+                                    style={i == nCities - 1 ? [styles.autocompleteTextWrapper, {borderBottomWidth: 1, elevation: 1}] : styles.autocompleteTextWrapper}
                                     onPress={() => this.handleAutocompleteSelect(result.id, result.query)}
                                 >
                                     <Text style={styles.autocompleteText}>{result.query}</Text>
