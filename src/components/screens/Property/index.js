@@ -15,8 +15,8 @@ var clientRef = '';
 var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
 let uid = '';
-let baseHomeUrl = 'https://alpha.locktrip.com/homes/listings/?'
-let baseHotelUrl = 'https://alpha.locktrip.com/mobile/search?'
+let baseHomeUrl = 'https://beta.locktrip.com/homes/listings/?'
+let baseHotelUrl = 'https://beta.locktrip.com/mobile/search?'
 
 class Property extends Component {
     webViewRef = {
@@ -275,7 +275,7 @@ class Property extends Component {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 marginBottom: 10}}>
-                <Image style={{height:35, width: 35}} source={{uri: 'https://alpha.locktrip.com/images/loader.gif'}} /> 
+                <Image style={{height:35, width: 35}} source={{uri: 'https://beta.locktrip.com/images/loader.gif'}} /> 
             </View>
         );
     }

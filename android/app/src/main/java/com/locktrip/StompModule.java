@@ -57,7 +57,7 @@ public class StompModule extends ReactContextBaseJavaModule {
         WebSocketStompClient stompClient = new WebSocketStompClient(transport);
         StringMessageConverter converter = new StringMessageConverter();
         stompClient.setMessageConverter(converter);
-        String url = "wss://alpha.locktrip.com/socket";
+        String url = "wss://beta.locktrip.com/socket";
 
         stompClient.connect(url, new StompSessionHandler() {
 
