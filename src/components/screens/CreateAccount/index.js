@@ -1,4 +1,3 @@
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import {
     Platform,
     Text,
@@ -6,18 +5,19 @@ import {
     View
 } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { validateEmail, validateName } from '../../../utils/validation';
 
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SmartInput from '../../atoms/SmartInput';
 import Switch from 'react-native-customisable-switch';
 import Toast from 'react-native-simple-toast';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
-import requester from '../../../initDependencies';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import styles from './styles';
+import requester from '../../../initDependencies';
 
 class CreateAccount extends Component {
 
@@ -38,7 +38,12 @@ class CreateAccount extends Component {
             countryName: undefined
         };
         this.animationTime = 150; // time for switch to slide from one end to the other
-        this.getCountriesForSignup();
+        // this.getCountriesForSignup();
+    }
+
+    
+    componentWillMount() {
+        this.setCountriesInfo();
     }
 
     onChangeHandler(property) {
@@ -47,39 +52,72 @@ class CreateAccount extends Component {
         };
     }
 
-    getCountriesForSignup() {
-        requester.getCountries(true).then(res => {
-            res.body.then(data => {
-                // console.log("getCountriesForSignup -------------- ", data);
-                countryArr = [];
-                data.map((item, i) => {
-                    countryArr.push({
-                        'label': item.name,
-                        'value': item
-                    });
-                    
-                });
-                this.setState({
-                    countries: countryArr,
-                    countriesLoaded: true,
-                    countryId: countryArr[0].value.id,
-                    countryName: countryArr[0].label,
-                });
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.countries != prevProps.countries) {
+            this.setCountriesInfo();
+        }
+    }
+
+    setCountriesInfo() {
+        countryArr = [];
+        this.props.countries.map((item, i) => {
+            countryArr.push({
+                'label': item.name,
+                'value': item
             });
+            
         });
+        this.setState({
+            countries: countryArr,
+            countriesLoaded: true,
+            countryId: countryArr[0].value.id,
+            countryName: countryArr[0].label,
+        });
+    }
+
+    getCountriesForSignup() {
+        // requester.getCountries(true).then(res => {
+        //     res.body.then(data => {
+        //         console.log("getCountriesForSignup -------------- ", data);
+        //         countryArr = [];
+        //         data.map((item, i) => {
+        //             countryArr.push({
+        //                 'label': item.name,
+        //                 'value': item
+        //             });
+                    
+        //         });
+        //         this.setState({
+        //             countries: countryArr,
+        //             countriesLoaded: true,
+        //             countryId: countryArr[0].value.id,
+        //             countryName: countryArr[0].label,
+        //         });
+        //     });
+        // });
     }
 
     goToCreatePassword() {
         const {
             firstName, lastName, email, country, userWantsPromo, checkZIndex
         } = this.state;
+        
         if (country === undefined || country === '') {
-            Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.CENTER);
+            Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
         }
         else {
-            this.props.navigation.navigate('CreatePassword', {
-                firstName, lastName, email, country, userWantsPromo
-            })
+            requester.getEmailFreeResponse(email).then(res => {
+                res.body.then(data => {
+                    if (data.exist) {
+                        Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
+                    } else {
+                        this.props.navigation.navigate('CreatePassword', {
+                            firstName, lastName, email, country, userWantsPromo
+                        })
+                    }
+                });
+            });
         }
     }
 
@@ -279,4 +317,11 @@ const pickerSelectStyles = {
 	},
 };
 
-export default CreateAccount;
+let mapStateToProps = (state) => {
+    return {
+        countries: state.country.countries
+    };
+}
+
+export default connect(mapStateToProps)(CreateAccount);
+// export default CreateAccount;

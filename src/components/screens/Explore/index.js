@@ -34,7 +34,6 @@ class Explore extends Component {
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.updateData = this.updateData.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
-        this.getCountryValues = this.getCountryValues.bind(this);
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
@@ -82,8 +81,8 @@ class Explore extends Component {
             currencySelectionVisible: false,
         };
         
-        this.props.actions.getCurrency(props.currency);
-        this.getCountryValues();
+        console.log("explorer  currency", props.currency, props.locRate);
+        this.props.actions.getCurrency(props.currency, false);
         Explore.self = this;
     }
 
@@ -105,6 +104,7 @@ class Explore extends Component {
                 console.log("componentWillMount", err);
             });
         });
+        this.setCountriesInfo();
     }
     
 
@@ -113,12 +113,32 @@ class Explore extends Component {
         if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
             this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
         }
+
+        if (this.props.countries != prevProps.countries) {
+            this.setCountriesInfo();
+        }
     }
     
 
     async componentDidMount() {
         console.disableYellowBox = true;
         console.log("componentDidMount");
+    }
+
+    setCountriesInfo() {
+        countryArr = [];
+        this.props.countries.map((item, i) => {
+            countryArr.push({
+                'label': item.name,
+                'value': item
+            });
+        });
+        this.setState({
+            countries: countryArr,
+            countriesLoaded: true,
+            countryId: countryArr[0].value.id,
+            countryName: countryArr[0].label
+        });
     }
 
     showToast() {
@@ -160,26 +180,26 @@ class Explore extends Component {
         }
     }
 
-    getCountryValues() {
-        requester.getCountries(true).then(res => {
-            res.body.then(data => {
-                countryArr = [];
-                data.map((item, i) => {
-                    countryArr.push({
-                        'label': item.name,
-                        'value': item
-                    });
-                });
-                console.log(countryArr[0].value.id);
-                this.setState({
-                    countries: countryArr,
-                    countriesLoaded: true,
-                    countryId: countryArr[0].value.id,
-                    countryName: countryArr[0].label
-                });
-            });
-        });
-    }
+    // getCountryValues() {
+    //     requester.getCountries(true).then(res => {
+    //         res.body.then(data => {
+    //             countryArr = [];
+    //             data.map((item, i) => {
+    //                 countryArr.push({
+    //                     'label': item.name,
+    //                     'value': item
+    //                 });
+    //             });
+    //             console.log(countryArr[0].value.id);
+    //             this.setState({
+    //                 countries: countryArr,
+    //                 countriesLoaded: true,
+    //                 countryId: countryArr[0].value.id,
+    //                 countryName: countryArr[0].label
+    //             });
+    //         });
+    //     });
+    // }
 
     onValueChange = (value) => {
         console.log(value);
@@ -674,7 +694,8 @@ let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
         currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate
+        locRate: state.currency.locRate,
+        countries: state.country.countries
     };
 }
 

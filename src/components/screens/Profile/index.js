@@ -32,6 +32,8 @@ class Profile extends Component {
         this.updateGender = this.updateGender.bind(this);
         this.showToast = this.showToast.bind(this);
         this.navigateToPaymentMethods = this.navigateToPaymentMethods.bind(this);
+
+        this.props.actions.getCurrency(props.currency, false);
     }
 
      async componentDidMount() {
@@ -164,7 +166,7 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Edit Profile</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-user.png')} style={styles.navIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.showToast} style={styles.navItem}>
+                        <TouchableOpacity onPress={() => navigate('Notifications')} style={styles.navItem}>
                             <Text style={styles.navItemText}>Notifications</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-bell.png')} style={styles.navIcon} />
                         </TouchableOpacity>

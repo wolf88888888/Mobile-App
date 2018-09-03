@@ -1,26 +1,14 @@
 import { AsyncStorage } from 'react-native';
 import { handleActions } from 'redux-actions';
-import { setCurrency, setLocRate } from '../../action/Currency';
-
-// function initialState(){
-//     console.log("currency reduc init", global);
-//     let currency = 'USD';
-//     if (global.currency == undefined || global.currency == null) {
-//         currency = global.currency;
-//     }
-//     let currencySign = getCurrencySign(currency);
-//     let locRate = 0;
-//     if (global.locRate == undefined || global.locRate == null) {
-//         locRate = global.locRate;
-//     }
-
-//     return {currency, currencySign, locRate}
-// }
+import { setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../action/Currency';
 
 const initialState = () => ({
     currency: 'EUR', 
     currencySign: '€', 
-    locRate: 0.0
+    locRate: 0.0,
+    preferCurrency: 'EUR',
+    preferCurrencySign: '€', 
+    preferLocRate: 0.0,
 });
 
 function getCurrencySign(currency) {
@@ -47,7 +35,24 @@ export default handleActions(
             console.log ("handleActions - setLocRate ------------------", payload.locRate);
 
             return { ...state, locRate: payload.locRate};
-        }
+        },
+
+        [setPreferCurrency]: (state, {payload}) => {
+            let currency = payload.currency;
+            let currencySign = getCurrencySign(currency);
+            AsyncStorage.setItem('preferCurrency', currency);
+            AsyncStorage.setItem('preferLocRate', JSON.stringify(0.0));
+            console.log ("handleActions - setPreferCurrency ------------------", currency, currencySign);
+
+            return { ...state, preferCurrency: currency, preferCurrencySign: currencySign, preferLocRate: 0.0};
+        },
+        
+        [setPreferLocRate]: (state, {payload}) => {
+            AsyncStorage.setItem('preferLocRate', JSON.stringify(payload.locRate));
+            console.log ("handleActions - setPreferLocRate ------------------", payload.locRate);
+
+            return { ...state, preferLocRate: payload.locRate};
+        },
     },
     initialState()
 );

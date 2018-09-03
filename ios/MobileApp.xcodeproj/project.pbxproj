@@ -37,6 +37,7 @@
 		84B015A420D5B399004ED6EF /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B0157C20D5AD69004ED6EF /* libLRDRCTSimpleToast.a */; };
 		99776688F31153BD51E7152E /* libPods-MobileApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B85C65B26FA94B6C4D54728 /* libPods-MobileApp.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		F153AE61213C45F80051B252 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F153AE60213C45D20051B252 /* libRCTImageResizer.a */; };
 		F1A6AF6E20DDC0DB00527566 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1A6AF6C20DDC0B700527566 /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
@@ -335,6 +336,13 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		F153AE5F213C45D20051B252 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F153AE5B213C45D00051B252 /* RCTImageResizer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D72D2E81C16249000E22EC1;
+			remoteInfo = RCTImageResizer;
+		};
 		F1A6AF6B20DDC0B700527566 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */;
@@ -385,6 +393,7 @@
 		95E6140F454CDA4E27E0C8D0 /* Pods-MobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MobileApp/Pods-MobileApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9B83022F2885484E8B84E8CE /* libRNUUIDGenerator.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNUUIDGenerator.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		F153AE5B213C45D00051B252 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -393,6 +402,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F153AE61213C45F80051B252 /* libRCTImageResizer.a in Frameworks */,
 				8449D5D42101851A00E689B7 /* libRNFastCrypto.a in Frameworks */,
 				840684C420EDD0FC00C1BE01 /* libRCTFBSDK.a in Frameworks */,
 				F1A6AF6E20DDC0DB00527566 /* libRNImagePicker.a in Frameworks */,
@@ -585,6 +595,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F153AE5B213C45D00051B252 /* RCTImageResizer.xcodeproj */,
 				8449D5CE210184FD00E689B7 /* RNFastCrypto.xcodeproj */,
 				8406849520EDD0ED00C1BE01 /* RCTFBSDK.xcodeproj */,
 				F1A6AF4020DDC0B700527566 /* RNImagePicker.xcodeproj */,
@@ -690,6 +701,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F153AE5C213C45D00051B252 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F153AE60213C45D20051B252 /* libRCTImageResizer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F1A6AF4120DDC0B700527566 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,6 +799,10 @@
 				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
+				},
+				{
+					ProductGroup = F153AE5C213C45D00051B252 /* Products */;
+					ProjectRef = F153AE5B213C45D00051B252 /* RCTImageResizer.xcodeproj */;
 				},
 				{
 					ProductGroup = 78C398B11ACF4ADC00677621 /* Products */;
@@ -1128,6 +1151,13 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F153AE60213C45D20051B252 /* libRCTImageResizer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTImageResizer.a;
+			remoteRef = F153AE5F213C45D20051B252 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F1A6AF6C20DDC0B700527566 /* libRNImagePicker.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1249,7 +1279,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = c.om.locktrip;
 				PRODUCT_NAME = MobileApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1283,7 +1313,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = c.om.locktrip;
 				PRODUCT_NAME = MobileApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

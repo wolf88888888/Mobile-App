@@ -4,7 +4,6 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import _ from 'lodash';
-import requester from '../../../initDependencies';
 import styles from './styles';
 
 class EditLocationModal extends Component {
