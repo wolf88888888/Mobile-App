@@ -525,14 +525,14 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     autocompleteTextWrapper: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fff',
+        borderColor:'#00000011',
         width: width - 34,
         justifyContent: 'center',
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 17,
         paddingRight: 17,
-        backgroundColor: 'lightgray'
     },
     SearchAndPickerwarp:{
         display: 'flex',
