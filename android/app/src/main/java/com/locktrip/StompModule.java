@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
+import javax.websocket.ContainerProvider;
+import javax.websocket.WebSocketContainer;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
@@ -52,8 +54,8 @@ public class StompModule extends ReactContextBaseJavaModule {
     public void startSession(String uid, String query, Callback success) {
         count = 0;
         ClientManager client = ClientManager.createClient();
-
-        WebSocketClient transport = new StandardWebSocketClient(client);
+        WebSocketContainer clientt = ContainerProvider.getWebSocketContainer();
+        WebSocketClient transport = new StandardWebSocketClient(clientt);
         WebSocketStompClient stompClient = new WebSocketStompClient(transport);
         StringMessageConverter converter = new StringMessageConverter();
         stompClient.setMessageConverter(converter);
