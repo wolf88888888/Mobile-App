@@ -59,6 +59,7 @@ class HotelDetails extends Component {
             locRate: 0,
             isLoadingHotelDetails: false,
             hotelRatingStars: 0,
+            daysDifference: 1
         }
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
@@ -77,6 +78,7 @@ class HotelDetails extends Component {
         this.state.longitude = params ? params.hotelFullDetails.longitude : 0.0;
         this.state.dataSourcePreview = params ? params.dataSourcePreview : [];
         this.state.hotelRatingStars = params ? params.hotelDetail.stars : 0;
+        this.state.daysDifference = params ? params.daysDifference : 1;
         // this.state.mainAddress = params.hotelDetail.additionalInfo.mainAddress;
         // this.state.countryName = params.hotelDetail.country;
         // this.state.latitude = params.hotelDetail.latitude;
@@ -189,7 +191,7 @@ class HotelDetails extends Component {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 
                         }]}
                         />
-
+                        
                         <AvailableRoomsView
                             id={this.state.hotel.id}
                             navigate={navigate}
@@ -199,7 +201,8 @@ class HotelDetails extends Component {
                             hotelDetails={this.state.hotelFullDetails}
                             currency={this.state.currency}
                             currencySign={this.state.currencySign}
-                            locRate={this.state.locRate} />
+                            locRate={this.state.locRate}
+                            daysDifference={this.state.daysDifference} />
 
                         <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15 }]} />
                         <TouchableOpacity activeOpacity={1} onPress={()=> this.onMapTap()}>

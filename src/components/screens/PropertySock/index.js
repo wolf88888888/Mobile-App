@@ -29,7 +29,7 @@ let countIos;
 class Property extends Component {
     constructor(props) {
         super(props);
-
+        
         UUIDGenerator.getRandomUUID((uuid) => {
             uid = uuid;
         });
@@ -80,7 +80,9 @@ class Property extends Component {
             sliderValue: [1, 5000],
             page: 0,
             totalPages: 0,
-            isLoadingHotelDetails: false
+            isLoadingHotelDetails: false,
+            seconds: 0,
+            daysDifference: 1
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -98,27 +100,50 @@ class Property extends Component {
         this.state.currencySign = params ? params.currencySign : '€';
         this.state.locRate = params ? params.locRate : 0;
         this.state.filter = params ? params.filter : [];
+        this.state.daysDifference = params ? params.daysDifference : 1;
 
         mainUrl = '?region='+this.state.regionId+'&currency='+this.state.currency+'&startDate='+this.state.checkInDateFormated+'&endDate='+this.state.checkOutDateFormated+'&rooms='+this.state.roomsDummyData; //eslint-disable-line
         this.state.urlForService = mainUrl;
     }
 
+    tick() {
+        this.setState(prevState => ({
+          seconds: prevState.seconds + 1
+        }));
+      }
+
+      componentDidMount() {
+        this.interval = setInterval(() => this.tick(), 1000);
+      }
+
+      componentWillUnmount() {
+        clearInterval(this.interval);
+      }
+
     componentWillMount() {
         if (Platform.OS === 'ios') {
             this.stompIos();
         } else if (Platform.OS === 'android') {
-            androidStomp.startSession(uid, mainUrl, () => {
-                this.applyFilters(false);
-            });
-            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                this.handleAndroidSingleHotel(message)
-            ));
+            this.stompAndroid();
         }
+    }
+
+    stompAndroid(){
+        androidStomp.startSession(uid, mainUrl, false,() => {
+            //success
+            this.applyFilters(false);
+        }, () =>{
+            //failure
+            this.stompAndroid()
+        });
+        DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+            this.handleAndroidSingleHotel(message)
+        ));
     }
 
     stompIos() {
         countIos = 0;
-        clientRef = stomp.client('wss://alpha.locktrip.com/socket');
+        clientRef = stomp.client('wss://beta.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
             clientRef.subscribe(`search/${uid}`, this.handleReceiveSingleHotel);
@@ -153,7 +178,7 @@ class Property extends Component {
     // }
 
     onSearchHandler(value) {
-        this.onSearchChange(value);
+        
     }
 
     // onSearchChange(value) {
@@ -336,6 +361,7 @@ class Property extends Component {
     }
 
     onBackPress() {
+        androidStomp.disconnect();
         this.props.navigation.goBack();
     }
 
@@ -343,6 +369,7 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
+        androidStomp.disconnect();
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
             // here you set the response in to json
@@ -363,6 +390,7 @@ class Property extends Component {
                     currencySign: this.state.currencySign,
                     hotelFullDetails: data,
                     dataSourcePreview: hotelPhotos,
+                    daysDifference: this.state.daysDifference
                 });
             }).catch((err) => {
                 console.log(err);
@@ -374,6 +402,7 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
+        androidStomp.disconnect();
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
             // here you set the response in to json
@@ -424,7 +453,7 @@ class Property extends Component {
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
-                marginBottom: 10
+                margin: 10
             }}
             >
                 <Text style={{
@@ -472,6 +501,7 @@ class Property extends Component {
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
                     showSearchButton={false}
+                    disableDateAndGuest={true}
                 />
             </View>
         );
@@ -488,7 +518,7 @@ class Property extends Component {
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
                 </TouchableOpacity>
                 {/* Search Text Field */}
-                <View style={styles.searchAreaView}>
+                <View pointerEvents="none" style={styles.searchAreaView}>
                     <SearchBar
                         autoCorrect={false}
                         value={search}
@@ -500,6 +530,10 @@ class Property extends Component {
                 </View>
                 {/* Filter Box */}
                 {this.state.isFilterLoaded && this.renderFilter() }
+                
+                {/* No Results Text */}
+                {this.state.noResultsFound && this.renderInfoTv()}
+                
                 {/* Show map button */}
                 
                 {this.state.showResultsOnMap &&
@@ -513,8 +547,6 @@ class Property extends Component {
                             </ImageBackground>
                         </View>
                     </TouchableOpacity>}
-                {/* No Results Text */}
-                {this.state.noResultsFound && this.renderInfoTv()}
                 {/* View for map and list */}
                 <View style={styles.itemView}>
                     {this.state.showResultsOnMap ?
@@ -626,13 +658,24 @@ class Property extends Component {
         );
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if (this.isEven(this.state.seconds)){
+            return true;
+        }
+        return false;
+    }
+
+    isEven(n) {
+        return n % 2 == 0;
+     }
+
     handleAndroidSingleHotel(message) {
         // this.applyFilters();
         try {
             const object = JSON.parse(message);
             if (object.hasOwnProperty('allElements')) {
                 if (object.allElements) {
-                    
+                    androidStomp.disconnect();
                 }
             } else {
                 this.setState(prevState => ({

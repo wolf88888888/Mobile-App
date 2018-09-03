@@ -55,6 +55,7 @@ class Explore extends Component {
             regionId: '',
             checkInDate: startDate.format('ddd, DD MMM').toString(),
             checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
+            daysDifference: 1,
             checkOutDate: endDate.format('ddd, DD MMM').toString(),
             checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
             guests: 2,
@@ -152,8 +153,11 @@ class Explore extends Component {
     }
 
     onDatesSelect({ startDate, endDate }) {
-        const year = (new Date()).getFullYear();
+        const year = (new Date()).getFullYear(); 
+        var start = moment(startDate, "ddd, DD MMM");
+        var end = moment(endDate, "ddd, DD MMM");
         this.setState({
+            daysDifference: moment.duration(end.diff(start)).asDays(),
             checkInDate: startDate,
             checkOutDate: endDate,
             checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
@@ -275,6 +279,7 @@ class Explore extends Component {
                 locRate: this.state.locRate,
                 email: this.state.email,
                 token: this.state.token,
+                daysDifference: this.state.daysDifference,
                 filter: encodeURI(JSON.stringify(this.state.filter)),
             });
         }

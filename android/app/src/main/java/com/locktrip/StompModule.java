@@ -1,5 +1,6 @@
 package com.locktrip;
 
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class StompModule extends ReactContextBaseJavaModule {
 
     static ReactContext reactContext;
     int count;
+    boolean _isErrorInvoked;
+    StompSession _session;
 
     public StompModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -51,32 +54,44 @@ public class StompModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void startSession(String uid, String query, Callback success) {
+    public void startSession(String uid, String query, boolean isErrorInvoked,Callback success, Callback failure) {
         count = 0;
+        _isErrorInvoked = isErrorInvoked;
         ClientManager client = ClientManager.createClient();
         WebSocketContainer clientt = ContainerProvider.getWebSocketContainer();
         WebSocketClient transport = new StandardWebSocketClient(clientt);
         WebSocketStompClient stompClient = new WebSocketStompClient(transport);
         StringMessageConverter converter = new StringMessageConverter();
         stompClient.setMessageConverter(converter);
-        String url = "wss://alpha.locktrip.com/socket";
+        String url = "wss://beta.locktrip.com/socket/";
 
         stompClient.connect(url, new StompSessionHandler() {
 
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+                _session = session;
                 session.send("search","{\"uuid\":\""+uid+"\",\"query\":\""+query+"\"}");
                 session.subscribe("search/"+uid, this);
             }
 
             @Override
             public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
+                _session = session;
+                if (!_isErrorInvoked) {
+                    failure.invoke();
+                    _isErrorInvoked = true;
+                }
+                exception.printStackTrace();
             }
 
             @Override
             public void handleTransportError(StompSession session, Throwable exception) {
-
+                _session = session;
+                if (!_isErrorInvoked) {
+                    failure.invoke();
+                    _isErrorInvoked = true;
+                }
+                exception.printStackTrace();
             }
 
             @Override
@@ -86,15 +101,24 @@ public class StompModule extends ReactContextBaseJavaModule {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
+                Log.e("data",payload.toString());
                 WritableMap event = Arguments.createMap();
                 event.putString("message",payload.toString());
                 emitDeviceEvent("SOCK_EVENT", event);
-                if (count == 0){
+                if (count == 0 && !_isErrorInvoked){
                     success.invoke();
+                    _isErrorInvoked = true;
                 }
                 count ++;
             }
         });
+    }
+
+    @ReactMethod
+    public void disconnect(){
+        if (_session.isConnected()){
+            _session.disconnect();
+        }
     }
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData){
