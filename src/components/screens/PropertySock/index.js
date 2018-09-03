@@ -361,7 +361,9 @@ class Property extends Component {
     }
 
     onBackPress() {
-        androidStomp.disconnect();
+        if (Platform.OS === 'android') {
+            androidStomp.disconnect();
+        }
         this.props.navigation.goBack();
     }
 
@@ -369,7 +371,9 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        androidStomp.disconnect();
+        if (Platform.OS === 'android') {
+            androidStomp.disconnect();
+        }
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
             // here you set the response in to json
@@ -402,7 +406,9 @@ class Property extends Component {
         if (clientRef) {
             clientRef.disconnect();
         }
-        androidStomp.disconnect();
+        if (Platform.OS === 'android') {
+            androidStomp.disconnect();
+        }
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
             // here you set the response in to json

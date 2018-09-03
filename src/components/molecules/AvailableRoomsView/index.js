@@ -113,7 +113,7 @@ class AvailableRoomsView extends Component {
                         <Text
                             style={styles.price}>
                             {this.props.daysDifference} nights:
-                            { this.props.currencySign} {((rowData.roomsResults[0].price).toFixed(2) * this.props.daysDifference)} (LOC {(((rowData.roomsResults[0].price) / this.props.locRate).toFixed(2)*this.props.daysDifference)})</Text>
+                            { this.props.currencySign} {((rowData.roomsResults[0].price) * this.props.daysDifference).toFixed(2)} (LOC {(((rowData.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2)})</Text>
                         {/* <Text style={styles.price}>{"1 night:" + Number(((parseFloat(rowData.roomsResults[0].price))).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text> */}
                         <TouchableOpacity onPress={this.onRoomPress.bind(this, rowData)}>
                             <Text style={styles.book}>Book Now</Text>
@@ -129,8 +129,8 @@ class AvailableRoomsView extends Component {
     }
     onRoomPress = (roomDetail) => {
         this.props.navigate('GuestInfoForm', { roomDetail: roomDetail, guests: this.props.guests, 
-            'price': ((roomDetail.roomsResults[0].price).toFixed(2) * this.props.daysDifference),
-             'priceLOC': (((roomDetail.roomsResults[0].price) / this.props.locRate).toFixed(2)*this.props.daysDifference), 
+            'price': ((roomDetail.roomsResults[0].price) * this.props.daysDifference).toFixed(2),
+             'priceLOC': (((roomDetail.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2), 
              'daysDifference': this.props.daysDifference,
              'hotelDetails': this.props.hotelDetails });
     }
