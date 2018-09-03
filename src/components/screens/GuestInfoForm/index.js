@@ -142,11 +142,11 @@ export default class GuestInfoForm extends Component {
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaMed]}>${params.price}</Text>
-                            <Text style={[styles.period1, styles.fontFuturaStd]}> for 1 nights</Text>
+                            <Text style={[styles.period1, styles.fontFuturaStd]}> for {params.daysDifference} nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={[styles.period2, styles.fontFuturaStd]}> for 1 nights</Text>
+                            <Text style={[styles.period2, styles.fontFuturaStd]}> for {params.daysDifference} nights</Text>
                         </View>
                     </View>
                     
@@ -163,7 +163,15 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state;
-        this.props.navigation.navigate('RoomDetailsReview', {'roomDetails' : params.roomDetail, 'quoteId': params.roomDetail.quoteId,'guests': testingArray.length, 'hotelDetails': params.hotelDetails, 'price': params.price, 'priceLOC': params.priceLOC, 'guestRecord': testingArray});
+        this.props.navigation.navigate('RoomDetailsReview', {
+            'roomDetails' : params.roomDetail, 
+            'quoteId': params.roomDetail.quoteId, 
+            'guests': testingArray.length, 
+            'hotelDetails': params.hotelDetails, 
+            'price': params.price, 
+            'priceLOC': params.priceLOC, 
+            'daysDifference': params.daysDifference,
+            'guestRecord': testingArray});
     }
 }
 

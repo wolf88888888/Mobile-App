@@ -333,11 +333,11 @@ export default class RoomDetailsReview extends Component {
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
-                            <Text style={styles.period1}> for 1 nights</Text>
+                            <Text style={styles.period1}> for {params.daysDifference} nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={styles.period2}> for 1 nights</Text>
+                            <Text style={styles.period2}> for {params.daysDifference} nights</Text>
                         </View>
                     </View>
                     <View style={styles.payButtonView}>
