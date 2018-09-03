@@ -38,6 +38,8 @@ target 'MobileApp' do
   pod 'GoogleMaps'  # Remove this line if you don't want to support GoogleMaps on iOS
   pod 'Google-Maps-iOS-Utils' # Remove this line if you don't want to support GoogleMaps on iOS
 
+  pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+
 end
 
 post_install do |installer|

@@ -18,6 +18,12 @@ const about_key = 'about_key';
 const governmentid_key = 'governmentid_key';
 const school_key = 'school_key';
 const work_key = 'work_key';
+const notification_message_email_key = "notification_message_email_key"
+const notification_message_text_key = "notification_message_text_key"
+const notification_message_push_key = "notification_message_push_key"
+const notification_reminder_email_key = "notification_reminder_email_key"
+const notification_reminder_text_key = "notification_reminder_text_key"
+const notification_reminder_push_key = "notification_reminder_push_key"
 
 export const userInstance = {
 
@@ -232,7 +238,7 @@ export const userInstance = {
     getWork: async function() {
         let work = await AsyncStorage.getItem(work_key);
         return work;
-    },
+    },    
 
     setUserData: function(data){
         this.setId(data.id);
@@ -249,5 +255,70 @@ export const userInstance = {
         this.setPhoneNumber(data.phoneNumber);
         this.setCurrency(data.preferredCurrency);
         this.setLanguage(data.preferredLanguage);
+    },
+
+    //user notification setting
+
+    setMessageEmailNotification: function(flag){
+        let value = flag==false? '0' : '1';
+        AsyncStorage.setItem(notification_message_email_key, value);
+    },
+
+    
+    getMessageEmailNotification: async function() {
+        let flag = await AsyncStorage.getItem(notification_message_email_key);
+        return flag=='0'? false: true;
+    },
+
+    setMessageTextNotification: function(flag){
+        let value = flag==false? '0' : '1';
+        AsyncStorage.setItem(notification_message_text_key, value);
+    },
+
+    
+    getMessageTextNotification: async function() {
+        let flag = await AsyncStorage.getItem(notification_message_text_key);
+        return flag=='0'? false: true;
+    },
+    
+    setMessagePushNotification: function(flag){
+        let value = flag==false? '0' : '1';
+        AsyncStorage.setItem(notification_message_push_key, value);
+    },
+
+    
+    getMessagePushNotification: async function() {
+        let flag = await AsyncStorage.getItem(notification_message_push_key);
+        return flag=='0'? false: true;
+    },
+
+    setReminderEmailNotification: function(flag){
+        let value = flag==false? '0' : '1';
+        AsyncStorage.setItem(notification_reminder_email_key, value);
+    },
+
+    getReminderEmailNotification: async function() {
+        let flag = await AsyncStorage.getItem(notification_reminder_email_key);
+        return flag=='0'? false: true;
+    },
+
+    setReminderTextNotification: function(flag){
+        let value = flag==false? '0' : '1';
+        AsyncStorage.setItem(notification_reminder_text_key, value);
+    },
+
+    getReminderTextNotification: async function() {
+        let flag = await AsyncStorage.getItem(notification_reminder_text_key);
+        return flag=='0'? false: true;
+    },
+
+    setReminderPushNotification: function(flag){
+        let value = flag==false? '0' : '1';
+        AsyncStorage.setItem(notification_reminder_push_key, value);
+    },
+
+    getReminderPushNotification: async function() {
+        let flag = await AsyncStorage.getItem(notification_reminder_push_key);
+        return flag=='0'? false: true;
     },
 }
