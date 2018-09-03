@@ -118,7 +118,7 @@ class Property extends Component {
 
     stompIos() {
         countIos = 0;
-        clientRef = stomp.client('wss://alpha.locktrip.com/socket');
+        clientRef = stomp.client('wss://beta.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
             clientRef.subscribe(`search/${uid}`, this.handleReceiveSingleHotel);
@@ -412,7 +412,7 @@ class Property extends Component {
                         height: 35, width: 35
                     }}
                     source={{
-                        uri: 'https://alpha.locktrip.com/images/loader.gif'
+                        uri: 'https://beta.locktrip.com/images/loader.gif'
                     }}
                 />
             </View>
@@ -453,7 +453,7 @@ class Property extends Component {
         return (
             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <Text style={{ marginTop: 18, width: '100%', textAlign: 'center' }}>Search in progress, filtering will be possible after it is completed</Text>
-                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://alpha.locktrip.com/images/loader.gif' }} />
+                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://beta.locktrip.com/images/loader.gif' }} />
             </View>
         );
     }
