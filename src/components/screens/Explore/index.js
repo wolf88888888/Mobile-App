@@ -81,6 +81,7 @@ class Explore extends Component {
             currencySelectionVisible: false,
         };
         
+        console.log("explorer  currency", props.currency, props.locRate);
         this.props.actions.getCurrency(props.currency, false);
         Explore.self = this;
     }
@@ -113,8 +114,6 @@ class Explore extends Component {
             this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
         }
 
-        console.log("country ----------------", this.props.countries);
-        console.log("prevProps country ----------------", prevProps.countries);
         if (this.props.countries != prevProps.countries) {
             this.setCountriesInfo();
         }
@@ -127,7 +126,6 @@ class Explore extends Component {
     }
 
     setCountriesInfo() {
-        console.log("---------------country ----------------", this.props.countries);
         countryArr = [];
         this.props.countries.map((item, i) => {
             countryArr.push({
@@ -135,7 +133,6 @@ class Explore extends Component {
                 'value': item
             });
         });
-        console.log("******************", countryArr[0].value.id);
         this.setState({
             countries: countryArr,
             countriesLoaded: true,

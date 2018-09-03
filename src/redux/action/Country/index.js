@@ -9,7 +9,6 @@ export const getCountries = () => {
     return dispatch => {
         requester.getCountries(true).then(res => {
             res.body.then(data => {
-                console.log("action getCountries data -------------- ", data);
                 dispatch(setCountries({countries:data}));
             });
         });

@@ -1,15 +1,11 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
-import { domainPrefix, imgHost } from '../../../config';
 
-import Dash from 'react-native-dash';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-simple-toast';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
 
@@ -72,6 +68,7 @@ class MyTrips extends Component {
         //Here we will load trips
         requester.getMyHotelBookings().then(res => {
             res.body.then(data => {
+                console.log("getMyHotelBookings", data);
                 var tripArray = _.orderBy(data.content, ['arrival_date'], ['desc']);
                 // _.remove(tripArray, function(obj) {
                 //     var tripDate = moment(obj.arrival_date).utc();
