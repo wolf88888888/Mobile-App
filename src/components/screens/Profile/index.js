@@ -32,6 +32,8 @@ class Profile extends Component {
         this.updateGender = this.updateGender.bind(this);
         this.showToast = this.showToast.bind(this);
         this.navigateToPaymentMethods = this.navigateToPaymentMethods.bind(this);
+
+        this.props.actions.getCurrency(props.currency, false);
     }
 
      async componentDidMount() {

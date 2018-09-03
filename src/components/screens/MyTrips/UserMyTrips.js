@@ -37,22 +37,6 @@ class UserMyTrips extends Component {
             isLoading: false,
         };
         this.onEndReached = this.onEndReached.bind(this)
-        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-    }
-
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }
-
-    handleBackButtonClick() {
-        console.log('back pressed---')
-        this.props.navigation.goBack();
-        this.props.navigation.state.params.gotoBooking();
-        return true;
     }
 
     async componentDidMount() {
@@ -70,18 +54,11 @@ class UserMyTrips extends Component {
             this.setState({ isLoading: true })
             requester.getMyHotelBookings([`page=${pageNumber}`]).then(res => {
                 res.body.then(data => {
-                    console.log('My trips----', data);
-                    console.log('ASD');
-                    var tempArr = []
-                    tempArr = this.state.trips.concat(data.content)
-                    tempArr = _.orderBy(tempArr, ['arrival_date'], ['desc']);
-                    // _.remove(tripArray, function(obj) {
-                    //     var tripDate = moment(obj.arrival_date).utc();
-                    //     var now = moment().utc();
-                    //     return tripDate < now;
-                    // });
+                    var tmpTrips = []
+                    tmpTrips = this.state.trips.concat(data.content)
+                    tmpTrips = _.orderBy(tmpTrips, ['arrival_date'], ['desc']);
                     this.setState({
-                        trips: tempArr,
+                        trips: tmpTrips,
                         isLast: data.last,
                         page: pageNumber,
                         isLoading: false,

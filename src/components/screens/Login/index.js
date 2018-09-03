@@ -4,10 +4,10 @@ import {
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View,
-    KeyboardAvoidingView
+    View
 } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { validateEmail, validatePassword1 } from '../../../utils/validation';
 
@@ -20,6 +20,8 @@ import { autobind } from 'core-decorators';
 import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import LoginLocationDialog from '../../atoms/LoginLocationDialog'
+import LoginEmailVerifyDialog from '../../atoms/LoginEmailVerifyDialog'
 
 class Login extends Component {
     static propTypes = {
@@ -32,7 +34,9 @@ class Login extends Component {
     state = {
         email: '',
         password: '',
-        showProgress: false
+        showProgress: false,
+        locationDialogVisible: false,
+        verificationDialogVisible: false,
     }
 
     componentDidMount() {
@@ -48,9 +52,20 @@ class Login extends Component {
 
     onClickLogIn() {
     // Toast.showWithGravity('Cannot login, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-    // return;
+        // this.setState({ locationDialogVisible: true });
+        // return;
+        this.handleLogin();
+    }
+
+    handleLogin(countryID = null, emailVerificationToken = null) {
         const { email, password } = this.state;
         const user = { email, password };
+        if (countryID != null) {
+            user.country = countryID;
+        }
+        if (emailVerificationToken != null) {
+            user.emailVerificationToken = emailVerificationToken;
+        }
 
         this.setState({ showProgress: true });
 
@@ -74,13 +89,22 @@ class Login extends Component {
             } else {
                 res.errors.then(data => {
                     const { errors } = data;
-                    Object.keys(errors).forEach((key) => {
-                        if (typeof key !== 'function') {
-                            // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
-                            console.log('Error logging in  :', errors[key].message);
-                            alert(errors[key].message);
-                        }
-                    });
+                    console.log("error", errors);
+                    if (errors.hasOwnProperty('CountryNull')) {
+                        this.setState({ locationDialogVisible: true });
+                    }
+                    else if (errors.hasOwnProperty('EmailNotVerified')) {
+                        this.setState({ verificationDialogVisible: true });
+                    }
+                    else {
+                        Object.keys(errors).forEach((key) => {
+                            if (typeof key !== 'function') {
+                                // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
+                                console.log('Error logging in  :', errors[key].message);
+                                alert(errors[key].message);
+                            }
+                        });
+                    }
                 });
             }
         })
@@ -89,6 +113,7 @@ class Login extends Component {
             alert('Cannot login, Please check network connection.');
             console.log(err);
         });
+
     }
 
     @autobind
@@ -100,7 +125,6 @@ class Login extends Component {
 
     render() {
         const { email, password } = this.state;
-        const { navigate } = this.props.navigation;
 
         return (
             <TouchableWithoutFeedback
@@ -173,6 +197,34 @@ class Login extends Component {
                        animationType="slide"
                        activityIndicatorSize="large"
                        activityIndicatorColor="black"/>
+
+                       
+                    <LoginLocationDialog
+                        countries = { this.props.countries }
+                        title = { 'Select Currency' }
+                        visible = { this.state.locationDialogVisible }
+                        okLabel = { 'OK' }
+                        onOk = { countryID => {
+                            console.log("select country", countryID);
+                            this.setState({ locationDialogVisible: false });
+                            this.handleLogin(countryID);
+                        }}
+                    />
+
+                    <LoginEmailVerifyDialog
+                        title = { 'Email Verification' }
+                        visible = { this.state.verificationDialogVisible }
+                        okLabel = { 'Verify' }
+                        cancelLabel = { 'Already Verified' }
+                        onCancel = { () => {
+                            this.setState({ verificationDialogVisible: false });
+                        }}
+                        onOk = { (emailToken) => {
+                            console.log("email verify", emailToken);
+                            this.setState({ verificationDialogVisible: false });
+                            this.handleLogin(null, emailToken);
+                        }}
+                    />
                 </View>
             </TouchableWithoutFeedback>
         );
@@ -183,4 +235,10 @@ class Login extends Component {
     }
 }
 
-export default Login;
+let mapStateToProps = (state) => {
+    return {
+        countries: state.country.countries
+    };
+}
+
+export default connect(mapStateToProps)(Login);
