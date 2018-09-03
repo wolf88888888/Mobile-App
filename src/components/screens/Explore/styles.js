@@ -531,7 +531,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 17,
-        paddingRight: 17
+        paddingRight: 17,
+        backgroundColor: 'lightgray'
     },
     SearchAndPickerwarp:{
         display: 'flex',

@@ -16,6 +16,7 @@ import EditWorkModal from '../../atoms/EditWorkModal';
 import Footer from '../../atoms/Footer';
 import Image from 'react-native-remote-svg';
 import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo';
@@ -167,15 +168,6 @@ class EditUserProfile extends Component {
         return this.state.modalView
     }
 
-    dataURLtoFile(dataurl, filename) {
-        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], filename, { type: mime });
-    }
-
     async onPhoto() {
         let options = {
             title: 'Select profile image',
@@ -199,36 +191,54 @@ class EditUserProfile extends Component {
                 this.setState({
                     showProgress: true,
                 });
-                var data = new FormData();
-                data.append('image', {
-                    uri: response.uri,
-                    name: 'selfie.jpg',
-                    type: 'image/jpg'
-                });
-                fetch(`${apiHost}users/me/images/upload`, {
-                    method: 'post',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data;',
-                        'Authorization': token_value
-                      },
-                    body: data
-                }).then(res => { res.json().
-                    then(data => {
+                const { uri, originalRotation } = response
+                let rotation = 0
+
+                if ( originalRotation === 90 ) {
+                    rotation = 90
+                } else if ( originalRotation === 270 ) {
+                    rotation = -90
+                }
+
+                ImageResizer.createResizedImage( uri, 500, 500, "JPEG", 80, rotation ).
+                then( ( { uri } ) => {
+                    var data = new FormData();
+                    data.append('image', {
+                        uri: uri,
+                        name: 'selfie.jpg',
+                        type: 'image/jpg'
+                    });
+                    fetch(`${apiHost}users/me/images/upload`, {
+                        method: 'post',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data;',
+                            'Authorization': token_value
+                        },
+                        body: data
+                    }).then(res => { res.json().
+                        then(data => {
+                            this.setState({
+                                showProgress: false,
+                                image: data.thumbnail
+                            });
+                            userInstance.setProfileImage(data.thumbnail);
+                        }).catch(err => {
+                            console.log('upload error', err);
+                        })
+                    }).catch(err => {
                         this.setState({
                             showProgress: false,
-                            image: data.thumbnail
-                        });
-                        userInstance.setProfileImage(data.thumbnail);
-                    }).catch(err => {
+                        })
                         console.log('upload error', err);
-                    })
-                }).catch(err => {
+                    });
+                } ).catch( err => {
                     this.setState({
                         showProgress: false,
                     })
-                    console.log('upload error', err);
-                });
+                    console.log( err )
+                } )
+
             }
         });
     }
