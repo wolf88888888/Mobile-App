@@ -319,6 +319,8 @@ class Property extends Component {
         }
         paramUrl += '&authEmail=' + this.state.email + '&authToken=' + this.state.token.replace(' ', '%20')
         this.state.webViewUrl = paramUrl
+
+        console.log("Propery - generateSearchUrl", paramUrl);
     }
 
     onAndroidBackPress = () => {
