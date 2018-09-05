@@ -22,6 +22,7 @@ export default class RoomDetailsReview extends Component {
             // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
+            leavingDate: '',
             creationDate: '',
             // cancellationLOCPrice: '',
             cancellationPrice: '',
@@ -48,14 +49,20 @@ export default class RoomDetailsReview extends Component {
 
         requester.createReservation(value).then(res => {
             res.body.then(data => {
+                console.log("!!!!");
+                console.log(data);
+                console.log("!!!!");
                 const bookingId = data.preparedBookingId;
                 const hotelBooking = data.booking.hotelBooking[0];
                 const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
                 const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
+                .add(data.booking.hotelBooking[0].nights, 'days');
                 this.setState({
                     // bookingDetail: data,
                     roomName: data.booking.hotelBooking[0].room.roomType.text,
                     arrivalDate: endDate.format('DD MMM'),
+                    leavingDate: leavingDate.format('DD MMM'),
                     creationDate: startDate.format('DD MMM'),
                     cancellationPrice: data.fiatPrice,
                     bookingId: bookingId,
@@ -301,7 +308,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Dates</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>{this.state.creationDate} - {this.state.arrivalDate}</Text>
+                            <Text style={styles.rhs}>{this.state.arrivalDate} - {this.state.leavingDate}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>

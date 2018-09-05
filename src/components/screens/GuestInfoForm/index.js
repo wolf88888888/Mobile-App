@@ -137,6 +137,8 @@ export default class GuestInfoForm extends Component {
                     </View>
 
                 {/*Bottom Bar*/}
+                </KeyboardAvoidingView>
+
                 <View style={styles.floatingBar}>
                     
                     <View style={styles.detailsView}>
@@ -156,7 +158,6 @@ export default class GuestInfoForm extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                </KeyboardAvoidingView>
             </View>
             
         )
