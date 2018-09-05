@@ -167,7 +167,7 @@ export default class GuestInfoForm extends Component {
         this.props.navigation.navigate('RoomDetailsReview', {
             'roomDetails' : params.roomDetail, 
             'quoteId': params.roomDetail.quoteId, 
-            'guests': testingArray.length, 
+            'guests': testingArray.length,
             'hotelDetails': params.hotelDetails, 
             'price': params.price, 
             'priceLOC': params.priceLOC, 

@@ -49,9 +49,6 @@ export default class RoomDetailsReview extends Component {
 
         requester.createReservation(value).then(res => {
             res.body.then(data => {
-                console.log("!!!!");
-                console.log(data);
-                console.log("!!!!");
                 const bookingId = data.preparedBookingId;
                 const hotelBooking = data.booking.hotelBooking[0];
                 const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
@@ -173,6 +170,7 @@ export default class RoomDetailsReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
+        console.log(params);
         return (
             <View style={styles.container}>
                 <Toast
@@ -316,7 +314,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Guests</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>2</Text>
+                            <Text style={styles.rhs}>{params.guests}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>
@@ -421,5 +419,5 @@ RoomDetailsReview.propTypes = {
     hotelAddress: PropTypes.string,//eslint-disable-line
     priceInUserCurreny: PropTypes.number,//eslint-disable-line
     priceInLoc: PropTypes.number,//eslint-disable-line
-    guests: PropTypes.array//eslint-disable-line
+    guests: PropTypes.array,//eslint-disable-line
 };
