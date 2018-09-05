@@ -82,7 +82,8 @@ class Property extends Component {
             totalPages: 0,
             isLoadingHotelDetails: false,
             seconds: 0,
-            daysDifference: 1
+            daysDifference: 1,
+            dummyDataForCeo: ''
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -236,6 +237,7 @@ class Property extends Component {
         requester.getStaticHotelsByFilter(search, filters).then((res) => {
             if (res.success) {
                 res.body.then((data) => {
+                    this.setState({dummyDataForCeo: data});
                     let mapInfo = [];
                     mapInfo = data.content.map((hotel) => {
                         return {
@@ -624,19 +626,24 @@ class Property extends Component {
                             onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
                             refreshing={false}
                             ListHeaderComponent={
-                                !this.state.isLoading ? 
-                                <TouchableOpacity onPress={this.alterMap}>
-                                    <View style={{
-                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
-                                    }}
-                                    >
-                                        <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
-                                            <Text style={styles.searchButtonText}>See Results on Map</Text>
-                                        </ImageBackground>
-                                    </View>
-                                </TouchableOpacity>
-                                :
-                                <View></View>
+                                <View>
+                                <Text style={{fontSize: 15}}>Total Pages: {this.state.dummyDataForCeo.totalPages}</Text>
+                                <Text style={{fontSize: 15}}>Total Elements on all pages: {this.state.dummyDataForCeo.totalElements}</Text>
+                                <Text style={{fontSize: 15}}>Number Of Elements on current page: {this.state.dummyDataForCeo.numberOfElements}</Text>
+                                </View>
+                                // !this.state.isLoading ? 
+                                // <TouchableOpacity onPress={this.alterMap}>
+                                //     <View style={{
+                                //         marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
+                                //     }}
+                                //     >
+                                //         <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                //             <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                //         </ImageBackground>
+                                //     </View>
+                                // </TouchableOpacity>
+                                // :
+                                // <View></View>
                             }
                             ListFooterComponent={
                                 this.state.isLoading && this.renderLoader()
