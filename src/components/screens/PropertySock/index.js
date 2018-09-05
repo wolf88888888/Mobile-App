@@ -558,8 +558,7 @@ class Property extends Component {
                     {this.state.showResultsOnMap ?
                         // MapView
                         <MapView
-                            style={styles.map}
-                            region={{
+                            initialRegion={{
                                 latitude: this.state.listingsMap.length >= 1 ?
                                     parseFloat(this.state.listingsMap[0].lat) : this.state.initialLat,
                                 longitude: this.state.listingsMap.length >= 1 ?
@@ -567,6 +566,7 @@ class Property extends Component {
                                 latitudeDelta: 1,
                                 longitudeDelta: 1
                             }}
+                            style={styles.map}
                         >
                             {/* Marker */}
                             {this.state.listingsMap.map(marker => marker.lat != null && (

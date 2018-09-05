@@ -98,7 +98,8 @@ export default class GuestInfoForm extends Component {
         const {params} = this.props.navigation.state
         return (
             <View style={styles.container}>
-                <KeyboardAvoidingView style={{height: '100%', width:'100%'}}>
+                <ScrollView>
+                    <KeyboardAvoidingView keyboardVerticalOffset={-20} behavior="position" enabled>
                     <TouchableOpacity onPress={() => {this.props.navigation.goBack()}}>
                         <Image style={styles.btn_backImage}
                                source={require('../../../../src/assets/png/arrow-back.png')}/>
@@ -137,6 +138,9 @@ export default class GuestInfoForm extends Component {
                     </View>
 
                 {/*Bottom Bar*/}
+                </KeyboardAvoidingView>
+                </ScrollView>
+
                 <View style={styles.floatingBar}>
                     
                     <View style={styles.detailsView}>
@@ -156,7 +160,6 @@ export default class GuestInfoForm extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                </KeyboardAvoidingView>
             </View>
             
         )
