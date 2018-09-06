@@ -58,12 +58,18 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
 
-    avatar: {
+    avatarWrapper: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'white',
-        alignSelf: 'stretch',
-        width: avatarWidth,
-        height: avatarHeight,
-        resizeMode:'contain'
+        padding: 10,
+    },
+
+    avatar: {
+        width: 140,
+        height: 140,
+        borderRadius: 70,
     },
 
     lineStyle:{

@@ -175,7 +175,7 @@ class WalletKeywordValidation extends Component {
                                 <Text style={styles.titleText}>Confirm Wallet Information</Text>
                             </View>
 
-                            <View>
+                            <View style={styles.infoView}>
                                 <Text style={styles.infoText}>
                                     Enter Your mnemonic recovery keywords.
                                 </Text>

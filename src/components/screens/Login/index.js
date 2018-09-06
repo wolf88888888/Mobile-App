@@ -172,6 +172,7 @@ class Login extends Component {
                         </View>
 
                         <TouchableOpacity
+                            style={styles.buttonWrapper}
                             disabled={!validateEmail(email) || !validatePassword1(password)}
                             onPress={() => this.onClickLogIn()}
                         >
