@@ -559,7 +559,7 @@ class EditUserProfile extends Component {
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
                     <View style={styles.body}>
-                        <View>
+                        <View style={styles.avatarWrapper}>
                             {
                                 imageAvatar == '' ?
                                     <Image style={styles.avatar} source={require('../../../assets/temple/user_profile_avatar.png')} />

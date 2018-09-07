@@ -134,12 +134,19 @@ const styles = StyleSheet.create({
     },
     navItemText: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 21,
-        color: '#000'
+        fontWeight: '400',
+        fontSize: 20,
+        color: '#000',
+        marginBottom: 10,
+    },
+    navSubItemText: {
+        fontFamily: 'FuturaStd-Light',
+        fontWeight: '100',
+        fontSize: 16,
     },
     navText: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 15
+        fontSize: 14
     },
     navCurrency: {
         color: '#da7b60',

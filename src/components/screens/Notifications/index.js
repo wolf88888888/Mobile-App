@@ -70,7 +70,7 @@ class Notifications extends Component {
 
 
                         <View style={styles.navItem}>
-                            <Text style={styles.navItemText}>Email</Text>
+                            <Text style={styles.navSubItemText}>Email</Text>
 
                             <View>
                                 {recieveEmailMessage ?
@@ -114,7 +114,7 @@ class Notifications extends Component {
 
 
                         <View style={styles.navItem}>
-                            <Text style={styles.navItemText}>Text Message</Text>
+                            <Text style={styles.navSubItemText}>Text Message</Text>
                             <View>
                                 {recieveTextMessage ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
@@ -157,7 +157,7 @@ class Notifications extends Component {
                         <View style={styles.navItem}>
 
 
-                            <Text style={styles.navItemText}>Push Notifications{'\n'}{'\n'}<Text style={styles.navText}>To your mobile or tablet device </Text></Text>
+                            <Text style={styles.navSubItemText}>Push Notifications{'\n'}{'\n'}<Text style={styles.navText}>To your mobile or tablet device </Text></Text>
 
                             <View>
                                 {recievePushNotificationMessages ?
@@ -203,13 +203,13 @@ class Notifications extends Component {
                             <View>
                                 <Text style={styles.navItemText}>Reminder & Suggestions</Text>
                                 <Text style={styles.navText}>
-                                    Recieve reminders,helpful tips to improve your trip and other messages
+                                    Recieve reminders, helpful tips to improve your trip and other messages
                                     related to your activites on LockChain.
                                 </Text>
                             </View>
                         </View>
                         <View style={styles.navItem}>
-                            <Text style={styles.navItemText}>Email</Text>
+                            <Text style={styles.navSubItemText}>Email</Text>
                             <View>
                                 {recieveEmail ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
@@ -249,7 +249,7 @@ class Notifications extends Component {
                         </View>
 
                         <View style={styles.navItem}>
-                            <Text style={styles.navItemText}>Text Message</Text>
+                            <Text style={styles.navSubItemText}>Text Message</Text>
                             <View>
                                 {recieveText ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
@@ -292,7 +292,7 @@ class Notifications extends Component {
                         <View style={styles.navItem}>
 
 
-                            <Text style={styles.navItemText}>Push Notifications{'\n'}{'\n'}<Text style={styles.navText}>To your mobile or tablet device </Text></Text>
+                            <Text style={styles.navSubItemText}>Push Notifications{'\n'}{'\n'}<Text style={styles.navText}>To your mobile or tablet device </Text></Text>
 
                             <View>
                                 {recievePushNotification ?

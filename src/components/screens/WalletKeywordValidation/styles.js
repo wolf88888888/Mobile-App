@@ -25,11 +25,16 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontFamily: 'FuturaStd-Light'
     },
+    infoView: {
+        display: 'flex',
+        width: '100%',
+        marginLeft: 36,
+        marginTop: 20,
+    },
     infoText: {
         color: '#fff',
         fontSize: 13.3,
         fontFamily: 'FuturaStd-Light',
-        margin: 20,
         lineHeight: 20
     },
     inputView: {
