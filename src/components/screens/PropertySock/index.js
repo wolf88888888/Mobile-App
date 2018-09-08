@@ -83,7 +83,8 @@ class Property extends Component {
             isLoadingHotelDetails: false,
             seconds: 0,
             daysDifference: 1,
-            dummyDataForCeo: ''
+            dummyDataForCeo: '',
+            statusForCeo: ''
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -130,8 +131,10 @@ class Property extends Component {
     }
 
     stompAndroid(){
+        this.setState({statusForCeo: 'Request Sent'})
         androidStomp.startSession(uid, mainUrl, false,() => {
             //success
+            this.setState({statusForCeo: 'Request received from Websocket'})
             this.applyFilters(false);
         }, () =>{
             //failure
@@ -236,6 +239,7 @@ class Property extends Component {
         // const page = this.state.page ? this.state.page : 0;
         requester.getStaticHotelsByFilter(search, filters).then((res) => {
             if (res.success) {
+                this.setState({statusForCeo: 'Request recieved from webservice'})
                 res.body.then((data) => {
                     this.setState({dummyDataForCeo: data});
                     let mapInfo = [];
@@ -630,6 +634,7 @@ class Property extends Component {
                                 <Text style={{fontSize: 15}}>Total Pages: {this.state.dummyDataForCeo.totalPages}</Text>
                                 <Text style={{fontSize: 15}}>Total Elements on all pages: {this.state.dummyDataForCeo.totalElements}</Text>
                                 <Text style={{fontSize: 15}}>Number Of Elements on current page: {this.state.dummyDataForCeo.numberOfElements}</Text>
+                                <Text style={{fontSize: 15}}>Request Status: {this.state.statusForCeo}</Text>
                                 </View>
                                 // !this.state.isLoading ? 
                                 // <TouchableOpacity onPress={this.alterMap}>
