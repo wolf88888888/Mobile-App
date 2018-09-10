@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 //        mStompClient = Stomp.over(Stomp.ConnectionProvider.JWS, "ws://" + ANDROID_EMULATOR_LOCALHOST
 //                + ":" + RestClient.SERVER_PORT + "/example-endpoint/websocket");
 
-        mStompClient = Stomp.over(Stomp.ConnectionProvider.JWS, "wss://alpha.locktrip.com/socket");
+        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "wss://beta.locktrip.com/socket\n");
         mStompClient.connect();
 
         mStompClient.lifecycle()
