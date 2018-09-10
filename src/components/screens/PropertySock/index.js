@@ -22,17 +22,12 @@ const stomp = require('stomp-websocket-js');
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 const clientRef = undefined;
-let uid = '';
 var mainUrl = '';
 let countIos;
 
 class Property extends Component {
     constructor(props) {
         super(props);
-
-        UUIDGenerator.getRandomUUID((uuid) => {
-            uid = uuid;
-        });
         console.disableYellowBox = true;
         
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
@@ -103,16 +98,14 @@ class Property extends Component {
         this.state.urlForService = mainUrl;
     }
 
-    componentWillMount() {
+    async componentWillMount() {
+        this.uuid = await UUIDGenerator.getRandomUUID();
+        console.log("------------------ uuid", this.uuid);
+
         if (Platform.OS === 'ios') {
             this.stompIos();
         } else if (Platform.OS === 'android') {
-            androidStomp.startSession(uid, mainUrl, () => {
-                this.applyFilters(false);
-            });
-            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                this.handleAndroidSingleHotel(message)
-            ));
+            this.stompAndroid();
         }
     }
 
@@ -121,10 +114,10 @@ class Property extends Component {
         clientRef = stomp.client('wss://beta.locktrip.com/socket');
         clientRef.connect({}, (frame) => {
             var headers = {'content-length': false};
-            clientRef.subscribe(`search/${uid}`, this.handleReceiveSingleHotel);
+            clientRef.subscribe(`search/${this.uuid}`, this.handleReceiveSingleHotel);
             clientRef.send("search",
                 headers,
-                JSON.stringify({uuid: uid, query : mainUrl})
+                JSON.stringify({uuid: this.uuid, query : mainUrl})
             )
         }, (error) => {
             clientRef.disconnect();
@@ -132,6 +125,16 @@ class Property extends Component {
                 isLoading: false,
             });
         });
+    }
+
+    stompAndroid() {
+        console.log("socket request", this.uuid, mainUrl);
+        androidStomp.startSession(this.uuid, mainUrl, () => {
+            this.applyFilters(false);
+        });
+        DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+            this.handleAndroidSingleHotel(message)
+        ));
     }
 
     alterMap() {
@@ -627,6 +630,7 @@ class Property extends Component {
     }
 
     handleAndroidSingleHotel(message) {
+        console.log("SOCK_EVENT", message);
         // this.applyFilters();
         try {
             const object = JSON.parse(message);

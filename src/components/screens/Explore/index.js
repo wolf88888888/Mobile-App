@@ -16,9 +16,10 @@ import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectM
 
 import * as currencyActions from '../../../redux/action/Currency'
 
-const shouldBeNative = false; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = true; //This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
 const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];
+import UUIDGenerator from 'react-native-uuid-generator';
 
 class Explore extends Component {
     static self;
@@ -89,10 +90,17 @@ class Explore extends Component {
     async componentWillMount() {
         const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
         const email_value = await AsyncStorage.getItem(`${domainPrefix}.auth.username`);
+
+        // UUIDGenerator.getRandomUUID((uuid) => {
+        //     console.log("uuid---------------", uuid)
+        //     uid = uuid;
+        // });
+
         this.setState({
             token: token_value,
             email: email_value,
         });
+        
 
         console.log("componentWillMount", token_value, email_value);
         // Below line gives null cannot be casted to string error on ios please look into it
