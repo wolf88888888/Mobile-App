@@ -604,7 +604,7 @@ class Explore extends Component {
                         <View style={styles.divsider} />
 
                         <View style={styles.viewPopularHotels}>
-                            <TouchableOpacity onPsress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
+                            <TouchableOpacity onPress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
                                 style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/london.png')} />
