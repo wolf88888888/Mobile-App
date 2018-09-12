@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
 //        mStompClient = Stomp.over(Stomp.ConnectionProvider.JWS, "ws://" + ANDROID_EMULATOR_LOCALHOST
 //                + ":" + RestClient.SERVER_PORT + "/example-endpoint/websocket");
 
-        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "wss://beta.locktrip.com/socket\n");
-        mStompClient.connect();
+        mStompClient = Stomp.over(Stomp.ConnectionProvider.JWS, "wss://beta.locktrip.com/socket");
 
         mStompClient.lifecycle()
                 .subscribeOn(Schedulers.io())
@@ -96,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("CheckResult")
     public void sendEchoViaStomp(View v) {
-        mStompClient.send("search/93fa27ac-36e0-4084-b2c2-b6afd0fba938",
-                "{'uuid':'93fa27ac-36e0-4084-b2c2-b6afd0fba938', 'query':'region=15664&currency=EUR&startDate=11/09/2018&endDate=12/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D'}")
+        mStompClient.send("search/e38effa6-491f-4e9e-b3b4-e4a2f71ed835",
+                "{\"uuid\":\"e38effa6-491f-4e9e-b3b4-e4a2f71ed835\",\"query\":\"?region=15664&currency=EUR&startDate=12/09/2018&endDate=13/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}")
                 .compose(applySchedulers())
                 .subscribe(() -> {
                     Log.d(TAG, "STOMP echo send successfully");
