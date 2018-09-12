@@ -16,6 +16,7 @@ import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HotelItemView from '../../organisms/HotelItemView';
 import styles from './styles';
 import requester from '../../../initDependencies';
+import update from 'immutability-helper';
 
 const androidStomp = NativeModules.StompModule;
 const stomp = require('stomp-websocket-js');
@@ -25,6 +26,7 @@ const clientRef = undefined;
 let uid = '';
 var mainUrl = '';
 let countIos;
+let counting = 0;
 
 class Property extends Component {
     constructor(props) {
@@ -46,6 +48,7 @@ class Property extends Component {
         this.updateFilter = this.updateFilter.bind(this);
         this.applyFilters = this.applyFilters.bind(this);
         this.gotoHotelDetailsPage = this.gotoHotelDetailsPage.bind(this);
+        this.getStaticHotels = this.getStaticHotels.bind(this);
         this.state = {
             search: '',
             checkInDate: '',
@@ -84,7 +87,10 @@ class Property extends Component {
             seconds: 0,
             daysDifference: 1,
             dummyDataForCeo: '',
-            statusForCeo: ''
+            statusForCeo: '',
+            statusForCeo2: '',
+            callAndroidAgain: true,
+            loadStatic: true
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -126,19 +132,16 @@ class Property extends Component {
         if (Platform.OS === 'ios') {
             this.stompIos();
         } else if (Platform.OS === 'android') {
-            this.stompAndroid();
+            this.getStaticHotels();
         }
     }
 
     stompAndroid(){
-        this.setState({statusForCeo: 'Request Sent'})
         androidStomp.startSession(uid, mainUrl, false,() => {
             //success
-            this.setState({statusForCeo: 'Request received from Websocket'})
-            this.applyFilters(false);
         }, () =>{
             //failure
-            this.stompAndroid()
+            this.stompAndroid();
         });
         DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
             this.handleAndroidSingleHotel(message)
@@ -204,6 +207,58 @@ class Property extends Component {
         );
     }
 
+    getStaticHotels(loadMore){
+        console.log(this.state.page);
+        requester.getStaticHotels(this.state.regionId, this.state.page).then((res) => {
+            if (res.success) {
+                if (!loadMore){
+                    this.stompAndroid();
+                }
+                res.body.then((data) => {
+                    let mapInfo = [];
+                    mapInfo = data.content.map((hotel) => {
+                        return {
+                            id: hotel.id,
+                            lat: hotel.latitude,
+                            lon: hotel.longitude,
+                            name: hotel.name,
+                            price: hotel.price,
+                            stars: hotel.star,
+                            thumbnail: { url: hotel.hotelPhoto }
+                        };
+                    });
+                    if (loadMore) {
+                        // Add to existing data
+                        this.setState({
+                            isLoading: false,
+                            listings: [...this.state.listings, ...mapInfo] 
+                        }, () => {
+                            if (this.state.listings.length <= 0) {
+                                this.setState({ noResultsFound: true });
+                            } else {
+                                this.setState({ noResultsFound: false });
+                            }
+                        });
+                    } else {
+                        this.setState({
+                            isLoading: false,
+                            listings: mapInfo,
+                            totalPages: data.totalPages
+                        }, () => {
+                            if (this.state.listings.length <= 0) {
+                                this.setState({ noResultsFound: true });
+                            } else {
+                                this.setState({ noResultsFound: false });
+                            }
+                        });
+                    }
+                });
+            } else {
+                // error
+            }
+        });
+    }
+
     loadMore = () => {
         if (this.state.page < this.state.totalPages - 1) {
             this.setState(
@@ -212,7 +267,12 @@ class Property extends Component {
                     page: this.state.page + 1
                 },
                 () => {
-                    this.applyFilters(true);
+                    if (this.state.loadStatic){
+                        this.getStaticHotels(true);
+                    }
+                    else {
+                        this.applyFilters(true);
+                    }
                 }
             );
         }
@@ -234,12 +294,12 @@ class Property extends Component {
     }
 
     applyFilters(loadMore) {
+        this.setState({loadStatic:false});
         const search = this.getSearchString();
         const filters = this.getFilterString();
         // const page = this.state.page ? this.state.page : 0;
         requester.getStaticHotelsByFilter(search, filters).then((res) => {
             if (res.success) {
-                this.setState({statusForCeo: 'Request recieved from webservice'})
                 res.body.then((data) => {
                     this.setState({dummyDataForCeo: data});
                     let mapInfo = [];
@@ -341,7 +401,7 @@ class Property extends Component {
 
     gotoGuests() {
         // if (clientRef) {
-        //     clientRef.disconnect();
+        //     clientRef.disconnect(); 
         // }
         // this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
     }
@@ -368,7 +428,7 @@ class Property extends Component {
 
     onBackPress() {
         if (Platform.OS === 'android') {
-            androidStomp.disconnect();
+            //androidStomp.disconnect();
         }
         this.props.navigation.goBack();
     }
@@ -378,7 +438,7 @@ class Property extends Component {
             clientRef.disconnect();
         }
         if (Platform.OS === 'android') {
-            androidStomp.disconnect();
+            //androidStomp.disconnect();
         }
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
@@ -413,7 +473,7 @@ class Property extends Component {
             clientRef.disconnect();
         }
         if (Platform.OS === 'android') {
-            androidStomp.disconnect();
+            //androidStomp.disconnect();
         }
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
@@ -458,6 +518,14 @@ class Property extends Component {
                 />
             </View>
         );
+    }
+
+    renderPageNumbers(){
+        var indents = [];
+        for (var i =0; i < 80; i++){
+            indents.push(<Text>{i}</Text>);
+        }
+        return indents;
     }
 
     renderInfoTv() {
@@ -630,25 +698,19 @@ class Property extends Component {
                             onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
                             refreshing={false}
                             ListHeaderComponent={
-                                <View>
-                                <Text style={{fontSize: 15}}>Total Pages: {this.state.dummyDataForCeo.totalPages}</Text>
-                                <Text style={{fontSize: 15}}>Total Elements on all pages: {this.state.dummyDataForCeo.totalElements}</Text>
-                                <Text style={{fontSize: 15}}>Number Of Elements on current page: {this.state.dummyDataForCeo.numberOfElements}</Text>
-                                <Text style={{fontSize: 15}}>Request Status: {this.state.statusForCeo}</Text>
-                                </View>
-                                // !this.state.isLoading ? 
-                                // <TouchableOpacity onPress={this.alterMap}>
-                                //     <View style={{
-                                //         marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
-                                //     }}
-                                //     >
-                                //         <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
-                                //             <Text style={styles.searchButtonText}>See Results on Map</Text>
-                                //         </ImageBackground>
-                                //     </View>
-                                // </TouchableOpacity>
-                                // :
-                                // <View></View>
+                                this.state.isFilterLoaded ? 
+                                <TouchableOpacity onPress={this.alterMap}>
+                                    <View style={{
+                                        marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
+                                    }}
+                                    >
+                                        <ImageBackground source={require('../../../assets/map_button.jpg')} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                            <Text style={styles.searchButtonText}>See Results on Map</Text>
+                                        </ImageBackground>
+                                    </View>
+                                </TouchableOpacity>
+                                :
+                                <View></View>
                             }
                             ListFooterComponent={
                                 this.state.isLoading && this.renderLoader()
@@ -665,13 +727,6 @@ class Property extends Component {
                         />
                     }
                 </View>
-                <ProgressDialog
-                    visible={this.state.isLoadingHotelDetails}
-                    title="Please Wait"
-                    message="Loading..."
-                    animationType="slide"
-                    activityIndicatorSize="large"
-                    activityIndicatorColor="black"/>
             </View>
         );
     }
@@ -688,20 +743,28 @@ class Property extends Component {
      }
 
     handleAndroidSingleHotel(message) {
-        // this.applyFilters();
         try {
             const object = JSON.parse(message);
             if (object.hasOwnProperty('allElements')) {
                 if (object.allElements) {
+                    this.applyFilters(false);
                     androidStomp.disconnect();
                 }
-            } else {
+            } 
+            else {
+                let listings = [...this.state.listings];
+                let index = listings.findIndex(el => el.id === object.id);
+                if (index !== -1){
+                    listings[index] = {...listings[index], price: object.price, thumbnail: object.thumbnail};
+                    this.setState({ listings });
+                }
+                
                 this.setState(prevState => ({
                     listingsMap: [...prevState.listingsMap, object]
                 }));
             }
         } catch (e) {
-            // Error
+            console.log(e);
         }
     }
 
@@ -722,6 +785,10 @@ class Property extends Component {
                 listingsMap: [...prevState.listingsMap, response]
             }));
         }
+    }
+
+    getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
     }
 }
 

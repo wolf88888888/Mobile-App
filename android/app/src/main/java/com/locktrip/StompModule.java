@@ -14,6 +14,9 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.client.SslContextConfigurator;
+import org.glassfish.tyrus.client.SslEngineConfigurator;
 import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -24,10 +27,13 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.lang.reflect.Type;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.websocket.ContainerProvider;
 import javax.websocket.WebSocketContainer;
 
@@ -54,16 +60,18 @@ public class StompModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void startSession(String uid, String query, boolean isErrorInvoked,Callback success, Callback failure) {
+    public void startSession(String uid, String query, boolean isErrorInvoked,Callback success, Callback failure) throws NoSuchAlgorithmException {
         count = 0;
         _isErrorInvoked = isErrorInvoked;
-        ClientManager client = ClientManager.createClient();
+
         WebSocketContainer clientt = ContainerProvider.getWebSocketContainer();
-        WebSocketClient transport = new StandardWebSocketClient(clientt);
+        StandardWebSocketClient transport = new StandardWebSocketClient(clientt);
         WebSocketStompClient stompClient = new WebSocketStompClient(transport);
+
+        stompClient.setAutoStartup(true);
         StringMessageConverter converter = new StringMessageConverter();
         stompClient.setMessageConverter(converter);
-        String url = "wss://beta.locktrip.com/socket/";
+        String url = "wss://beta.locktrip.com/socket";
 
         stompClient.connect(url, new StompSessionHandler() {
 
@@ -77,11 +85,12 @@ public class StompModule extends ReactContextBaseJavaModule {
             @Override
             public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
                 _session = session;
-                if (!_isErrorInvoked) {
-                    failure.invoke();
-                    _isErrorInvoked = true;
-                }
-                exception.printStackTrace();
+//                if (!_isErrorInvoked) {
+//                    failure.invoke();
+//                    _isErrorInvoked = true;
+//                }
+                //exception.printStackTrace();
+                Log.e("error1", exception.getCause().toString());
             }
 
             @Override
@@ -90,8 +99,9 @@ public class StompModule extends ReactContextBaseJavaModule {
                 if (!_isErrorInvoked) {
                     failure.invoke();
                     _isErrorInvoked = true;
+                    Log.e("Invoke","One");
                 }
-                exception.printStackTrace();
+                Log.e("error2", exception.getCause().toString());
             }
 
             @Override
@@ -108,6 +118,7 @@ public class StompModule extends ReactContextBaseJavaModule {
                 if (count == 0 && !_isErrorInvoked){
                     success.invoke();
                     _isErrorInvoked = true;
+                    Log.e("Invoke","two");
                 }
                 count ++;
             }
