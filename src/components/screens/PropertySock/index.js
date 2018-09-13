@@ -10,7 +10,6 @@ import { withNavigation } from 'react-navigation';
 
 import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
-import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HotelItemView from '../../organisms/HotelItemView';
 import styles from './styles';
@@ -39,7 +38,6 @@ class Property extends Component {
         this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
         this.gotoSearch = this.gotoSearch.bind(this);
-        // this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.alterMap = this.alterMap.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
@@ -119,14 +117,6 @@ class Property extends Component {
         };
     }
 
-    // onDatesSelect({ startDate, endDate }) {
-    //     this.setState({
-    //         search : '',
-    //         checkInDate : startDate,
-    //         checkOutDate : endDate,
-    //     });
-    // }
-
     onSearchHandler(value) {
 
     }
@@ -137,11 +127,6 @@ class Property extends Component {
         }
         this.props.navigation.goBack();
     }
-
-    // onSearchChange(value) {
-    //     setSearchValue({ value });
-    //     clearSelected();
-    // }
 
     getStaticHotels(loadMore) {
         console.log(this.state.page);
@@ -321,6 +306,32 @@ class Property extends Component {
         ));
     }
 
+    handleAndroidSingleHotel(message) {//eslint-disable-line
+        try {
+            const object = JSON.parse(message);
+            if (object.hasOwnProperty('allElements')) {
+                if (object.allElements) {
+                    this.applyFilters(false);
+                    androidStomp.disconnect();
+                }
+            }
+            else {
+                let listings = [...this.state.listings];
+                let index = listings.findIndex(el => el.id === object.id);
+                if (index !== -1) {
+                    listings[index] = { ...listings[index], price: object.price, thumbnail: object.thumbnail };
+                    this.setState({ listings });
+                }
+
+                this.setState(prevState => ({
+                    listingsMap: [...prevState.listingsMap, object]
+                }));
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     stompIos() {
         countIos = 0;
         clientRef = stomp.client('wss://beta.locktrip.com/socket');
@@ -338,6 +349,25 @@ class Property extends Component {
                 isLoading: false
             });
         });
+    }
+
+    handleReceiveSingleHotel(message) {
+        if (countIos === 0) {
+            this.applyFilters(false);
+        }
+        countIos = 1;
+        const response = JSON.parse(message.body);
+        if (response.hasOwnProperty('allElements')) {
+            if (response.allElements) {
+                if (clientRef) {
+                    clientRef.disconnect();
+                }
+            }
+        } else {
+            this.setState(prevState => ({
+                listingsMap: [...prevState.listingsMap, response]
+            }));
+        }
     }
 
     mapStars(stars) {
@@ -369,13 +399,6 @@ class Property extends Component {
         this.setState({ showResultsOnMap: !this.state.showResultsOnMap });
     }
 
-    gotoGuests() {
-        // if (clientRef) {
-        //     clientRef.disconnect(); 
-        // }
-        // this.props.navigation.navigate('GuestsScreen', {adults: this.state.adults, children: this.state.children, infants: this.state.infants, updateData:this.updateData, childrenBool: this.state.childrenBool});
-    }
-
     gotoSettings() {
         if (clientRef) {
             clientRef.disconnect();
@@ -387,13 +410,6 @@ class Property extends Component {
             showUnAvailable: this.state.showUnAvailable,
             hotelName: this.state.nameFilter
         });
-    }
-
-    gotoSearch() {
-        //     if (clientRef) {
-        //         clientRef.disconnect();
-        //     }
-        //   this.props.navigation.navigate('PropertyScreen');
     }
 
     gotoHotelDetailsPage(item) {
@@ -465,20 +481,6 @@ class Property extends Component {
         });
     }
 
-    renderHomes() {
-        return (
-            <View style={styles.sectionView}>
-                <View style={styles.subtitleView}>
-                    <Text style={styles.subtitleText}>Popular Homes</Text>
-                </View>
-
-                <View style={styles.tilesView}>
-                    {this.state.topHomes.map(listing => <SmallPropertyTile listingsType="homes" listing={listing} key={listing.id} />)}
-                </View>
-            </View>
-        );
-    }
-
     renderLoader() {
         return (
             <View style={{
@@ -516,26 +518,6 @@ class Property extends Component {
         );
     }
 
-    renderLog() {
-        return (
-            <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginBottom: 10
-            }}
-            />
-        );
-    }
-
-    renderFilterText() {
-        return (
-            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Text style={{ marginTop: 18, width: '100%', textAlign: 'center' }}>Search in progress, filtering will be possible after it is completed</Text>
-                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://alpha.locktrip.com/images/loader.gif' }} />
-            </View>
-        );
-    }
     renderFilter() {
         return (
             <View style={{ width: '100%', height: 80 }}>
@@ -710,51 +692,5 @@ class Property extends Component {
             </View>
         );
     }
-
-    handleAndroidSingleHotel(message) {//eslint-disable-line
-        try {
-            const object = JSON.parse(message);
-            if (object.hasOwnProperty('allElements')) {
-                if (object.allElements) {
-                    this.applyFilters(false);
-                    androidStomp.disconnect();
-                }
-            }
-            else {
-                let listings = [...this.state.listings];
-                let index = listings.findIndex(el => el.id === object.id);
-                if (index !== -1) {
-                    listings[index] = { ...listings[index], price: object.price, thumbnail: object.thumbnail };
-                    this.setState({ listings });
-                }
-
-                this.setState(prevState => ({
-                    listingsMap: [...prevState.listingsMap, object]
-                }));
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    handleReceiveSingleHotel(message) {
-        if (countIos === 0) {
-            this.applyFilters(false);
-        }
-        countIos = 1;
-        const response = JSON.parse(message.body);
-        if (response.hasOwnProperty('allElements')) {
-            if (response.allElements) {
-                if (clientRef) {
-                    clientRef.disconnect();
-                }
-            }
-        } else {
-            this.setState(prevState => ({
-                listingsMap: [...prevState.listingsMap, response]
-            }));
-        }
-    }
 }
-
 export default withNavigation(Property);
