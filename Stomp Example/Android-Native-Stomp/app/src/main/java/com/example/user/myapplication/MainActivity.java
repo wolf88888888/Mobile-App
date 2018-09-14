@@ -24,9 +24,12 @@ public class MainActivity extends AppCompatActivity {
     String _url = "wss://beta.locktrip.com/socket";
     WebSocketStompClient _client = null;
     StompSession _session = null;
+    StompSession.Subscription _lastSubscription = null;
 
     boolean _isOnce = false;
 
+    String _message = "";
+    String _destination = "";
 
     StompSessionHandler _sessionHandler = new StompSessionHandler() {
         @Override
@@ -81,6 +84,14 @@ public class MainActivity extends AppCompatActivity {
             new Thread(this::getData).start();
         });
 
+        findViewById(R.id.btnGet1).setOnClickListener(view -> {
+            new Thread(this::getData1).start();
+        });
+
+        findViewById(R.id.btnUnsubscribe).setOnClickListener(view -> {
+            new Thread(this::unSubscription).start();
+        });
+
         findViewById(R.id.btnOnce).setOnClickListener(view -> {
             _isOnce = true;
             new Thread(this::connect).start();
@@ -116,16 +127,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getData() {
-        if (_session != null && _session.isConnected()) {
-            _session.send("search","{\"uuid\":\"e38effa6-491f-4e9e-b3b4-e4a2f71ed835\",\"query\":\"?region=52612&currency=EUR&startDate=14/09/2018&endDate=15/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}");
+    private void unSubscription() {
+        if (_lastSubscription != null) {
+            _lastSubscription.unsubscribe();
+            _lastSubscription = null;
+        }
+    }
 
-            _session.subscribe("search/e38effa6-491f-4e9e-b3b4-e4a2f71ed835", _sessionHandler);
+    private void subscription() {
+        if (_session != null && _session.isConnected()) {
+            this.unSubscription();
+
+            _session.send("search",_message);
+            _lastSubscription = _session.subscribe(_destination, _sessionHandler);
         }
         else {
             _isOnce = true;
             connect();
         }
+    }
+
+    private void getData() {
+        _message = "{\"uuid\":\"e38effa6-491f-4e9e-b3b4-e4a2f71ed835\",\"query\":\"?region=52612&currency=EUR&startDate=15/09/2018&endDate=16/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}";
+        _destination = "search/e38effa6-491f-4e9e-b3b4-e4a2f71ed835";
+
+        this.subscription();
+    }
+
+    private void getData1() {
+        _message = "{\"uuid\":\"7ad740e8-9dc3-4562-a98b-c9a121f43150&11386332418\",\"query\":\"?region=18417&currency=EUR&startDate=15/09/2018&endDate=16/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}";
+        _destination = "search/7ad740e8-9dc3-4562-a98b-c9a121f43150&11386332418";
+
+        this.subscription();
     }
 
     private void test() {

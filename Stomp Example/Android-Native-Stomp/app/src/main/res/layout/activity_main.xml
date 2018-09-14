@@ -28,7 +28,19 @@
             android:id="@+id/btnGet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Get..."/>
+            android:text="Get"/>
+
+        <Button
+            android:id="@+id/btnGet1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get1"/>
+
+        <Button
+            android:id="@+id/btnUnsubscribe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unsubscribe"/>
 
         <Button
             android:id="@+id/btnOnce"
