@@ -34,12 +34,15 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 
 public class StompModule extends ReactContextBaseJavaModule {
 
-    static ReactContext reactContext;
-    int count;
+    static final String _url = "wss://beta.locktrip.com/socket";
+    private Context context;
+    private WebSocketStompClient _client = null;
+    StompSession _session = null;
+    StompSession.Subscription _lastSubscription = null;
 
     public StompModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
+        this.context = context;
     }
 
     @Override
@@ -47,6 +50,61 @@ public class StompModule extends ReactContextBaseJavaModule {
         return "StompModule";
     }
 
+    public WebSocketStompClient client() {
+        if (_client != null)
+            return _client;
+        ClientManager clientManager = ClientManager.createClient();
+        WebSocketClient webSocketClient = new StandardWebSocketClient(clientManager);
+
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.afterPropertiesSet();
+        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
+        stompClient.setMessageConverter(new StringMessageConverter());
+        stompClient.setTaskScheduler(taskScheduler);
+        stompClient.setReceiptTimeLimit(5000);
+        return stompClient;
+    }
+
+    private void connect() {
+        _client = this.client();
+        if (!_client.isRunning() || _session == null || !_session.isConnected()) {
+            StompHeaders stompHeaders = new StompHeaders();
+            _client.connect(_url, new WebSocketHttpHeaders(), stompHeaders, _sessionHandler);
+        }
+    }
+
+    private void disconnect() {
+        unSubscription();
+        if (_session != null) {
+            _session.disconnect();
+            _session = null;
+        }
+    }
+
+    private void unSubscription() {
+        if (_lastSubscription != null) {
+            _lastSubscription.unsubscribe();
+            _lastSubscription = null;
+        }
+    }
+
+    private void subscription() {
+        if (_session != null && _session.isConnected()) {
+            this.unSubscription();
+
+            _session.send("search",_message);
+            _lastSubscription = _session.subscribe(_destination, _sessionHandler);
+        }
+        else {
+            _isOnce = true;
+            connect();
+        }
+    }
+
+    @ReactMethod
+    public void connect(Callback ){
+
+    }
 
     @ReactMethod
     public void startSession(String uid, String query, Callback success) {
@@ -57,7 +115,6 @@ public class StompModule extends ReactContextBaseJavaModule {
         WebSocketStompClient stompClient = new WebSocketStompClient(transport);
         StringMessageConverter converter = new StringMessageConverter();
         stompClient.setMessageConverter(converter);
-        String url = "wss://beta.locktrip.com/socket";
 
         stompClient.connect(url, new StompSessionHandler() {
 

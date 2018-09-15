@@ -3,7 +3,6 @@ package com.example.user.myapplication;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -20,8 +19,10 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.lang.reflect.Type;
 
+import javax.websocket.DeploymentException;
+
 public class MainActivity extends AppCompatActivity {
-    String _url = "wss://beta.locktrip.com/socket";
+    static final String _url = "wss://beta.locktrip.com/socket";
     WebSocketStompClient _client = null;
     StompSession _session = null;
     StompSession.Subscription _lastSubscription = null;
@@ -43,19 +44,25 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-            _session = null;
             Log.e("MainActivity", "handleException~~~~");
+            disconnect();
             exception.printStackTrace();
         }
 
         @Override
         public void handleTransportError(StompSession session, Throwable exception) {
-            _session = null;
             Log.e("MainActivity", "handleTransportError~~~~");
+            disconnect();
             if (exception instanceof ConnectionLostException) {
                 // if connection lost, call this
-                _session.disconnect();
             }
+            else if (exception instanceof DeploymentException) {
+                // if connection failed, call this
+            }
+            else {
+                //unknown issues
+            }
+
             exception.printStackTrace();
         }
 
@@ -127,6 +134,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void disconnect() {
+        unSubscription();
+        if (_session != null) {
+            _session.disconnect();
+            _session = null;
+        }
+    }
+
     private void unSubscription() {
         if (_lastSubscription != null) {
             _lastSubscription.unsubscribe();
@@ -159,46 +174,5 @@ public class MainActivity extends AppCompatActivity {
         _destination = "search/7ad740e8-9dc3-4562-a98b-c9a121f43150&11386332418";
 
         this.subscription();
-    }
-
-    private void test() {
-        ClientManager client = ClientManager.createClient();
-        WebSocketClient webSocketClient = new StandardWebSocketClient(client);
-
-//        WebSocketClient webSocketClient = new StandardWebSocketClient();
-        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
-        stompClient.setMessageConverter(new StringMessageConverter());
-
-        String url = "wss://beta.locktrip.com/socket";
-        StompHeaders stompHeaders = new StompHeaders();
-        stompClient.connect(url, new WebSocketHttpHeaders(), stompHeaders, new StompSessionHandler() {
-            @Override
-            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                Log.e("MainActivity", "connected");
-                session.send("search","{\"uuid\":\"e38effa6-491f-4e9e-b3b4-e4a2f71ed835\",\"query\":\"?region=52612&currency=EUR&startDate=14/09/2018&endDate=15/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}");
-
-                session.subscribe("search/e38effa6-491f-4e9e-b3b4-e4a2f71ed835", this);
-            }
-
-            @Override
-            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-                exception.printStackTrace();
-            }
-
-            @Override
-            public void handleTransportError(StompSession session, Throwable exception) {
-                exception.printStackTrace();
-            }
-
-            @Override
-            public Type getPayloadType(StompHeaders headers) {
-                return String.class;
-            }
-
-            @Override
-            public void handleFrame(StompHeaders headers, Object payload) {
-                Log.e("MainActivity", payload.toString());
-            }
-        });
     }
 }

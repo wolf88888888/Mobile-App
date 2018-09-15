@@ -108,14 +108,18 @@ class Property extends Component {
         if (Platform.OS === 'ios') {
             this.stompIos();
         } else if (Platform.OS === 'android') {
-            console.log("uid---------------", this.uuid, mainUrl);
-            androidStomp.startSession(this.uuid, mainUrl, () => {
-                this.applyFilters(false);
-            });
-            DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
-                this.handleAndroidSingleHotel(message)
-            ));
+            this.stompAndroid();
         }
+    }
+
+    stompAndroid() {
+        console.log("uid---------------", this.uuid, mainUrl);
+        androidStomp.startSession(this.uuid, mainUrl, () => {
+            this.applyFilters(false);
+        });
+        // DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
+        //     this.handleAndroidSingleHotel(message)
+        // ));
     }
 
     stompIos() {
