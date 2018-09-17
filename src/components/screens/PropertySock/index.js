@@ -35,9 +35,9 @@ class Property extends Component {
 
         this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.gotoGuests = this.gotoGuests.bind(this);
+        //this.gotoGuests = this.gotoGuests.bind(this);
         this.gotoSettings = this.gotoSettings.bind(this);
-        this.gotoSearch = this.gotoSearch.bind(this);
+        //this.gotoSearch = this.gotoSearch.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.alterMap = this.alterMap.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
@@ -80,7 +80,8 @@ class Property extends Component {
             totalPages: 0,
             isLoadingHotelDetails: false,
             daysDifference: 1,
-            loadStatic: true
+            loadStatic: true,
+            log: ''
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         this.state.searchedCity = params ? params.searchedCity : '';
@@ -129,7 +130,8 @@ class Property extends Component {
     }
 
     getStaticHotels(loadMore) {
-        console.log(this.state.page);
+        console.log("Static search started");
+        this.setState({log: `${this.state.log} \n Static Search Started`});
         requester.getStaticHotels(this.state.regionId, this.state.page).then((res) => {
             if (res.success) {
                 if (!loadMore) {
@@ -207,13 +209,19 @@ class Property extends Component {
     }
 
     applyFilters(loadMore) {
+        console.log("AAAAA");
+        this.setState({log: `${this.state.log} \n Applying filters`});
         this.setState({ loadStatic: false });
+        console.log("bAAAA");
         const search = this.getSearchString();
         const filters = this.getFilterString();
         // const page = this.state.page ? this.state.page : 0;
         requester.getStaticHotelsByFilter(search, filters).then((res) => {
+            console.log("BBAAA");
             if (res.success) {
                 res.body.then((data) => {
+                    console.log(data);
+                    this.setState({log: `${this.state.log} \n JSON Total Elements: ${data.totalElements} \n Total Pages: ${data.totalPages}`});
                     let mapInfo = [];
                     mapInfo = data.content.map((hotel) => {
                         return {
@@ -295,12 +303,18 @@ class Property extends Component {
     }
 
     stompAndroid() {
+        this.setState({log: `${this.state.log} \n Socket Request Sent`});
         androidStomp.startSession(uid, mainUrl, false, () => {
             // success
+            this.setState({log: `${this.state.log} \n Socket Session Started`});
         }, () => {
             // failure
+            this.setState({log: `${this.state.log} \n SSL Exception \n Retrying....`});
             this.stompAndroid();
         });
+        DeviceEventEmitter.addListener('ERROR_EVENT', ({ message }) => (
+            this.setState({log: `${this.state.log} \n ${message}`})
+        ));
         DeviceEventEmitter.addListener('SOCK_EVENT', ({ message }) => (
             this.handleAndroidSingleHotel(message)
         ));
@@ -550,6 +564,7 @@ class Property extends Component {
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
                 </TouchableOpacity>
                 {/* Search Text Field */}
+                <Text>{this.state.log}</Text>
                 <View pointerEvents="none" style={styles.searchAreaView}>
                     <SearchBar
                         autoCorrect={false}

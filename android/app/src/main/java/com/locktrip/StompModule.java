@@ -101,6 +101,11 @@ public class StompModule extends ReactContextBaseJavaModule {
                     _isErrorInvoked = true;
                     Log.e("Invoke","One");
                 }
+                else {
+                    WritableMap event = Arguments.createMap();
+                    event.putString("message","FAILED \n cannot retry socket.\nif we try to connect socket will try and connect from very start!");
+                    emitDeviceEvent("ERROR_EVENT", event);
+                }
                 Log.e("error2", exception.getCause().toString());
             }
 
