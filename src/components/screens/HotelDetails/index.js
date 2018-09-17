@@ -56,6 +56,7 @@ class HotelDetails extends Component {
             hotelRatingStars: 0,
             daysDifference: 1
         }
+
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
@@ -93,7 +94,6 @@ class HotelDetails extends Component {
     }
 
     onBooking(roomData) {
-
     }
 
     render() {

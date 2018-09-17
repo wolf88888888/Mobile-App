@@ -131,7 +131,7 @@ class Property extends Component {
 
     getStaticHotels(loadMore) {
         console.log("Static search started");
-        this.setState({log: `${this.state.log} \n Static Search Started`});
+        //this.setState({log: `${this.state.log} \n Static Search Started`});
         requester.getStaticHotels(this.state.regionId, this.state.page).then((res) => {
             if (res.success) {
                 if (!loadMore) {
@@ -210,7 +210,7 @@ class Property extends Component {
 
     applyFilters(loadMore) {
         console.log("AAAAA");
-        this.setState({log: `${this.state.log} \n Applying filters`});
+        //this.setState({log: `${this.state.log} \n Applying filters`});
         this.setState({ loadStatic: false });
         console.log("bAAAA");
         const search = this.getSearchString();
@@ -303,13 +303,13 @@ class Property extends Component {
     }
 
     stompAndroid() {
-        this.setState({log: `${this.state.log} \n Socket Request Sent`});
+        //this.setState({log: `${this.state.log} \n Socket Request Sent`});
         androidStomp.startSession(uid, mainUrl, false, () => {
             // success
-            this.setState({log: `${this.state.log} \n Socket Session Started`});
+            //this.setState({log: `${this.state.log} \n Socket Session Started`});
         }, () => {
             // failure
-            this.setState({log: `${this.state.log} \n SSL Exception \n Retrying....`});
+            //this.setState({log: `${this.state.log} \n SSL Exception \n Retrying....`});
             this.stompAndroid();
         });
         DeviceEventEmitter.addListener('ERROR_EVENT', ({ message }) => (

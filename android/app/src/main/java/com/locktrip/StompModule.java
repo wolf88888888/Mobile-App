@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.glassfish.tyrus.client.SslContextConfigurator;
@@ -26,8 +27,14 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,12 +67,26 @@ public class StompModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void startSession(String uid, String query, boolean isErrorInvoked,Callback success, Callback failure) throws NoSuchAlgorithmException {
+    public void startSession(String uid, String query, boolean isErrorInvoked,Callback success, Callback failure) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, KeyManagementException, IOException, CertificateException {
         count = 0;
         _isErrorInvoked = isErrorInvoked;
 
+        //
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null,null);
+
+        MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+        sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+        //
+
         WebSocketContainer clientt = ContainerProvider.getWebSocketContainer();
         StandardWebSocketClient transport = new StandardWebSocketClient(clientt);
+        //
+        Map<String, Object> userProperties = new HashMap<>();
+        userProperties.put("org.apache.tomcat.websocket.SSL_CONTEXT", sf);
+        transport.setUserProperties(userProperties);
+        //
         WebSocketStompClient stompClient = new WebSocketStompClient(transport);
 
         stompClient.setAutoStartup(true);
@@ -123,7 +144,6 @@ public class StompModule extends ReactContextBaseJavaModule {
                 if (count == 0 && !_isErrorInvoked){
                     success.invoke();
                     _isErrorInvoked = true;
-                    Log.e("Invoke","two");
                 }
                 count ++;
             }

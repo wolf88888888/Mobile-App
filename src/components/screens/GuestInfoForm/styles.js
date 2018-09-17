@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     guestInfoWrapper: {
-        marginTop: 15
+        marginTop: 15,
+        flex: 1
     }
 });
 
