@@ -26,6 +26,8 @@ var mainUrl = '';
 let countIos;
 
 class Property extends Component {
+	hotels = [];
+
     constructor(props) {
         super(props);
 
@@ -117,19 +119,19 @@ class Property extends Component {
         const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + mainUrl + "\"}";
         const destination = "search/" + this.uuid;
 
-        androidStomp.getData(message, destination, (error, connection, message) => {
-            if (error == null) {
-                if (connection == 1){
-                    console.log("stompAndroid connected");
-                }
-                else if (connection == 2){
-                    console.log("stompAndroid ---------------", message);
-                }
-            }
-            else {
-                console.log("stompAndroid errr!!!!", error);
-            }
+        DeviceEventEmitter.addListener("onStompConnect", () => {
+            console.log("onStompConnect -------------");
         });
+        
+        DeviceEventEmitter.addListener("onStompError", ({type, message}) => {
+            console.log("onStompError -------------", type, message);
+        });
+
+        DeviceEventEmitter.addListener("onStompMessage", ({message}) => (
+            this.handleAndroidSingleHotel(message)
+        ));
+
+        androidStomp.getData(message, destination);
 
         // androidStomp.startSession(this.uuid, mainUrl, () => {
         //     this.applyFilters(false);
@@ -155,6 +157,60 @@ class Property extends Component {
                 isLoading: false,
             });
         });
+    }
+
+    handleAndroidSingleHotel(message) {
+        console.log("handleAndroidSingleHotel ---------------", message);
+        // this.applyFilters();
+        try {
+            const jsonHotel = JSON.parse(message);
+            if (jsonHotel.hasOwnProperty('allElements')) {
+                if (jsonHotel.allElements) {
+                    
+                }
+            } else {
+                console.log("handleAndroidSingleHotel --------------1111-");
+                this.hotels.push(jsonHotel);
+                if (this.hotels.length <= 10) {
+                    console.log("handleAndroidSingleHotel --------------2222-", this.hotels);
+                    // this.setState({listingsMap:this.hotels});
+                    if (this.state.isLoading) {
+                        this.setState({
+                            isLoading: false,
+                        });
+                        // this.state.isLoading = false;
+                    }
+                    this.setState(prevState => ({
+                        listings: [...prevState.listings, jsonHotel]
+                    }));
+                }
+                
+                // this.setState(prevState => ({
+                //     listingsMap: [...prevState.listingsMap, object]
+                // }));
+            }
+        } catch (e) {
+            // Error
+        }
+    }
+
+    handleReceiveSingleHotel(message) {
+        if (countIos === 0) {
+            this.applyFilters(false);
+        }
+        countIos = 1;
+        const response = JSON.parse(message.body);
+        if (response.hasOwnProperty('allElements')) {
+            if (response.allElements) {         
+                if (clientRef) {
+                    clientRef.disconnect();
+                }
+            }
+        } else {
+            this.setState(prevState => ({
+                listingsMap: [...prevState.listingsMap, response]
+            }));
+        }
     }
 
     alterMap() {
@@ -501,6 +557,7 @@ class Property extends Component {
     }
 
     render() {
+        console.log("hotels---------", this.state.listings);
         const {
             search, searchedCity
         } = this.state;
@@ -647,44 +704,6 @@ class Property extends Component {
                     activityIndicatorColor="black"/>
             </View>
         );
-    }
-
-    handleAndroidSingleHotel(message) {
-        console.log("handleAndroidSingleHotel ---------------", message);
-        // this.applyFilters();
-        try {
-            const object = JSON.parse(message);
-            if (object.hasOwnProperty('allElements')) {
-                if (object.allElements) {
-                    
-                }
-            } else {
-                this.setState(prevState => ({
-                    listingsMap: [...prevState.listingsMap, object]
-                }));
-            }
-        } catch (e) {
-            // Error
-        }
-    }
-
-    handleReceiveSingleHotel(message) {
-        if (countIos === 0) {
-            this.applyFilters(false);
-        }
-        countIos = 1;
-        const response = JSON.parse(message.body);
-        if (response.hasOwnProperty('allElements')) {
-            if (response.allElements) {         
-                if (clientRef) {
-                    clientRef.disconnect();
-                }
-            }
-        } else {
-            this.setState(prevState => ({
-                listingsMap: [...prevState.listingsMap, response]
-            }));
-        }
     }
 }
 

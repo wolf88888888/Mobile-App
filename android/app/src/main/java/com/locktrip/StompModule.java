@@ -37,12 +37,11 @@ import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 public class StompModule extends ReactContextBaseJavaModule {
     final String TAG = "StompModule";
     
-    private Context context;
+    private ReactApplicationContext _reactContext;
     private WebSocketStompClient _client = null;
     StompSession _session = null;
     StompSession.Subscription _lastSubscription = null;
 
-    Callback _callbackStomp = null;
     String _url = "wss://beta.locktrip.com/socket";
     String _message = "";
     String _destination = "";
@@ -54,7 +53,8 @@ public class StompModule extends ReactContextBaseJavaModule {
         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
             Log.e(TAG, "Connected~~~~");
             _session = session;
-            _callbackStomp.invoke(null, 1, null);
+            StompModule.this.onConnect();
+
             if (_isOnce) {
                 StompModule.this.subscription();
             }
@@ -64,7 +64,7 @@ public class StompModule extends ReactContextBaseJavaModule {
         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
             Log.e(TAG, "handleException~~~~");
             disconnect();
-            // _callbackStomp.invoke("Unknown Error Occured!", 0, null);
+            StompModule.this.onError(1, "Unknown Error Occured!");
             exception.printStackTrace();
         }
 
@@ -74,15 +74,15 @@ public class StompModule extends ReactContextBaseJavaModule {
             disconnect();
             if (exception instanceof ConnectionLostException) {
                 // if connection lost, call this
-                // _callbackStomp.invoke("Connection Lost!", 0, null);
+                StompModule.this.onError(2, "Connection Lost!");
             }
             else if (exception instanceof DeploymentException) {
                 // if connection failed, call this
-                // _callbackStomp.invoke("Connection Failed!", 0, null);
+                StompModule.this.onError(3, "Connection Failed!");
             }
             else {
                 //unknown issues
-                // _callbackStomp.invoke("Unknown Error Occured!", 0, null);
+                StompModule.this.onError(1, "Unknown Error Occured!");
             }
 
             exception.printStackTrace();
@@ -96,13 +96,13 @@ public class StompModule extends ReactContextBaseJavaModule {
         @Override
         public void handleFrame(StompHeaders headers, Object payload) {
             Log.e(TAG, payload.toString());
-            // _callbackStomp.invoke(null, 2, payload.toString());
+            onMessage(payload.toString());
         }
     };
 
     public StompModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.context = context;
+        this._reactContext = reactContext;
     }
 
     @Override
@@ -167,17 +167,33 @@ public class StompModule extends ReactContextBaseJavaModule {
         }
     }
 
+    private void onConnect() {
+        this.emitEventToJS("onStompConnect", null);
+    }
+
+    private void onError(int type, String message) {
+        WritableMap event = Arguments.createMap();
+        event.putInt("type", type); // 1: unknown, 2: connection lost, 3: connection failed.
+        event.putString("message", message);
+        this.emitEventToJS("onStompError", event);
+    }
+
+    private void onMessage(String message) {
+        WritableMap event = Arguments.createMap();
+        event.putString("message", message);
+        this.emitEventToJS("onStompMessage", event);
+    }
+
     @ReactMethod
-    public void connect(String url, Callback callbackStomp){
+    public void connect(String url){
         this._url = url;
-        this._callbackStomp = callbackStomp;
         _isOnce = false;
         // this.connect();
         new Thread(this::connect).start();
     }
 
     @ReactMethod
-    public void getData(String message, String destination, Callback callbackStomp) {
+    public void getData(String message, String destination) {
         // _message = "{\"uuid\":\"e38effa6-491f-4e9e-b3b4-e4a2f71ed835\",\"query\":\"?region=52612&currency=EUR&startDate=15/09/2018&endDate=16/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}";
         // _destination = "search/e38effa6-491f-4e9e-b3b4-e4a2f71ed835";
         this._message = message;
@@ -191,14 +207,12 @@ public class StompModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void close() {
-        this._callbackStomp = null;
         new Thread(this::unSubscription).start();
         // this.unSubscription();
     }
-
-    @ReactMethod
-    public void setCallback(Callback callbackStomp) {
-        this._callbackStomp = callbackStomp;
+    
+    private void emitEventToJS(String eventName, @Nullable WritableMap eventData){
+        this._reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
     }
 
     // @ReactMethod
@@ -248,6 +262,6 @@ public class StompModule extends ReactContextBaseJavaModule {
     // }
 
     // private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData){
-    //     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
+    //     _reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
     // }
 }

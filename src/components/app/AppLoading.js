@@ -70,22 +70,21 @@ class AppLoading extends Component {
         const isLoggedIn = keys.includes(`${domainPrefix}.auth.locktrip`) &&
                         keys.includes(`${domainPrefix}.auth.username`);
 
-        androidStomp.connect(socketHost, (error, connection, message) => {
-            SplashScreen.close({
-                animationType: SplashScreen.animationType.scale,
-                duration: 0,
-                delay: 0
-            });
-
-            // This will switch to the App screen or Auth screen and this loading
-            // screen will be unmounted and thrown away.
-
-            const resetAction = StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'MainScreen' : 'Welcome' })],
-            });
-            this.props.navigation.dispatch(resetAction);
+        androidStomp.connect(socketHost);
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 0
         });
+
+        // This will switch to the App screen or Auth screen and this loading
+        // screen will be unmounted and thrown away.
+
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'MainScreen' : 'Welcome' })],
+        });
+        this.props.navigation.dispatch(resetAction);
     };
 
     render() {
