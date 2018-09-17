@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
+import { NativeModules, AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../redux/action/Currency'
 
@@ -9,6 +9,9 @@ import { domainPrefix } from '../../config';
 import { bindActionCreators } from 'redux';
 
 import * as countryActions from '../../redux/action/Country'
+import { socketHost } from '../../config';
+
+const androidStomp = NativeModules.StompModule;
 
 const styles = StyleSheet.create({
     container: {
@@ -29,11 +32,6 @@ class AppLoading extends Component {
     async componentDidMount() {
         console.log("AppLoading - componentDidMount")
         
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 150,
-            delay: 100
-        });
     }
 
     // Fetch the token from storage then navigate to our appropriate place
@@ -72,15 +70,22 @@ class AppLoading extends Component {
         const isLoggedIn = keys.includes(`${domainPrefix}.auth.locktrip`) &&
                         keys.includes(`${domainPrefix}.auth.username`);
 
-        // This will switch to the App screen or Auth screen and this loading
-        // screen will be unmounted and thrown away.
+        androidStomp.connect(socketHost, (error, connection, message) => {
+            SplashScreen.close({
+                animationType: SplashScreen.animationType.scale,
+                duration: 0,
+                delay: 0
+            });
 
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'MainScreen' : 'Welcome' })],
+            // This will switch to the App screen or Auth screen and this loading
+            // screen will be unmounted and thrown away.
+
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'MainScreen' : 'Welcome' })],
+            });
+            this.props.navigation.dispatch(resetAction);
         });
-        this.props.navigation.dispatch(resetAction);
-        // this.props.navigation.navigate(isLoggedIn ? 'MainScreen' : 'Welcome');
     };
 
     render() {

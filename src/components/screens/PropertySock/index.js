@@ -9,7 +9,7 @@ import queryString from 'query-string';
 import Image from 'react-native-remote-svg';
 import { withNavigation } from 'react-navigation';
 
-import { imgHost } from '../../../config';
+import { imgHost, socketHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
@@ -114,9 +114,26 @@ class Property extends Component {
 
     stompAndroid() {
         console.log("uid---------------", this.uuid, mainUrl);
-        androidStomp.startSession(this.uuid, mainUrl, () => {
-            this.applyFilters(false);
+        const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + mainUrl + "\"}";
+        const destination = "search/" + this.uuid;
+
+        androidStomp.getData(message, destination, (error, connection, message) => {
+            if (error == null) {
+                if (connection == 1){
+                    console.log("stompAndroid connected");
+                }
+                else if (connection == 2){
+                    console.log("stompAndroid ---------------", message);
+                }
+            }
+            else {
+                console.log("stompAndroid errr!!!!", error);
+            }
         });
+
+        // androidStomp.startSession(this.uuid, mainUrl, () => {
+        //     this.applyFilters(false);
+        // });
         // DeviceEventEmitter.addListener("SOCK_EVENT", ({message}) => (
         //     this.handleAndroidSingleHotel(message)
         // ));

@@ -2,6 +2,7 @@ package com.locktrip;
 
 import android.util.Log;
 import android.widget.Toast;
+import android.content.Context;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -14,43 +15,48 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.springframework.messaging.converter.StringMessageConverter;
+import org.springframework.messaging.simp.stomp.ConnectionLostException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import javax.websocket.DeploymentException;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
-
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
-
-import org.springframework.messaging.simp.stomp.StompHeaders;
 
 public class StompModule extends ReactContextBaseJavaModule {
     final String TAG = "StompModule";
-    String _url = "wss://beta.locktrip.com/socket";
+    
     private Context context;
     private WebSocketStompClient _client = null;
     StompSession _session = null;
     StompSession.Subscription _lastSubscription = null;
 
-    Callback _callbackConnection = null;
-    Callback _messageConnection = null;
+    Callback _callbackStomp = null;
+    String _url = "wss://beta.locktrip.com/socket";
+    String _message = "";
+    String _destination = "";
+
+    boolean _isOnce = false;
 
     StompSessionHandler _sessionHandler = new StompSessionHandler() {
         @Override
         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
             Log.e(TAG, "Connected~~~~");
             _session = session;
-            _callbackConnection.invoke(null, true);
+            _callbackStomp.invoke(null, 1, null);
             if (_isOnce) {
-                MainActivity.this.getData();
+                StompModule.this.subscription();
             }
         }
 
@@ -58,6 +64,7 @@ public class StompModule extends ReactContextBaseJavaModule {
         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
             Log.e(TAG, "handleException~~~~");
             disconnect();
+            // _callbackStomp.invoke("Unknown Error Occured!", 0, null);
             exception.printStackTrace();
         }
 
@@ -67,12 +74,15 @@ public class StompModule extends ReactContextBaseJavaModule {
             disconnect();
             if (exception instanceof ConnectionLostException) {
                 // if connection lost, call this
+                // _callbackStomp.invoke("Connection Lost!", 0, null);
             }
             else if (exception instanceof DeploymentException) {
                 // if connection failed, call this
+                // _callbackStomp.invoke("Connection Failed!", 0, null);
             }
             else {
                 //unknown issues
+                // _callbackStomp.invoke("Unknown Error Occured!", 0, null);
             }
 
             exception.printStackTrace();
@@ -86,6 +96,7 @@ public class StompModule extends ReactContextBaseJavaModule {
         @Override
         public void handleFrame(StompHeaders headers, Object payload) {
             Log.e(TAG, payload.toString());
+            // _callbackStomp.invoke(null, 2, payload.toString());
         }
     };
 
@@ -115,11 +126,14 @@ public class StompModule extends ReactContextBaseJavaModule {
     }
 
     private void connect() {
+        Log.e(TAG, "connect~~~~  0");
         _client = this.client();
         if (!_client.isRunning() || _session == null || !_session.isConnected()) {
+            Log.e(TAG, "connect~~~~  1");
             StompHeaders stompHeaders = new StompHeaders();
             _client.connect(_url, new WebSocketHttpHeaders(), stompHeaders, _sessionHandler);
         }
+        Log.e(TAG, "connect~~~~  2");
     }
 
     private void disconnect() {
@@ -138,91 +152,102 @@ public class StompModule extends ReactContextBaseJavaModule {
     }
 
     private void subscription() {
+        Log.e(TAG, "subscription");
         if (_session != null && _session.isConnected()) {
+        Log.e(TAG, "subscription1");
             this.unSubscription();
 
             _session.send("search",_message);
             _lastSubscription = _session.subscribe(_destination, _sessionHandler);
         }
         else {
+        Log.e(TAG, "subscription2");
             _isOnce = true;
             connect();
         }
     }
 
     @ReactMethod
-    public void connect(String url, Callback callbackConnection){
+    public void connect(String url, Callback callbackStomp){
         this._url = url;
-        this._callbackConnection = callbackConnection;
-        this.connect();
+        this._callbackStomp = callbackStomp;
+        _isOnce = false;
+        // this.connect();
+        new Thread(this::connect).start();
     }
 
     @ReactMethod
-    public void getData(String message, String destination, Callback messageCallback) {
+    public void getData(String message, String destination, Callback callbackStomp) {
         // _message = "{\"uuid\":\"e38effa6-491f-4e9e-b3b4-e4a2f71ed835\",\"query\":\"?region=52612&currency=EUR&startDate=15/09/2018&endDate=16/09/2018&rooms=%5B%7B%22adults%22:2,%22children%22:%5B%5D%7D%5D\"}";
         // _destination = "search/e38effa6-491f-4e9e-b3b4-e4a2f71ed835";
         this._message = message;
         this._destination = destination;
-        this._messageConnection = messageCallback;
 
-        this.subscription();
+        Log.e(TAG, message);
+        Log.e(TAG, destination);
+        // this.subscription();
+        new Thread(this::subscription).start();
     }
 
     @ReactMethod
     public void close() {
-        this._callbackConnection = null;
-        this._messageCallback = null;
-        this.unSubscription();
+        this._callbackStomp = null;
+        new Thread(this::unSubscription).start();
+        // this.unSubscription();
     }
-
 
     @ReactMethod
-    public void startSession(String uid, String query, Callback success) {
-        count = 0;
-        ClientManager client = ClientManager.createClient();
-
-        WebSocketClient transport = new StandardWebSocketClient(client);
-        WebSocketStompClient stompClient = new WebSocketStompClient(transport);
-        StringMessageConverter converter = new StringMessageConverter();
-        stompClient.setMessageConverter(converter);
-
-        stompClient.connect(url, new StompSessionHandler() {
-
-            @Override
-            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                session.send("search","{\"uuid\":\""+uid+"\",\"query\":\""+query+"\"}");
-                session.subscribe("search/"+uid, this);
-            }
-
-            @Override
-            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
-            }
-
-            @Override
-            public void handleTransportError(StompSession session, Throwable exception) {
-
-            }
-
-            @Override
-            public Type getPayloadType(StompHeaders headers) {
-                return String.class;
-            }
-
-            @Override
-            public void handleFrame(StompHeaders headers, Object payload) {
-                WritableMap event = Arguments.createMap();
-                event.putString("message",payload.toString());
-                emitDeviceEvent("SOCK_EVENT", event);
-                if (count == 0){
-                    success.invoke();
-                }
-                count ++;
-            }
-        });
+    public void setCallback(Callback callbackStomp) {
+        this._callbackStomp = callbackStomp;
     }
 
-    private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData){
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
-    }
+    // @ReactMethod
+    // public void startSession(String uid, String query, Callback success) {
+    //     count = 0;
+    //     ClientManager client = ClientManager.createClient();
+
+    //     WebSocketClient transport = new StandardWebSocketClient(client);
+    //     WebSocketStompClient stompClient = new WebSocketStompClient(transport);
+    //     StringMessageConverter converter = new StringMessageConverter();
+    //     stompClient.setMessageConverter(converter);
+
+    //     stompClient.connect(url, new StompSessionHandler() {
+
+    //         @Override
+    //         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+    //             session.send("search","{\"uuid\":\""+uid+"\",\"query\":\""+query+"\"}");
+    //             session.subscribe("search/"+uid, this);
+    //         }
+
+    //         @Override
+    //         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+
+    //         }
+
+    //         @Override
+    //         public void handleTransportError(StompSession session, Throwable exception) {
+
+    //         }
+
+    //         @Override
+    //         public Type getPayloadType(StompHeaders headers) {
+    //             return String.class;
+    //         }
+
+    //         @Override
+    //         public void handleFrame(StompHeaders headers, Object payload) {
+    //             WritableMap event = Arguments.createMap();
+    //             event.putString("message",payload.toString());
+    //             emitDeviceEvent("SOCK_EVENT", event);
+    //             if (count == 0){
+    //                 success.invoke();
+    //             }
+    //             count ++;
+    //         }
+    //     });
+    // }
+
+    // private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData){
+    //     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
+    // }
 }

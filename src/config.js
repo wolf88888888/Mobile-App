@@ -25,6 +25,7 @@
 export let apiHost;
 export let imgHost;
 export let basePath;
+export let socketHost;
 export let routerPrefix;
 export let domainPrefix;
 export let PUBLIC_URL;
@@ -36,6 +37,7 @@ if (__DEV__) {
     apiHost = 'https://beta.locktrip.com/api/';//'http://192.168.203.165:8080/';
     imgHost = 'https://static.locktrip.com/';
     basePath = 'https://beta.locktrip.com/';//'http://192.168.203.165:3000/';
+    socketHost = 'wss://beta.locktrip.com/socket';
     xDeviceVersion = "49365f68-42e1-11e8-842f-0ed5f89f718b";
     routerPrefix = '.';
     //export const domainPrefix = 'rc';
@@ -55,6 +57,7 @@ if (__DEV__) {
     apiHost = 'https://beta.locktrip.com/api/';
     imgHost = 'https://static.locktrip.com/';
     basePath = 'https://beta.locktrip.com/';
+    socketHost = 'wss://beta.locktrip.com/socket';
     xDeviceVersion = "49365f68-42e1-11e8-842f-0ed5f89f718b";
     routerPrefix = '.';
     //export const domainPrefix = 'rc';

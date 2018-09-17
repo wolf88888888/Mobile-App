@@ -186,8 +186,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.android.support:multidex:1.0.3'
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.facebook.react:react-native:+"             // From node_modules
+
     implementation project(':react-native-smart-splashscreen')     // From node_modules
     implementation project(':react-native-cardview')
     implementation(project(':react-native-maps')){
@@ -202,11 +204,10 @@ dependencies {
     implementation project(':react-native-image-picker')
     implementation project(':react-native-image-resizer')
     implementation project(':react-native-fast-crypto')
-    implementation group: 'org.springframework', name: 'spring-framework-bom', version: '4.2.2.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-messaging', version: '4.2.2.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-websocket', version: '4.2.2.RELEASE'
-    implementation "org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12"
-    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation group: 'org.springframework', name: 'spring-messaging', version: '4.3.18.RELEASE'
+    implementation group: 'org.springframework', name: 'spring-websocket', version: '4.3.18.RELEASE'
+    implementation "org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13.1"
 }
 
 // Run this once to be able to run the application with BUCK
