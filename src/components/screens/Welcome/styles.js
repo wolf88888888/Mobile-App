@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
         textAlign: 'justify',
         position: 'absolute',
         bottom:'15%',
-        left:0,
     }
 });
 

@@ -36,8 +36,10 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 13,
         fontFamily: 'FuturaStd-Light',
-        margin: 10,
-        marginBottom: 15
+        marginBottom: 15,
+        width: '100%',
+        paddingLeft: 18,
+        paddingRight: 18,
     },
     inputView: {
         width: '100%',
@@ -80,7 +82,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 0
+        bottom: 0,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
     },
     getStartedImage: {
         width: 400,
