@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
 
     scrollViewTitles:{
         fontFamily: 'FuturaStd-Medium',
-        fontSize: 17,
+        fontSize: dimensionWindows.width*0.05,
         color: '#1f2427',
         top: 2
     },
