@@ -5,7 +5,7 @@ export default StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        padding: 16,
+        marginTop: 17,
     },
     pickerRow: {
         display: 'flex',

@@ -1,8 +1,7 @@
-import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Dimensions } from 'react-native';
+import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-const { width, height } = Dimensions.get('window');
 
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import RNPickerSelect from 'react-native-picker-select';
@@ -374,7 +373,6 @@ class Explore extends Component {
             return (
                 <ScrollView
                     style={{
-                        position: 'relative',
                         marginLeft: 17,
                         marginRight: 17,
                         minHeight: 100,
@@ -537,8 +535,9 @@ class Explore extends Component {
             checkInDate, checkOutDate, guests
         } = this.state;
         return (
+
             <View style={styles.container}>
-             <Toast
+                <Toast
                     ref="toast"
                     style={{ backgroundColor: '#DA7B61' }}
                     position='bottom'
@@ -550,13 +549,8 @@ class Explore extends Component {
                 />
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 {this.renderAutocomplete()}
-            
-            <View style={{marginBottom: 100, marginLeft: 17, marginRight: 17}}>
-                <ScrollView
-                automaticallyAdjustContentInsets={true}
-                >
-
-                <View style={styles.scrollViewContentMain}>
+                <ScrollView style={styles.scrollView}>
+                    <View style={styles.scrollViewContentMain}>
                         <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
@@ -571,44 +565,45 @@ class Explore extends Component {
                             showSearchButton={true}
                         />
                     </View>
-                    
-                    <Text style={[styles.scrollViewTitles, {marginBottom:5}]}>Discover</Text>
 
-                    <View>
-                        <View style={{flexDirection: 'row',justifyContent: 'space-evenly'}}>
-                            
+                    <View style={styles.scrollViewContent}>
+
+                        <Text style={[styles.scrollViewTitles, {marginBottom:5}]}>Discover</Text>
+
+                        <View style={styles.viewDiscover}>
+
                             <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
-                                style={{width: width/2.2,
-                                    height: width/4}}>
+                                style={styles.imageViewDiscoverLeft}>
                                 <Image style={{
-                                    width: width/2.2,
-                                    height: width/4,
+                                    height: '100%',
+                                    width: '100%'
                                 }} resizeMode='stretch'
                                     source={require('../../../assets/home_images/hotels.png')} />
                                 {this.state.searchHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
                             </TouchableOpacity>
-                            
+
                             <TouchableOpacity onPress={() => this.setState({
                                 searchHotel: false,
                                 cities: [],
                                 search: '',
                                 regionId: 0
                             })}
-                            style={{width: width/2.2,
-                                    height: width/4}}>
-                                <Image style={{width: width/2.2,
-                                    height: width/4}} resizeMode='stretch'
+                                style={styles.imageViewDiscoverLeft}>
+                                <Image style={{
+                                    height: '100%',
+                                    width: '100%'
+                                }} resizeMode='stretch'
                                     source={require('../../../assets/home_images/homes.png')} />
                                 {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
                             </TouchableOpacity>
-                            
+
                         </View>
 
                         <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
 
                         <View style={styles.divsider} />
-                        
-                        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+
+                        <View style={styles.viewPopularHotels}>
                             <TouchableOpacity onPress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
                                 style={styles.subViewPopularHotelsLeft}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
@@ -616,13 +611,13 @@ class Explore extends Component {
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.handlePopularCities(18417, 'Madrid , Spain')}
-                                style={styles.subViewPopularHotelsLeft}>
+                                style={styles.subViewPopularHotelsRight}>
                                 <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                     source={require('../../../assets/home_images/Madrid.png')} />
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                        <View style={styles.viewPopularHotels}>
 
                             <TouchableOpacity onPress={() => this.handlePopularCities(16471, 'Paris , France')}
                                 style={styles.subViewPopularHotelsLeft}>
@@ -643,8 +638,9 @@ class Explore extends Component {
                             </View>
                         </TouchableOpacity>
 
+
                         <View style={styles.bottomView}>
-                            <Image style={styles.bottomViewText} resizeMode='center'
+                            <Image style={styles.bottomViewText} resizeMode='stretch'
                                 source={require('../../../assets/texthome.png')} />
                             <TouchableOpacity onPress={this.showToast} style={styles.getStartedButtonView}>
                                 <View>
@@ -654,11 +650,34 @@ class Explore extends Component {
                             <Image style={styles.bottomViewBanner} resizeMode='stretch'
                                 source={require('../../../../src/assets/vector.png')} />
                         </View>
+
+                    </View>
+                </ScrollView>
+                                
+                <TouchableWithoutFeedback onPress={() => this.setState({ currencySelectionVisible: true })}>
+                    <View style={styles.fab}>
+                    {
+                        this.state.locRate != 0 ? 
+                            (<Text style={styles.fabText}>LOC/{this.state.currency} {parseFloat(this.state.locRate).toFixed(2)}</Text>)
+                            :
+                            (<Text style={styles.fabText}>LOC/{this.state.currency}    </Text>)
+                    }
                         
                     </View>
+                </TouchableWithoutFeedback>
 
-                </ScrollView>
-            </View>
+                <SingleSelectMaterialDialog
+                    title = { 'Select Currency' }
+                    items = { BASIC_CURRENCY_LIST.map((row, index) => ({ value: index, label: row })) }
+                    visible = { this.state.currencySelectionVisible }
+                    onCancel = { () =>this.setState({ currencySelectionVisible: false }) }
+                    onOk = { result => {
+                        console.log("select country", result);
+                        this.setState({ currencySelectionVisible: false });
+                        this.props.actions.getCurrency(result.selectedItem.label);
+                        // this.setState({ singlePickerSelectedItem: result.selectedItem });
+                    }}
+                />
             </View>
         );
     }
