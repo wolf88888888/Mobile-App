@@ -160,7 +160,9 @@ const styles = StyleSheet.create({
     searchButtonView: {
         backgroundColor: '#DA7B61',
         alignItems: 'center',
+        justifyContent: 'center',
         flex: 1,
+        height: dimensionWindows.height*0.08,
         marginTop: 10,
         marginBottom: 10,
         marginLeft: 17,
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
     searchButtonText: {
         color: '#fff',
         fontFamily: 'FuturaStd-Light',
-        fontSize: 17,
+        fontSize: dimensionWindows.width * 0.05,
         padding: 14
     },
     title: {
