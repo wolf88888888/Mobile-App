@@ -34,6 +34,7 @@
     "card-validator": "^5.0.0",
     "core-decorators": "^0.20.0",
     "ethers": "git://github.com/yuri930/ethers.js.git",
+    "immutability-helper": "^2.7.1",
     "immutable": "^3.8.2",
     "javascript-time-ago": "^1.0.30",
     "locktrip-service-layer": "^1.0.4",

@@ -1,11 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const dimensionWindows = Dimensions.get('window');
 
 export default StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        padding: 16,
+        marginTop: 17,
     },
     pickerRow: {
         display: 'flex',
@@ -107,6 +108,7 @@ export default StyleSheet.create({
     },
     searchButtonView: {
         width: '100%',
+        height: dimensionWindows.height * 0.08,
         backgroundColor: '#DA7B61',
         justifyContent: 'center',
         alignItems: 'center',
@@ -115,7 +117,7 @@ export default StyleSheet.create({
     searchButtonText: {
         color: '#fff',
         fontFamily: 'FuturaStd-Light',
-        fontSize: 17,
+        fontSize: dimensionWindows.width * 0.05,
         padding: 14
     }
 });

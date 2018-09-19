@@ -22,6 +22,7 @@ export default class RoomDetailsReview extends Component {
             // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
+            leavingDate: '',
             creationDate: '',
             // cancellationLOCPrice: '',
             cancellationPrice: '',
@@ -52,10 +53,13 @@ export default class RoomDetailsReview extends Component {
                 const hotelBooking = data.booking.hotelBooking[0];
                 const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
                 const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
+                .add(data.booking.hotelBooking[0].nights, 'days');
                 this.setState({
                     // bookingDetail: data,
                     roomName: data.booking.hotelBooking[0].room.roomType.text,
                     arrivalDate: endDate.format('DD MMM'),
+                    leavingDate: leavingDate.format('DD MMM'),
                     creationDate: startDate.format('DD MMM'),
                     cancellationPrice: data.fiatPrice,
                     bookingId: bookingId,
@@ -166,6 +170,7 @@ export default class RoomDetailsReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
+        console.log(params);
         return (
             <View style={styles.container}>
                 <Toast
@@ -301,7 +306,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Dates</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>{this.state.creationDate} - {this.state.arrivalDate}</Text>
+                            <Text style={styles.rhs}>{this.state.arrivalDate} - {this.state.leavingDate}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>
@@ -309,7 +314,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Guests</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>2</Text>
+                            <Text style={styles.rhs}>{params.guests}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>
@@ -333,11 +338,11 @@ export default class RoomDetailsReview extends Component {
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
-                            <Text style={styles.period1}> for 1 nights</Text>
+                            <Text style={styles.period1}> for {params.daysDifference} nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={styles.period2}> for 1 nights</Text>
+                            <Text style={styles.period2}> for {params.daysDifference} nights</Text>
                         </View>
                     </View>
                     <View style={styles.payButtonView}>
@@ -414,5 +419,5 @@ RoomDetailsReview.propTypes = {
     hotelAddress: PropTypes.string,//eslint-disable-line
     priceInUserCurreny: PropTypes.number,//eslint-disable-line
     priceInLoc: PropTypes.number,//eslint-disable-line
-    guests: PropTypes.array//eslint-disable-line
+    guests: PropTypes.array,//eslint-disable-line
 };

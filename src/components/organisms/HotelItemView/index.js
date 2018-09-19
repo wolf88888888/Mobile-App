@@ -68,6 +68,24 @@ class HotelItemView extends Component {
         }
     }
 
+    renderLoader() {
+        return (
+            <View style={{
+                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
+            }}
+            >
+                <Image
+                    style={{
+                        height: 35, width: 35
+                    }}
+                    source={{
+                        uri: 'https://alpha.locktrip.com/images/loader.gif'
+                    }}
+                />
+            </View>
+        );
+    }
+
     render() {
         const {
             item, currencySign, locRate
@@ -97,11 +115,18 @@ class HotelItemView extends Component {
                             {/* <Text style={styles.totalReviews}> 73 Reviews </Text> */}
                         </View>
 
-                        <View style={styles.costView}>
+                        {
+                            item.price === undefined ?
+
+                            <View style={styles.costView}>
+                            <Text style={styles.perNight}>Loading...</Text>
+                            </View> :
+                            <View style={styles.costView}>
                             <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{item.price}</Text>
                             <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
                             <Text style={styles.perNight}>per night</Text>
-                        </View>
+                            </View>
+                        }
                     </View>
                 </View>
             </TouchableOpacity>
