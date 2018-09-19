@@ -572,18 +572,16 @@ class Explore extends Component {
                         />
                     </View>
                     
-                    <Text style={[styles.scrollViewTitles, {marginBottom:5}]}>Discover</Text>
+                    <Text style={[styles.scrollViewTitles, {marginBottom:5, marginTop: 5}]}>Discover</Text>
 
                     <View>
+                        
                         <View style={{flexDirection: 'row',justifyContent: 'space-evenly'}}>
                             
                             <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
-                                style={{width: width/2.2,
-                                    height: width/4}}>
-                                <Image style={{
-                                    width: width/2.2,
-                                    height: width/4,
-                                }} resizeMode='stretch'
+                                style={styles.homehotelsView}>
+                                <Image 
+                                style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                     source={require('../../../assets/home_images/hotels.png')} />
                                 {this.state.searchHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
                             </TouchableOpacity>
@@ -594,17 +592,15 @@ class Explore extends Component {
                                 search: '',
                                 regionId: 0
                             })}
-                            style={{width: width/2.2,
-                                    height: width/4}}>
-                                <Image style={{width: width/2.2,
-                                    height: width/4}} resizeMode='stretch'
+                            style={styles.homehotelsView}>
+                                <Image style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                     source={require('../../../assets/home_images/homes.png')} />
                                 {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
                             </TouchableOpacity>
                             
                         </View>
 
-                        <Text style={styles.scrollViewTitles}>Popular Destinations</Text>
+                        <Text style={[styles.scrollViewTitles,  {marginBottom:5, marginTop: 5}]}>Popular Destinations</Text>
 
                         <View style={styles.divsider} />
                         

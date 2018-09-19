@@ -602,6 +602,14 @@ const styles = StyleSheet.create({
         marginTop:10,
         flex: 0.3,
         flexDirection: 'row'},
+
+        homehotelsView: {
+            width: dimensionWindows.width/2.2,
+            height: dimensionWindows.width/4,
+            marginRight: 4
+        },
+
+    imageViewHotelsHomes: {width: dimensionWindows.width/2.2,height: dimensionWindows.width/4},
     
     subViewPopularHotelsLeft: {
         width: dimensionWindows.width/2.2,
