@@ -173,6 +173,7 @@ class Explore extends Component {
     }
 
     onSearchHandler(value) {
+        console.log("onSearchHandler", value)
         this.setState({ search: value });
         if (value === '') {
             this.setState({ cities: [] });
