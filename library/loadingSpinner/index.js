@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, ActivityIndicator } from 'react-native'
-import { View, Text } from 'native-base'
+import { Dimensions, ActivityIndicator, View, Text } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
 

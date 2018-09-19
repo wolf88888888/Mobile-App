@@ -6,14 +6,11 @@ const styles = StyleSheet.create({
     
     card: {
         flexDirection: 'row',
-        marginLeft: 18,
-        marginRight: 18,
-        marginTop: 18,
-        paddingTop: 2,
-        paddingLeft: 2,
-        paddingRight: 24,
+        marginLeft: 12,
+        marginRight: 12,
+        marginTop: 8,
+        paddingRight: 20,
         height: imageHeight,
-        width: '100%',
         backgroundColor: 'white',    
     },
     popularHotelsImage: {
@@ -37,7 +34,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         fontSize: 18,
         color: 'black',
-        fontWeight: 'normal',
+        fontWeight: '100',
         fontFamily: 'FuturaStd-Medium',
     },
     aboutPlaceView: {
@@ -73,17 +70,18 @@ const styles = StyleSheet.create({
     },
     cost: {
         color: 'black',
-        fontSize: 18,
+        fontSize: 17,
         fontFamily: 'FuturaStd-Medium'
     },
     costLoc: {
         color: 'black',
-        fontSize: 14,
+        fontSize: 13,
         fontFamily: 'FuturaStd-Medium'
     },
     perNight: {
         fontSize: 10,
         fontFamily: 'FuturaStd-Light',
+        color: 'black',
     },
     star: {
         height: 8,

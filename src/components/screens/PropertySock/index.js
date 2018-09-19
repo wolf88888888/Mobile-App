@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter,ImageBackground } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 
@@ -34,7 +34,8 @@ const clientRef = undefined;
 let countIos;
 
 class Property extends Component {
-	hotels = [];
+    hotels = [];
+    hotelsDisplay = [];
 
     constructor(props) {
         super(props);
@@ -78,6 +79,23 @@ class Property extends Component {
     }
 
     async componentWillMount() {
+        this.getHotels();
+    }
+
+    async getHotels() {
+
+        // requester.getStaticHotels(this.state.regionId).then(res => {
+        //     res.body.then(data => {
+        //       const { content } = data;
+        //       console.log("getStaticHotels", content);
+        //     //   content.forEach(l => {
+        //     //     if (this.hotelInfoById[l.id]) {
+        //     //       l.price = this.hotelInfoById[l.id];
+        //     //     }
+        //     //   });
+        //     });
+        //   });
+
         this.uuid = await UUIDGenerator.getRandomUUID();
 
         if (Platform.OS === 'ios') {
@@ -109,7 +127,7 @@ class Property extends Component {
     }
 
     handleAndroidSingleHotel(message) {
-        console.log("handleAndroidSingleHotel ---------------", message);
+        // console.log("handleAndroidSingleHotel ---------------", message);
         try {
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
@@ -117,10 +135,13 @@ class Property extends Component {
                     
                 }
             } else {
-                console.log("handleAndroidSingleHotel --------------1111-");
+                // console.log("handleAndroidSingleHotel --------------1111-");
                 this.hotels.push(jsonHotel);
-                if (this.hotels.length <= 10) {
-                    console.log("handleAndroidSingleHotel --------------2222-", this.hotels);
+                // if (this.hotels.length <= 10) {
+                    // console.log("handleAndroidSingleHotel --------------2222-", this.hotels);
+
+                    // this.hotelsDisplay.push(jsonHotel);
+                    this.listView.onFirstLoad(jsonHotel);
                     // if (this.state.isLoading) {
                     //     this.setState({
                     //         isLoading: false,
@@ -130,7 +151,7 @@ class Property extends Component {
                     // this.setState(prevState => ({
                     //     listings: [...prevState.listings, jsonHotel]
                     // }));
-                }
+                // }
                 
                 // this.setState(prevState => ({
                 //     listingsMap: [...prevState.listingsMap, object]
@@ -176,7 +197,7 @@ class Property extends Component {
           abortFetch() // manually stop the refresh or pagination if it encounters network error
           console.log(err)
         }
-      }
+    }
 
     renderItem = (item) => {
         return (
@@ -190,9 +211,8 @@ class Property extends Component {
     }
 
     renderPaginationFetchingView = () => (
-        <View style={{width, height:height - 100, justifyContent: 'center', alignItems: 'center'}}>
-        {/* <LoadingSpinner style={{flex:1, backgroundColor:'#f00'}} text="loading1..." /> */}
-            <Image style={{flex:1, backgroundColor:'#f00'}} source={require('../../../../library/UltimateListView/loading.gif')}/>
+        <View style={{width, height:height - 90, justifyContent: 'center', alignItems: 'center'}}>
+            <Image style={{width:50, height:50}} source={require('../../../../library/UltimateListView/loading.gif')}/>
         </View>
     )
     
@@ -225,18 +245,19 @@ class Property extends Component {
             <View style={styles.container}>
                 <CloseButton onPress={this.onCancel} />
                 <View style={styles.containerHotels}>
-                <UltimateListView
-                    ref={ref => this.listView = ref}
-                    key={'list'} // this is important to distinguish different FlatList, default is numColumns
-                    onFetch={this.onFetch}
-                    keyExtractor={(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
-                    refreshable = { false }
-                    item={this.renderItem} // this takes three params (item, index, separator)
-                    numColumns={1} // to use grid layout, simply set gridColumn > 1
-                    paginationFetchingView={this.renderPaginationFetchingView}
-                    paginationWaitingView={this.renderPaginationWaitingView}
-                    paginationAllLoadedView={this.renderPaginationAllLoadedView}
-                />
+                    <UltimateListView
+                        ref = {ref => this.listView = ref}
+                        key = {'list'} // this is important to distinguish different FlatList, default is numColumns
+                        onFetch = {this.onFetch}
+                        keyExtractor = {(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
+                        firstLoader = { false }
+                        refreshable = { false }
+                        item = {this.renderItem} // this takes three params (item, index, separator)
+                        numColumns = {1} // to use grid layout, simply set gridColumn > 1
+                        paginationFetchingView = {this.renderPaginationFetchingView}
+                        paginationWaitingView = {this.renderPaginationWaitingView}
+                        paginationAllLoadedView = {this.renderPaginationAllLoadedView}
+                    />
                 </View>
                 <ProgressDialog
                     visible={this.state.isLoadingHotelDetails}

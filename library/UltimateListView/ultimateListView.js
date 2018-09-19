@@ -169,6 +169,22 @@ export default class UltimateListView extends Component {
     this.mounted = false
   }
 
+  onFirstLoad = (row) => {
+    console.log("onFirstLoad", row);
+    
+    this.setState(prevState => ({
+      dataSource: [...prevState.dataSource, row],
+      paginationStatus: PaginationStatus.waiting
+    }));
+    // this.setState( 
+    //   { 
+    //     paginationStatus: PaginationStatus.waiting, 
+    //     dataSource: rows,
+    //   } 
+    // );
+    this.setPage(1);
+  }
+
   onRefresh = () => {
     console.log('onRefresh()')
     if (this.mounted) {

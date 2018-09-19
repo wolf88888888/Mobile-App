@@ -3,11 +3,10 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Dimensions,
-    ViewPropTypes
 } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
+import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
 import styles from './styles';
@@ -74,11 +73,17 @@ class HotelItemView extends Component {
         } = this.props;
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
-                <View style={styles.card}>
-                    <Image
-                        source={item.thumbnail !== null && { uri: imgHost + item.thumbnail.url }}
-                        style={styles.popularHotelsImage}
-                    />
+                <CardView 
+                    style = {styles.card}
+                    cardElevation = {0.5}
+                    cardMaxElevation = {0.5}
+                    cornerRadius = {0}>
+                    <View style={styles.popularHotelsImage}>
+                        <Image
+                            source={item.thumbnail !== null && { uri: imgHost + item.thumbnail.url }}
+                            style={{flex:1}}
+                        />
+                    </View>
 
                     <TouchableOpacity style={styles.favoritesButton}>
                         <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon} />
@@ -103,7 +108,7 @@ class HotelItemView extends Component {
                             <Text style={styles.perNight}>per night</Text>
                         </View>
                     </View>
-                </View>
+                </CardView>
             </TouchableOpacity>
         );
     }

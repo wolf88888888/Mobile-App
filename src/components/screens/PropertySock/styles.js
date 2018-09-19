@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 
     containerHotels:{
         marginTop: 10,
-        flex: 1
+        flex: 1,
     },
 });
 export default styles;
