@@ -18,7 +18,7 @@ import Welcome from '../components/screens/Welcome';
 import Login from '../components/screens/Login';
 import CreateAccount from '../components/screens/CreateAccount';
 import CreatePassword from '../components/screens/CreatePassword';
-import Terms from '../components/templates/Terms';
+import Terms from '../components/screens/Terms';
 
 import Explore from '../components/screens/Explore';
 import Profile from '../components/screens/Profile'
