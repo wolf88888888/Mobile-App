@@ -35,6 +35,7 @@ let countIos;
 
 class Property extends Component {
     hotels = [];
+    isAllElement = false;
     hotelsDisplay = [];
 
     constructor(props) {
@@ -82,8 +83,11 @@ class Property extends Component {
         this.getHotels();
     }
 
-    async getHotels() {
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
 
+    async getHotels() {
         // requester.getStaticHotels(this.state.regionId).then(res => {
         //     res.body.then(data => {
         //       const { content } = data;
@@ -105,6 +109,13 @@ class Property extends Component {
         }
     }
 
+    unsubscribe = () => {
+        if (Platform.OS === 'ios') {
+        } else if (Platform.OS === 'android') {
+            androidStomp.close();
+        }
+    }
+
     stompAndroid() {
         console.log("uid---------------", this.uuid, this.mainUrl);
         const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.mainUrl + "\"}";
@@ -122,24 +133,22 @@ class Property extends Component {
             this.handleAndroidSingleHotel(message)
         ));
 
-        androidStomp.close();
         androidStomp.getData(message, destination);
     }
 
     handleAndroidSingleHotel(message) {
-        // console.log("handleAndroidSingleHotel ---------------", message);
         try {
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
                 if (jsonHotel.allElements) {
-                    
+                    this.isAllElement = true;
+                    if (this.hotels.length < 10) {
+                        this.listView.onDone();
+                    }
                 }
             } else {
-                // console.log("handleAndroidSingleHotel --------------1111-");
                 this.hotels.push(jsonHotel);
-                // if (this.hotels.length <= 10) {
-                    // console.log("handleAndroidSingleHotel --------------2222-", this.hotels);
-
+                if (this.hotels.length <= 10) {
                     // this.hotelsDisplay.push(jsonHotel);
                     this.listView.onFirstLoad(jsonHotel);
                     // if (this.state.isLoading) {
@@ -151,7 +160,7 @@ class Property extends Component {
                     // this.setState(prevState => ({
                     //     listings: [...prevState.listings, jsonHotel]
                     // }));
-                // }
+                }
                 
                 // this.setState(prevState => ({
                 //     listingsMap: [...prevState.listingsMap, object]
@@ -174,28 +183,10 @@ class Property extends Component {
     onFetch = async (page = 1, startFetch, abortFetch) => {
         console.log("onFetch", page);
         try {
-          // This is required to determinate whether the first loading list is all loaded.
-          let pageLimit = 20;
-          const skip = (page - 1) * pageLimit;
-    
-          console.log("onFetch", pageLimit);
-    
-          // Generate dummy data
-          let rowData = Array.from({ length: pageLimit }, (value, index) => `item -> ${index + skip}`)
-    
-          console.log("onFetch", rowData);
-          // Simulate the end of the list if there is no more data returned from the server
-          if (page === 5) {
-            rowData = []
-          }
-    
-          // Simulate the network loading in ES7 syntax (async/await)
-          await this.sleep(1000)
-          startFetch(rowData, pageLimit)
-          console.log("onFetstartFetchch");
+        //   startFetch(rowData, pageLimit)
         } catch (err) {
           abortFetch() // manually stop the refresh or pagination if it encounters network error
-          console.log(err)
+        //   console.log(err)
         }
     }
 

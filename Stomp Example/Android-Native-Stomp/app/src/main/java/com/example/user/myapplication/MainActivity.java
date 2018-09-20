@@ -131,7 +131,11 @@ public class MainActivity extends AppCompatActivity {
         _client = this.client();
         if (!_client.isRunning() || _session == null || !_session.isConnected()) {
             StompHeaders stompHeaders = new StompHeaders();
-            _client.connect(_url, new WebSocketHttpHeaders(), stompHeaders, _sessionHandler);
+            try {
+                _client.connect(_url, new WebSocketHttpHeaders(), stompHeaders, _sessionHandler);
+            } catch (IllegalStateException ex) {
+
+            }
         }
     }
 

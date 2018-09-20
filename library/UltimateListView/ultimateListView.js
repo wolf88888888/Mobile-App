@@ -185,6 +185,14 @@ export default class UltimateListView extends Component {
     this.setPage(1);
   }
 
+  onDone = () => {
+    console.log("onDone");
+    this.setState({
+      dataSource: this.getRows().slice(),
+      paginationStatus: PaginationStatus.allLoaded
+    })
+  }
+
   onRefresh = () => {
     console.log('onRefresh()')
     if (this.mounted) {
@@ -397,15 +405,37 @@ export default class UltimateListView extends Component {
     return null
   }
 
+  renderNoResult() {
+    return (
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: 10
+        }}
+        >
+          <Text style={{width: '100%', height: 35, fontSize: 20, textAlign: 'center', fontFamily: 'FuturaStd-Medium'}}>
+            No Results Found
+          </Text>
+        </View>
+    );
+}
+
   renderFooter = () => {
+    console.log("renderFooter");
     if (this.state.paginationStatus === PaginationStatus.firstLoad) {
       return this.paginationFetchingView()
-    } else if (this.state.paginationStatus === PaginationStatus.waiting && this.props.autoPagination === false) {
+    } 
+    else if (this.state.paginationStatus === PaginationStatus.waiting && this.props.autoPagination === false) {
       return this.paginationWaitingView(this.onPaginate)
-    } else if (this.state.paginationStatus === PaginationStatus.waiting && this.props.autoPagination === true) {
+    }
+    else if (this.state.paginationStatus === PaginationStatus.waiting && this.props.autoPagination === true) {
       return this.paginationWaitingView()
-    } else if (this.getRows().length !== 0 && this.state.paginationStatus === PaginationStatus.allLoaded) {
+    }
+    else if (this.getRows().length !== 0 && this.state.paginationStatus === PaginationStatus.allLoaded) {
       return this.paginationAllLoadedView()
+    }
+    else if (this.getRows().length === 0 && this.state.paginationStatus === PaginationStatus.allLoaded) {
+      return this.renderNoResult()
     }
 
     return null

@@ -39,6 +39,7 @@ public class StompModule extends ReactContextBaseJavaModule {
     
     private ReactApplicationContext _reactContext;
     private WebSocketStompClient _client = null;
+    StompHeaders _stompHeaders = new StompHeaders();
     StompSession _session = null;
     StompSession.Subscription _lastSubscription = null;
 
@@ -70,8 +71,8 @@ public class StompModule extends ReactContextBaseJavaModule {
 
         @Override
         public void handleTransportError(StompSession session, Throwable exception) {
-            Log.e(TAG, "handleTransportError~~~~");
-            disconnect();
+            Log.e(TAG, "handleTransportError~~~~");            
+            disconnect();            
             if (exception instanceof ConnectionLostException) {
                 // if connection lost, call this
                 StompModule.this.onError(2, "Connection Lost!");
@@ -130,17 +131,25 @@ public class StompModule extends ReactContextBaseJavaModule {
         _client = this.client();
         if (!_client.isRunning() || _session == null || !_session.isConnected()) {
             Log.e(TAG, "connect~~~~  1");
-            StompHeaders stompHeaders = new StompHeaders();
-            _client.connect(_url, new WebSocketHttpHeaders(), stompHeaders, _sessionHandler);
+            try {
+                _client.connect(_url, new WebSocketHttpHeaders(), _stompHeaders, _sessionHandler);
+            } catch (IllegalStateException ex) {
+                StompModule.this.onError(4, "Connection Closed!");
+            }
         }
         Log.e(TAG, "connect~~~~  2");
     }
 
     private void disconnect() {
-        unSubscription();
-        if (_session != null) {
-            _session.disconnect();
+        try {
+            unSubscription();
+            if (_session != null) {
+                _session.disconnect();
+                _session = null;
+            }
+        } catch (IllegalStateException ex) {
             _session = null;
+            _lastSubscription = null;
         }
     }
 
@@ -154,11 +163,11 @@ public class StompModule extends ReactContextBaseJavaModule {
     private void subscription() {
         Log.e(TAG, "subscription");
         if (_session != null && _session.isConnected()) {
-        Log.e(TAG, "subscription1");
+            Log.e(TAG, "subscription1");
             this.unSubscription();
 
-            _session.send("search",_message);
             _lastSubscription = _session.subscribe(_destination, _sessionHandler);
+            _session.send("search", _message);
         }
         else {
         Log.e(TAG, "subscription2");
