@@ -112,10 +112,10 @@ class Welcome extends Component {
                     console.log("Success");
                     res.body.then(data => {
                         console.log(data);
-                        // AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
+                        AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
                         // // TODO: Get first name + last name from response included with Authorization token (Backend)
                         // AsyncStorage.setItem(`${domainPrefix}.auth.username`, fbInfo.email);
-                        // this.props.navigation.navigate('MainScreen');
+                        this.props.navigation.navigate('MainScreen');
                     });
                 } else {
                     res.errors.then(data => {
@@ -180,6 +180,7 @@ class Welcome extends Component {
                 userWantsPromo: true, 
                 password:this.fbInfo.id+"!a123",
                 authId:"fid" + this.fbInfo.id,
+                authProvider: "facebook",
             }
         ); 
         }

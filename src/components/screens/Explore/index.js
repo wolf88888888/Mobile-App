@@ -101,11 +101,18 @@ class Explore extends Component {
         });
         
 
-        console.log("componentWillMount", token_value, email_value);
+        // console.log("componentWillMount", token_value, email_value);
         // Below line gives null cannot be casted to string error on ios please look into it
         requester.getUserInfo().then(res => {
             res.body.then(data => {
                 console.log("componentWillMount", data);
+                if (email_value == undefined || email_value == null || email_value == "") {
+                    AsyncStorage.setItem(`${domainPrefix}.auth.username`, data.email);
+                    this.setState({
+                        email: email_value,
+                    });
+                }
+
                 userInstance.setUserData(data);
             }).catch(err => {
                 console.log("componentWillMount", err);

@@ -200,7 +200,7 @@ class Property extends Component {
         
                   startFetch(hotels, hotels.length)
                 });
-              });
+            });
         } catch (err) {
           abortFetch() // manually stop the refresh or pagination if it encounters network error
         //   console.log(err)
