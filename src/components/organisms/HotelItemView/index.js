@@ -50,7 +50,7 @@ class HotelItemView extends Component {
     }
 
     ratingTitle(count){
-        if (count < 1){
+        if (count <= 1){
             return 'Poor'
         }
         else if (count > 1 && count <= 2){
@@ -71,6 +71,12 @@ class HotelItemView extends Component {
         const {
             item, currencySign, locRate
         } = this.props;
+        let urlThumbnail = Array.isArray(item.hotelPhoto) ? imgHost + item.hotelPhoto.url : imgHost + item.hotelPhoto;
+        let stars = item.star;
+        let isLoadingPricing = true;
+        if (item.price != undefined && item.price != null) {
+            isLoadingPricing = false;
+        }
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
                 <CardView 
@@ -80,7 +86,7 @@ class HotelItemView extends Component {
                     cornerRadius = {0}>
                     <View style={styles.popularHotelsImage}>
                         <Image
-                            source={item.thumbnail !== null && { uri: imgHost + item.thumbnail.url }}
+                            source={{ uri: urlThumbnail }}
                             style={{flex:1}}
                         />
                     </View>
@@ -94,10 +100,10 @@ class HotelItemView extends Component {
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
 
                         <View style={styles.aboutPlaceView}>
-                            <Text style={styles.placeReviewText}>{this.ratingTitle(item.stars)}</Text>
-                            <Text style={styles.placeReviewNumber}> {item.stars}/5 </Text>
+                            <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text>
+                            <Text style={styles.placeReviewNumber}> {stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
-                                {this.checkStars(item.stars)}
+                                {this.checkStars(stars)}
                             </View>
                             {/* <Text style={styles.totalReviews}> 73 Reviews </Text> */}
                         </View>

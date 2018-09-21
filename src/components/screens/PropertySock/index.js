@@ -34,9 +34,8 @@ const clientRef = undefined;
 let countIos;
 
 class Property extends Component {
-    hotels = [];
-    isAllElement = false;
-    hotelsDisplay = [];
+    hotelsInfoById = [];
+    hotelsInfo = [];
 
     constructor(props) {
         super(props);
@@ -50,6 +49,8 @@ class Property extends Component {
             checkOutDateFormated : '',
             roomsDummyData : '',
             locRate : 1.0,
+
+            allElements: false,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         console.log("Property Native", params);
@@ -88,17 +89,20 @@ class Property extends Component {
     }
 
     async getHotels() {
-        // requester.getStaticHotels(this.state.regionId).then(res => {
-        //     res.body.then(data => {
-        //       const { content } = data;
-        //       console.log("getStaticHotels", content);
-        //     //   content.forEach(l => {
-        //     //     if (this.hotelInfoById[l.id]) {
-        //     //       l.price = this.hotelInfoById[l.id];
-        //     //     }
-        //     //   });
-        //     });
-        //   });
+        requester.getStaticHotels(this.state.regionId).then(res => {
+            res.body.then(data => {
+              const { content } = data;
+              content.forEach(l => {
+                if (this.hotelsInfoById[l.id]) {
+                  l.price = this.hotelsInfoById[l.id];
+                }
+              });
+
+              console.log("getStaticHotels", content);
+              const hotels = content;
+              this.listView.onFirstLoad(hotels);
+            });
+          });
 
         this.uuid = await UUIDGenerator.getRandomUUID();
 
@@ -141,26 +145,27 @@ class Property extends Component {
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
                 if (jsonHotel.allElements) {
-                    this.isAllElement = true;
-                    if (this.hotels.length < 10) {
-                        this.listView.onDone();
-                    }
+                    this.setState({ allElements: true });
+                    androidStomp.close();
                 }
             } else {
-                this.hotels.push(jsonHotel);
-                if (this.hotels.length <= 10) {
-                    // this.hotelsDisplay.push(jsonHotel);
-                    this.listView.onFirstLoad(jsonHotel);
-                    // if (this.state.isLoading) {
-                    //     this.setState({
-                    //         isLoading: false,
-                    //     });
-                    //     // this.state.isLoading = false;
-                    // }
-                    // this.setState(prevState => ({
-                    //     listings: [...prevState.listings, jsonHotel]
-                    // }));
-                }
+                this.hotelsInfoById[jsonHotel.id] = jsonHotel;
+                this.hotelsInfos.push(jsonHotel);
+
+                // this.hotels.push();
+                // if (this.hotels.length <= 10) {
+                //     // this.hotelsDisplay.push(jsonHotel);
+                //     this.listView.onFirstLoad(jsonHotel);
+                //     // if (this.state.isLoading) {
+                //     //     this.setState({
+                //     //         isLoading: false,
+                //     //     });
+                //     //     // this.state.isLoading = false;
+                //     // }
+                //     // this.setState(prevState => ({
+                //     //     listings: [...prevState.listings, jsonHotel]
+                //     // }));
+                // }
                 
                 // this.setState(prevState => ({
                 //     listingsMap: [...prevState.listingsMap, object]
@@ -183,7 +188,19 @@ class Property extends Component {
     onFetch = async (page = 1, startFetch, abortFetch) => {
         console.log("onFetch", page);
         try {
-        //   startFetch(rowData, pageLimit)
+            requester.getStaticHotels(this.state.regionId, page - 1).then(res => {
+                res.body.then(data => {
+                  const listings = data.content;
+                  listings.forEach(l => {
+                    if (this.hotelInfoById[l.id]) {
+                      l.price = this.hotelInfoById[l.id].price;
+                    }
+                  });
+                  const hotels = listings;
+        
+                  startFetch(hotels, hotels.length)
+                });
+              });
         } catch (err) {
           abortFetch() // manually stop the refresh or pagination if it encounters network error
         //   console.log(err)
