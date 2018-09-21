@@ -72,9 +72,10 @@ class HotelItemView extends Component {
         const {
             item, currencySign, locRate
         } = this.props;
-        console.log("hotel item", item);
-        let urlThumbnail = _.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url;
-        console.log("hotel urlThumbnail", urlThumbnail);
+        let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
+                 (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
+                 : 
+                 "";
         let stars = item.star;
         let isLoadingPricing = true;
 

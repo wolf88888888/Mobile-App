@@ -36,7 +36,7 @@
     "ethers": "git://github.com/yuri930/ethers.js.git",
     "immutable": "^3.8.2",
     "javascript-time-ago": "^1.0.30",
-    "locktrip-service-layer": "^1.0.4",
+    "locktrip-service-layer": "^1.0.32",
     "lodash": "^4.17.10",
     "missing": "0.0.1",
     "moment": "^2.22.1",

@@ -21,6 +21,7 @@ const PaginationStatus = {
 }
 
 export default class UltimateListView extends Component {
+
   static defaultProps = {
     initialNumToRender: 10,
     horizontal: false,
@@ -81,6 +82,8 @@ export default class UltimateListView extends Component {
 
     // GridView
     numColumns: 1,
+
+    isDoneSocket: false,
   }
 
   static propTypes = {
@@ -143,7 +146,8 @@ export default class UltimateListView extends Component {
     paginationBtnText: PropTypes.string,
 
     // GridView
-    numColumns: PropTypes.number
+    numColumns: PropTypes.number,
+    isDoneSocket: PropTypes.bool
   }
 
   constructor(props) {
@@ -171,15 +175,26 @@ export default class UltimateListView extends Component {
 
   getIndex = (id) => {
     const index = this.state && this.state.dataSource ? this.state.dataSource.findIndex(h => h.id === id) : null;
-    console.log("getIndex", id, index, this.state.dataSource);
     return index;
   }
 
   upgradePrice = (index, price) => {
-    console.log("upgradePrice", index, price);
     const hotels = this.state.dataSource.slice(0);
     hotels[index].price = price;//this.hotelInfoById[id].price;
     this.setState({ dataSource: hotels });
+  }
+
+  onDoneSocket = () => {
+    if (this.rows == undefined || this.rows == null) {
+      return;
+    }
+    
+    for (var i = 0; i < this.rows.length; i++){
+      if (this.rows[i].price == undefined || this.rows[i].price == null || !isNaN(this.rows[i].price) ) {
+        this.rows.splice(i, 1);
+      }
+    }
+    this.setState({ dataSource: this.rows });
   }
 
   onFirstLoad = (rows) => {
@@ -189,6 +204,14 @@ export default class UltimateListView extends Component {
     //   dataSource: [...prevState.dataSource, row],
     //   paginationStatus: PaginationStatus.waiting
     // }));
+    if (this.props.isDoneSocket)  {
+      for (var i = 0; i < rows.length; i++){
+        if (rows[i].price == undefined || rows[i].price == null || !isNaN(rows[i].price) ) {
+          rows.splice(i, 1);
+        }
+      }
+    }
+    this.setRows(rows);
     if (rows.length > 0) {
       this.setState( 
         { 
@@ -275,6 +298,14 @@ export default class UltimateListView extends Component {
   postRefresh = (rows = [], pageLimit) => {
     console.log('postRefresh()');
     if (this.mounted) {
+      if (this.props.isDoneSocket)  {
+        for (var i = 0; i < rows.length; i++){
+          if (rows[i].price == undefined || rows[i].price == null || !isNaN(rows[i].price) ) {
+            rows.splice(i, 1);
+          }
+        }
+      }
+
       let paginationStatus = PaginationStatus.waiting
       if (rows.length < pageLimit) {
         paginationStatus = PaginationStatus.allLoaded
@@ -296,7 +327,19 @@ export default class UltimateListView extends Component {
   postPaginate = (rows = [], pageLimit) => {
     console.log("postPaginate", rows)
     console.log("postPaginate before", this.getRows())
+    console.log("postPaginate this.isDoneSocket", this.props.isDoneSocket)
     this.setPage(this.getPage() + 1)
+
+    if (this.props.isDoneSocket)  {
+      for (var i = 0; i < rows.length; i++){
+        console.log("postPaginate rows.splice", rows[i].price);
+        if (rows[i].price == undefined || rows[i].price == null || !isNaN(rows[i].price) ) {
+          console.log("postPaginate rows.splice");
+          rows.splice(i, 1);
+        }
+      }
+      console.log("postPaginate rows", rows);
+    }
     let mergedRows
     let paginationStatus
     if (rows.length === 0) {
@@ -444,7 +487,6 @@ export default class UltimateListView extends Component {
 }
 
   renderFooter = () => {
-    console.log("renderFooter");
     if (this.state.paginationStatus === PaginationStatus.firstLoad) {
       return this.paginationFetchingView()
     } 
@@ -507,7 +549,6 @@ export default class UltimateListView extends Component {
   }
 
   render() {
-    console.log("ultimate listview", this.state.dataSource)
     const { numColumns } = this.props
     return (
       <FlatList

@@ -155,15 +155,20 @@ class Property extends Component {
             if (jsonHotel.hasOwnProperty('allElements')) {
                 if (jsonHotel.allElements) {
                     this.setState({ allElements: true });
+                    if (this.listView) {
+                        this.listView.onDoneSocket();
+                    }
                     androidStomp.close();
                 }
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
                 this.hotelsInfo.push(jsonHotel);
                 
-                const index = this.listView.getIndex(jsonHotel.id);
-                if (index !== -1) {
-                    this.listView.upgradePrice(index, this.hotelsInfoById[jsonHotel.id].price)
+                if (this.listView != null) {
+                    const index = this.listView.getIndex(jsonHotel.id);
+                    if (index !== -1) {
+                        this.listView.upgradePrice(index, this.hotelsInfoById[jsonHotel.id].price)
+                    }
                 }
 
                 // this.hotels.push();
@@ -207,16 +212,18 @@ class Property extends Component {
                 res.body.then(data => {
                   const listings = data.content;
                   listings.forEach(l => {
-                    if (this.hotelInfoById[l.id]) {
-                      l.price = this.hotelInfoById[l.id].price;
+                    if (this.hotelsInfoById[l.id]) {
+                      l.price = this.hotelsInfoById[l.id].price;
                     }
                   });
                   const hotels = listings;
+                  console.log("onFetch--=- res  ", hotels);
         
                   startFetch(hotels, hotels.length)
                 });
             });
         } catch (err) {
+            console.log("onFetch--=- error  ", err);
           abortFetch() // manually stop the refresh or pagination if it encounters network error
         //   console.log(err)
         }
@@ -270,6 +277,7 @@ class Property extends Component {
                 <View style={styles.containerHotels}>
                     <UltimateListView
                         ref = {ref => this.listView = ref}
+                        isDoneSocket = {this.state.allElements}
                         key = {'list'} // this is important to distinguish different FlatList, default is numColumns
                         onFetch = {this.onFetch}
                         keyExtractor = {(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
