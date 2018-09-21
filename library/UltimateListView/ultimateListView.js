@@ -169,6 +169,19 @@ export default class UltimateListView extends Component {
     this.mounted = false
   }
 
+  getIndex = (id) => {
+    const index = this.state && this.state.dataSource ? this.state.dataSource.findIndex(h => h.id === id) : null;
+    console.log("getIndex", id, index, this.state.dataSource);
+    return index;
+  }
+
+  upgradePrice = (index, price) => {
+    console.log("upgradePrice", index, price);
+    const hotels = this.state.dataSource.slice(0);
+    hotels[index].price = price;//this.hotelInfoById[id].price;
+    this.setState({ dataSource: hotels });
+  }
+
   onFirstLoad = (rows) => {
     console.log("onFirstLoad", rows);
     

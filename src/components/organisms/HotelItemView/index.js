@@ -9,6 +9,7 @@ import Image from 'react-native-remote-svg';
 import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
+import _ from 'lodash';
 import styles from './styles';
 
 const RNPropTypes = PropTypes || React.PropTypes;
@@ -16,7 +17,7 @@ const RNPropTypes = PropTypes || React.PropTypes;
 class HotelItemView extends Component {
     static propTypes = {
         item: RNPropTypes.array,
-        currencySign: RNPropTypes.object,
+        currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
         gotoHotelDetailsPage: PropTypes.func.isRequired
     };
@@ -71,12 +72,16 @@ class HotelItemView extends Component {
         const {
             item, currencySign, locRate
         } = this.props;
-        let urlThumbnail = Array.isArray(item.hotelPhoto) ? imgHost + item.hotelPhoto.url : imgHost + item.hotelPhoto;
+        console.log("hotel item", item);
+        let urlThumbnail = _.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url;
+        console.log("hotel urlThumbnail", urlThumbnail);
         let stars = item.star;
         let isLoadingPricing = true;
+
         if (item.price != undefined && item.price != null) {
             isLoadingPricing = false;
         }
+        
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
                 <CardView 
@@ -108,14 +113,18 @@ class HotelItemView extends Component {
                             {/* <Text style={styles.totalReviews}> 73 Reviews </Text> */}
                         </View>
 
-                        <View style={styles.costView}>
-                            {isLoadingPricing?
-                                (<Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{item.price}</Text>):
-                                ()}
-                            
-                            <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
-                            <Text style={styles.perNight}>per night</Text>
-                        </View>
+                        {
+                        !isLoadingPricing?
+                            <View style={styles.costView}>
+                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(item.price).toFixed(2)}</Text>
+                                <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
+                                <Text style={styles.perNight}>per night</Text>
+                            </View>
+                        :
+                            <View style={styles.costView}>
+                                <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
+                            </View>
+                        }
                     </View>
                 </CardView>
             </TouchableOpacity>

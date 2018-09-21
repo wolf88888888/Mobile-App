@@ -23,6 +23,7 @@ import { UltimateListView } from '../../../../library/UltimateListView';
 import LoadingSpinner from '../../../../library/loadingSpinner'
 import { DotIndicator } from 'react-native-indicators';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import _ from 'lodash';
 
 import styles from './styles';
 
@@ -69,8 +70,16 @@ class Property extends Component {
             this.state.checkInDateFormated = params.checkInDateFormated;
             this.state.checkOutDateFormated = params.checkOutDateFormated;
             this.state.roomsDummyData = params.roomsDummyData;
-            this.state.locRate = params.locRate;
+
+            if(_.isString(params.locRate)) {
+                this.state.locRate = parseFloat(params.locRate);
+            }
+            else {
+                this.state.locRate = params.locRate;
+            }
+
             this.state.filter = params.filter;
+            console.log("Property this.state", this.state);
         }
 
         this.mainUrl = '?region='+this.state.regionId
@@ -94,7 +103,7 @@ class Property extends Component {
               const { content } = data;
               content.forEach(l => {
                 if (this.hotelsInfoById[l.id]) {
-                  l.price = this.hotelsInfoById[l.id];
+                  l.price = this.hotelsInfoById[l.id].price;
                 }
               });
 
@@ -150,7 +159,12 @@ class Property extends Component {
                 }
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
-                this.hotelsInfos.push(jsonHotel);
+                this.hotelsInfo.push(jsonHotel);
+                
+                const index = this.listView.getIndex(jsonHotel.id);
+                if (index !== -1) {
+                    this.listView.upgradePrice(index, this.hotelsInfoById[jsonHotel.id].price)
+                }
 
                 // this.hotels.push();
                 // if (this.hotels.length <= 10) {
@@ -173,6 +187,7 @@ class Property extends Component {
 
             }
         } catch (e) {
+            console.log("handleAndroidSingleHotel2222---", e);
             // Error
         }
     }
@@ -220,7 +235,7 @@ class Property extends Component {
 
     renderPaginationFetchingView = () => (
         <View style={{width, height:height - 90, justifyContent: 'center', alignItems: 'center'}}>
-            <Image style={{width:50, height:50}} source={require('../../../../library/UltimateListView/loading.gif')}/>
+            <Image style={{width:50, height:50}} source={require('../../../assets/loader.gif')}/>
         </View>
     )
     

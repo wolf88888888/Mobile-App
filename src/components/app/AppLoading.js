@@ -36,6 +36,7 @@ class AppLoading extends Component {
 
     // Fetch the token from storage then navigate to our appropriate place
     bootstrapAsync = async () => {
+        console.log("AppLoading - bootstrapAsync")
         let currency = await AsyncStorage.getItem('currency');
         let locRate = await AsyncStorage.getItem('locRate');
         locRate = JSON.parse(locRate)
