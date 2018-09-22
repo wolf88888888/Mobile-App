@@ -22,6 +22,8 @@ import com.facebook.appevents.AppEventsLogger;
 
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 
+import com.dylanvann.fastimage.FastImageViewPackage;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
           new ImagePickerPackage(),
           new FBSDKPackage(mCallbackManager),
           new RNFastCryptoPackage(),
-          new StompPackage()
+          new StompPackage(),
+          new FastImageViewPackage()
       );
     }
 

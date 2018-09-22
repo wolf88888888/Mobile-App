@@ -12,5 +12,23 @@ const styles = StyleSheet.create({
         marginTop: 10,
         flex: 1,
     },
+    
+    switchButton: {
+        position: 'absolute',
+        bottom: 15,
+        right: 20,
+        width: 56,
+        height: 56,
+        borderRadius: 50,
+        backgroundColor: '#D87A61',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    icon: {
+        color: '#fff',
+        fontSize: 24
+    },
 });
 export default styles;

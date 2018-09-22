@@ -1,28 +1,28 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
+    ActivityIndicator,
+    Dimensions,
+    FlatList,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native'
 import RefreshableScrollView from './refreshableScrollView'
 
 
 const { width, height } = Dimensions.get('window')
 const PaginationStatus = {
-  firstLoad: 0,
-  waiting: 1,
-  allLoaded: 2
+    firstLoad: 0,
+    waiting: 1,
+    allLoaded: 2
 }
 
 export default class UltimateListView extends Component {
 
-  static defaultProps = {
+static defaultProps = {
     initialNumToRender: 10,
     horizontal: false,
 
@@ -84,9 +84,9 @@ export default class UltimateListView extends Component {
     numColumns: 1,
 
     isDoneSocket: false,
-  }
+}
 
-  static propTypes = {
+static propTypes = {
     initialNumToRender: PropTypes.number,
     horizontal: PropTypes.bool,
 
@@ -148,26 +148,26 @@ export default class UltimateListView extends Component {
     // GridView
     numColumns: PropTypes.number,
     isDoneSocket: PropTypes.bool
-  }
+}
 
-  constructor(props) {
-    super(props)
-    this.setPage(1)
-    this.setRows([])
+    constructor(props) {
+        super(props)
+        this.setPage(1)
+        this.setRows([])
 
-    this.state = {
-      dataSource: [],
-      isRefreshing: false,
-      paginationStatus: PaginationStatus.firstLoad
+        this.state = {
+        dataSource: [],
+        isRefreshing: false,
+        paginationStatus: PaginationStatus.firstLoad
+        }
     }
-  }
 
-  componentDidMount() {
-    this.mounted = true
-    if (this.props.firstLoader) {
-      this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch)
+    componentDidMount() {
+        this.mounted = true
+        if (this.props.firstLoader) {
+           this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch)
+        }
     }
-  }
 
   componentWillUnmount() {
     this.mounted = false
@@ -191,7 +191,7 @@ export default class UltimateListView extends Component {
     
     let refineHotels = [];
     for (var i = 0; i < this.rows.length; i++){
-      if (this.rows[i].price != undefined && this.rows[i].price != null || isNaN(this.rows[i].price) ) {
+      if (this.rows[i].price != undefined && this.rows[i].price != null && !isNaN(this.rows[i].price) ) {
         refineHotels.push(this.rows[i]);
       }
     }
@@ -209,7 +209,7 @@ export default class UltimateListView extends Component {
     if (this.props.isDoneSocket)  {
       let refineHotels = [];
       for (var i = 0; i < rows.length; i++){
-        if (rows[i].price != undefined && rows[i].price != null && isNaN(rows[i].price) ) {
+        if (rows[i].price != undefined && rows[i].price != null && !isNaN(rows[i].price) ) {
           refineHotels.push(this.rows[i]);
         }
       }
@@ -307,7 +307,7 @@ export default class UltimateListView extends Component {
       let refineHotels = [];
       if (this.props.isDoneSocket)  {
         for (var i = 0; i < rows.length; i++){
-          if (this.rows[i].price != undefined && this.rows[i].price != null || isNaN(this.rows[i].price) ) {
+          if (this.rows[i].price != undefined && this.rows[i].price != null && !isNaN(this.rows[i].price) ) {
             refineHotels.push(this.rows[i]);
           }
         }
@@ -342,16 +342,16 @@ export default class UltimateListView extends Component {
 
     let refineHotels = [];
     if (this.props.isDoneSocket)  {
-      for (var i = 0; i < this.rows.length; i++){
-        if (this.rows[i].price != undefined && this.rows[i].price != null || isNaN(this.rows[i].price) ) {
-          refineHotels.push(this.rows[i]);
+      for (var i = 0; i < rows.length; i++){
+        if (rows[i].price != undefined && rows[i].price != null && !isNaN(rows[i].price) ) {
+          refineHotels.push(rows[i]);
         }
       }
     }
     else {
       refineHotels = rows;
     }
-    console.log("postPaginate rows", rows);
+    console.log("postPaginate rows", refineHotels);
     let mergedRows
     let paginationStatus
     if (rows.length === 0) {

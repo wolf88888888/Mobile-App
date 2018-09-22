@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
 import _ from 'lodash';
 import styles from './styles';
+import FastImage from 'react-native-fast-image'
 
 const RNPropTypes = PropTypes || React.PropTypes;
 
@@ -91,10 +92,17 @@ class HotelItemView extends Component {
                     cardMaxElevation = {0.5}
                     cornerRadius = {0}>
                     <View style={styles.popularHotelsImage}>
-                        <Image
-                            source={{ uri: urlThumbnail }}
-                            style={{flex:1}}
-                        />
+                        {
+                            urlThumbnail != null && urlThumbnail != "" &&
+                            <FastImage
+                                style={{flex:1}}
+                                source={{
+                                uri: urlThumbnail,
+                                priority: FastImage.priority.high,
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                        }
                     </View>
 
                     <TouchableOpacity style={styles.favoritesButton}>

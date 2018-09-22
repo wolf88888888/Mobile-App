@@ -52,6 +52,7 @@ class Property extends Component {
             locRate : 1.0,
 
             allElements: false,
+            isMAP : -1,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         console.log("Property Native", params);
@@ -98,6 +99,8 @@ class Property extends Component {
     }
 
     async getHotels() {
+        
+        this.setState({isMAP: -1});
         requester.getStaticHotels(this.state.regionId).then(res => {
             res.body.then(data => {
               const { content } = data;
@@ -150,6 +153,9 @@ class Property extends Component {
     }
 
     handleAndroidSingleHotel(message) {
+        if (this.state.isMAP == -1) {
+            this.setState({isMAP: 0});
+        }
         try {
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
@@ -199,6 +205,20 @@ class Property extends Component {
 
     onCancel = () => {
         this.props.navigation.goBack();
+    }
+
+    switchMode = () => {
+        if (this.state.isMAP == 0) {
+            this.setState({
+                isMAP: 1,
+            });
+        }
+        else {
+            this.setState({
+                isMAP: 0,
+            });
+        }
+        
     }
 
     gotoHotelDetailsPage = (item) => {
@@ -289,6 +309,13 @@ class Property extends Component {
                         paginationWaitingView = {this.renderPaginationWaitingView}
                         paginationAllLoadedView = {this.renderPaginationAllLoadedView}
                     />
+
+                    {
+                        this.state.isMAP != -1 &&
+                            <TouchableOpacity onPress={this.switchMode} style={styles.switchButton}>
+                                <FontAwesome style={styles.icon}>{this.state.isMAP == 0? Icons.mapMarker : Icons.listUl}</FontAwesome>
+                            </TouchableOpacity>
+                    }
                 </View>
                 <ProgressDialog
                     visible={this.state.isLoadingHotelDetails}
