@@ -189,11 +189,13 @@ export default class UltimateListView extends Component {
       return;
     }
     
+    let refineHotels = [];
     for (var i = 0; i < this.rows.length; i++){
-      if (this.rows[i].price == undefined || this.rows[i].price == null || !isNaN(this.rows[i].price) ) {
-        this.rows.splice(i, 1);
+      if (this.rows[i].price != undefined && this.rows[i].price != null || isNaN(this.rows[i].price) ) {
+        refineHotels.push(this.rows[i]);
       }
     }
+    this.setRows(refineHotels);
     this.setState({ dataSource: this.rows });
   }
 
@@ -205,18 +207,22 @@ export default class UltimateListView extends Component {
     //   paginationStatus: PaginationStatus.waiting
     // }));
     if (this.props.isDoneSocket)  {
+      let refineHotels = [];
       for (var i = 0; i < rows.length; i++){
-        if (rows[i].price == undefined || rows[i].price == null || !isNaN(rows[i].price) ) {
-          rows.splice(i, 1);
+        if (rows[i].price != undefined && rows[i].price != null && isNaN(rows[i].price) ) {
+          refineHotels.push(this.rows[i]);
         }
       }
+      this.setRows(refineHotels);
     }
-    this.setRows(rows);
+    else {
+      this.setRows(rows);
+    }
     if (rows.length > 0) {
       this.setState( 
         { 
           paginationStatus: PaginationStatus.waiting, 
-          dataSource: rows,
+          dataSource: this.getRows(),
         } 
       );
     }
@@ -224,7 +230,7 @@ export default class UltimateListView extends Component {
       this.setState( 
         { 
           paginationStatus: PaginationStatus.allLoaded, 
-          dataSource: rows,
+          dataSource: this.getRows(),
         } 
       );
     }
@@ -298,19 +304,23 @@ export default class UltimateListView extends Component {
   postRefresh = (rows = [], pageLimit) => {
     console.log('postRefresh()');
     if (this.mounted) {
+      let refineHotels = [];
       if (this.props.isDoneSocket)  {
         for (var i = 0; i < rows.length; i++){
-          if (rows[i].price == undefined || rows[i].price == null || !isNaN(rows[i].price) ) {
-            rows.splice(i, 1);
+          if (this.rows[i].price != undefined && this.rows[i].price != null || isNaN(this.rows[i].price) ) {
+            refineHotels.push(this.rows[i]);
           }
         }
+      }
+      else {
+        refineHotels = rows;
       }
 
       let paginationStatus = PaginationStatus.waiting
       if (rows.length < pageLimit) {
         paginationStatus = PaginationStatus.allLoaded
       }
-      this.updateRows(rows, paginationStatus)
+      this.updateRows(refineHotels, paginationStatus)
     }
   }
 
@@ -330,22 +340,24 @@ export default class UltimateListView extends Component {
     console.log("postPaginate this.isDoneSocket", this.props.isDoneSocket)
     this.setPage(this.getPage() + 1)
 
+    let refineHotels = [];
     if (this.props.isDoneSocket)  {
-      for (var i = 0; i < rows.length; i++){
-        console.log("postPaginate rows.splice", rows[i].price);
-        if (rows[i].price == undefined || rows[i].price == null || !isNaN(rows[i].price) ) {
-          console.log("postPaginate rows.splice");
-          rows.splice(i, 1);
+      for (var i = 0; i < this.rows.length; i++){
+        if (this.rows[i].price != undefined && this.rows[i].price != null || isNaN(this.rows[i].price) ) {
+          refineHotels.push(this.rows[i]);
         }
       }
-      console.log("postPaginate rows", rows);
     }
+    else {
+      refineHotels = rows;
+    }
+    console.log("postPaginate rows", rows);
     let mergedRows
     let paginationStatus
     if (rows.length === 0) {
       paginationStatus = PaginationStatus.allLoaded
     } else {
-      mergedRows = this.getRows().concat(rows)
+      mergedRows = this.getRows().concat(refineHotels)
       paginationStatus = PaginationStatus.waiting
     }
     console.log("postPaginate after", this.getRows())
