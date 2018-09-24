@@ -150,24 +150,25 @@ static propTypes = {
     isDoneSocket: PropTypes.bool
 }
 
-    constructor(props) {
-        super(props)
-        this.setPage(1)
-        this.setRows([])
+  constructor(props) {
+    super(props)
+    console.log("constructor ----------");
+    this.setPage(1)
+    this.setRows([])
 
-        this.state = {
-        dataSource: [],
-        isRefreshing: false,
-        paginationStatus: PaginationStatus.firstLoad
-        }
+    this.state = {
+      dataSource: [],
+      isRefreshing: false,
+      paginationStatus: PaginationStatus.firstLoad
     }
+  }
 
-    componentDidMount() {
-        this.mounted = true
-        if (this.props.firstLoader) {
-           this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch)
-        }
+  componentDidMount() {
+    this.mounted = true
+    if (this.props.firstLoader) {
+        this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch)
     }
+  }
 
   componentWillUnmount() {
     this.mounted = false

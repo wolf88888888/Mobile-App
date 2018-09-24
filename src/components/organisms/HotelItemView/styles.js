@@ -6,10 +6,11 @@ const styles = StyleSheet.create({
     
     card: {
         flexDirection: 'row',
-        marginLeft: 12,
-        marginRight: 12,
-        marginTop: 8,
-        paddingRight: 20,
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 7.5,
+        marginBottom: 7.5,
+        paddingRight: 10,
         height: imageHeight,
         backgroundColor: 'white',    
     },
@@ -19,8 +20,10 @@ const styles = StyleSheet.create({
     },
     favoritesButton: {
         position: 'absolute',
-        top: 10,
-        right: 10
+        height: 20, 
+        width: 20,
+        top: 5,
+        right: 5
     },
     favoriteIcon: {
         height: 20,

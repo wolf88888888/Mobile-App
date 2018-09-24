@@ -156,7 +156,7 @@ class HotelDetails extends Component {
                     <View style={styles.body}>
                         <View style={{ width: logoWidth, height: logoHeight }}>    
                             <ImageCarousel
-                                delay={1500}
+                                delay={5000}
                                 style={styles.logoImage}
                                 width={logoWidth}
                                 height={logoHeight}

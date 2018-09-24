@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
        flex:1,
         backgroundColor: '#f0f1f3',
         paddingTop: 40,
-        paddingLeft: 17,
-        paddingRight: 17
+        paddingLeft: 15,
+        paddingRight: 15
     },
     blank:{
         height: 70,
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     pickerWrap:{
         width: '32%',
         paddingTop: 40,
-        paddingRight: 17,
+        paddingRight: 15,
         alignSelf: 'flex-start',
         justifyContent: 'flex-end',  
         alignItems: 'flex-start'
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
         //justifyContent:'flex-start',
         //alignItems: 'flex-start',
         paddingTop: 10,
-        paddingLeft: 17,
-        paddingRight: 17,
+        paddingLeft: 15,
+        paddingRight: 15,
         //alignContent: 'flex-start',
         alignItems: 'center',
         justifyContent: 'center',
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     catTitle: {
         justifyContent:'flex-start',
         fontSize: 24,
-        paddingLeft: 17,
+        paddingLeft: 15,
         fontFamily: 'FuturaStd-Light',
         paddingTop: 10
     },
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 10,
         marginBottom: 10,
-        marginLeft: 17,
-        marginRight: 17
+        marginLeft: 15,
+        marginRight: 15
     },
     searchButtonText: {
         color: '#fff',
@@ -192,8 +192,8 @@ const styles = StyleSheet.create({
     },
     sectionView: {
         width: '100%',
-        paddingLeft: 17,
-        paddingRight: 17
+        paddingLeft: 15,
+        paddingRight: 15
     },
     subtitleView: {
         width: '100%',
@@ -531,8 +531,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: 10,
         paddingBottom: 10,
-        paddingLeft: 17,
-        paddingRight: 17,
+        paddingLeft: 15,
+        paddingRight: 15,
     },
     SearchAndPickerwarp:{
         display: 'flex',
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
     pickerWrap:{
         width: '32%',
         paddingTop: 40,
-        paddingRight: 17,
+        paddingRight: 15,
         alignSelf: 'flex-start',
         justifyContent: 'flex-end',  
         alignItems: 'flex-start'
@@ -612,8 +612,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-end',
-        paddingLeft: 17,
-        paddingRight: 17
+        paddingLeft: 15,
+        paddingRight: 15
     },
 });
 export default styles;

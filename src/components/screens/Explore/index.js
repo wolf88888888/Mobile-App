@@ -273,21 +273,23 @@ class Explore extends Component {
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
             this.props.navigation.navigate('PropertySock', {
+                searchHotel: this.state.searchHotel,
                 searchedCity: this.state.search,
-                searchedCityId: 72,
+                home: this.state.value,
                 checkInDate: this.state.checkInDate,
                 checkOutDate: this.state.checkOutDate,
                 guests: this.state.guests,
+                adults: this.state.adults,
                 children: this.state.children,
+                infants: this.state.infants,
+                childrenBool: this.state.childrenBool,
+
                 countryId: this.state.countryId,
                 regionId: this.state.regionId,
                 isHotelSelected: this.state.isHotelSelected,
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
                 roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                currency: this.state.currency,
-                currencySign: this.state.currencySign,
-                locRate: this.state.locRate,
                 email: this.state.email,
                 token: this.state.token,
                 filter: encodeURI(JSON.stringify(this.state.filter)),
@@ -384,8 +386,8 @@ class Explore extends Component {
             return (
                 <ScrollView
                     style={{
-                        marginLeft: 17,
-                        marginRight: 17,
+                        marginLeft: 15,
+                        marginRight: 15,
                         minHeight: 100,
                         zIndex: 99,
                     }}
@@ -565,10 +567,10 @@ class Explore extends Component {
                         <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
-                            adults={guests}
-                            children={0}
-                            guests={0}
-                            infants={0}
+                            adults={this.state.adults}
+                            children={this.state.children}
+                            guests={this.state.guests}
+                            infants={this.state.infants}
                             gotoGuests={this.gotoGuests}
                             gotoSearch={this.gotoSearch}
                             onDatesSelect={this.onDatesSelect}

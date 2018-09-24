@@ -73,6 +73,8 @@ class HotelItemView extends Component {
         const {
             item, currencySign, locRate
         } = this.props;
+        
+
         let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
                  (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
                  : 
@@ -97,17 +99,17 @@ class HotelItemView extends Component {
                             <FastImage
                                 style={{flex:1}}
                                 source={{
-                                uri: urlThumbnail,
-                                priority: FastImage.priority.high,
+                                    uri: urlThumbnail,
+                                    priority: FastImage.priority.high,
                                 }}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
                         }
+                        <TouchableOpacity style={styles.favoritesButton}>
+                            <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon} resizeMode='contain'/>
+                        </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity style={styles.favoritesButton}>
-                        <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon} />
-                    </TouchableOpacity>
 
                     <View style={styles.cardContent}>
 

@@ -10,7 +10,7 @@ export default StyleSheet.create({
     },
     leftIconText: {
         color: '#5a5a5c',
-        fontSize: 20
+        fontSize: 16
     },
     container: {
         display: 'flex',
@@ -22,8 +22,9 @@ export default StyleSheet.create({
         flex: 1,
         marginLeft: -3,
         marginRight: 20,
+        marginTop:7,
         color: '#000',
         fontSize: 17,
-        fontFamily: 'FuturaStd-Light'
+        fontFamily: 'FuturaStd-Light',
     }
 });
