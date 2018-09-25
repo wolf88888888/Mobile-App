@@ -149,7 +149,7 @@ class Property extends Component {
                             name: hotel.name,
                             price: hotel.price,
                             stars: hotel.star,
-                            thumbnail: { url: hotel.hotelPhoto }
+                            thumbnail: { url: hotel.hotelPhoto.url }
                         };
                     });
                     if (loadMore) {
