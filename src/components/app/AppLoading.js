@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NativeModules, AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, NativeModules, AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../redux/action/Currency'
 
@@ -71,7 +71,10 @@ class AppLoading extends Component {
         const isLoggedIn = keys.includes(`${domainPrefix}.auth.locktrip`) &&
                         keys.includes(`${domainPrefix}.auth.username`);
 
-        androidStomp.connect(socketHost);
+        if (Platform.OS === 'ios') {
+        } else if (Platform.OS === 'android') {
+            androidStomp.connect(socketHost);
+        }
         SplashScreen.close({
             animationType: SplashScreen.animationType.scale,
             duration: 0,
