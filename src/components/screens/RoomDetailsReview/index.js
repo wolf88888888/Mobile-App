@@ -47,40 +47,42 @@ export default class RoomDetailsReview extends Component {
             'currency': 'USD'
         };
 
-        console.log(value);
-
         requester.createReservation(value).then(res => {
-            console.log(res);
-            // if (res.success){
-            //     res.body.then(data => {
-            //         const bookingId = data.preparedBookingId;
-            //         const hotelBooking = data.booking.hotelBooking[0];
-            //         const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
-            //         const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
-            //         const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
-            //         .add(data.booking.hotelBooking[0].nights, 'days');
-            //         this.setState({
-            //             // bookingDetail: data,
-            //             roomName: data.booking.hotelBooking[0].room.roomType.text,
-            //             arrivalDate: endDate.format('DD MMM'),
-            //             leavingDate: leavingDate.format('DD MMM'),
-            //             creationDate: startDate.format('DD MMM'),
-            //             cancellationPrice: data.fiatPrice,
-            //             bookingId: bookingId,
-            //             hotelBooking: hotelBooking,
-            //             booking: value,
-            //             data: data
-            //             // cancellationLOCPrice: data.locPrice,
-            //         });
-            //     }).catch((err) => {
-            //         //Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
-            //         console.log(err); //eslint-disable-line
-            //     });
-            // }
-            // else {
-            //     this.refs.toast.show('Something went wrong!', 1500);
-            // }
+            if (res.success){
+                res.body.then(data => {
+                    const bookingId = data.preparedBookingId;
+                    const hotelBooking = data.booking.hotelBooking[0];
+                    const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
+                    const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                    const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
+                    .add(data.booking.hotelBooking[0].nights, 'days');
+                    this.setState({
+                        // bookingDetail: data,
+                        roomName: data.booking.hotelBooking[0].room.roomType.text,
+                        arrivalDate: endDate.format('DD MMM'),
+                        leavingDate: leavingDate.format('DD MMM'),
+                        creationDate: startDate.format('DD MMM'),
+                        cancellationPrice: data.fiatPrice,
+                        bookingId: bookingId,
+                        hotelBooking: hotelBooking,
+                        booking: value,
+                        data: data
+                        // cancellationLOCPrice: data.locPrice,
+                    });
+                }).catch((err) => {
+                    //Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
+                    console.log(err); //eslint-disable-line
+                });
+            }
+            else {
+                res.errors.then(data => {
+                    console.log(data.errors.RoomsXmlResponse.message);
+                    this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000);
+                });
+            }
         }).catch((main_err) => {
+            this.refs.toast.show("Error", 5000);
+            console.log("Error Room");
             console.log(main_err);
         });
     }
