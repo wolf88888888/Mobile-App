@@ -81,7 +81,7 @@ export default class RoomDetailsReview extends Component {
                 });
             }
         }).catch((main_err) => {
-            this.refs.toast.show("Error", 5000);
+            this.refs.toast.show("Error", 1500);
             console.log("Error Room");
             console.log(main_err);
         });
