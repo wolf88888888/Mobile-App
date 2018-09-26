@@ -70,7 +70,6 @@ export default class RoomDetailsReview extends Component {
                         // cancellationLOCPrice: data.locPrice,
                     });
                 }).catch((err) => {
-                    //Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
                     console.log(err); //eslint-disable-line
                 });
             }
@@ -412,7 +411,18 @@ RoomDetailsReview.defaultProps = {
             lastName: ''
         }
     ]
-    // testBookParameter: {
+};
+
+RoomDetailsReview.propTypes = {
+    hotelName: PropTypes.string, //eslint-disable-line
+    hotelAddress: PropTypes.string,//eslint-disable-line
+    priceInUserCurreny: PropTypes.number,//eslint-disable-line
+    priceInLoc: PropTypes.number,//eslint-disable-line
+    guests: PropTypes.array,//eslint-disable-line
+};
+
+
+// testBookParameter: {
     //     "quoteId":"249357191-0",
     //         "rooms":[{
     //             "adults":[{
@@ -423,12 +433,3 @@ RoomDetailsReview.defaultProps = {
     //         }],
     //         "currency":"USD"
     // }
-};
-
-RoomDetailsReview.propTypes = {
-    hotelName: PropTypes.string, //eslint-disable-line
-    hotelAddress: PropTypes.string,//eslint-disable-line
-    priceInUserCurreny: PropTypes.number,//eslint-disable-line
-    priceInLoc: PropTypes.number,//eslint-disable-line
-    guests: PropTypes.array,//eslint-disable-line
-};
