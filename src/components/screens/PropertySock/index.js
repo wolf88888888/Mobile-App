@@ -134,10 +134,12 @@ class Property extends Component {
         //this.setState({log: `${this.state.log} \n Static Search Started`});
         requester.getStaticHotels(this.state.regionId, this.state.page).then((res) => {
             if (res.success) {
+                
                 if (!loadMore) {
                     this.stompAndroid();
                 }
                 res.body.then((data) => {
+                    console.log(data);
                     let mapInfo = [];
                     mapInfo = data.content.map((hotel) => {
                         return {
@@ -147,7 +149,7 @@ class Property extends Component {
                             name: hotel.name,
                             price: hotel.price,
                             stars: hotel.star,
-                            thumbnail: { url: hotel.hotelPhoto }
+                            thumbnail: { url: hotel.hotelPhoto.url }
                         };
                     });
                     if (loadMore) {
