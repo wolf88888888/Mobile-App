@@ -130,11 +130,15 @@ class AvailableRoomsView extends Component {
         );
     }
     onRoomPress = (roomDetail) => {
-        this.props.navigate('GuestInfoForm', { roomDetail: roomDetail, guests: this.props.guests, 
+        this.props.navigate('GuestInfoForm', { 
+            roomDetail: roomDetail, 
+            guests: this.props.guests, 
             'price': ((roomDetail.roomsResults[0].price) * this.props.daysDifference).toFixed(2),
-             'priceLOC': (((roomDetail.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2), 
-             'daysDifference': this.props.daysDifference,
-             'hotelDetails': this.props.hotelDetails });
+            'priceLOC': (((roomDetail.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2), 
+            'daysDifference': this.props.daysDifference,
+            currency: this.props.currency,
+            currencySign: this.props.currencySign,
+            'hotelDetails': this.props.hotelDetails });
     }
 }
 

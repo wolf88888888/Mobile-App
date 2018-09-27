@@ -30,7 +30,8 @@ export default class RoomDetailsReview extends Component {
             hotelBooking: '',
             booking: '',
             data: '',
-            isLoading: false
+            isLoading: false,
+            cancelationDate: ''
         };
     }
 
@@ -44,7 +45,7 @@ export default class RoomDetailsReview extends Component {
                 ,
                 'children': []
             }],
-            'currency': 'USD'
+            'currency': params.currency
         };
 
         requester.createReservation(value).then(res => {
@@ -61,6 +62,7 @@ export default class RoomDetailsReview extends Component {
                         roomName: data.booking.hotelBooking[0].room.roomType.text,
                         arrivalDate: endDate.format('DD MMM'),
                         leavingDate: leavingDate.format('DD MMM'),
+                        cancelationDate: endDate.format('DD MMM YYYY'),
                         creationDate: startDate.format('DD MMM'),
                         cancellationPrice: data.fiatPrice,
                         bookingId: bookingId,
@@ -252,7 +254,7 @@ export default class RoomDetailsReview extends Component {
                     <View style={styles.modalView}>
                         <View style={styles.popup}>
                             <View style={styles.labelCloseView}>
-                                <Text style={styles.walletPasswordLabel}>Cancellation Fee</Text>
+                                <Text style={styles.walletPasswordLabel}>Cancellation Condition</Text>
                                 <View style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
@@ -264,8 +266,15 @@ export default class RoomDetailsReview extends Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <Text style={{ fontFamily: 'FuturaStd-Light' }}>USD {this.state.cancellationPrice} -
-                                ({this.state.cancellationPrice}LOC)</Text>
+                            <View style={{flexDirection: 'column', marginTop: 10}}>
+                                <Text style={{ fontFamily: 'FuturaStd-Light'}}>Cancellation fee before {this.state.cancelationDate}</Text>
+                                <Text style={{ fontFamily: 'FuturaStd-Light' }}>{params.currency} 0.00 (0.0000 LOC)</Text>
+                            </View>
+                            <View style={{flexDirection: 'column', marginTop: 10}}>
+                                <Text style={{ fontFamily: 'FuturaStd-Light'}}>Cancel on {this.state.cancelationDate}</Text>
+                                <Text style={{ fontFamily: 'FuturaStd-Light' }}>{params.currency} {this.state.cancellationPrice} -
+                                ({this.state.cancellationPrice} LOC)</Text>
+                            </View>
                             <TouchableOpacity
                                 style={styles.confirmButton}
                                 onPress={() => {
@@ -327,6 +336,8 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.rhs}>{params.guests}</Text>
                         </View>
                     </View>
+                    
+                    {/* Get Cancellation Fees */}
                     <View style={styles.listItem}>
                         <View style={styles.listItemNameWrapper}>
                             <Text style={styles.listItemText}>Cancellation Fees</Text>
@@ -341,6 +352,7 @@ export default class RoomDetailsReview extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+
                 </ScrollView>
 
                 {/* Bottom Bar */}
@@ -433,3 +445,8 @@ RoomDetailsReview.propTypes = {
     //         }],
     //         "currency":"USD"
     // }
+
+
+
+//     Cancellation fee before 27 Sep 2018 including	USD 0.00 (0.0000 LOC)
+// Cancel on 27 Sep 2018	USD 424.47 (890.6885 LOC)

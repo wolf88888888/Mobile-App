@@ -126,7 +126,7 @@ export default class GuestInfoForm extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.fontFuturaMed]}>${params.price}</Text>
+                            <Text style={[styles.price, styles.fontFuturaMed]}>{params.currencySign} {params.price}</Text>
                             <Text style={[styles.period1, styles.fontFuturaStd]}> for {params.daysDifference} nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
@@ -153,7 +153,9 @@ export default class GuestInfoForm extends Component {
             'guests': testingArray.length,
             'hotelDetails': params.hotelDetails, 
             'price': params.price, 
-            'priceLOC': params.priceLOC, 
+            'priceLOC': params.priceLOC,
+            currency: params.currency,
+            currencySign: params.currencySign,
             'daysDifference': params.daysDifference,
             'guestRecord': testingArray});
     }
