@@ -5,6 +5,7 @@ import GuestFormRow from './GuestFormRow';
 import styles from './styles';
 import PropTypes from 'prop-types';
 import thunk from 'redux-thunk';
+import Toast from 'react-native-easy-toast';
 
 let testingArray = [];
 var newElement = {};
@@ -85,6 +86,16 @@ export default class GuestInfoForm extends Component {
         const {params} = this.props.navigation.state
         return (
             <View style={styles.container}>
+                <Toast
+                    ref="toast"
+                    style={{ backgroundColor: '#DA7B61' }}
+                    position='bottom'
+                    positionValue={150}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
+                />
                 <TouchableOpacity onPress={() => {this.props.navigation.goBack()}}>
                     <Image style={styles.btn_backImage}
                             source={require('../../../../src/assets/png/arrow-back.png')}/>
@@ -147,17 +158,23 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state;
-        this.props.navigation.navigate('RoomDetailsReview', {
-            'roomDetails' : params.roomDetail, 
-            'quoteId': params.roomDetail.quoteId, 
-            'guests': testingArray.length,
-            'hotelDetails': params.hotelDetails, 
-            'price': params.price, 
-            'priceLOC': params.priceLOC,
-            currency: params.currency,
-            currencySign: params.currencySign,
-            'daysDifference': params.daysDifference,
-            'guestRecord': testingArray});
+        if (testingArray.length != this.state.arr.length){
+            this.refs.toast.show("Please enter details for all the guests", 2000);
+        }
+        else {
+            this.props.navigation.navigate('RoomDetailsReview', {
+                'roomDetails' : params.roomDetail, 
+                'quoteId': params.roomDetail.quoteId, 
+                'guests': testingArray.length,
+                'hotelDetails': params.hotelDetails, 
+                'price': params.price, 
+                'priceLOC': params.priceLOC,
+                currency: params.currency,
+                currencySign: params.currencySign,
+                'daysDifference': params.daysDifference,
+                'guestRecord': testingArray});
+        }
+        
     }
 }
 
