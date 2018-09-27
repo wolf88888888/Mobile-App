@@ -1,39 +1,21 @@
 import {
     FlatList,
-    Image,
     ScrollView,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View
 } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import InboxMessagesView from './InboxMessagesView';
-import { ListView } from 'react-native';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
-import SplashScreen from 'react-native-smart-splash-screen';
 import Toast from 'react-native-simple-toast';
-import { imgHost } from '../../../config'
 import requester from '../../../initDependencies';
 import styles from './inboxStyle';
 
-// import Image from 'react-native-remote-svg'; import GoBack from
-// '../common/GoBack';
-
-
-
-
-
-
-
-
-// You will find all component related to style in this class
-
 
 class Inbox extends Component {
+    static self;
     constructor(props) {
         super(props);
         this.onConversation = this.onConversation.bind(this);
@@ -47,10 +29,35 @@ class Inbox extends Component {
             inboxMessages: [],
             showProgress: false,
         };
+
+        Inbox.self = this;
+    }
+
+    componentWillMount(){
+		this.list = [
+			this.props.navigation.addListener('didFocus', this._onFocus),
+        ];
+        
+        this.refreshMessage();
     }
 
     componentDidMount() {
-        this.setState({ showProgress: true });
+
+    }
+
+    _onFocus() {
+        that = Inbox.self;
+        if (!that.isLoading) {
+            that.refreshMessage(false);
+        }
+	};
+
+    refreshMessage(isShowProgress = true) {
+        console.log("refreshMessage");
+        this.isLoading = true;
+        if (isShowProgress) {
+            this.setState({ showProgress: true});
+        }
         requester.getMyConversations().then(res => {
             // here you set the response in to json
             res.body.then(data => {
@@ -59,13 +66,15 @@ class Inbox extends Component {
                     showProgress: false,
                     inboxMessages: data.content,
                 });
-                console.log("message");
-                console.log(data.content);
+                this.isLoading = false;
             }).catch(err => {
+                console.log(err);
+                this.isLoading = false;
+                if (isShowProgress) {
                     this.setState({ showProgress: false });
                     Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-                    console.log(err);
-                });
+                }
+            });
         });
     }
 

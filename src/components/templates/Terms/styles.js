@@ -11,29 +11,33 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#000',
-        fontFamily: 'FuturaStd-Light',
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 22,
-        marginTop: '10%'
+        marginTop: 64,
     },
+
     paragraph: {
         color: '#444',
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
         lineHeight: 20,
-        marginTop: '10%'
+        marginTop: 64,
+    },
+    topContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
     },
     buttonsView: {
         display: 'flex',
         flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-        marginTop: '10%',
+        justifyContent: 'space-around',
         marginBottom: 10
     },
     acceptButtonView: {
         display: 'flex',
         flexDirection: 'row',
-        width: 150,
+        width: 140,
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,
@@ -43,7 +47,7 @@ const styles = StyleSheet.create({
     declineButtonView: {
         display: 'flex',
         flexDirection: 'row',
-        width: 150,
+        width: 140,
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,

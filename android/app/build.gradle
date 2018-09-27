@@ -101,7 +101,7 @@ android {
         applicationId "com.locktrip"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 9
+        versionCode 11
         versionName "1.0." + versionCode
         multiDexEnabled  true
         ndk {
@@ -163,6 +163,12 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+    lintOptions {
+          checkReleaseBuilds false
+          // Or, if you prefer, you can continue to check for errors in release builds,
+          // but continue the build even when errors are found:
+          abortOnError false
+      }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -194,6 +200,7 @@ dependencies {
     implementation project(':react-native-uuid-generator')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-image-picker')
+    implementation project(':react-native-image-resizer')
     implementation project(':react-native-fast-crypto')
     implementation group: 'org.springframework', name: 'spring-framework-bom', version: '4.2.2.RELEASE'
     implementation group: 'org.springframework', name: 'spring-messaging', version: '4.2.2.RELEASE'

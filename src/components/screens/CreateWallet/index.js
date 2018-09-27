@@ -11,8 +11,6 @@ import React, { Component } from 'react';
 import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';
 import { Wallet } from '../../../services/blockchain/wallet';
@@ -20,25 +18,7 @@ import LineProgressDialog from '../../atoms/SimpleDialogs/LineProgressDialog';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import styles from './styles';
 
-var interval;
 class CreateWallet extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func,
-            state: PropTypes.shape({
-                params: PropTypes.object
-            })
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => { },
-            state: {
-                params: {},
-            }
-        }
-    }
     constructor(props) {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -57,7 +37,7 @@ class CreateWallet extends Component {
     animate() {
         let progress = 0;
         this.setState({ progress });
-        interval = setInterval(() => {
+        this.interval = setInterval(() => {
             //console.log("animate - " + progress);
             if (this.state.showProgress) {
                 progress += 0.004;
@@ -71,7 +51,7 @@ class CreateWallet extends Component {
     }
 
     stopAnimation() {
-        clearInterval(interval);
+        clearInterval(this.interval);
     }
     
 
@@ -136,7 +116,7 @@ class CreateWallet extends Component {
 
     render() {
         const { password, confirmPassword } = this.state;
-        const { navigate, goBack } = this.props.navigation;
+        const { goBack } = this.props.navigation;
 
         return (
             <KeyboardAwareScrollView
@@ -171,7 +151,7 @@ class CreateWallet extends Component {
                                 autoCapitalize="none"
                                 value={password}
                                 onChangeText={this.onChangeHandler('password')}
-                                placeholder="Password"
+                                placeholder="8 chars with a digit and a symbol"
                                 placeholderTextColor="#fff"
                                 rightIcon={validatePassword(password) ? 'check' : null}
                             />
@@ -186,7 +166,7 @@ class CreateWallet extends Component {
                                 autoCapitalize="none"
                                 value={confirmPassword}
                                 onChangeText={this.onChangeHandler('confirmPassword')}
-                                placeholder="Password"
+                                placeholder="8 chars with a digit and a symbol"
                                 placeholderTextColor="#fff"
                                 rightIcon={validateConfirmPassword(password, confirmPassword) ? 'check' : null}
                             />

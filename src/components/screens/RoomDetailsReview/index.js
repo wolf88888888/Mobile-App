@@ -4,10 +4,11 @@ import React, { Component } from 'react';
 import { HotelReservation } from '../../../services/blockchain/hotelReservation';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-easy-toast';
 import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
 export default class RoomDetailsReview extends Component {
     constructor() {
@@ -21,13 +22,15 @@ export default class RoomDetailsReview extends Component {
             // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
+            leavingDate: '',
             creationDate: '',
             // cancellationLOCPrice: '',
             cancellationPrice: '',
             bookingId: '',
             hotelBooking: '',
             booking: '',
-            data: ''
+            data: '',
+            isLoading: false
         };
     }
 
@@ -45,28 +48,41 @@ export default class RoomDetailsReview extends Component {
         };
 
         requester.createReservation(value).then(res => {
-            res.body.then(data => {
-                const bookingId = data.preparedBookingId;
-                const hotelBooking = data.booking.hotelBooking[0];
-                const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
-                const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
-                this.setState({
-                    // bookingDetail: data,
-                    roomName: data.booking.hotelBooking[0].room.roomType.text,
-                    arrivalDate: endDate.format('DD MMM'),
-                    creationDate: startDate.format('DD MMM'),
-                    cancellationPrice: data.fiatPrice,
-                    bookingId: bookingId,
-                    hotelBooking: hotelBooking,
-                    booking: value,
-                    data: data
-                    // cancellationLOCPrice: data.locPrice,
-                });
-            })
-                .catch((err) => {
-                    Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
+            if (res.success){
+                res.body.then(data => {
+                    const bookingId = data.preparedBookingId;
+                    const hotelBooking = data.booking.hotelBooking[0];
+                    const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
+                    const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                    const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
+                    .add(data.booking.hotelBooking[0].nights, 'days');
+                    this.setState({
+                        // bookingDetail: data,
+                        roomName: data.booking.hotelBooking[0].room.roomType.text,
+                        arrivalDate: endDate.format('DD MMM'),
+                        leavingDate: leavingDate.format('DD MMM'),
+                        creationDate: startDate.format('DD MMM'),
+                        cancellationPrice: data.fiatPrice,
+                        bookingId: bookingId,
+                        hotelBooking: hotelBooking,
+                        booking: value,
+                        data: data
+                        // cancellationLOCPrice: data.locPrice,
+                    });
+                }).catch((err) => {
                     console.log(err); //eslint-disable-line
                 });
+            }
+            else {
+                res.errors.then(data => {
+                    console.log(data.errors.RoomsXmlResponse.message);
+                    this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000);
+                });
+            }
+        }).catch((main_err) => {
+            this.refs.toast.show("Error", 1500);
+            console.log("Error Room");
+            console.log(main_err);
         });
     }
 
@@ -101,9 +117,8 @@ export default class RoomDetailsReview extends Component {
 
     handleSubmit() {
 
-        this.setState({ modalVisible: false });
-
-        Toast.showWithGravity('We are working on your transaction this might take some time.', Toast.SHORT, Toast.CENTER);
+        this.setState({ modalVisible: false, isLoading: true });
+        this.refs.toast.show('We are working on your transaction this might take some time.', 1500);
 
         requester.getCancellationFees(this.state.bookingId).then(res => {
             res.body.then(data => {
@@ -140,19 +155,23 @@ export default class RoomDetailsReview extends Component {
                                 numberOfTravelers.toString()
                             )
                                 .then(transaction => {
-                                    Toast.showWithGravity('' + transaction, Toast.SHORT, Toast.CENTER);
+                                    this.setState({isLoading: false});
+                                    this.refs.toast.show('' + transaction, 1500);
                                 })
                                 .catch((err) => {
-                                    Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                                    this.setState({isLoading: false});
+                                    this.refs.toast.show('' + err, 1500);
                                 });
                         }, 3000);
                     }).catch((err) => {
-                        Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+                        this.setState({isLoading: false});
+                        this.refs.toast.show('' + err, 1500);
                     });
                 });
             });
         }).catch((err) => {
-            Toast.showWithGravity('' + err, Toast.SHORT, Toast.CENTER);
+            this.setState({isLoading: false});
+            this.refs.toast.show('' + err, 1500);
         });
     }
 
@@ -161,8 +180,19 @@ export default class RoomDetailsReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
+        console.log(params);
         return (
             <View style={styles.container}>
+                <Toast
+                    ref="toast"
+                    style={{ backgroundColor: '#DA7B61' }}
+                    position='bottom'
+                    positionValue={150}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
+                />
                 <View style={{ height: 0 }}>
                     <WebView
                         ref={el => this.webView = el}
@@ -252,7 +282,7 @@ export default class RoomDetailsReview extends Component {
                     {/* Back Button */}
                     <TouchableOpacity onPress={() => {
                         this.props.navigation.goBack();
-                    }} style={styles.backButton}>
+                    }} >
                         <Image
                             style={styles.btn_backImage}
                             source={require('../../../../src/assets/png/arrow-back.png')}
@@ -260,7 +290,7 @@ export default class RoomDetailsReview extends Component {
                     </TouchableOpacity>
                     <View style={styles.content}>
                         <Text style={styles.steps}>STEP 2 OF 2</Text>
-                        <Text style={styles.heading}>Review Room Details</Text>
+                        <Text style={styles.heading}>Review room details</Text>
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
                                 <Image source={require('../../../../src/assets/apartment.png')}
@@ -286,7 +316,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Dates</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>{this.state.creationDate} - {this.state.arrivalDate}</Text>
+                            <Text style={styles.rhs}>{this.state.arrivalDate} - {this.state.leavingDate}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>
@@ -294,7 +324,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Guests</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>2</Text>
+                            <Text style={styles.rhs}>{params.guests}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>
@@ -317,12 +347,12 @@ export default class RoomDetailsReview extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, {fontWeight: '400'}, styles.fontFuturaStd]}>${params.price}</Text>
-                            <Text style={styles.period1}> for 1 nights</Text>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
+                            <Text style={styles.period1}> for {params.daysDifference} nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={styles.period2}> for 1 nights</Text>
+                            <Text style={styles.period2}> for {params.daysDifference} nights</Text>
                         </View>
                     </View>
                     <View style={styles.payButtonView}>
@@ -336,6 +366,13 @@ export default class RoomDetailsReview extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <ProgressDialog
+                    visible={this.state.isLoading}
+                    title="Please Wait"
+                    message="Loading..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }
@@ -374,7 +411,18 @@ RoomDetailsReview.defaultProps = {
             lastName: ''
         }
     ]
-    // testBookParameter: {
+};
+
+RoomDetailsReview.propTypes = {
+    hotelName: PropTypes.string, //eslint-disable-line
+    hotelAddress: PropTypes.string,//eslint-disable-line
+    priceInUserCurreny: PropTypes.number,//eslint-disable-line
+    priceInLoc: PropTypes.number,//eslint-disable-line
+    guests: PropTypes.array,//eslint-disable-line
+};
+
+
+// testBookParameter: {
     //     "quoteId":"249357191-0",
     //         "rooms":[{
     //             "adults":[{
@@ -385,12 +433,3 @@ RoomDetailsReview.defaultProps = {
     //         }],
     //         "currency":"USD"
     // }
-};
-
-RoomDetailsReview.propTypes = {
-    hotelName: PropTypes.string, //eslint-disable-line
-    hotelAddress: PropTypes.string,//eslint-disable-line
-    priceInUserCurreny: PropTypes.number,//eslint-disable-line
-    priceInLoc: PropTypes.number,//eslint-disable-line
-    guests: PropTypes.array//eslint-disable-line
-};

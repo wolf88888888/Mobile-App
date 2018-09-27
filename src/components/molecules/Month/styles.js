@@ -2,17 +2,16 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     month: {
-        paddingTop: 15,
-        paddingBottom: 10
+        paddingTop: 5,
+        paddingBottom: 7
     },
     monthTitle: {
-        paddingHorizontal: 20
+        paddingHorizontal: 10
     },
     monthTitleText: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 18,
-        lineHeight: 18,
-        fontWeight: '300'
+        lineHeight: 20,
     },
     dayRow: {
         flex: 1,

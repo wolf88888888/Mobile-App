@@ -4,7 +4,6 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import _ from 'lodash';
-import requester from '../../../initDependencies';
 import styles from './styles';
 
 class EditLocationModal extends Component {
@@ -42,31 +41,32 @@ class EditLocationModal extends Component {
         });
         this.setState({
             countries: countryArr,
-            selectedCityId: this.props.city.id,
-            selectedCountryId: this.props.country.id,
-            selectedCountryName: this.props.country.name,
+            selectedCityId: this.props.city==null? null: this.props.city.id,
+            selectedCountryId: this.props.country==null? null : this.props.country.id,
+            selectedCountryName: this.props.country==null? null : this.props.country.name,
         });
-
-        this.getCities(this.props.country.id);
+        if (this.props.country != null){
+            this.getCities(this.props.country.id );
+        }
     }
 
     getCities(countryId) {
         cityArr = [];
-        requester.getCities(countryId, false).then(res => {
-            res.body.then(data => {
-                if (data.content.length > 0) {
-                    data.content.map((item, i) => {
-                        cityArr.push({ 'label': item.name, 'value': item.id })
-                    })
-                    this.setState({
-                        cities: cityArr,
-                        selectedCityId: this.state.selectedCityId == null ? cityArr[0].value : this.state.selectedCityId,
-                    })
-                }
-            });
-        }).catch(err => {
-            console.log('error: ', err);
-        });
+        // requester.getCities(countryId, false).then(res => {
+        //     res.body.then(data => {
+        //         if (data.content.length > 0) {
+        //             data.content.map((item, i) => {
+        //                 cityArr.push({ 'label': item.name, 'value': item.id })
+        //             })
+        //             this.setState({
+        //                 cities: cityArr,
+        //                 selectedCityId: this.state.selectedCityId == null ? cityArr[0].value : this.state.selectedCityId,
+        //             })
+        //         }
+        //     });
+        // }).catch(err => {
+        //     console.log('error: ', err);
+        // });
     }
 
     render() {
@@ -119,10 +119,11 @@ class EditLocationModal extends Component {
                                 index = _.findIndex(this.state.cities, function (o) {
                                     return o.value == cId;
                                 })
-                                city = {
-                                    id: this.state.selectedCityId,
-                                    name: this.state.cities[index].label == null ? this.state.cities[0].label : this.state.cities[index].label,
-                                }
+                                // city = {
+                                //     id: this.state.selectedCityId,
+                                //     name: this.state.cities[index].label == null ? this.state.cities[0].label : this.state.cities[index].label,
+                                // }
+                                city = null;
                                 country = {
                                     id: this.state.selectedCountryId,
                                     name: this.state.selectedCountryName

@@ -1,6 +1,5 @@
 import {
     AsyncStorage,
-    Keyboard,
     ScrollView,
     Text,
     TouchableOpacity,
@@ -11,21 +10,13 @@ import {
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
-import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
-import { autobind } from 'core-decorators';
-import { domainPrefix } from '../../../config';
-import { imgHost } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
-
-// import DialogProgress from 'react-native-dialog-progress'
-
-
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -82,7 +73,7 @@ class SaveWallet extends Component {
             this.setState({ showProgress: false });
             if (res.success) {
                 console.log(res);
-                navigate('CongratsWallet', {isFB:params.isFB})
+                navigate('CongratsWallet')
             } else {
                 res.errors.then(data => {
                     const { errors } = data;
@@ -107,7 +98,7 @@ class SaveWallet extends Component {
         const { walletMnemonic } = this.state;
         let i = 0;
         return (
-            <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
+            <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%', backgroundColor:'#DA7B61' }}>
                 <StatusBar
                     backgroundColor="rgba(0,0,0,0)"
                     translucent
@@ -132,7 +123,7 @@ class SaveWallet extends Component {
                                     i++;
                                     return (
                                         <View key={i} style={styles.inputView}>
-                                            <SmartInput value={`${i}. ${value}`} placeholderTextColor="#fff" />
+                                            <SmartInput value={`${i}. ${value}`} placeholderTextColor="#fff" editable={false}/>
                                         </View>
                                     )
                                 })}

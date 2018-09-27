@@ -1,40 +1,41 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const dimensionWindows = Dimensions.get('window');
 
 export default StyleSheet.create({
     container: {
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        padding: 16
+        marginTop: 17,
     },
     pickerRow: {
         display: 'flex',
+        flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between'
     },
     datesPickerViewIncomplete: {
         display: 'flex',
         flexDirection: 'row',
-        width: 210,
         height: 50,
-        backgroundColor: '#fff',
         borderColor: '#dbdbdb',
         borderWidth: 0.5,
         justifyContent: 'space-around',
-        padding: 8
+        padding: 8,
+        backgroundColor:'#fff'
     },
     datesPickerViewComplete: {
         display: 'flex',
         flexDirection: 'row',
-        width: 210,
         height: 50,
-        backgroundColor: '#fff',
         borderColor: '#dbdbdb',
         borderWidth: 0.5,
         justifyContent: 'space-around',
-        padding: 8
+        padding: 8,
+        backgroundColor:'#fff'
     },
     datePickerView: {
         display: 'flex',
+        flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
@@ -58,8 +59,9 @@ export default StyleSheet.create({
     guestPickerViewComplete: {
         display: 'flex',
         flexDirection: 'column',
-        width: 65,
+        width: 80,
         height: 50,
+        marginLeft: 7,
         backgroundColor: '#fff',
         borderColor: '#dbdbdb',
         borderWidth: 0.5,
@@ -81,9 +83,10 @@ export default StyleSheet.create({
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
+        marginLeft:7,
         width: 50,
         height: 50,
-        borderColor: '#dbdbdb',
+        borderColor: '#dadadb',
         borderWidth: 0.5,
         justifyContent: 'center',
         alignItems: 'center'
@@ -105,6 +108,7 @@ export default StyleSheet.create({
     },
     searchButtonView: {
         width: '100%',
+        height: dimensionWindows.height * 0.08,
         backgroundColor: '#DA7B61',
         justifyContent: 'center',
         alignItems: 'center',
@@ -113,7 +117,7 @@ export default StyleSheet.create({
     searchButtonText: {
         color: '#fff',
         fontFamily: 'FuturaStd-Light',
-        fontSize: 17,
+        fontSize: dimensionWindows.width * 0.05,
         padding: 14
     }
 });

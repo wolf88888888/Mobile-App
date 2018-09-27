@@ -1,17 +1,21 @@
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { validateEmail, validateName } from '../../../utils/validation';
+import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
+import { validateEmail, validateName, validateCardExpiry, validateCVV, validateCardNumber } from '../../../utils/validation';
 
 import GoBack from '../../atoms/GoBack';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
+import SmartInputCreditCard from '../../atoms/SmartInput/creditcard';
+import SmartInputDate from '../../atoms/SmartInput/date';
 import Switch from 'react-native-customisable-switch';
+import { TextInputMask } from 'react-native-masked-text';
+import { Header } from 'react-navigation';
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex:1,
         flexDirection: 'column',
         backgroundColor: '#DA7B61'
     },
@@ -34,14 +38,14 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     maintitleText: {
-        color: '#fff',
-        fontSize: 24,
-        fontFamily: 'FuturaStd-Light'
+        color: '#ffffff',
+        fontSize: 22,
+        fontFamily: 'Futura',
     },
 
     inputView: {
         width: '100%',
-        margin: 11.5,
+        marginTop: 0,
         paddingLeft: 18,
         paddingRight: 18
     },
@@ -49,14 +53,11 @@ const styles = StyleSheet.create({
         display: 'flex',
         width: '100%',
         marginTop: 16,
-        marginLeft: 16,
         marginBottom: 16
     },
      inputhalfView: {
         width: '50%',
         margin: 11.5,
-        paddingLeft: 18,
-        paddingRight: 18
     },
     finePrintView: {
         display: 'flex',
@@ -84,10 +85,9 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'flex-end',
         width: '100%',
-        paddingRight: 18,
-        marginTop: 36
     },
     nextButton: {
+        margin: 15,
         height: 50,
         width: 50,
         backgroundColor: '#273842',
@@ -113,9 +113,9 @@ const styles = StyleSheet.create({
     btn_backImage:{
         height: 28,
         width: 28,
-        marginTop: 44,
-        marginLeft: 16,
-        marginBottom: 16
+        marginTop: 45,
+        marginLeft: 15,
+        marginBottom: 15
       }
 });
 
@@ -155,7 +155,6 @@ class CreditCard extends Component {
         };
     }
      onClickSave() {
-        console.log('hi')
         const { CardHolder, CardNumber,MY,CVV } = this.state;
         const user = {CardHolder, CardNumber,MY,CVV};
 
@@ -184,14 +183,16 @@ class CreditCard extends Component {
         const { navigate } = this.props.navigation;
 
         return (
+            
             <View style={styles.container}>
-                <TouchableOpacity  onPress={() => navigate('AddPaymentMethod')}>
+
+                <ScrollView>
+                    <KeyboardAvoidingView keyboardVerticalOffset={-20} behavior="position" enabled>
+                    <TouchableOpacity  onPress={() => navigate('AddPaymentMethod')}>
                     <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-white.png')}/>
                 </TouchableOpacity>
-
-                <View style={styles.main}>
+                    <View style={styles.main}>
                     <View style={styles.titleView}><Text style={styles.maintitleText}>Card Holder</Text></View>
-
                     <View style={styles.inputView}>
                         <SmartInput
                             value={CardHolder}
@@ -199,38 +200,41 @@ class CreditCard extends Component {
                             placeholder="Card Holder"
                             placeholderTextColor="#fff"
                             onChangeText={this.onChangeHandler('CardHolder')}
+                            rightIcon={validateName(CardHolder) ? 'check' : null}
                         />
                     </View>
                    <View style={styles.titleView}><Text style={styles.maintitleText}>Credit Card Details</Text></View>
                      <View style={styles.titleView}><Text style={styles.titleText}>Card Number</Text></View>
-                    <View style={styles.inputView}>
+
                     
-                        <SmartInput
+                    <View style={styles.inputView}>
+
+                        <SmartInputCreditCard
                             value={CardNumber}
                             keyboardType="numeric"
                             autoCorrect={false}
                             autoCapitalize="none"
-                            maxLength={16}
+                            maxLength={19}
                             placeholder="0000-0000-0000-0000"
                             placeholderTextColor="#fff"
                             onChangeText={this.onChangeHandler('CardNumber')}
+                            rightIcon={validateCardNumber(CardNumber) ? 'check' : null}
                         />
                     </View>
-
-                    <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={{flexDirection: 'row',marginLeft: 30, marginRight: 30}}>
                       
                             <View style={styles.inputhalfView}>
                              <View style={styles.titleHalfView}><Text style={styles.titleText}>Expiration Date</Text></View>
-                                <SmartInput
+                                <SmartInputDate
                                     value={MY}
                                     keyboardType="numeric"
                                     autoCorrect={false}
                                     autoCapitalize="none"
-                                    maxLength={4}
+                                    maxLength={5}
                                     placeholder="M/Y"
                                     placeholderTextColor="#fff" 
-                                    onChangeText={this.onChangeHandler('MY')}           
-                                    
+                                    onChangeText={this.onChangeHandler('MY')}
+                                    rightIcon={validateCardExpiry(MY) ? 'check' : null}
                                 />
                             </View>
                         
@@ -245,9 +249,14 @@ class CreditCard extends Component {
                                     placeholder="123"
                                     placeholderTextColor="#fff"
                                     onChangeText={this.onChangeHandler('CVV')}
+                                    rightIcon={validateCVV(CVV) ? 'check' : null}
                                 />
                             </View>
                     </View>
+                    </View>
+                    </KeyboardAvoidingView>
+                </ScrollView>
+                
                     <View style={styles.nextButtonView}>
                        
                             <View style={styles.nextButton}>
@@ -260,20 +269,11 @@ class CreditCard extends Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                    
                     </View>
-
-                        {/*<View style={styles.nextButtonView}>
-          
-                                <View style={styles.nextButton}>
-                                    <Text style={styles.buttonText}>
-                                        <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                    </Text>
-                                </View>
-                            
-                    </View>*/}
+                {/* <View style={styles.main}>
+                    
+                </View> */}
                 </View>
-            </View>
         );
     }
 }

@@ -51,8 +51,6 @@ class HotelDetailView extends Component {
             interval: null,
             dataSource: [],
         };
-
-        console.log(props.dataSourcePreview);
         this.state.dataSource = props.dataSourcePreview;
     }
 
@@ -67,8 +65,6 @@ class HotelDetailView extends Component {
         //     });
         //     }, 2000)
         // });
-        console.log("width : " + logoWidth);
-        console.log("height : " + logoHeight);
     }
 
     componentWillUnmount() {
@@ -80,17 +76,6 @@ class HotelDetailView extends Component {
         const ratingSize = 8;
         return (
           <View style={styles.container}>
-            <View style={{width: logoWidth, height: logoHeight}}>
-                <ImageCarousel
-                  delay={1500}
-                  style={styles.logoImage}
-                  width={logoWidth}
-                  height={logoHeight}
-                  indicatorSize={12.5}
-                  indicatorOffset={20}
-                  indicatorColor="#D87A61"
-                  images={this.state.dataSource} />
-              </View>
               <CardView style={styles.topView}
                   cardElevation={1.5}
                   cardMaxElevation={1.5}
@@ -126,7 +111,7 @@ class HotelDetailView extends Component {
               </CardView>
 
               <View style={styles.descriptionView}>
-                  <Text style={styles.normalText}>{this.props.description}</Text>
+                  <Text style={styles.normalText}>{`${this.props.description}`.replace(/<(?:.|\n)*?>/gm, '')}</Text>
               </View>
           </View>
         );

@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
         fontFamily: 'futura',
         fontSize: 10,
         fontSize: 12.5,
-        marginTop: -3,
         color: '#d97b61',
         alignSelf: 'flex-end'
     }

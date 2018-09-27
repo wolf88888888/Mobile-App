@@ -1,5 +1,4 @@
-import { AsyncStorage, Clipboard, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { AsyncStorage, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
 import moment, { lang } from 'moment';
 
@@ -17,20 +16,15 @@ import EditWorkModal from '../../atoms/EditWorkModal';
 import Footer from '../../atoms/Footer';
 import Image from 'react-native-remote-svg';
 import ImagePicker from 'react-native-image-picker';
-import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
+import ImageResizer from 'react-native-image-resizer';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import UserProfileHomes from '../../organisms/UserProfileHomes';
-import UserProfileReviews from '../../organisms/UserProfileReviews';
-import UserProfileSummary from '../../organisms/UserProfileSummary';
-import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction';
 import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo';
 import  { userInstance } from '../../../utils/userInstance';
 import requester from '../../../initDependencies';
 import _ from 'lodash';
-import { connect } from 'react-redux';
-import { imgHost, apiHost, domainPrefix } from '../../../config.js';
 import styles from './styles';
+import { apiHost, domainPrefix } from '../../../config';
 
 class EditUserProfile extends Component {
 
@@ -158,7 +152,7 @@ class EditUserProfile extends Component {
         requester.getCountries().then(res => {
             res.body.then(data => {
                 this.setState({
-                    countries: data.content,
+                    countries: data,
                 })
             })
         }).catch(err => {
@@ -172,15 +166,6 @@ class EditUserProfile extends Component {
 
     showModal() {
         return this.state.modalView
-    }
-
-    dataURLtoFile(dataurl, filename) {
-        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], filename, { type: mime });
     }
 
     async onPhoto() {
@@ -206,36 +191,54 @@ class EditUserProfile extends Component {
                 this.setState({
                     showProgress: true,
                 });
-                var data = new FormData();
-                data.append('image', {
-                    uri: response.uri,
-                    name: 'selfie.jpg',
-                    type: 'image/jpg'
-                });
-                fetch(`${apiHost}users/me/images/upload`, {
-                    method: 'post',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data;',
-                        'Authorization': token_value
-                      },
-                    body: data
-                }).then(res => { res.json().
-                    then(data => {
+                const { uri, originalRotation } = response
+                let rotation = 0
+
+                if ( originalRotation === 90 ) {
+                    rotation = 90
+                } else if ( originalRotation === 270 ) {
+                    rotation = -90
+                }
+
+                ImageResizer.createResizedImage( uri, 500, 500, "JPEG", 80, rotation ).
+                then( ( { uri } ) => {
+                    var data = new FormData();
+                    data.append('image', {
+                        uri: uri,
+                        name: 'selfie.jpg',
+                        type: 'image/jpg'
+                    });
+                    fetch(`${apiHost}users/me/images/upload`, {
+                        method: 'post',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data;',
+                            'Authorization': token_value
+                        },
+                        body: data
+                    }).then(res => { res.json().
+                        then(data => {
+                            this.setState({
+                                showProgress: false,
+                                image: data.thumbnail
+                            });
+                            userInstance.setProfileImage(data.thumbnail);
+                        }).catch(err => {
+                            console.log('upload error', err);
+                        })
+                    }).catch(err => {
                         this.setState({
                             showProgress: false,
-                            image: data.thumbnail
-                        });
-                        userInstance.setProfileImage(data.thumbnail);
-                    }).catch(err => {
+                        })
                         console.log('upload error', err);
-                    })
-                }).catch(err => {
+                    });
+                } ).catch( err => {
                     this.setState({
                         showProgress: false,
                     })
-                    console.log('upload error', err);
-                });
+                    console.log( err )
+                } )
+
             }
         });
     }
@@ -471,7 +474,7 @@ class EditUserProfile extends Component {
         this.setState({
             showProgress: true
         });
-
+        
         userInstance.setAbout(this.state.about==null? '' : this.state.about);
         userInstance.setGovernmentId(this.state.governmentId==null? '' : this.state.governmentId);
         userInstance.setSchool(this.state.school==null? '' : this.state.school);
@@ -485,7 +488,7 @@ class EditUserProfile extends Component {
             preferredCurrency: parseInt(this.state.preferredCurrency, 10),
             gender: this.state.gender,
             country: parseInt(this.state.country.id, 10),
-            city: parseInt(this.state.city.id, 10),
+            // city: parseInt(this.state.city.id, 10),
             birthday: `${this.state.day}/${this.state.month}/${this.state.year}`,
             locAddress: this.state.locAddress,
             jsonFile: this.state.jsonFile
@@ -501,7 +504,7 @@ class EditUserProfile extends Component {
                 userInstance.setLanguage(userInfo.preferredLanguage);
                 userInstance.setGender(userInfo.gender);
                 userInstance.setCountry(this.state.country);
-                userInstance.setCity(this.state.city);
+                // userInstance.setCity(this.state.city);
                 userInstance.setBirthday(new Date(`${this.state.year}/${this.state.month}/${this.state.day} 00:00:00`).getTime());
                 this.setState({
                     showProgress: false
@@ -522,8 +525,6 @@ class EditUserProfile extends Component {
     }
 
     render() {
-        const { navigate, goBack } = this.props.navigation;
-
         let imageAvatar = '';
         if (this.state.image != '') {
             if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
@@ -535,11 +536,14 @@ class EditUserProfile extends Component {
         }
 
         let location = '';
-        if (this.state.city == '') {
-            location = this.state.country.name;
+        console.log("location city", this.state.city);
+        if (this.state.city == undefined || this.state.city == null || this.state.city == '') {
+            location = this.state.country==null? '' : this.state.country.name;
         }
         else {
-            location = this.state.city.name + " " + this.state.country.name;
+            let city_name = this.state.city==null? '' : this.state.city.name;
+            let country_name = this.state.country==null? '' : this.state.country.name;
+            location = city_name + " " + country_name;
         }
 
         return (
@@ -555,7 +559,7 @@ class EditUserProfile extends Component {
                 </View>
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
                     <View style={styles.body}>
-                        <View>
+                        <View style={styles.avatarWrapper}>
                             {
                                 imageAvatar == '' ?
                                     <Image style={styles.avatar} source={require('../../../assets/temple/user_profile_avatar.png')} />
@@ -622,7 +626,7 @@ class EditUserProfile extends Component {
 
                         <UserPropertyItemTypeInfo
                             title="Location"
-                            info={this.state.country.name + ', ' + this.state.city.name}
+                            info={location}
                             onPress={this.onLocation} />
                         <View style={styles.lineStyle} />
 

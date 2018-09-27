@@ -130,11 +130,12 @@ class WalletKeywordValidation extends Component {
 
             this.setState({ showProgress: true });
             requester.register(user, null).then(res => {
+                console.log("register ----------", res);
                     this.setState({ showProgress: false });
                     if (res.success) {
                         console.log("Error");
                         console.log(res);
-                        navigate('CongratsWallet', {isFB:params.isFB})
+                        navigate('CongratsWallet')
                     } else {
                         console.log("Error");
                         res.errors.then(data => {
@@ -174,7 +175,7 @@ class WalletKeywordValidation extends Component {
                                 <Text style={styles.titleText}>Confirm Wallet Information</Text>
                             </View>
 
-                            <View>
+                            <View style={styles.infoView}>
                                 <Text style={styles.infoText}>
                                     Enter Your mnemonic recovery keywords.
                                 </Text>

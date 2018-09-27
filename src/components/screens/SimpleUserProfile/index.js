@@ -93,11 +93,12 @@ class SimpleUserProfile extends Component {
     render() {
         const { navigate, goBack } = this.props.navigation;
         let gender = '';
-        if (this.state.gender === 'man') {
+        if (this.state.gender === 'men') {
             gender = 'M';
-        }
-        else if (this.state.gender === 'women') {
+        }else if (this.state.gender === 'women') {
             gender = 'F';
+        }else{
+            gender = '?';
         }
 
         let image = '';
@@ -135,9 +136,9 @@ class SimpleUserProfile extends Component {
                             <Text style={styles.name}>{this.state.firstName} {this.state.lastName}</Text>
                             {
                                 this.state.city == '' ?
-                                    <Text style={styles.location}>{this.state.country.name}</Text>
+                                    <Text style={styles.location}>{this.state.country==null? '' : this.state.country.name}</Text>
                                     :
-                                    <Text style={styles.location}>{this.state.city.name} {this.state.country.name}</Text>
+                                    <Text style={styles.location}>{this.state.city==null? '' : this.state.city.name} {this.state.country==null? '' : this.state.country.name}</Text>
                             }
                         </View>
 

@@ -5,7 +5,6 @@ import {
     Dimensions
 } from 'react-native';
 import Moment from 'moment';
-import styles from '../../templates/Calendar/styles';
 import Month from '../../molecules/Month';
 
 const { width } = Dimensions.get('window');
@@ -149,7 +148,7 @@ export default class MonthList extends Component {
         return (
             <ListView
                 ref={(list) => { this.list = list; }}
-                style={styles.scrollArea}
+                style={{flex: 1}}
                 dataSource={this.state.dataSource}
                 renderRow={this.renderMonth}
                 pageSize={12}

@@ -1,37 +1,25 @@
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import {
     Platform,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View
 } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { validateEmail, validateName } from '../../../utils/validation';
 
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import SmartInput from '../../atoms/SmartInput';
 import Switch from 'react-native-customisable-switch';
 import Toast from 'react-native-simple-toast';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
-import requester from '../../../initDependencies';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import styles from './styles';
+import requester from '../../../initDependencies';
 
 class CreateAccount extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
-
-    static defaultProps = {
-        navigation: {
-            navigate: () => { }
-        }
-    }
 
     constructor(props) {
         super(props);
@@ -50,7 +38,12 @@ class CreateAccount extends Component {
             countryName: undefined
         };
         this.animationTime = 150; // time for switch to slide from one end to the other
-        this.getCountriesForSignup();
+        // this.getCountriesForSignup();
+    }
+
+    
+    componentWillMount() {
+        this.setCountriesInfo();
     }
 
     onChangeHandler(property) {
@@ -59,37 +52,72 @@ class CreateAccount extends Component {
         };
     }
 
-    getCountriesForSignup() {
-        requester.getCountries(true).then(res => {
-            res.body.then(data => {
-                countryArr = [];
-                data.content.map((item, i) => {
-                    countryArr.push({
-                        'label': item.name,
-                        'value': item
-                    });
-                });
-                this.setState({
-                    countries: countryArr,
-                    countriesLoaded: true,
-                    countryId: countryArr[0].value.id,
-                    countryName: countryArr[0].label,
-                });
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.countries != prevProps.countries) {
+            this.setCountriesInfo();
+        }
+    }
+
+    setCountriesInfo() {
+        countryArr = [];
+        this.props.countries.map((item, i) => {
+            countryArr.push({
+                'label': item.name,
+                'value': item
             });
+            
         });
+        this.setState({
+            countries: countryArr,
+            countriesLoaded: true,
+            countryId: countryArr[0].value.id,
+            countryName: countryArr[0].label,
+        });
+    }
+
+    getCountriesForSignup() {
+        // requester.getCountries(true).then(res => {
+        //     res.body.then(data => {
+        //         console.log("getCountriesForSignup -------------- ", data);
+        //         countryArr = [];
+        //         data.map((item, i) => {
+        //             countryArr.push({
+        //                 'label': item.name,
+        //                 'value': item
+        //             });
+                    
+        //         });
+        //         this.setState({
+        //             countries: countryArr,
+        //             countriesLoaded: true,
+        //             countryId: countryArr[0].value.id,
+        //             countryName: countryArr[0].label,
+        //         });
+        //     });
+        // });
     }
 
     goToCreatePassword() {
         const {
             firstName, lastName, email, country, userWantsPromo, checkZIndex
         } = this.state;
+        
         if (country === undefined || country === '') {
-            Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.CENTER);
+            Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
         }
         else {
-            this.props.navigation.navigate('CreatePassword', {
-                firstName, lastName, email, country, userWantsPromo
-            })
+            requester.getEmailFreeResponse(email).then(res => {
+                res.body.then(data => {
+                    if (data.exist) {
+                        Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
+                    } else {
+                        this.props.navigation.navigate('CreatePassword', {
+                            firstName, lastName, email, country, userWantsPromo
+                        })
+                    }
+                });
+            });
         }
     }
 
@@ -163,11 +191,12 @@ class CreateAccount extends Component {
                                     this.setState({
                                         countryId: value.id,
                                         countryName: value.name,
-                                        country: value.name,
+                                        //country: value.name,
+                                        country: value.id,
                                         value: value
                                     });
                                 }}
-                                style={{ ...pickerSelectStyles }}
+                                style={{...pickerSelectStyles}}
                             >
                             </RNPickerSelect>
                         </View>
@@ -176,9 +205,9 @@ class CreateAccount extends Component {
                             <Text style={styles.finePrintText}>
                                 I'd like to receive promotional communications, including discounts,
                                 surveys and inspiration via email, SMS and phone.
-                        </Text>
+                            </Text>
 
-                            <View style={{ flex: 0.2, alignSelf: 'flex-end', }}>
+                            <View style={styles.switchContainer}>
                                 {userWantsPromo ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
                                         <Text style={styles.switchCheckText}>
@@ -212,8 +241,7 @@ class CreateAccount extends Component {
                         <View style={styles.nextButtonView}>
                             <TouchableOpacity
                                 disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
-                                onPress={() => this.goToCreatePassword()}
-                            >
+                                onPress={() => this.goToCreatePassword()}>
                                 <View style={styles.nextButton}>
                                     <Text style={styles.buttonText}>
                                         <FontAwesome>{Icons.arrowRight}</FontAwesome>
@@ -228,19 +256,40 @@ class CreateAccount extends Component {
     }
 }
 
-const pickerSelectStyles = StyleSheet.create({
+const pickerSelectStyles = {
     inputIOS: {
         height: 50,
-        fontSize: 16,
+        fontSize: 17,
+        paddingLeft: 20,
         paddingTop: 13,
-        paddingHorizontal: 10,
+        paddingRight: 10,
         paddingBottom: 12,
-        color: 'white'
+        color: '#fff',
+        fontFamily: 'FuturaStd-Light'
     },
+
+    icon : {
+        position: 'absolute',
+        backgroundColor: 'transparent',
+        borderTopWidth: 7.5,
+        borderTopColor: '#fff',
+        borderRightWidth: 7.5,
+        borderRightColor: 'transparent',
+        borderLeftWidth: 7.5,
+        borderLeftColor: 'transparent',
+        width: 0,
+        height: 0,
+        top: 20,
+        right: 12,
+    },
+
+	placeholderColor: '#fff',
+
     inputAndroid: {
         marginLeft: 12,
         color: 'white',
     },
+
     underline: {
         borderTopWidth: 0,
         borderTopColor: '#888988',
@@ -266,6 +315,13 @@ const pickerSelectStyles = StyleSheet.create({
 		top: 20,
 		right: 15,
 	},
-});
+};
 
-export default CreateAccount;
+let mapStateToProps = (state) => {
+    return {
+        countries: state.country.countries
+    };
+}
+
+export default connect(mapStateToProps)(CreateAccount);
+// export default CreateAccount;

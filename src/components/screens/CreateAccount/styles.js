@@ -42,16 +42,19 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         width: '100%',
     },
     finePrintText: {
         paddingLeft: 18,
         flex: 0.8,
-        alignSelf: 'flex-start',
         color: '#fff',
         fontSize: 13,
         fontFamily: 'FuturaStd-Light',
-        maxWidth: 280
+    },
+    switchContainer: {
+        alignSelf: 'center',
+        marginRight: 20,
     },
     switchCheckView: {
         position: 'absolute',
@@ -90,7 +93,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 0
+        bottom: 0,
+        display: 'flex',
+        alignItems: 'center',
     },
     getStartedImage: {
         width: 400,
