@@ -36,6 +36,7 @@ export default class RoomDetailsReview extends Component {
     }
 
     componentDidMount() {
+        this.refs.toast.show("Confirming Rooms", 1500);
         const { params } = this.props.navigation.state; //eslint-disable-line
         console.log(params.guestRecord);
         const value = {
