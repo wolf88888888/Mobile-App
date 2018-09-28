@@ -203,7 +203,7 @@ class Notifications extends Component {
                             <View>
                                 <Text style={styles.navItemText}>Reminder & Suggestions</Text>
                                 <Text style={styles.navText}>
-                                    Recieve reminders,helpful tips to improve your trip and other messages
+                                    Recieve reminders, helpful tips to improve your trip and other messages
                                     related to your activites on LockChain.
                                 </Text>
                             </View>

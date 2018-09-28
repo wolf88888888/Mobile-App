@@ -31,9 +31,11 @@ const styles = StyleSheet.create({
         paddingLeft: 18,
         paddingRight: 18
     },
+    buttonWrapper: {
+        width: '70%',
+    },
     LogInButton: {
         height: 50,
-        width: 280,
         backgroundColor: '#273842',
         borderRadius: 25,
         marginTop: 90,
@@ -48,11 +50,14 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     lowOpacity: {
-        opacity: 0.3
+        opacity: 0.3,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
     },
     getStartedImage: {
         width: 400,
-        height: 80
+        height: 80,
     },
     btn_backImage:{
         height: 28,

@@ -1,4 +1,4 @@
-import { Item, Picker, Text, TextInput, View } from 'react-native';
+import { Item, Picker, Text, TextInput, View, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -84,8 +84,12 @@ export default class GuestFormRow extends Component {
 
     render() {
         return (
+            
             <View style={styles.guestInfoWrapper} key={this.props.guest.key}>
-                <Text style={styles.labelGuest}>Guest</Text>
+
+                {/* <ScrollView> */}
+                    
+                    <Text style={styles.labelGuest}>Guest</Text>
                 <View style={styles.inputFieldsView}>
                     <View style={styles.genderFlex}>
                         <View style={[styles.gender, styles.spaceRight]}>
@@ -119,6 +123,11 @@ export default class GuestFormRow extends Component {
                         />
                     </View>
                 </View>
+                    {/* </KeyboardAvoidingView> */}
+                {/* </ScrollView> */}
+            
+               
+                
             </View>
         )
     }

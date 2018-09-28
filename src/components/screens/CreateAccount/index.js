@@ -237,7 +237,7 @@ class CreateAccount extends Component {
                             <Text style={styles.finePrintText}>
                                 I'd like to receive promotional communications, including discounts,
                                 surveys and inspiration via email, SMS and phone.
-                        </Text>
+                            </Text>
 
                             <View style={styles.switchContainer}>
                                 {userWantsPromo ?

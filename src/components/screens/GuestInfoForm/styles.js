@@ -3,6 +3,8 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
         backgroundColor: '#eee'
     },
     backButton: {
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
     floatingBar: {
         padding: 17,
         position:'absolute',
-        bottom:0,
+        bottom: 0,
         alignSelf:'center',
         height: 90,
         width: '100%',
@@ -175,7 +177,8 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     guestInfoWrapper: {
-        marginTop: 15
+        marginTop: 15,
+        flex: 1
     }
 });
 

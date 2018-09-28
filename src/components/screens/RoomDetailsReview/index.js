@@ -22,6 +22,7 @@ export default class RoomDetailsReview extends Component {
             // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
+            leavingDate: '',
             creationDate: '',
             // cancellationLOCPrice: '',
             cancellationPrice: '',
@@ -29,11 +30,13 @@ export default class RoomDetailsReview extends Component {
             hotelBooking: '',
             booking: '',
             data: '',
-            isLoading: false
+            isLoading: false,
+            cancelationDate: ''
         };
     }
 
     componentDidMount() {
+        this.refs.toast.show("Confirming Rooms", 1500);
         const { params } = this.props.navigation.state; //eslint-disable-line
         console.log(params.guestRecord);
         const value = {
@@ -43,32 +46,50 @@ export default class RoomDetailsReview extends Component {
                 ,
                 'children': []
             }],
-            'currency': 'USD'
+            'currency': params.currency
         };
 
         requester.createReservation(value).then(res => {
-            res.body.then(data => {
-                const bookingId = data.preparedBookingId;
-                const hotelBooking = data.booking.hotelBooking[0];
-                const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
-                const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
-                this.setState({
-                    // bookingDetail: data,
-                    roomName: data.booking.hotelBooking[0].room.roomType.text,
-                    arrivalDate: endDate.format('DD MMM'),
-                    creationDate: startDate.format('DD MMM'),
-                    cancellationPrice: data.fiatPrice,
-                    bookingId: bookingId,
-                    hotelBooking: hotelBooking,
-                    booking: value,
-                    data: data
-                    // cancellationLOCPrice: data.locPrice,
-                });
-            })
-                .catch((err) => {
-                    //Toast.showWithGravity('Access to one of the quotes failed. The quote is no longer available.', Toast.SHORT, Toast.CENTER);
+            if (res.success){
+                // console.log("createReservation  ---", res)
+                res.body.then(data => {
+                    // let data = res.body;
+                    // console.log("createReservation  ---", data)
+                    const bookingId = data.preparedBookingId;
+                    const hotelBooking = data.booking.hotelBooking[0];
+                    const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
+                    const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                    const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
+                    .add(data.booking.hotelBooking[0].nights, 'days');
+                    this.setState({
+                        // bookingDetail: data,
+                        roomName: data.booking.hotelBooking[0].room.roomType.text,
+                        arrivalDate: endDate.format('DD MMM'),
+                        leavingDate: leavingDate.format('DD MMM'),
+                        cancelationDate: endDate.format('DD MMM YYYY'),
+                        creationDate: startDate.format('DD MMM'),
+                        cancellationPrice: data.fiatPrice,
+                        bookingId: bookingId,
+                        hotelBooking: hotelBooking,
+                        booking: value,
+                        data: data
+                        // cancellationLOCPrice: data.locPrice,
+                    });
+                }).catch((err) => {
                     console.log(err); //eslint-disable-line
                 });
+            }
+            else {
+                res.errors.then(data => {
+                    console.log(data);
+                    console.log(data.errors.RoomsXmlResponse.message);
+                    this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000);
+                });
+            }
+        }).catch((main_err) => {
+            this.refs.toast.show("Error", 1500);
+            console.log("Error Room");
+            console.log(main_err);
         });
     }
 
@@ -166,6 +187,7 @@ export default class RoomDetailsReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
+        console.log(params);
         return (
             <View style={styles.container}>
                 <Toast
@@ -237,7 +259,7 @@ export default class RoomDetailsReview extends Component {
                     <View style={styles.modalView}>
                         <View style={styles.popup}>
                             <View style={styles.labelCloseView}>
-                                <Text style={styles.walletPasswordLabel}>Cancellation Fee</Text>
+                                <Text style={styles.walletPasswordLabel}>Cancellation Condition</Text>
                                 <View style={styles.closeButtonView}>
                                     <TouchableOpacity
                                         onPress={() => {
@@ -249,8 +271,15 @@ export default class RoomDetailsReview extends Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <Text style={{ fontFamily: 'FuturaStd-Light' }}>USD {this.state.cancellationPrice} -
-                                ({this.state.cancellationPrice}LOC)</Text>
+                            <View style={{flexDirection: 'column', marginTop: 10}}>
+                                <Text style={{ fontFamily: 'FuturaStd-Light'}}>Cancellation fee before {this.state.cancelationDate}</Text>
+                                <Text style={{ fontFamily: 'FuturaStd-Light' }}>{params.currency} 0.00 (0.0000 LOC)</Text>
+                            </View>
+                            <View style={{flexDirection: 'column', marginTop: 10}}>
+                                <Text style={{ fontFamily: 'FuturaStd-Light'}}>Cancel on {this.state.cancelationDate}</Text>
+                                <Text style={{ fontFamily: 'FuturaStd-Light' }}>{params.currency} {this.state.cancellationPrice} -
+                                ({this.state.cancellationPrice} LOC)</Text>
+                            </View>
                             <TouchableOpacity
                                 style={styles.confirmButton}
                                 onPress={() => {
@@ -301,7 +330,7 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Dates</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>{this.state.creationDate} - {this.state.arrivalDate}</Text>
+                            <Text style={styles.rhs}>{this.state.arrivalDate} - {this.state.leavingDate}</Text>
                         </View>
                     </View>
                     <View style={styles.listItem}>
@@ -309,9 +338,11 @@ export default class RoomDetailsReview extends Component {
                             <Text style={styles.listItemText}>Guests</Text>
                         </View>
                         <View style={styles.listItemRhsWrapper}>
-                            <Text style={styles.rhs}>2</Text>
+                            <Text style={styles.rhs}>{params.guests}</Text>
                         </View>
                     </View>
+                    
+                    {/* Get Cancellation Fees */}
                     <View style={styles.listItem}>
                         <View style={styles.listItemNameWrapper}>
                             <Text style={styles.listItemText}>Cancellation Fees</Text>
@@ -326,6 +357,7 @@ export default class RoomDetailsReview extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+
                 </ScrollView>
 
                 {/* Bottom Bar */}
@@ -333,11 +365,11 @@ export default class RoomDetailsReview extends Component {
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
-                            <Text style={styles.period1}> for 1 nights</Text>
+                            <Text style={styles.period1}> for {params.daysDifference} nights</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaStd]}>{params.priceLOC} LOC</Text>
-                            <Text style={styles.period2}> for 1 nights</Text>
+                            <Text style={styles.period2}> for {params.daysDifference} nights</Text>
                         </View>
                     </View>
                     <View style={styles.payButtonView}>
@@ -396,7 +428,18 @@ RoomDetailsReview.defaultProps = {
             lastName: ''
         }
     ]
-    // testBookParameter: {
+};
+
+RoomDetailsReview.propTypes = {
+    hotelName: PropTypes.string, //eslint-disable-line
+    hotelAddress: PropTypes.string,//eslint-disable-line
+    priceInUserCurreny: PropTypes.number,//eslint-disable-line
+    priceInLoc: PropTypes.number,//eslint-disable-line
+    guests: PropTypes.array,//eslint-disable-line
+};
+
+
+// testBookParameter: {
     //     "quoteId":"249357191-0",
     //         "rooms":[{
     //             "adults":[{
@@ -407,12 +450,8 @@ RoomDetailsReview.defaultProps = {
     //         }],
     //         "currency":"USD"
     // }
-};
 
-RoomDetailsReview.propTypes = {
-    hotelName: PropTypes.string, //eslint-disable-line
-    hotelAddress: PropTypes.string,//eslint-disable-line
-    priceInUserCurreny: PropTypes.number,//eslint-disable-line
-    priceInLoc: PropTypes.number,//eslint-disable-line
-    guests: PropTypes.array//eslint-disable-line
-};
+
+
+//     Cancellation fee before 27 Sep 2018 including	USD 0.00 (0.0000 LOC)
+// Cancel on 27 Sep 2018	USD 424.47 (890.6885 LOC)

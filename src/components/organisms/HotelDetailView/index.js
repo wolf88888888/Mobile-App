@@ -111,7 +111,7 @@ class HotelDetailView extends Component {
               </CardView>
 
               <View style={styles.descriptionView}>
-                  <Text style={styles.normalText}>{this.props.description}</Text>
+                  <Text style={styles.normalText}>{`${this.props.description}`.replace(/<(?:.|\n)*?>/gm, '')}</Text>
               </View>
           </View>
         );
