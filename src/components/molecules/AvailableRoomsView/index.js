@@ -56,14 +56,7 @@ class AvailableRoomsView extends Component {
                 flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
             }}
             >
-                <Image
-                    style={{
-                        height: 35, width: 35
-                    }}
-                    source={{
-                        uri: 'https://alpha.locktrip.com/images/loader.gif'
-                    }}
-                />
+                <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
             </View>
         );
     }

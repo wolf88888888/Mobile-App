@@ -4,11 +4,13 @@ const dimensionWindows = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#f0f1f3'
+        alignItems: 'stretch',
+        backgroundColor: '#f0f1f3',
+        height:'100%',
+        position:'relative',
+        paddingBottom: 10
     },
-
     scrollView: {
         position: 'absolute',
         top: 100,
@@ -18,7 +20,9 @@ const styles = StyleSheet.create({
     },
 
     searchAreaView: {
-        flex:1,
+        //width: '68%',
+       // height: 105,
+       flex:1,
         backgroundColor: '#f0f1f3',
         paddingTop: 40,
         paddingLeft: 15,
@@ -163,11 +167,10 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     searchButtonView: {
+        width: '90%',
         backgroundColor: '#DA7B61',
         alignItems: 'center',
-        justifyContent: 'center',
         flex: 1,
-        height: dimensionWindows.height*0.08,
         marginTop: 10,
         marginBottom: 10,
         marginLeft: 15,
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     searchButtonText: {
         color: '#fff',
         fontFamily: 'FuturaStd-Light',
-        fontSize: dimensionWindows.width * 0.05,
+        fontSize: 17,
         padding: 14
     },
     title: {
@@ -565,25 +568,22 @@ const styles = StyleSheet.create({
     },
 
     scrollViewContent : {
-        
+        flexGrow: 1, padding:16, paddingVertical: 10,
     },
 
     scrollViewContentMain:{
-      
+      padding:0,
+      margin:0
     },
 
     scrollViewTitles:{
         fontFamily: 'FuturaStd-Medium',
-        fontSize: dimensionWindows.width*0.048,
+        fontSize: 17,
         color: '#1f2427',
-        top: 2,
-        marginLeft:15
+        top: 2
     },
 
-    viewDiscover: {
-        height: '100%',
-        width: '100%'
-    },
+    viewDiscover: {width:'100%', height:100,  flexDirection: 'row', marginBottom: 10},
     divider : {
         marginTop: 10,
         marginBottom: 10,
@@ -598,50 +598,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 3,
         borderBottomColor: '#DA7B61'
     },
-    
-    imageViewDiscoverLeft: {
-        flex: 1,
-        marginRight: 5
-    },
-
-    imageViewDiscoverRight: {
-        height: '100%', 
-        flex:1,
-        marginLeft: 5
-    },
-
-    viewPopularHotels: {
-        marginTop:10,
-        flex: 0.3,
-        flexDirection: 'row'},
-
-    homehotelsView: {
-        width: dimensionWindows.width / 2.2 - 4,
-        height: dimensionWindows.width / 4
-    },
-
-    imageViewHotelsHomes: {
-        width: '100%',
-        height: '100%'
-    },
-    
-    subViewPopularHotelsLeft: {
-        width: dimensionWindows.width / 2.2 - 4,
-        height: dimensionWindows.width / 3,
-        marginRight: 5
-    },
-    subViewPopularHotelsRight : {
-    	width: dimensionWindows.width /  2.2 - 4,
-        height: dimensionWindows.width / 3,
-        marginLeft: 5
-
- 	},
-    imageViewPopularHotels: {width: dimensionWindows.width/2.2,height: dimensionWindows.width/3},
+    imageViewDiscoverLeft: {height: '100%', flex:1, marginRight: 4},
+    imageViewDiscoverRight: {height: '100%', flex:1, marginLeft: 4},
+    viewPopularHotels: {marginTop:10, width:'100%', height:110, flexDirection: 'row'},
+    subViewPopularHotelsLeft: {flex:1, backgroundColor:'white',marginRight: 4},
+    subViewPopularHotelsRight : {flex:1, backgroundColor:'white',marginLeft: 4},
+    imageViewPopularHotels: {height: 120, width:'100%'},
     bottomView: {flexDirection: 'column', justifyContent: 'space-between',alignItems: 'center'},
-    bottomViewText: {margin:10, width:dimensionWindows.width/2, height: dimensionWindows.height/7},
-    bottomViewBanner: {
-        marginTop:10,
-        height: dimensionWindows.height/7, width: dimensionWindows.width},
+    bottomViewText: {margin:10,height: 50, width:'60%'},
+    bottomViewBanner: {marginTop:10,height: 80, width:'100%',},
     countriesSpinner: {
         marginTop: 40,
         flex: 1,
