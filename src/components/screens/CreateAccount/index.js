@@ -38,6 +38,14 @@ class CreateAccount extends Component {
             countryName: undefined
         };
         this.animationTime = 150; // time for switch to slide from one end to the other
+        
+        const { params } = this.props.navigation.state;
+        console.log("CreateAccount", params);
+        if (params != undefined && params != null) {
+            this.state.firstName = params.firstName;
+            this.state.lastName = params.lastName;
+            this.state.email = params.email;
+        }
         // this.getCountriesForSignup();
     }
 
@@ -98,26 +106,41 @@ class CreateAccount extends Component {
         // });
     }
 
-    goToCreatePassword() {
-        const {
-            firstName, lastName, email, country, userWantsPromo, checkZIndex
-        } = this.state;
-        
-        if (country === undefined || country === '') {
-            Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
+    goToNextScreen() {
+        const { params } = this.props.navigation.state;
+
+        if (params != undefined && params != null) {
+            const {
+                firstName, lastName, email, country, userWantsPromo, checkZIndex
+            } = this.state;
+            if (country === undefined || country === '') {
+                Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
+            }
+            else {
+                this.props.navigation.navigate('Terms', { ...params, firstName, lastName, email, country, userWantsPromo })
+            }
         }
         else {
-            requester.getEmailFreeResponse(email).then(res => {
-                res.body.then(data => {
-                    if (data.exist) {
-                        Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
-                    } else {
-                        this.props.navigation.navigate('CreatePassword', {
-                            firstName, lastName, email, country, userWantsPromo
-                        })
-                    }
+            const {
+                firstName, lastName, email, country, userWantsPromo, checkZIndex
+            } = this.state;
+            
+            if (country === undefined || country === '') {
+                Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
+            }
+            else {
+                requester.getEmailFreeResponse(email).then(res => {
+                    res.body.then(data => {
+                        if (data.exist) {
+                            Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
+                        } else {
+                            this.props.navigation.navigate('CreatePassword', {
+                                firstName, lastName, email, country, userWantsPromo
+                            })
+                        }
+                    });
                 });
-            });
+            }
         }
     }
 
@@ -125,7 +148,15 @@ class CreateAccount extends Component {
         const {
             firstName, lastName, email, country, userWantsPromo, checkZIndex
         } = this.state;
+        const { params } = this.props.navigation.state;
         const { navigate, goBack } = this.props.navigation;
+
+        let isEditableEmail = true;
+        if (params != undefined && params != null) {
+            if (params.email != null && params.email != "") {
+                isEditableEmail = false;
+            }
+        }
 
         return (
             <KeyboardAwareScrollView
@@ -169,6 +200,7 @@ class CreateAccount extends Component {
 
                         <View style={styles.inputView}>
                             <SmartInput
+                                editable={isEditableEmail} selectTextOnFocus={isEditableEmail} 
                                 keyboardType="email-address"
                                 autoCorrect={false}
                                 autoCapitalize="none"
@@ -241,7 +273,7 @@ class CreateAccount extends Component {
                         <View style={styles.nextButtonView}>
                             <TouchableOpacity
                                 disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
-                                onPress={() => this.goToCreatePassword()}>
+                                onPress={() => this.goToNextScreen()}>
                                 <View style={styles.nextButton}>
                                     <Text style={styles.buttonText}>
                                         <FontAwesome>{Icons.arrowRight}</FontAwesome>

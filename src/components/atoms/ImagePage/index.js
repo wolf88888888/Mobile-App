@@ -8,72 +8,69 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import Header from './viewer-header';
 import Carousel from './carousel';
 import TouchableImage from './touchable-image';
-
-type Props = {
-  indicatorAtBottom: boolean,
-  indicatorOffset: number,
-  images: {uri: string}[],
-  renderHeader: ({[key: string]: any}, number) => void,
-  renderFooter: ({[key: string]: any}, number) => void,
-}
+import PropTypes from 'prop-types';
 
 export default class ImageCarousel extends Component {
-  props: Props
-  state: {
-    showModal: boolean,
-    imageIndex: number,
-    fromCarousel: boolean,
+
+  static propTypes = {
+    indicatorAtBottom: PropTypes.boolean,
+    indicatorOffset: PropTypes.number,
+    images: [],
+    renderHeader: PropTypes.func,
+    renderFooter: PropTypes.func,
   }
-  scrolling: boolean
+
+  static defaultProps = {
+    indicatorAtBottom: false,
+    indicatorOffset: 0,
+    images: [],
+    renderHeader: ([], number) => {},
+    renderFooter: ([], number) => {},
+  }
 
   static defaultProps = {
     renderHeader: () => {},
     renderFooter: () => {},
   }
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     this.state = {
       showModal: false,
       imageIndex: 0,
       fromCarousel: false,
     };
-
-    (this: any)._onPressImg = this._onPressImg.bind(this);
-    (this: any)._updateIndex = this._updateIndex.bind(this);
-    (this: any)._closeModal = this._closeModal.bind(this);
-    (this: any)._setPageChange = this._setPageChange.bind(this);
   }
 
-  _onPressImg(i) {
+  _onPressImg = (i) => {
     this.setState({
       showModal: true,
       imageIndex: i,
     });
   }
 
-  _updateIndex(i, fromCarousel) {
+  _updateIndex = (i, fromCarousel) => {
     this.setState({
       imageIndex: i,
       fromCarousel,
     });
   }
 
-  _closeModal() {
+  _closeModal = () => {
     this.setState({
       showModal: false,
     });
   }
 
-    _onScroll() {
+    _onScroll = () => {
         this.scrolling = true;
     }
 
-    _setScrollFalse() {
+    _setScrollFalse = () => {
         this.scrolling = false;
     }
 
-    _setPageChange(activeIndex) {
+    _setPageChange = (activeIndex) => {
       this._setScrollFalse();
       this._updateIndex(activeIndex, true);
     }
@@ -118,6 +115,7 @@ export default class ImageCarousel extends Component {
         <View style={[extraPadding, {flex:1}]}>
             <Carousel
               {...rest}
+              delay = {this.props.delay}
               contentContainer={{flex:1}}
               indicatorOffset={indicatorOffset}
               indicatorAtBottom={indicatorAtBottom}
