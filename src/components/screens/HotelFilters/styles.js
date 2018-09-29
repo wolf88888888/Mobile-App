@@ -1,9 +1,28 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native';
+const { width } = Dimensions.get('screen');
+const dimensionWindows = Dimensions.get('window');
 
 export default styles = StyleSheet.create({
     container: {
         height: '100%',
         backgroundColor: '#eee'
+    },
+    backButton:{
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginTop: 25,
+        marginLeft: 15,
+    },
+    btn_backImage:{
+        height: 24,
+        width: 24,
+        resizeMode: 'contain'
+      },
+      titleText: {
+        color: '#000',
+        fontSize: 22,
+        fontFamily: 'FuturaStd-Light',
+        marginLeft: 20,
     },
     closeView: {
         height: 80,
@@ -33,7 +52,6 @@ export default styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     header: {
-        height: '25%',
         justifyContent: 'center',
         alignItems: 'flex-end',
         flexDirection: 'row',
@@ -62,7 +80,12 @@ export default styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     residenceView: {
-        marginHorizontal: 15
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        borderBottomColor: '#d4d4d4',
+        borderBottomWidth: 1,
+        paddingBottom: 15
     },
     tick: {
         width: 20,
@@ -210,5 +233,22 @@ export default styles = StyleSheet.create({
         paddingBottom: 12,
         backgroundColor: 'white',
         color: 'black'
-    }
+    },
+    searchButtonView: {
+        backgroundColor: '#DA7B61',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        height: dimensionWindows.height*0.08,
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 17,
+        marginRight: 17
+    },
+    searchButtonText: {
+        color: '#fff',
+        fontFamily: 'FuturaStd-Light',
+        fontSize: dimensionWindows.width * 0.05,
+        padding: 14
+    },
 })
