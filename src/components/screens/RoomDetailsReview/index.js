@@ -49,9 +49,11 @@ export default class RoomDetailsReview extends Component {
             'currency': params.currency
         };
 
+        console.log("createReservationcreateReservation  ---", value)
         requester.createReservation(value).then(res => {
+            console.log("createReservation  ---", res)
             if (res.success){
-                // console.log("createReservation  ---", res)
+                console.log("createReservation  ---", res)
                 res.body.then(data => {
                     // let data = res.body;
                     // console.log("createReservation  ---", data)
@@ -81,7 +83,7 @@ export default class RoomDetailsReview extends Component {
             }
             else {
                 res.errors.then(data => {
-                    console.log(data);
+                    console.log(data.errors);
                     console.log(data.errors.RoomsXmlResponse.message);
                     this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000);
                 });

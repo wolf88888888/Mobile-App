@@ -70,6 +70,7 @@ class Login extends Component {
         this.setState({ showProgress: true });
 
         requester.login(user, null).then(res => {
+            console.log("requester.login", res);
             this.setState({ showProgress: false });
             if (res.success) {
                 res.body.then(data => {

@@ -33,6 +33,8 @@ export default class GuestFormRow extends Component {
             guestRecord: {}
         }
         this.getUserName();
+
+        console.log("GuestFormRow--------------");
     }
 
     async getUserName() {
@@ -44,6 +46,10 @@ export default class GuestFormRow extends Component {
             });
             this.props.onFirstNameChange(0, firstName == null ? '' : firstName);
             this.props.onLastNameChange(0, lastName == null ? '' : lastName);
+        }
+        else {
+            this.props.onFirstNameChange(0, "Optional");
+            this.props.onLastNameChange(0, "Optional");
         }
     }
 

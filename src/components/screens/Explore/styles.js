@@ -24,30 +24,33 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15
     },
+
     blank:{
         height: 70,
         backgroundColor: '#fff'
     },
+
     SearchAndPickerwarp:{
         display: 'flex',
         flexDirection: 'row',
         marginBottom:10
     },
+
     bottomWrapper:{
      marginTop:20,
       flex: 1,
      justifyContent: 'center', 
      alignItems: 'center'
     },
-    getStartedButtonView:
-    {
+
+    getStartedButtonView: {
         width: '50%',
+        height: dimensionWindows.height * 0.07,
         backgroundColor: '#DA7B61',
         marginTop: 10,
         marginBottom: 10,
         paddingVertical: 0,
         alignItems: 'center',
-
     },
 
     pickerWrap:{
@@ -167,7 +170,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
-        height: dimensionWindows.height*0.08,
+        height: dimensionWindows.height * 0.07,
         marginTop: 10,
         marginBottom: 10,
         marginLeft: 15,

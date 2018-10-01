@@ -8,12 +8,10 @@ import { withNavigation } from 'react-navigation';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import queryString from 'query-string';
 import Image from 'react-native-remote-svg';
 
 import { imgHost, socketHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
-import SmallPropertyTile from '../../molecules/SmallPropertyTile';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HotelItemView from '../../organisms/HotelItemView';
 import requester from '../../../initDependencies';
@@ -80,6 +78,7 @@ class Property extends Component {
             children: 0,
             infants: 0,
             childrenBool: false,
+            daysDifference: 1,
             roomsDummyData: [{
                 adults: 2,
                 children: []
@@ -90,7 +89,6 @@ class Property extends Component {
             selectedRating: [false, false, false, false, false],
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
-        console.log("Property Native", params);
 
         if (params) {
             this.state.search = params.searchedCity;
@@ -109,6 +107,7 @@ class Property extends Component {
             this.state.checkOutDateFormated = params.checkOutDateFormated;
             this.state.roomsDummyData = params.roomsDummyData;
             this.state.filter = params.filter;
+            this.state.daysDifference = params.daysDifference;
             console.log("Property this.state", this.state);
         }
 
@@ -232,10 +231,14 @@ class Property extends Component {
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
 
-                
-                this.setState(prevState => ({
-                    hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
-                }));
+                if (this.state.hotelsInfo.length < this.listView.getRows.length || this.state.hotelsInfo.length % 10 === 0) {
+                    this.setState(prevState => ({
+                        hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
+                    }));
+                }
+                else {
+                    this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
+                }
 
                 if (this.listView != null) {
                     const index = this.listView.getIndex(jsonHotel.id);
@@ -311,6 +314,7 @@ class Property extends Component {
                     currencySign: this.state.currencySign,
                     hotelFullDetails: data,
                     dataSourcePreview: hotelPhotos,
+                    daysDifference: this.state.daysDifference
                 });
             }).catch((err) => {
                 console.log(err);
@@ -466,7 +470,7 @@ class Property extends Component {
     }
 
     renderPaginationFetchingView = () => (
-        <View style={{width, height:height - 90, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{width, height:height - 160, justifyContent: 'center', alignItems: 'center'}}>
             <Image style={{width:50, height:50}} source={require('../../../assets/loader.gif')}/>
         </View>
     )
