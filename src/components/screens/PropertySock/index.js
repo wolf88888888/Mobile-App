@@ -345,6 +345,7 @@ class Property extends Component {
                     currencySign: this.state.currencySign,
                     hotelFullDetails: data,
                     dataSourcePreview: hotelPhotos,
+                    daysDifference: this.state.daysDifference
                 });
             }).catch((err) => {
                 console.log(err);
