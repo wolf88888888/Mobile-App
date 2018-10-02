@@ -424,7 +424,9 @@ class Property extends Component {
             updateFilter: this.updateFilter,
             selectedRating: this.state.selectedRating,
             showUnAvailable: this.state.showUnAvailable,
-            hotelName: this.state.nameFilter
+            hotelName: this.state.nameFilter,
+            currency: this.state.currency,
+            currencySign: this.state.currencySign,
         });
     }
 
@@ -567,16 +569,18 @@ class Property extends Component {
                 </TouchableOpacity>
                 {/* Search Text Field */}
                 <Text>{this.state.log}</Text>
-                <View pointerEvents="none" style={styles.searchAreaView}>
-                    <SearchBar
-                        autoCorrect={false}
-                        value={search}
-                        onChangeText={this.onSearchHandler}
-                        placeholder={searchedCity}
-                        placeholderTextColor="#bdbdbd"
-                        leftIcon="search"
-                    />
-                </View>
+                <TouchableOpacity onPress={() => this.onBackPress()} style={styles.searchAreaView}>
+                    <View pointerEvents="none">
+                        <SearchBar
+                            autoCorrect={false}
+                            value={search}
+                            onChangeText={this.onSearchHandler}
+                            placeholder={searchedCity}
+                            placeholderTextColor="#bdbdbd"
+                            leftIcon="search"
+                        />
+                    </View>
+                </TouchableOpacity>
                 {/* Filter Box */}
                 {this.state.isFilterLoaded && this.renderFilter()}
 
@@ -588,7 +592,7 @@ class Property extends Component {
                 {this.state.showResultsOnMap &&
                     <TouchableOpacity onPress={this.alterMap}>
                         <View style={{
-                            marginLeft: 18, marginTop: 20, marginRight: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
+                            marginTop: 20, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
                         }}
                         >
                             <ImageBackground source={require('../../../assets/map_button.jpg')} style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
@@ -672,7 +676,7 @@ class Property extends Component {
                                         disabled={!this.state.isFilterLoaded && true}
                                         onPress={this.alterMap}>
                                         <View style={{
-                                            marginLeft: 18, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
+                                            alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
                                         }}
                                         >
                                             <ImageBackground source={require('../../../assets/map_button.jpg')} style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>

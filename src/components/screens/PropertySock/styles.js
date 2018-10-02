@@ -5,14 +5,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#f0f1f3'
+        backgroundColor: '#f0f1f3',
+        paddingLeft: 17,
+        paddingRight: 17
     },
     searchAreaView: {
         width: '100%',
         backgroundColor: '#f0f1f3',
         paddingTop: 20,
-        paddingLeft: 17,
-        paddingRight: 17
     },
     itemView:{
         marginTop: 10,
@@ -20,8 +20,6 @@ const styles = StyleSheet.create({
     },
     sectionView: {
         width: '100%',
-        paddingLeft: 17,
-        paddingRight: 17
     },
     subtitleView: {
         backgroundColor: 'green',
@@ -49,8 +47,8 @@ const styles = StyleSheet.create({
         flex: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginLeft: 18,
-        marginRight: 18
+        // marginLeft: 18,
+        // marginRight: 18
     },
     dateView: {
         flex: 1,
@@ -106,8 +104,8 @@ const styles = StyleSheet.create({
     },
     btnSearch: {
         margin: 10,
-        marginLeft: 18,
-        marginRight: 18,
+        // marginLeft: 18,
+        // marginRight: 18,
         padding: 14,
         alignItems: 'center',
         backgroundColor: '#cc8068'
@@ -119,7 +117,7 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     discoverView: {
-        padding: 18
+        //padding: 18
     },
     discoverText: {
         fontSize: 16,
@@ -131,7 +129,7 @@ const styles = StyleSheet.create({
         height: 100
     },
     topDestinationsView: {
-        padding: 18
+        //padding: 18
     },
     topDestinationsText: {
         fontSize: 16,
@@ -146,7 +144,7 @@ const styles = StyleSheet.create({
         marginRight: 6
     },
     popularHotelsView: {
-        paddingHorizontal: 18,
+        //paddingHorizontal: 18,
         paddingBottom: 18
     },
     popularHotelsText: {
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
         
     },
     flatList:{
-        marginRight: 18,
+        // marginRight: 18,
     },
     card: {
         height: 230,
@@ -248,7 +246,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     listHotelView: {
-        padding: 18,
+        //padding: 18,
         alignItems: 'center'
     },
     hostHeader: {
@@ -303,7 +301,6 @@ const styles = StyleSheet.create({
     },
     backButton:{
         marginTop: 25,
-        marginLeft: 15,
     },
     btn_backImage:{
         height: 24,
@@ -311,8 +308,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
       },
       searchButtonView: {
-        marginLeft: 18,
-        marginRight: 18,
+        //marginLeft: 18,
+        //marginRight: 18,
         alignItems: 'center',
         backgroundColor: '#cc8068'
     },
@@ -326,8 +323,8 @@ const styles = StyleSheet.create({
     map: {
         marginTop: 18,
         zIndex: -1,
-        marginLeft: 18,
-        marginRight: 18,
+        //marginLeft: 18,
+        //marginRight: 18,
         alignItems: 'center',
         height: '100%',
     },

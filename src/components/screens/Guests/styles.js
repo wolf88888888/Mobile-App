@@ -7,6 +7,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f1f3'
     },
 
+    backButton:{
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginTop: 25,
+        marginLeft: 15,
+    },
+    btn_backImage:{
+        height: 24,
+        width: 24,
+        resizeMode: 'contain'
+      },
+      titleText: {
+        color: '#000',
+        fontSize: 22,
+        fontFamily: 'FuturaStd-Light',
+        marginLeft: 20,
+    },
+
     bodyRows: {
         flex: 1,
         flexDirection: 'column',

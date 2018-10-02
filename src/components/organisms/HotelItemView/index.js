@@ -122,9 +122,9 @@ class HotelItemView extends Component {
                             <Text style={styles.perNight}>Loading...</Text>
                             </View> :
                             <View style={styles.costView}>
-                            <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{item.price}</Text>
-                            <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
-                            <Text style={styles.perNight}>per night</Text>
+                                <Text style={styles.cost} adjustsFontSizeToFit={true} minimumFontScale={0.01} numberOfLines={1} ellipsizeMode="tail">{currencySign}{item.price}</Text>
+                                <Text style={styles.costLoc} adjustsFontSizeToFit={true} minimumFontScale={0.01} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
+                                <Text style={styles.perNight} adjustsFontSizeToFit={true} minimumFontScale={0.01}>per night</Text>
                             </View>
                         }
                     </View>

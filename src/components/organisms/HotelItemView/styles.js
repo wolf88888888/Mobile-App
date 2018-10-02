@@ -6,8 +6,6 @@ const styles = StyleSheet.create({
     
     card: {
         flexDirection: 'row',
-        marginLeft: 18,
-        marginRight: 18,
         marginTop: 18,
         paddingTop: 2,
         paddingLeft: 2,
@@ -64,24 +62,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     costView: {
-        width: '100%',
+        width: '96%',
         flexDirection: 'row',
         position: 'absolute',
         bottom: 10,
+        right: 0,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
     cost: {
+        flex:1.05,
         color: 'black',
         fontSize: 18,
         fontFamily: 'FuturaStd-Medium'
     },
     costLoc: {
+        flex:1.35,
         color: 'black',
         fontSize: 14,
         fontFamily: 'FuturaStd-Medium'
     },
     perNight: {
+        flex:0.6,
         fontSize: 10,
         fontFamily: 'FuturaStd-Light',
     },
