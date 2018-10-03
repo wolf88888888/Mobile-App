@@ -154,7 +154,7 @@ class Welcome extends Component {
             requester.getEmailFreeResponse(this.fbInfo.email).then(res => {
                 res.body.then(data => {
                     if (data.exist) {
-                        Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
+                        Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.BOTTOM);
                     } else {
                         this.props.navigation.navigate('CreateAccount', 
                             {
