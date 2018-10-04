@@ -103,8 +103,8 @@ class SimpleUserProfile extends Component {
 
         let image = '';
         if (this.state.image != '') {
-            if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
-                image = { uri: 'https://staging.locktrip.com/images/default.png' };
+            if (this.state.image.indexOf("images/default.png".toLowerCase()) != -1){ 
+                mageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
             }
             else {
                 image = { uri: imgHost + this.state.image }

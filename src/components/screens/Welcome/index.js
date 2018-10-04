@@ -173,16 +173,16 @@ class Welcome extends Component {
         }
         else {
             this.props.navigation.navigate('CreateAccount', 
-            {
-                firstName:this.fbInfo.first_name, 
-                lastName:this.fbInfo.last_name, 
-                email:'',
-                userWantsPromo: true, 
-                password:this.fbInfo.id+"!a123",
-                authId:"fid" + this.fbInfo.id,
-                authProvider: "facebook",
-            }
-        ); 
+                {
+                    firstName:this.fbInfo.first_name, 
+                    lastName:this.fbInfo.last_name, 
+                    email:'',
+                    userWantsPromo: true, 
+                    password:this.fbInfo.id+"!a123",
+                    authId:"fid" + this.fbInfo.id,
+                    authProvider: "facebook",
+                }
+            ); 
         }
     }
 

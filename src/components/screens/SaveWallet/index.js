@@ -17,6 +17,7 @@ import Toast from 'react-native-simple-toast';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import { PUBLIC_URL } from '../../../config.js'
 
 class SaveWallet extends Component {
     static propTypes = {
@@ -56,7 +57,7 @@ class SaveWallet extends Component {
         const { params } = this.props.navigation.state;
         const {navigate} = this.props.navigation;
         let user = params;
-        user['image'] = "https://staging.locktrip.com/images/default.png";
+        user['image'] = PUBLIC_URL + "images/default.png";
         user['jsonFile'] = this.state.walletJson;
         user['locAddress'] = this.state.walletAddress;
 

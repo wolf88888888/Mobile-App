@@ -28,8 +28,6 @@ class Profile extends Component {
             locRate: props.locRate,
             currencySelectionVisible: false,
         }
-        this.onCurrency = this.onCurrency.bind(this);
-        this.updateGender = this.updateGender.bind(this);
         this.showToast = this.showToast.bind(this);
         this.navigateToPaymentMethods = this.navigateToPaymentMethods.bind(this);
 
@@ -67,11 +65,11 @@ class Profile extends Component {
         }
     }
 
-    onCurrency() {
+    onCurrency = () => {
         this.setState({ currencySelectionVisible: true });
     }
 
-    updateGender(gender) {
+    updateGender = (gender) => {
         this.setState({
             info: {
                 ...this.state.info,
