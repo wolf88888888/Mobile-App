@@ -13,8 +13,8 @@ import Image from 'react-native-remote-svg';
 import styles from './styles';
 import Button from '../../atoms/Button';
 
-class CongratsWallet extends Component {
 
+class CongratulationRegister extends Component {
     constructor(props) {
         super(props)
         this.gotoRoot = this.gotoRoot.bind(this);
@@ -55,9 +55,9 @@ class CongratsWallet extends Component {
                         source={require('../../../assets/walletCongrats.png')}
                         style={styles.walletCongratsImage} />
                     <Text style={styles.bigTitle}>Congratulations!</Text>
-                    <Text style={styles.subTitle}>Your LOC Wallet Has Been Created</Text>
+                    <Text style={styles.subTitle}>Your Account Has Been Created</Text>
                     <View style={styles.gotoButtonContainer}>
-                        <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Done" />
+                        <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Proceed to Login" />
                     </View>
                 </View>
             </View>
@@ -65,4 +65,4 @@ class CongratsWallet extends Component {
     }
 }
 
-export default CongratsWallet;
+export default CongratulationRegister;

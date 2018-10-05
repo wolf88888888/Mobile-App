@@ -19,6 +19,7 @@ import Login from '../components/screens/Login';
 import CreateAccount from '../components/screens/CreateAccount';
 import CreatePassword from '../components/screens/CreatePassword';
 import Terms from '../components/screens/Terms';
+import CongratulationRegister from '../components/screens/CongratulationRegister'
 
 import Explore from '../components/screens/Explore';
 import Profile from '../components/screens/Profile'
@@ -116,6 +117,7 @@ const RootNavigator = createStackNavigator(
         SaveWallet: { screen: SaveWallet },
         WalletKeywordValidation: {screen: WalletKeywordValidation},
         CongratsWallet: { screen: CongratsWallet },
+        CongratulationRegister: { screen: CongratulationRegister },
         MainScreen: { screen: MainNavigator },
         GuestsScreen: { screen: Guests },
         CalendarScreen: {screen: Calendar},

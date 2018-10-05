@@ -28,9 +28,6 @@ class Profile extends Component {
             locRate: props.locRate,
             currencySelectionVisible: false,
         }
-        this.showToast = this.showToast.bind(this);
-        this.navigateToPaymentMethods = this.navigateToPaymentMethods.bind(this);
-
         this.props.actions.getCurrency(props.currency, false);
     }
 
@@ -39,7 +36,7 @@ class Profile extends Component {
         this.setState({
             walletAddress: walletAddress,
         });
-        if (walletAddress != '') {
+        if (walletAddress !== null && walletAddress !== '') {
             Wallet.getBalance(walletAddress).then(x => {
                 const ethBalance = x / (Math.pow(10, 18));
                 this.setState({ ethBalance: ethBalance });
@@ -49,10 +46,6 @@ class Profile extends Component {
                 this.setState({ locBalance: locBalance });
             });
         }
-    }
-
-    componentDidCatch(errorString, errorInfo) {
-        console.log("componentDidCatch");
     }
 
     componentDidUpdate(prevProps) {
@@ -95,11 +88,11 @@ class Profile extends Component {
         AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
     }
 
-    navigateToPaymentMethods(){
+    navigateToPaymentMethods = () => {
         this.props.navigation.navigate('PaymentMethods', {});
     }
 
-    showToast() {
+    showToast = () => {
         this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
 

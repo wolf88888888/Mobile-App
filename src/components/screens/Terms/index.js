@@ -41,7 +41,7 @@ class Terms extends Component {
             this.setState({ showProgress: false });
             if (res.success) {
                 console.log(res);
-                navigate('CongratsWallet')
+                navigate('CongratulationRegister')
             } else {
                 res.errors.then(data => {
                     const { errors } = data;
