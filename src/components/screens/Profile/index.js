@@ -92,6 +92,11 @@ class Profile extends Component {
         this.props.navigation.navigate('PaymentMethods', {});
     }
 
+    createWallet = () => {
+        const {navigate} = this.props.navigation;
+        navigate("CreateWallet");
+    }
+
     showToast = () => {
         this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
@@ -139,9 +144,14 @@ class Profile extends Component {
                         <Image
                             source={require('../../../assets/splash.png')}
                             style={styles.logoBackground} />
-                        <TouchableOpacity onPress={this.showToast} style={styles.addMore}>
-                            <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
-                        </TouchableOpacity>
+                        {
+                            (this.state.walletAddress == null || this.state.walletAddress == '') &&
+                            (
+                                <TouchableOpacity onPress={this.createWallet} style={styles.addMore}>
+                                    <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
+                                </TouchableOpacity>
+                            )
+                        }
                     </View>
                     <TouchableOpacity onPress={() => { Clipboard.setString(this.state.walletAddress) }}>
                         <View style={styles.copyBox}>

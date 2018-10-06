@@ -15,18 +15,20 @@ import {Platform, BackHandler} from 'react-native';
 import AppLoading from '../components/app/AppLoading';
 
 import Welcome from '../components/screens/Welcome';
-import Login from '../components/screens/Login';
-import CreateAccount from '../components/screens/CreateAccount';
-import CreatePassword from '../components/screens/CreatePassword';
-import Terms from '../components/screens/Terms';
-import CongratulationRegister from '../components/screens/CongratulationRegister'
+import Login from '../components/screens/Account/Login';
+import CreateAccount from '../components/screens/Account/CreateAccount';
+import CreatePassword from '../components/screens/Account/CreatePassword';
+import Terms from '../components/screens/Account/Terms';
+import CongratulationRegister from '../components/screens/Account/CongratulationRegister'
+
+import CreateWallet from '../components/screens/Wallet/CreateWallet';
+import WalletRecoveryKeywords from '../components/screens/Wallet/WalletRecoveryKeywords';
+import WalletKeywordValidation from '../components/screens/Wallet/WalletKeywordValidation';
+import CongratsWallet from '../components/screens/Wallet/CongratsWallet'
 
 import Explore from '../components/screens/Explore';
 import Profile from '../components/screens/Profile'
-import CreateWallet from '../components/screens/CreateWallet';
-import SaveWallet from '../components/screens/SaveWallet';
-import WalletKeywordValidation from '../components/screens/WalletKeywordValidation';
-import CongratsWallet from '../components/screens/CongratsWallet'
+
 import NavTabBar from '../components/organisms/NavTabBar';
 import Inbox from '../components/screens/Message/Inbox';
 import Chat from '../components/screens/Message/Chat';
@@ -114,7 +116,7 @@ const RootNavigator = createStackNavigator(
         CreatePassword: { screen: CreatePassword },
         Terms: { screen: Terms },
         CreateWallet: { screen: CreateWallet },
-        SaveWallet: { screen: SaveWallet },
+        WalletRecoveryKeywords: { screen: WalletRecoveryKeywords },
         WalletKeywordValidation: {screen: WalletKeywordValidation},
         CongratsWallet: { screen: CongratsWallet },
         CongratulationRegister: { screen: CongratulationRegister },

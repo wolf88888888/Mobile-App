@@ -6,18 +6,17 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { validateEmail, validateName } from '../../../utils/validation';
-
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
-import SmartInput from '../../atoms/SmartInput';
 import Switch from 'react-native-customisable-switch';
 import Toast from 'react-native-simple-toast';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import styles from './styles';
-import requester from '../../../initDependencies';
+import { validateEmail, validateName } from '../../../../utils/validation';
+import SmartInput from '../../../atoms/SmartInput';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
+import requester from '../../../../initDependencies';
 
 class CreateAccount extends Component {
 
@@ -169,7 +168,7 @@ class CreateAccount extends Component {
                     
                     <View style={styles.lowOpacity}>
                         <Image
-                            source={require('../../../assets/get-started-white-outline.png')}
+                            source={require('../../../../assets/get-started-white-outline.png')}
                             style={styles.getStartedImage}
                         />
                     </View>

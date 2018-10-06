@@ -10,16 +10,13 @@ import {
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import SmartInput from '../../atoms/SmartInput';
-import Toast from 'react-native-simple-toast';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import requester from '../../../initDependencies';
+import SmartInput from '../../../atoms/SmartInput';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
 import styles from './styles';
-import { PUBLIC_URL } from '../../../config.js'
 
-class SaveWallet extends Component {
+class WalletRecoveryKeywords extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -52,47 +49,6 @@ class SaveWallet extends Component {
         const { params } = this.props.navigation.state;
         this.props.navigation.navigate('WalletKeywordValidation', { ...params})
     }
-
-    onClickAccept = async () => {
-        const { params } = this.props.navigation.state;
-        const {navigate} = this.props.navigation;
-        let user = params;
-        user['image'] = PUBLIC_URL + "images/default.png";
-        user['jsonFile'] = this.state.walletJson;
-        user['locAddress'] = this.state.walletAddress;
-
-        console.log(user);
-
-        const options = {
-            title:"",
-            message:"Registering...",
-            isCancelable:false
-        };
-
-        this.setState({ showProgress: true });
-        requester.register(user, null).then(res => {
-            this.setState({ showProgress: false });
-            if (res.success) {
-                console.log(res);
-                navigate('CongratsWallet')
-            } else {
-                res.errors.then(data => {
-                    const { errors } = data;
-                    Object.keys(errors).forEach((key) => {
-                        if (typeof key !== 'function') {
-                            Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
-                            console.log('Error logging in:', errors[key].message);
-                        }
-                    });
-                });
-            }
-        })
-        .catch(err => {
-            this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-            console.log(err);
-        });
-    };
 
     render() {
         const { navigate, goBack } = this.props.navigation;
@@ -154,4 +110,4 @@ class SaveWallet extends Component {
     }
 }
 
-export default SaveWallet;
+export default WalletRecoveryKeywords;

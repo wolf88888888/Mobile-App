@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import requester from '../../../initDependencies';
-import { PUBLIC_URL } from '../../../config';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+import requester from '../../../../initDependencies';
+import { PUBLIC_URL } from '../../../../config';
 
 import styles from './styles';
 

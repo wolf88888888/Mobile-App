@@ -11,10 +11,10 @@ import {
 import {BackHandler} from 'react-native';
 import Image from 'react-native-remote-svg';
 import styles from './styles';
-import Button from '../../atoms/Button';
+import Button from '../../../atoms/Button';
 
+class CongratsWallet extends Component {
 
-class CongratulationRegister extends Component {
     constructor(props) {
         super(props)
         this.gotoRoot = this.gotoRoot.bind(this);
@@ -33,13 +33,7 @@ class CongratulationRegister extends Component {
     };
 
     gotoRoot() {
-		let resetAction = StackActions.reset({
-			index: 0,
-			actions: [
-				NavigationActions.navigate({routeName: 'Welcome'})
-			]
-		});
-		this.props.navigation.dispatch(resetAction);
+		this.props.navigation.pop(4);
     }
 
     render() {
@@ -52,12 +46,12 @@ class CongratulationRegister extends Component {
                 />
                 <View style={styles.main}>
                     <Image
-                        source={require('../../../assets/walletCongrats.png')}
+                        source={require('../../../../assets/walletCongrats.png')}
                         style={styles.walletCongratsImage} />
                     <Text style={styles.bigTitle}>Congratulations!</Text>
-                    <Text style={styles.subTitle}>Your Account Has Been Created</Text>
+                    <Text style={styles.subTitle}>Your LOC Wallet Has Been Created</Text>
                     <View style={styles.gotoButtonContainer}>
-                        <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Proceed to Login" />
+                        <Button wrapStyle={{backgroundColor: '#223843', width:'90%'}} onPress={this.gotoRoot} text="Done" />
                     </View>
                 </View>
             </View>
@@ -65,4 +59,4 @@ class CongratulationRegister extends Component {
     }
 }
 
-export default CongratulationRegister;
+export default CongratsWallet;
