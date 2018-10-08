@@ -1,27 +1,20 @@
 import {
     AsyncStorage,
-    Keyboard,
     ScrollView,
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-
-import Image from 'react-native-remote-svg';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import SmartInput from '../../atoms/SmartInput';
-import Toast from 'react-native-simple-toast';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import { autobind } from 'core-decorators';
-import { domainPrefix } from '../../../config';
-import { imgHost } from '../../../config';
-import requester from '../../../initDependencies';
 import styles from './styles';
-import { validateName } from '../../../utils/validation';
+
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+import SmartInput from '../../../atoms/SmartInput';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
+import  { userInstance } from '../../../../utils/userInstance';
+import requester from '../../../../initDependencies';
 
 var min = 1,
     max = 12,
@@ -116,44 +109,83 @@ class WalletKeywordValidation extends Component {
             const { params } = this.props.navigation.state;
             const {navigate} = this.props.navigation;
             let user = params;
-            user['image'] = "https://staging.locktrip.com/images/default.png";
-            user['jsonFile'] = this.state.walletJson;
-            user['locAddress'] = this.state.walletAddress;
-
-            console.log(user);
-
-            const options = {
-                title:"",
-                message:"Registering...",
-                isCancelable:false
-            };
-
+            console.log("onClickAccept", user);
+            
             this.setState({ showProgress: true });
-            requester.register(user, null).then(res => {
-                console.log("register ----------", res);
+            requester.getUserInfo()
+            .then(res => res.body)
+            .then(userInfo => {
+                if (userInfo.birthday) {
+                    let birthday = moment.utc(userInfo.birthday);
+                    const day = birthday.add(1, 'days').format('D');
+                    const month = birthday.format('MM');
+                    const year = birthday.format('YYYY');
+                    userInfo.birthday = `${day}/${month}/${year}`;
+                }
+        
+                userInfo.countryState = userInfo.countryState && userInfo.countryState.id;
+                userInfo.preferredCurrency = userInfo.preferredCurrency ? userInfo.preferredCurrency.id : 1;
+                userInfo.country = userInfo.country && userInfo.country.id;
+                userInfo.countryState = userInfo.countryState && parseInt(userInfo.countryState, 10);
+                userInfo.locAddress = params.walletAddress;
+                userInfo.jsonFile = params.walletJson;
+        
+                requester.updateUserInfo(userInfo, null).then(res => {
+                    console.log("save wallet ----------", res);
                     this.setState({ showProgress: false });
                     if (res.success) {
-                        console.log("Error");
-                        console.log(res);
+                        userInstance.setLocAddress(params.walletAddress);
+                        userInstance.setJsonFile(params.walletJson);
+                        
                         navigate('CongratsWallet')
                     } else {
-                        console.log("Error");
-                        res.errors.then(data => {
-                            const { errors } = data;
-                            Object.keys(errors).forEach((key) => {
-                                if (typeof key !== 'function') {
-                                    Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
-                                    console.log('Error logging in:', errors[key].message);
-                                }
-                            });
-                        });
+                    res.errors.then(e => {
+                        this.setState({ showProgress: false });
+                        Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                        console.log(err);
+                    });
                     }
-                })
-                .catch(err => {
-                    this.setState({ showProgress: false });
-                    Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
-                    console.log(err);
+        
+                    this.closeModal(CONFIRM_WALLET);
                 });
+            });
+            // user['image'] = PUBLIC_URL + "images/default.png";
+            // user['jsonFile'] = this.state.walletJson;
+            // user['locAddress'] = this.state.walletAddress;
+
+
+            // const options = {
+            //     title:"",
+            //     message:"Registering...",
+            //     isCancelable:false
+            // };
+
+            // this.setState({ showProgress: true });
+            // requester.register(user, null).then(res => {
+            //     console.log("register ----------", res);
+            //         this.setState({ showProgress: false });
+            //         if (res.success) {
+            //             console.log("Error");
+            //             console.log(res);
+            //             navigate('CongratsWallet')
+            //         } else {
+            //             console.log("Error");
+            //             res.errors.then(data => {
+            //                 const { errors } = data;
+            //                 Object.keys(errors).forEach((key) => {
+            //                     if (typeof key !== 'function') {
+            //                         Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
+            //                         console.log('Error logging in:', errors[key].message);
+            //                     }
+            //                 });
+            //             });
+            //         }
+            //     })
+            //     .catch(err => {
+            //         this.setState({ showProgress: false });
+            //         Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            //         console.log(err);
+            //     });
         }
         else {
             alert("Answers are not correct please retry")

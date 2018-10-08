@@ -5,6 +5,7 @@ import {
     StatusBar
 } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../atoms/Button';
 import GetStartedImage from '../../atoms/GetStartedImage';
@@ -14,6 +15,7 @@ import SplashPNG from '../../../assets/png/locktrip_logo.png';
 import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
+import LoginLocationDialog from '../../atoms/LoginLocationDialog'
 
 import SplashScreen from 'react-native-smart-splash-screen';
 const FBSDK = require('react-native-fbsdk');
@@ -25,7 +27,8 @@ class Welcome extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showProgress: false
+            showProgress: false,
+            locationDialogVisible: false,
         }
         Welcome.self = this;
     }
@@ -39,63 +42,148 @@ class Welcome extends Component {
         });
     }
 
-    tryLogin(fbInfo) {
+    tryLogin(countryID = null) {
+        console.log("fb info", this.fbInfo);
         this.setState({ showProgress: true });
-        requester.login({email:fbInfo.email, password:fbInfo.id+"!a123"}, null).then(res => {
-            this.setState({ showProgress: false });
-            if (res.success) {
-                console.log("Success");
-                res.body.then(data => {
-                    console.log(data);
-                    AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
-                    // TODO: Get first name + last name from response included with Authorization token (Backend)
-                    AsyncStorage.setItem(`${domainPrefix}.auth.username`, fbInfo.email);
-                    this.props.navigation.navigate('MainScreen');
-                });
-            } else {
-                res.errors.then(data => {
-                    const { errors } = data;
-                    Object.keys(errors).forEach((key) => {
-                        if (typeof key !== 'function') {
-                            if (errors[key].message == "Incorrect password") {
-                                alert("You already registered using email, so please try to login using email.");
-                            }
-                            else {
-                                Welcome.self.tryRegister(fbInfo);
-                            }
-                            // alert(errors[key].message);
-                            console.log('Error logging in  :', errors[key].message);
+        if (this.fbInfo.email != null) {
+            const user = { 
+                email : this.fbInfo.email, 
+                password : this.fbInfo.id+"!a123" };
+            if (countryID != null) {
+                user.country = countryID;
+            }
+            
+            requester.login(user, null).then(res => {
+                this.setState({ showProgress: false });
+                // if (countryID != null) {
+                if (res.success) {
+                    console.log("Success");
+                    res.body.then(data => {
+                        console.log(data);
+                        AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
+                        // TODO: Get first name + last name from response included with Authorization token (Backend)
+                        AsyncStorage.setItem(`${domainPrefix}.auth.username`, this.fbInfo.email);
+                        this.props.navigation.navigate('MainScreen');
+                    });
+                } else {
+                    res.errors.then(data => {
+                        const { errors } = data;
+                        
+                        if (errors.hasOwnProperty('CountryNull')) {
+                            this.setState({ locationDialogVisible: true });
+                        }
+                        else {
+                            Object.keys(errors).forEach((key) => {
+                                if (typeof key !== 'function') {
+                                    if (errors[key].message == "Incorrect password") {
+                                        alert("You already registered using email, so please try to login using email.");
+                                    }
+                                    else {
+                                        Welcome.self.tryRegister();
+                                    }
+                                    // alert(errors[key].message);
+                                    console.log('Error logging in  :', errors[key].message);
+                                }
+                            });
                         }
                     });
-                });
+                }
+                // this.setState({ locationDialogVisible: true });
+            })
+            .catch(err => {
+                this.setState({ showProgress: false });
+                alert('Cannot login, Please check network connection.');
+                console.log(err);
+            });
+        }
+        else {
+            const user = { 
+                authId: "fid"+this.fbInfo.id, 
+                password: this.fbInfo.id+"!a123", 
+                authProvider: "facebook" };
+            if (countryID != null) {
+                user.country = countryID;
             }
-        })
-        .catch(err => {
-            this.setState({ showProgress: false });
-            alert('Cannot login, Please check network connection.');
-            console.log(err);
-        });
+            console.log("uerer-------------", user);
+            requester.login(user, null).then(res => {
+                console.log("login by auth_id", res);
+                this.setState({ showProgress: false });
+                if (res.success) {
+                    console.log("Success");
+                    res.body.then(data => {
+                        console.log(data);
+                        AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
+                        // // TODO: Get first name + last name from response included with Authorization token (Backend)
+                        // AsyncStorage.setItem(`${domainPrefix}.auth.username`, fbInfo.email);
+                        this.props.navigation.navigate('MainScreen');
+                    });
+                } else {
+                    res.errors.then(data => {
+                        const { errors } = data;
+                        
+                        if (errors.hasOwnProperty('CountryNull')) {
+                            this.setState({ locationDialogVisible: true });
+                        }
+                        else {
+                            Object.keys(errors).forEach((key) => {
+                                if (typeof key !== 'function') {
+                                    if (errors[key].message == "Incorrect password") {
+                                        alert("You already registered using email, so please try to login using email.");
+                                    }
+                                    else {
+                                        Welcome.self.tryRegister();
+                                    }
+                                    // alert(errors[key].message);
+                                    console.log('Error logging in  :', errors[key].message);
+                                }
+                            });
+                        }
+                    });
+                }
+            })
+            .catch(err => {
+                this.setState({ showProgress: false });
+                alert('Cannot login, Please check network connection.');
+                console.log(err);
+            });
+        }
     }
 
-    tryRegister(fbInfo) {
-        requester.getEmailFreeResponse(fbInfo.email).then(res => {
-            res.body.then(data => {
-                if (data.exist) {
-                    Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.CENTER);
-                } else {
-                    this.props.navigation.navigate('Terms', 
-                        {
-                            firstName:fbInfo.first_name, 
-                            lastName:fbInfo.last_name, 
-                            email:fbInfo.email,
-                            userWantsPromo: true, 
-                            password:fbInfo.id+"!a123"
-                        }
-                    );
-                }
+    tryRegister() {
+        if (this.fbInfo.email) {
+            requester.getEmailFreeResponse(this.fbInfo.email).then(res => {
+                res.body.then(data => {
+                    if (data.exist) {
+                        Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.BOTTOM);
+                    } else {
+                        this.props.navigation.navigate('CreateAccount', 
+                            {
+                                firstName:this.fbInfo.first_name, 
+                                lastName:this.fbInfo.last_name, 
+                                email:this.fbInfo.email,
+                                userWantsPromo: true, 
+                                password:this.fbInfo.id+"!a123",
+                                authId:"fid" + this.fbInfo.id,
+                                authProvider: "facebook",
+                            }
+                        );
+                    }
+                });
             });
-        });
-        
+        }
+        else {
+            this.props.navigation.navigate('CreateAccount', 
+                {
+                    firstName:this.fbInfo.first_name, 
+                    lastName:this.fbInfo.last_name, 
+                    email:'',
+                    userWantsPromo: true, 
+                    password:this.fbInfo.id+"!a123",
+                    authId:"fid" + this.fbInfo.id,
+                    authProvider: "facebook",
+                }
+            ); 
+        }
     }
 
     doLoginViaFb(data) {
@@ -105,7 +193,8 @@ class Welcome extends Component {
                 alert('Error fetching data: ' + error.toString());
             }
             else {
-                Welcome.self.tryLogin(result);
+                this.fbInfo = result;
+                Welcome.self.tryLogin();
             }
         }
 
@@ -190,6 +279,18 @@ class Welcome extends Component {
 
                 <GetStartedImage />
 
+                <LoginLocationDialog
+                    countries = { this.props.countries }
+                    title = { 'Select Currency' }
+                    visible = { this.state.locationDialogVisible }
+                    okLabel = { 'OK' }
+                    onOk = { countryID => {
+                        console.log("select country", countryID);
+                        this.setState({ locationDialogVisible: false });
+                        this.tryLogin(countryID);
+                    }}
+                />
+                
                 <ProgressDialog
                    visible={this.state.showProgress}
                    title=""
@@ -202,4 +303,10 @@ class Welcome extends Component {
     }
 }
 
-export default Welcome;
+let mapStateToProps = (state) => {
+    return {
+        countries: state.country.countries
+    };
+}
+
+export default connect(mapStateToProps)(Welcome);

@@ -72,3 +72,8 @@
 -keep class com.facebook.imagepipeline.animated.factory.AnimatedFactoryImpl {
   public AnimatedFactoryImpl(com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, com.facebook.imagepipeline.core.ExecutorSupplier);
 }
+
+
+# fastimage
+-keep public class com.dylanvann.fastimage.* {*;}
+-keep public class com.dylanvann.fastimage.** {*;}

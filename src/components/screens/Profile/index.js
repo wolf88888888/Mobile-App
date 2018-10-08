@@ -28,20 +28,21 @@ class Profile extends Component {
             locRate: props.locRate,
             currencySelectionVisible: false,
         }
-        this.onCurrency = this.onCurrency.bind(this);
-        this.updateGender = this.updateGender.bind(this);
-        this.showToast = this.showToast.bind(this);
-        this.navigateToPaymentMethods = this.navigateToPaymentMethods.bind(this);
-
         this.props.actions.getCurrency(props.currency, false);
     }
 
-     async componentDidMount() {
+    async componentDidMount() {
+        this.listListener = [
+            this.props.navigation.addListener('didFocus', () => {
+              this.onRefresh()
+            })
+        ];
+
         let walletAddress = await userInstance.getLocAddress();
         this.setState({
             walletAddress: walletAddress,
         });
-        if (walletAddress != '') {
+        if (walletAddress !== null && walletAddress !== '') {
             Wallet.getBalance(walletAddress).then(x => {
                 const ethBalance = x / (Math.pow(10, 18));
                 this.setState({ ethBalance: ethBalance });
@@ -53,9 +54,10 @@ class Profile extends Component {
         }
     }
 
-    componentDidCatch(errorString, errorInfo) {
-        console.log("componentDidCatch");
-    }
+    componentWillUnmount() {
+       // Now remove listeners here
+       this.listListener.forEach( item => item.remove() )
+     }
 
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
@@ -67,11 +69,33 @@ class Profile extends Component {
         }
     }
 
-    onCurrency() {
+    onRefresh = async () => {
+        console.log("onRefresh ---------------");
+
+        if (this.state.walletAddress === null || this.state.walletAddress === '') {
+            
+            let walletAddress = await userInstance.getLocAddress();
+            if (walletAddress !== null && walletAddress !== '') {
+                this.setState({
+                    walletAddress: walletAddress,
+                });
+                Wallet.getBalance(walletAddress).then(x => {
+                    const ethBalance = x / (Math.pow(10, 18));
+                    this.setState({ ethBalance: ethBalance });
+                });
+                Wallet.getTokenBalance(walletAddress).then(y => {
+                    const locBalance = y / (Math.pow(10, 18));
+                    this.setState({ locBalance: locBalance });
+                });
+            }
+        }
+    }
+
+    onCurrency = () => {
         this.setState({ currencySelectionVisible: true });
     }
 
-    updateGender(gender) {
+    updateGender = (gender) => {
         this.setState({
             info: {
                 ...this.state.info,
@@ -97,11 +121,16 @@ class Profile extends Component {
         AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
     }
 
-    navigateToPaymentMethods(){
+    navigateToPaymentMethods = () => {
         this.props.navigation.navigate('PaymentMethods', {});
     }
 
-    showToast() {
+    createWallet = () => {
+        const {navigate} = this.props.navigation;
+        navigate("CreateWallet");
+    }
+
+    showToast = () => {
         this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
 
@@ -148,9 +177,14 @@ class Profile extends Component {
                         <Image
                             source={require('../../../assets/splash.png')}
                             style={styles.logoBackground} />
-                        <TouchableOpacity onPress={this.showToast} style={styles.addMore}>
-                            <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
-                        </TouchableOpacity>
+                        {
+                            (this.state.walletAddress == null || this.state.walletAddress == '') &&
+                            (
+                                <TouchableOpacity onPress={this.createWallet} style={styles.addMore}>
+                                    <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
+                                </TouchableOpacity>
+                            )
+                        }
                     </View>
                     <TouchableOpacity onPress={() => { Clipboard.setString(this.state.walletAddress) }}>
                         <View style={styles.copyBox}>

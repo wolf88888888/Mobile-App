@@ -3,7 +3,9 @@ import {
     Image,
     ScrollView,
     StyleSheet,
-    Text, TouchableOpacity,
+    Text, 
+    TouchableOpacity,
+	TouchableWithoutFeedback, 
     View
 } from 'react-native';
 import React, { Component } from 'react';
@@ -19,6 +21,7 @@ import { domainPrefix } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import { userInstance } from '../../../utils/userInstance';
+import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog';
 
 import * as currencyActions from '../../../redux/action/Currency';
 
@@ -85,7 +88,9 @@ class Explore extends Component {
             currency: props.currency,//eslint-disable-line
             currencySign: props.currencySign,//eslint-disable-line
             email: '',
-            token: ''
+            token: '',
+            countriesLoaded: false,
+            currencySelectionVisible: false,
         };
 
         console.log('explorer  currency', props.currency, props.locRate);
@@ -106,6 +111,12 @@ class Explore extends Component {
         requester.getUserInfo().then((res) => {
             res.body.then((data) => {
                 console.log('componentWillMount', data);
+                if (email_value == undefined || email_value == null || email_value == "") {
+                    AsyncStorage.setItem(`${domainPrefix}.auth.username`, data.email);
+                    this.setState({
+                        email: email_value,
+                    });
+                }
                 userInstance.setUserData(data);
             }).catch((err) => {
                 console.log('componentWillMount', err);
@@ -129,6 +140,27 @@ class Explore extends Component {
         }
     }
 
+    setCountriesInfo() {
+        countryArr = [];
+        this.props.countries.map((item, i) => {
+            countryArr.push({
+                label: item.name,
+                value: item
+            });
+        });
+        this.setState({
+            countries: countryArr,
+            countriesLoaded: true,
+            countryId: countryArr[0].value.id,
+            countryName: countryArr[0].label
+        });
+    }
+
+    showToast() {
+        this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
+    }
+
+
     onChangeHandler(property) {
         return (value) => {
             this.setState({ [property]: value });
@@ -151,27 +183,6 @@ class Explore extends Component {
                 .toString()) + year
         });
     }
-
-    setCountriesInfo() {
-        countryArr = [];
-        this.props.countries.map((item, i) => {
-            countryArr.push({
-                label: item.name,
-                value: item
-            });
-        });
-        this.setState({
-            countries: countryArr,
-            countriesLoaded: true,
-            countryId: countryArr[0].value.id,
-            countryName: countryArr[0].label
-        });
-    }
-
-    showToast() {
-        this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
-    }
-
     onSearchHandler(value) {
         this.setState({ search: value });
         if (value === '') {
@@ -265,21 +276,22 @@ class Explore extends Component {
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
             this.props.navigation.navigate('PropertySock', {
+                searchHotel: this.state.searchHotel,
                 searchedCity: this.state.search,
-                searchedCityId: 72,
+                home: this.state.value,
                 checkInDate: this.state.checkInDate,
                 checkOutDate: this.state.checkOutDate,
                 guests: this.state.guests,
+                adults: this.state.adults,
                 children: this.state.children,
+                infants: this.state.infants,
+                childrenBool: this.state.childrenBool,
                 countryId: this.state.countryId,
                 regionId: this.state.regionId,
                 isHotelSelected: this.state.isHotelSelected,
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
                 roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                currency: this.state.currency,
-                currencySign: this.state.currencySign,
-                locRate: this.state.locRate,
                 email: this.state.email,
                 token: this.state.token,
                 daysDifference: this.state.daysDifference,
@@ -367,23 +379,23 @@ class Explore extends Component {
     }
 
     renderAutocomplete() {
-        if (this.state.cities.length > 0) {
+        const nCities = this.state.cities.length;
+        if (nCities > 0) {
             return (
                 <ScrollView
                     style={{
-                        position: 'relative',
-                        marginLeft: 17,
-                        marginRight: 17,
+                        marginLeft: 15,
+                        marginRight: 15,
                         minHeight: 100,
                         zIndex: 99,
                     }}
                 >
                     {
-                        this.state.cities.map(result => { //eslint-disable-line
+                        this.state.cities.map((result, i) => { //eslint-disable-line
                             return (//eslint-disable-line
                                 <TouchableOpacity
                                     key={result.id}
-                                    style={styles.autocompleteTextWrapper}
+                                    style={i == nCities - 1 ? [styles.autocompleteTextWrapper, {borderBottomWidth: 1, elevation: 1}] : styles.autocompleteTextWrapper}
                                     onPress={() => this.handleAutocompleteSelect(result.id, result.query)}
                                 >
                                     <Text style={styles.autocompleteText}>{result.query}</Text>
@@ -548,19 +560,16 @@ class Explore extends Component {
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 {this.renderAutocomplete()}
 
-                <View style={{ marginBottom: 100, marginLeft: 17, marginRight: 17 }}>
-                    <ScrollView
-                        automaticallyAdjustContentInsets={true}
-                    >
+                    <ScrollView  style={styles.scrollView} automaticallyAdjustContentInsets={true}>
 
                         <View style={styles.scrollViewContentMain}>
                             <DateAndGuestPicker
                                 checkInDate={checkInDate}
                                 checkOutDate={checkOutDate}
-                                adults={guests}
-                                children={0}
-                                guests={0}
-                                infants={0}
+                                adults={this.state.adults}
+                                children={this.state.children}
+                                guests={this.state.guests}
+                                infants={this.state.infants}
                                 gotoGuests={this.gotoGuests}
                                 gotoSearch={this.gotoSearch}
                                 onDatesSelect={this.onDatesSelect}
@@ -569,14 +578,14 @@ class Explore extends Component {
                             />
                         </View>
 
-                        <Text style={[styles.scrollViewTitles, { marginBottom: 5, marginTop: 5 }]}>Discover</Text>
+                        <Text style={[styles.scrollViewTitles, { marginBottom: 10, marginTop: 5 }]}>Discover</Text>
 
                         <View>
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft:15, marginRight:15 }}>
 
                                 <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
-                                    style={styles.homehotelsView}>
+                                    style={[styles.homehotelsView, {marginRight:5}]}>
                                     <Image
                                         style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                         source={require('../../../assets/home_images/hotels.png')} />
@@ -589,7 +598,7 @@ class Explore extends Component {
                                     search: '',
                                     regionId: 0
                                 })}
-                                style={styles.homehotelsView}>
+                                style={[styles.homehotelsView, {marginLeft:5}]}>
                                     <Image style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                         source={require('../../../assets/home_images/homes.png')} />
                                     {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
@@ -597,11 +606,11 @@ class Explore extends Component {
 
                             </View>
 
-                            <Text style={[styles.scrollViewTitles,  { marginBottom: 5, marginTop: 5 }]}>Popular Destinations</Text>
+                            <Text style={[styles.scrollViewTitles,  { marginBottom: 10, marginTop: 5 }]}>Popular Destinations</Text>
 
                             <View style={styles.divsider} />
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft:15, marginRight:15, marginBottom:10 }}>
                                 <TouchableOpacity onPress={() => this.handlePopularCities(52612, 'London , United Kingdom')}
                                     style={styles.subViewPopularHotelsLeft}>
                                     <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
@@ -609,13 +618,13 @@ class Explore extends Component {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={() => this.handlePopularCities(18417, 'Madrid , Spain')}
-                                    style={styles.subViewPopularHotelsLeft}>
+                                    style={styles.subViewPopularHotelsRight}>
                                     <Image style={styles.imageViewPopularHotels} resizeMode='stretch'
                                         source={require('../../../assets/home_images/Madrid.png')} />
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft:15, marginRight:15, marginBottom:10 }}>
 
                                 <TouchableOpacity onPress={() => this.handlePopularCities(16471, 'Paris , France')}
                                     style={styles.subViewPopularHotelsLeft}>
@@ -640,7 +649,7 @@ class Explore extends Component {
                                 <Image style={styles.bottomViewText} resizeMode='center'
                                     source={require('../../../assets/texthome.png')} />
                                 <TouchableOpacity onPress={this.showToast} style={styles.getStartedButtonView}>
-                                    <View>
+                                    <View >
                                         <Text style={styles.searchButtonText}>Get Started</Text>
                                     </View>
                                 </TouchableOpacity>
@@ -651,7 +660,30 @@ class Explore extends Component {
                         </View>
 
                     </ScrollView>
-                </View>
+                <TouchableWithoutFeedback onPress={() => this.setState({ currencySelectionVisible: true })}>
+                    <View style={styles.fab}>
+                    {
+                        this.state.locRate != 0 ? 
+                            (<Text style={styles.fabText}>LOC/{this.state.currency} {parseFloat(this.state.locRate).toFixed(2)}</Text>)
+                            :
+                            (<Text style={styles.fabText}>LOC/{this.state.currency}    </Text>)
+                    }
+                        
+                    </View>
+                </TouchableWithoutFeedback>
+
+                <SingleSelectMaterialDialog
+                    title = { 'Select Currency' }
+                    items = { BASIC_CURRENCY_LIST.map((row, index) => ({ value: index, label: row })) }
+                    visible = { this.state.currencySelectionVisible }
+                    onCancel = { () =>this.setState({ currencySelectionVisible: false }) }
+                    onOk = { result => {
+                        console.log("select country", result);
+                        this.setState({ currencySelectionVisible: false });
+                        this.props.actions.getCurrency(result.selectedItem.label);
+                        // this.setState({ singlePickerSelectedItem: result.selectedItem });
+                    }}
+                />
             </View>
         );
     }

@@ -1,4 +1,13 @@
-import { AsyncStorage, Image, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { 
+	AsyncStorage, 
+	Image, 
+	ScrollView, 
+	StyleSheet, 
+	Text, 
+	TouchableOpacity, 
+	TouchableWithoutFeedback, 
+	View 
+} from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -55,7 +64,6 @@ class Explore extends Component {
             regionId: '',
             checkInDate: startDate.format('ddd, DD MMM').toString(),
             checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
-            daysDifference: 1,
             checkOutDate: endDate.format('ddd, DD MMM').toString(),
             checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
             guests: 2,
@@ -90,16 +98,30 @@ class Explore extends Component {
     async componentWillMount() {
         const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
         const email_value = await AsyncStorage.getItem(`${domainPrefix}.auth.username`);
+
+        // UUIDGenerator.getRandomUUID((uuid) => {
+        //     console.log("uuid---------------", uuid)
+        //     uid = uuid;
+        // });
+
         this.setState({
             token: token_value,
             email: email_value,
         });
+        
 
-        console.log("componentWillMount", token_value, email_value);
+        // console.log("componentWillMount", token_value, email_value);
         // Below line gives null cannot be casted to string error on ios please look into it
         requester.getUserInfo().then(res => {
             res.body.then(data => {
                 console.log("componentWillMount", data);
+                if (email_value == undefined || email_value == null || email_value == "") {
+                    AsyncStorage.setItem(`${domainPrefix}.auth.username`, data.email);
+                    this.setState({
+                        email: email_value,
+                    });
+                }
+
                 userInstance.setUserData(data);
             }).catch(err => {
                 console.log("componentWillMount", err);
@@ -108,6 +130,10 @@ class Explore extends Component {
         this.setCountriesInfo();
     }
     
+    async componentDidMount() {
+        console.disableYellowBox = true;
+        console.log("componentDidMount");
+    }
 
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
@@ -121,10 +147,7 @@ class Explore extends Component {
     }
     
 
-    async componentDidMount() {
-        console.disableYellowBox = true;
-        console.log("componentDidMount");
-    }
+
 
     setCountriesInfo() {
         countryArr = [];
@@ -153,11 +176,8 @@ class Explore extends Component {
     }
 
     onDatesSelect({ startDate, endDate }) {
-        const year = (new Date()).getFullYear(); 
-        var start = moment(startDate, "ddd, DD MMM");
-        var end = moment(endDate, "ddd, DD MMM");
+        const year = (new Date()).getFullYear();
         this.setState({
-            daysDifference: moment.duration(end.diff(start)).asDays(),
             checkInDate: startDate,
             checkOutDate: endDate,
             checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
@@ -170,6 +190,7 @@ class Explore extends Component {
     }
 
     onSearchHandler(value) {
+        console.log("onSearchHandler", value)
         this.setState({ search: value });
         if (value === '') {
             this.setState({ cities: [] });
@@ -262,24 +283,25 @@ class Explore extends Component {
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
             this.props.navigation.navigate('PropertySock', {
+                searchHotel: this.state.searchHotel,
                 searchedCity: this.state.search,
-                searchedCityId: 72,
+                home: this.state.value,
                 checkInDate: this.state.checkInDate,
                 checkOutDate: this.state.checkOutDate,
                 guests: this.state.guests,
+                adults: this.state.adults,
                 children: this.state.children,
+                infants: this.state.infants,
+                childrenBool: this.state.childrenBool,
+
                 countryId: this.state.countryId,
                 regionId: this.state.regionId,
                 isHotelSelected: this.state.isHotelSelected,
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
                 roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                currency: this.state.currency,
-                currencySign: this.state.currencySign,
-                locRate: this.state.locRate,
                 email: this.state.email,
                 token: this.state.token,
-                daysDifference: this.state.daysDifference,
                 filter: encodeURI(JSON.stringify(this.state.filter)),
             });
         }
@@ -369,22 +391,23 @@ class Explore extends Component {
     }
 
     renderAutocomplete() {
-        if (this.state.cities.length > 0) {
+        const nCities = this.state.cities.length;
+        if (nCities > 0) {
             return (
                 <ScrollView
                     style={{
-                        marginLeft: 17,
-                        marginRight: 17,
+                        marginLeft: 15,
+                        marginRight: 15,
                         minHeight: 100,
                         zIndex: 99,
                     }}
                 >
                     {
-                        this.state.cities.map(result => { //eslint-disable-line
+                        this.state.cities.map((result, i) => { //eslint-disable-line
                             return (//eslint-disable-line
                                 <TouchableOpacity
                                     key={result.id}
-                                    style={styles.autocompleteTextWrapper}
+                                    style={i == nCities - 1 ? [styles.autocompleteTextWrapper, {borderBottomWidth: 1, elevation: 1}] : styles.autocompleteTextWrapper}
                                     onPress={() => this.handleAutocompleteSelect(result.id, result.query)}
                                 >
                                     <Text style={styles.autocompleteText}>{result.query}</Text>
@@ -554,10 +577,10 @@ class Explore extends Component {
                         <DateAndGuestPicker
                             checkInDate={checkInDate}
                             checkOutDate={checkOutDate}
-                            adults={guests}
-                            children={0}
-                            guests={0}
-                            infants={0}
+                            adults={this.state.adults}
+                            children={this.state.children}
+                            guests={this.state.guests}
+                            infants={this.state.infants}
                             gotoGuests={this.gotoGuests}
                             gotoSearch={this.gotoSearch}
                             onDatesSelect={this.onDatesSelect}

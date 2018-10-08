@@ -2,15 +2,15 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     leftIconView: {
-        top: 13,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: 50
+        width: 50,
+        height: 50,
     },
     leftIconText: {
         color: '#5a5a5c',
-        fontSize: 20
+        fontSize: 16
     },
     container: {
         display: 'flex',
@@ -22,8 +22,10 @@ export default StyleSheet.create({
         flex: 1,
         marginLeft: -3,
         marginRight: 20,
+        marginTop:0,
         color: '#000',
         fontSize: 17,
-        fontFamily: 'FuturaStd-Light'
+        fontFamily: 'FuturaStd-Light',
+        textAlignVertical: "center"
     }
 });

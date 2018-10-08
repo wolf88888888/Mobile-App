@@ -8,15 +8,15 @@ import {
 } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
-import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';
-import { Wallet } from '../../../services/blockchain/wallet';
-import LineProgressDialog from '../../atoms/SimpleDialogs/LineProgressDialog';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
 import styles from './styles';
+import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../../utils/validation';
+import SmartInput from '../../../atoms/SmartInput';
+import { Wallet } from '../../../../services/blockchain/wallet';
+import LineProgressDialog from '../../../atoms/SimpleDialogs/LineProgressDialog';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
 
 class CreateWallet extends Component {
     constructor(props) {
@@ -30,8 +30,13 @@ class CreateWallet extends Component {
         };
     }
 
+    componentWillUpdate() {
+        console.log("CreateWallet - componentWillUpdate");
+    }
+
     componentDidMount() {
         //this.animate();
+        console.log("CreateWallet - componentDidMount");
     }
 
     animate() {
@@ -95,8 +100,9 @@ class CreateWallet extends Component {
                         console.log(wallet);
                         AsyncStorage.setItem('walletAddress', wallet.address);
                         AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
-                        AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
-                        this.props.navigation.navigate('SaveWallet', { ...params});
+                        const walletJson = JSON.stringify(wallet.jsonFile);
+                        AsyncStorage.setItem('walletJson', walletJson);
+                        this.props.navigation.navigate('WalletRecoveryKeywords', { ...params, walletAddress:wallet.address, walletJson: walletJson});
                         this.setState({ showProgress: false });
                     }, 1000);
                 })

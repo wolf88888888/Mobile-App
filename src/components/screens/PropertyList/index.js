@@ -95,7 +95,7 @@ class PropertyList extends React.Component {
                 justifyContent: 'center',
                 marginBottom: 10
             }}>
-                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://alpha.locktrip.com/images/loader.gif' }} />
+                <Image style={{ height: 35, width: 35 }} source={{ uri: 'https://beta.locktrip.com/images/loader.gif' }} />
             </View>
         );
     }

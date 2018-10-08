@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -32,7 +32,8 @@ class SearchBar extends Component {
             renderButton = (
                 <View style={styles.leftIconView}>
                     <Text style={styles.leftIconText}>
-                        <FontAwesome>{Icons[leftIcon]}</FontAwesome>
+                        <Icon name={leftIcon} size={22} color="#000" />
+                        {/* <FontAwesome>{Icons[leftIcon]}</FontAwesome> */}
                     </Text>
                 </View>
             );

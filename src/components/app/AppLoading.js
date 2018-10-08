@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, NativeModules, AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../redux/action/Currency'
 
@@ -9,6 +9,9 @@ import { domainPrefix } from '../../config';
 import { bindActionCreators } from 'redux';
 
 import * as countryActions from '../../redux/action/Country'
+import { socketHost } from '../../config';
+
+const androidStomp = NativeModules.StompModule;
 
 const styles = StyleSheet.create({
     container: {
@@ -29,15 +32,11 @@ class AppLoading extends Component {
     async componentDidMount() {
         console.log("AppLoading - componentDidMount")
         
-        SplashScreen.close({
-            animationType: SplashScreen.animationType.scale,
-            duration: 150,
-            delay: 100
-        });
     }
 
     // Fetch the token from storage then navigate to our appropriate place
     bootstrapAsync = async () => {
+        console.log("AppLoading - bootstrapAsync")
         let currency = await AsyncStorage.getItem('currency');
         let locRate = await AsyncStorage.getItem('locRate');
         locRate = JSON.parse(locRate)
@@ -72,6 +71,16 @@ class AppLoading extends Component {
         const isLoggedIn = keys.includes(`${domainPrefix}.auth.locktrip`) &&
                         keys.includes(`${domainPrefix}.auth.username`);
 
+        if (Platform.OS === 'ios') {
+        } else if (Platform.OS === 'android') {
+            androidStomp.connect(socketHost);
+        }
+        SplashScreen.close({
+            animationType: SplashScreen.animationType.scale,
+            duration: 0,
+            delay: 0
+        });
+
         // This will switch to the App screen or Auth screen and this loading
         // screen will be unmounted and thrown away.
 
@@ -80,7 +89,6 @@ class AppLoading extends Component {
             actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'MainScreen' : 'Welcome' })],
         });
         this.props.navigation.dispatch(resetAction);
-        // this.props.navigation.navigate(isLoggedIn ? 'MainScreen' : 'Welcome');
     };
 
     render() {

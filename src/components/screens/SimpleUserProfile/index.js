@@ -7,10 +7,7 @@ import Image from 'react-native-remote-svg';
 import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import UserProfileHomes from '../../organisms/UserProfileHomes'
-import UserProfileReviews from '../../organisms/UserProfileReviews'
-import { connect } from 'react-redux';
-import { imgHost } from '../../../config.js';
+import { imgHost, PUBLIC_URL } from '../../../config.js';
 import moment from 'moment'
 import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
@@ -103,13 +100,14 @@ class SimpleUserProfile extends Component {
 
         let image = '';
         if (this.state.image != '') {
-            if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
-                image = { uri: 'https://staging.locktrip.com/images/default.png' };
+            if (this.state.image.indexOf("images/default.png".toLowerCase()) != -1){ 
+                image = { uri: PUBLIC_URL + 'images/default.png' };
             }
             else {
                 image = { uri: imgHost + this.state.image }
             }
         }
+        console.log("simple profile image", image);
 
         return (
             <View style={styles.container}>
