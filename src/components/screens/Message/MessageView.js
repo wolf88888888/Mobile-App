@@ -21,7 +21,7 @@ export default function MessageView(props) {
     let imageAvatar = PUBLIC_URL + 'images/default.png';
     if (props.message.sender.image != '') {
         if (props.message.sender.image.indexOf("images/default.png".toLowerCase()) != -1){ 
-            mageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
+            imageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
         }
         else {
             imageAvatar ={uri:imgHost+props.message.sender.image}

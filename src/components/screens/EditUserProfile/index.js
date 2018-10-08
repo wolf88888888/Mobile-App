@@ -528,7 +528,7 @@ class EditUserProfile extends Component {
         let imageAvatar = '';
         if (this.state.image != '') {
             if (this.state.image.indexOf("images/default.png".toLowerCase()) != -1){ 
-                mageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
+                imageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
             }
             else {
                 imageAvatar = { uri: imgHost + this.state.image }

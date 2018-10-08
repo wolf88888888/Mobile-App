@@ -30,8 +30,13 @@ class CreateWallet extends Component {
         };
     }
 
+    componentWillUpdate() {
+        console.log("CreateWallet - componentWillUpdate");
+    }
+
     componentDidMount() {
         //this.animate();
+        console.log("CreateWallet - componentDidMount");
     }
 
     animate() {
@@ -95,8 +100,9 @@ class CreateWallet extends Component {
                         console.log(wallet);
                         AsyncStorage.setItem('walletAddress', wallet.address);
                         AsyncStorage.setItem('walletMnemonic', wallet.mnemonic);
-                        AsyncStorage.setItem('walletJson', JSON.stringify(wallet.jsonFile));
-                        this.props.navigation.navigate('WalletRecoveryKeywords', { ...params});
+                        const walletJson = JSON.stringify(wallet.jsonFile);
+                        AsyncStorage.setItem('walletJson', walletJson);
+                        this.props.navigation.navigate('WalletRecoveryKeywords', { ...params, walletAddress:wallet.address, walletJson: walletJson});
                         this.setState({ showProgress: false });
                     }, 1000);
                 })

@@ -32,6 +32,12 @@ class Profile extends Component {
     }
 
      async componentDidMount() {
+        this.listListener = [
+            this.props.navigation.addListener('didFocus', () => {
+              this.onRefresh()
+            })
+        ];
+
         let walletAddress = await userInstance.getLocAddress();
         this.setState({
             walletAddress: walletAddress,
@@ -48,6 +54,11 @@ class Profile extends Component {
         }
     }
 
+    componentWillUnmount() {
+       // Now remove listeners here
+       this.listListener.forEach( item => item.remove() )
+     }
+
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
         if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
@@ -56,6 +67,10 @@ class Profile extends Component {
                 currencySign:this.props.currencySign, 
                 locRate: this.props.locRate});
         }
+    }
+
+    onRefresh = () => {
+        console.log("onRefresh ---------------");
     }
 
     onCurrency = () => {

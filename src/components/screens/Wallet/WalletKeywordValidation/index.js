@@ -1,6 +1,5 @@
 import {
     AsyncStorage,
-    Keyboard,
     ScrollView,
     Text,
     TouchableOpacity,
@@ -14,6 +13,8 @@ import styles from './styles';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import SmartInput from '../../../atoms/SmartInput';
 import WhiteBackButton from '../../../atoms/WhiteBackButton';
+import  { userInstance } from '../../../../utils/userInstance';
+import requester from '../../../../initDependencies';
 
 var min = 1,
     max = 12,
@@ -109,7 +110,45 @@ class WalletKeywordValidation extends Component {
             const {navigate} = this.props.navigation;
             let user = params;
             console.log("onClickAccept", user);
-            navigate('CongratsWallet')
+            
+            this.setState({ showProgress: true });
+            requester.getUserInfo()
+            .then(res => res.body)
+            .then(userInfo => {
+                if (userInfo.birthday) {
+                    let birthday = moment.utc(userInfo.birthday);
+                    const day = birthday.add(1, 'days').format('D');
+                    const month = birthday.format('MM');
+                    const year = birthday.format('YYYY');
+                    userInfo.birthday = `${day}/${month}/${year}`;
+                }
+        
+                userInfo.countryState = userInfo.countryState && userInfo.countryState.id;
+                userInfo.preferredCurrency = userInfo.preferredCurrency ? userInfo.preferredCurrency.id : 1;
+                userInfo.country = userInfo.country && userInfo.country.id;
+                userInfo.countryState = userInfo.countryState && parseInt(userInfo.countryState, 10);
+                userInfo.locAddress = params.walletAddress;
+                userInfo.jsonFile = params.walletJson;
+        
+                requester.updateUserInfo(userInfo, null).then(res => {
+                    console.log("save wallet ----------", res);
+                    this.setState({ showProgress: false });
+                    if (res.success) {
+                        userInstance.setLocAddress(params.walletAddress);
+                        userInstance.setJsonFile(params.walletJson);
+                        
+                        navigate('CongratsWallet')
+                    } else {
+                    res.errors.then(e => {
+                        this.setState({ showProgress: false });
+                        Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                        console.log(err);
+                    });
+                    }
+        
+                    this.closeModal(CONFIRM_WALLET);
+                });
+            });
             // user['image'] = PUBLIC_URL + "images/default.png";
             // user['jsonFile'] = this.state.walletJson;
             // user['locAddress'] = this.state.walletAddress;
