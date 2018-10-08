@@ -6,12 +6,12 @@ const styles = StyleSheet.create({
     
     card: {
         flexDirection: 'row',
-        marginTop: 18,
-        paddingTop: 2,
-        paddingLeft: 2,
-        paddingRight: 24,
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 7.5,
+        marginBottom: 7.5,
+        paddingRight: 10,
         height: imageHeight,
-        width: '100%',
         backgroundColor: 'white',    
     },
     popularHotelsImage: {
@@ -20,8 +20,10 @@ const styles = StyleSheet.create({
     },
     favoritesButton: {
         position: 'absolute',
-        top: 10,
-        right: 10
+        height: 20, 
+        width: 20,
+        top: 5,
+        right: 5
     },
     favoriteIcon: {
         height: 20,
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         fontSize: 18,
         color: 'black',
-        fontWeight: 'normal',
+        fontWeight: '100',
         fontFamily: 'FuturaStd-Medium',
     },
     aboutPlaceView: {
@@ -73,19 +75,20 @@ const styles = StyleSheet.create({
     cost: {
         flex:1.05,
         color: 'black',
-        fontSize: 18,
+        fontSize: 17,
         fontFamily: 'FuturaStd-Medium'
     },
     costLoc: {
         flex:1.35,
         color: 'black',
-        fontSize: 14,
+        fontSize: 13,
         fontFamily: 'FuturaStd-Medium'
     },
     perNight: {
         flex:0.6,
         fontSize: 10,
         fontFamily: 'FuturaStd-Light',
+        color: 'black',
     },
     star: {
         height: 8,

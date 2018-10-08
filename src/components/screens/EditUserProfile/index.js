@@ -24,7 +24,7 @@ import  { userInstance } from '../../../utils/userInstance';
 import requester from '../../../initDependencies';
 import _ from 'lodash';
 import styles from './styles';
-import { apiHost, domainPrefix } from '../../../config';
+import { apiHost, domainPrefix, imgHost, PUBLIC_URL } from '../../../config';
 
 class EditUserProfile extends Component {
 
@@ -527,16 +527,16 @@ class EditUserProfile extends Component {
     render() {
         let imageAvatar = '';
         if (this.state.image != '') {
-            if (this.state.image == 'https://staging.locktrip.com/images/default.png' || this.state.image == 'images/default.png') {
-                imageAvatar = { uri: 'https://staging.locktrip.com/images/default.png' };
+            if (this.state.image.indexOf("images/default.png".toLowerCase()) != -1){ 
+                imageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
             }
             else {
-                imageAvatar = { uri: 'https://static.locktrip.com' + this.state.image }
+                imageAvatar = { uri: imgHost + this.state.image }
             }
         }
 
         let location = '';
-        console.log("location city", this.state.city);
+        console.log("location city", this.state.city, imageAvatar);
         if (this.state.city == undefined || this.state.city == null || this.state.city == '') {
             location = this.state.country==null? '' : this.state.country.name;
         }

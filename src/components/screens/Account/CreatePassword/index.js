@@ -6,14 +6,14 @@ import {
     View
 } from 'react-native';
 import React, { Component } from 'react';
-import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../utils/validation';
 
 import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import SmartInput from '../../atoms/SmartInput';
 import Toast from 'react-native-simple-toast';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
 import styles from './styles';
+import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../../utils/validation';
+import SmartInput from '../../../atoms/SmartInput';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
 
 class CreatePassword extends Component {
     constructor(props) {
@@ -69,7 +69,7 @@ class CreatePassword extends Component {
 
                 <View style={styles.lowOpacity}>
                     <Image
-                        source={require('../../../assets/get-started-white-outline.png')}
+                        source={require('../../../../assets/get-started-white-outline.png')}
                         style={styles.getStartedImage}
                     />
                 </View>

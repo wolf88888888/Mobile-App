@@ -9,19 +9,19 @@ import {
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { validateEmail, validatePassword1 } from '../../../utils/validation';
 
 import Image from 'react-native-remote-svg';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import SmartInput from '../../atoms/SmartInput';
 import SplashScreen from 'react-native-smart-splash-screen';
 import { autobind } from 'core-decorators';
-import { domainPrefix } from '../../../config';
-import requester from '../../../initDependencies';
 import styles from './styles';
-import LoginLocationDialog from '../../atoms/LoginLocationDialog'
-import LoginEmailVerifyDialog from '../../atoms/LoginEmailVerifyDialog'
+import { validateEmail, validatePassword1 } from '../../../../utils/validation';
+import SmartInput from '../../../atoms/SmartInput';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+import { domainPrefix } from '../../../../config';
+import requester from '../../../../initDependencies';
+import LoginLocationDialog from '../../../atoms/LoginLocationDialog'
+import LoginEmailVerifyDialog from '../../../atoms/LoginEmailVerifyDialog'
 
 class Login extends Component {
     static propTypes = {
@@ -70,6 +70,7 @@ class Login extends Component {
         this.setState({ showProgress: true });
 
         requester.login(user, null).then(res => {
+            console.log("requester.login", res);
             this.setState({ showProgress: false });
             if (res.success) {
                 res.body.then(data => {
@@ -135,7 +136,7 @@ class Login extends Component {
                     <View style={styles.chatToolbar}>
 
                         <TouchableOpacity onPress={this.onBackPress}>
-                            <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-white.png')} />
+                            <Image style={styles.btn_backImage} source={require('../../../../assets/icons/icon-back-white.png')} />
                         </TouchableOpacity>
 
                     </View>
@@ -186,7 +187,7 @@ class Login extends Component {
 
                     <View style={styles.lowOpacity}>
                         <Image
-                            source={require('../../../assets/get-started-white-outline.png')}
+                            source={require('../../../../assets/get-started-white-outline.png')}
                             style={styles.getStartedImage}
                         />
                     </View>

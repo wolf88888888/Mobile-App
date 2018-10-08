@@ -2,12 +2,13 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import appReducers from '../reducers';
-import {middleware} from '../../routing'
+import { middleware } from '../../routing'
+import { logger } from 'redux-logger'
 
-const middlewares = [thunk, middleware];
+const middlewares = [thunk, middleware, logger];
 
 const enchancer = composeWithDevTools({
-    serialize: true,
+    serialize: true,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     actionSanitizer: (action) => {
         if (typeof action.type === 'symbol') {
             const actionCopy = { ...action }; // Don't change the original action

@@ -1,444 +1,300 @@
 import React, { Component } from 'react';
-import { FlatList, Text, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground } from 'react-native';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import UUIDGenerator from 'react-native-uuid-generator';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
-import queryString from 'query-string';
-import Image from 'react-native-remote-svg';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { StyleSheet, Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions, WebView, Modal } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
-import { imgHost } from '../../../config';
+
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Image from 'react-native-remote-svg';
+
+import { imgHost, socketHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HotelItemView from '../../organisms/HotelItemView';
-import styles from './styles';
 import requester from '../../../initDependencies';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 
+import UUIDGenerator from 'react-native-uuid-generator';
+import { UltimateListView } from '../../../../library/UltimateListView';
+import { DotIndicator } from 'react-native-indicators';
+import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import _ from 'lodash';
+import moment from 'moment';
+import * as currencyActions from '../../../redux/action/Currency'
+import RNPickerSelect from 'react-native-picker-select';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import styles from './styles';
+
+const { width, height } = Dimensions.get('window')
 const androidStomp = NativeModules.StompModule;
 const stomp = require('stomp-websocket-js');
 
-let clientRef;
-let uid = '';
-var mainUrl = '';
+const clientRef = undefined;
 let countIos;
 
 class Property extends Component {
+    hotelsInfoById = [];
+
     constructor(props) {
         super(props);
-
-        UUIDGenerator.getRandomUUID((uuid) => {
-            uid = uuid;
-        });
         console.disableYellowBox = true;
 
-        this.handleReceiveSingleHotel = this.handleReceiveSingleHotel.bind(this);
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-        //this.gotoGuests = this.gotoGuests.bind(this);
-        this.gotoSettings = this.gotoSettings.bind(this);
-        //this.gotoSearch = this.gotoSearch.bind(this);
-        this.onSearchHandler = this.onSearchHandler.bind(this);
-        this.alterMap = this.alterMap.bind(this);
-        this.updateFilter = this.updateFilter.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
-        this.gotoHotelDetailsPage = this.gotoHotelDetailsPage.bind(this);
-        this.getStaticHotels = this.getStaticHotels.bind(this);
+        const startDate = moment()
+            .add(1, 'day');
+        const endDate = moment()
+            .add(2, 'day');
+        
         this.state = {
             search: '',
-            checkInDate: '',
-            checkOutDate: '',
-            guests: 0,
-            children: 1,
-            topHomes: [],
-            listings: [],
-            listingsMap: [],
-            searchedCity: 'Discover your next experience',
-            searchedCityId: 0,
-            // these state are for paramerters in urlForService
-            regionId: '',
-            checkInDateFormated: '',
-            checkOutDateFormated: '',
-            roomsDummyData: [],
-            urlForService: '',
-            isLoading: true,
-            isFilterLoaded: false,
-            noResultsFound: false,
-            locRate: 0,
-            currency: 'EUR',
-            currencySign: '€',
-            showResultsOnMap: false,
+            countryId: 0,
+            countryName: '',
+            value: '',
+
+            countries: [],
+            cities: [],
+
+            searchHotel: true,
+            regionId : '',
+            currency: props.currency,
+            currencySign: props.currencySign,
+            locRate: _.isString(props.locRate) ? parseFloat(props.locRate) : props.locRate,
+
+            hotelsInfo : [],
+            allElements: false,
+            isMAP : -1,
             initialLat: 51.5074,
             initialLon: 0.1278,
-            filter: undefined,
-            nameFilter: '',
+            
+            checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
+            checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
+            checkInDate: startDate.format('ddd, DD MMM').toString(),
+            checkOutDate: endDate.format('ddd, DD MMM').toString(),
+
+            guests: 2,
+            adults: 2,
+            children: 0,
+            infants: 0,
+            childrenBool: false,
+            daysDifference: 1,
+            roomsDummyData: [{
+                adults: 2,
+                children: []
+            }],
+
+            //filters
             showUnAvailable: false,
             selectedRating: [false, false, false, false, false],
-            orderBy: 'priceForSort,asc',
-            sliderValue: [1, 5000],
-            page: 0,
-            totalPages: 0,
-            isLoadingHotelDetails: false,
-            daysDifference: 1,
-            loadStatic: true,
-            log: ''
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
-        this.state.searchedCity = params ? params.searchedCity : '';
-        this.state.searchedCityId = params ? params.searchedCityId : 0;
-        this.state.checkInDate = params ? params.checkInDate : '';
-        this.state.checkOutDate = params ? params.checkOutDate : '';
-        this.state.guests = params ? params.guests : 0;
-        this.state.children = params ? params.children : 0;
-        this.state.regionId = params ? params.regionId : [];
-        this.state.checkInDateFormated = params ? params.checkInDateFormated : '';
-        this.state.checkOutDateFormated = params ? params.checkOutDateFormated : '';
-        this.state.roomsDummyData = params ? params.roomsDummyData : [];
-        this.state.currency = params ? params.currency : [];
-        this.state.currencySign = params ? params.currencySign : '€';
-        this.state.locRate = params ? params.locRate : 0;
-        this.state.filter = params ? params.filter : [];
-        this.state.daysDifference = params ? params.daysDifference : 1;
 
-        mainUrl = '?region=' + this.state.regionId + '&currency=' + this.state.currency + '&startDate=' + this.state.checkInDateFormated + '&endDate=' + this.state.checkOutDateFormated + '&rooms=' + this.state.roomsDummyData; //eslint-disable-line
-        this.state.urlForService = mainUrl;
+        if (params) {
+            this.state.search = params.searchedCity;
+            this.state.value = params.home;
+            this.state.checkInDate = params.checkInDate;
+            this.state.checkOutDate = params.checkOutDate;
+            this.state.guests = params.guests;
+            this.state.adults = params.adults;
+            this.state.children = params.children;
+            this.state.infants = params.infants;
+            this.state.childrenBool = params.childrenBool;
+
+            this.state.searchHotel = params.searchHotel;
+            this.state.regionId = params.regionId;
+            this.state.checkInDateFormated = params.checkInDateFormated;
+            this.state.checkOutDateFormated = params.checkOutDateFormated;
+            this.state.roomsDummyData = params.roomsDummyData;
+            this.state.filter = params.filter;
+            this.state.daysDifference = params.daysDifference;
+            console.log("Property this.state", this.state);
+        }
+
+        this.mainUrl = '?region='+this.state.regionId
+                    +'&currency='+this.state.currency
+                    +'&startDate='+this.state.checkInDateFormated
+                    +'&endDate='+this.state.checkOutDateFormated
+                    +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
+    }
+
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
+            this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
+        }
+
+        if (this.props.countries != prevProps.countries) {
+            this.setCountriesInfo();
+        }
+    }
+
+    setCountriesInfo() {
+        console.log("setCountriesInfo");
+        countryArr = [];
+        this.props.countries.map((item, i) => {
+            countryArr.push({
+                'label': item.name,
+                'value': item
+            });
+        });
+        this.setState({
+            countries: countryArr,
+            countriesLoaded: true,
+            countryId: countryArr[0].value.id,
+            countryName: countryArr[0].label
+        });
     }
 
     componentWillMount() {
+        this.setCountriesInfo();
+        if(this.state.searchHotel) {
+            this.getHotels();
+        }
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    getHotels() {
+        this.setState({isMAP: -1});
+        requester.getStaticHotels(this.state.regionId).then(res => {
+            res.body.then(data => {
+                const { content } = data;
+                content.forEach(l => {
+                    if (this.hotelsInfoById[l.id]) {
+                    l.price = this.hotelsInfoById[l.id].price;
+                    }
+                });
+
+                console.log("getStaticHotels", content);
+                const hotels = content;
+                this.listView.onFirstLoad(hotels);
+                this.getHotelsInfoBySocket();
+            });
+          });
+
+    }
+
+    async getHotelsInfoBySocket() {
+        this.uuid = await UUIDGenerator.getRandomUUID();
+
         if (Platform.OS === 'ios') {
             this.stompIos();
         } else if (Platform.OS === 'android') {
-            this.getStaticHotels();
+            this.stompAndroid();
         }
     }
 
-    onChangeHandler(property) {
-        return (value) => {
-            this.setState({ [property]: value });
-        };
-    }
-
-    onSearchHandler(value) {
-
-    }
-
-    onBackPress() {
-        if (Platform.OS === 'android') {
-            androidStomp.disconnect();
-        }
-        this.props.navigation.goBack();
-    }
-
-    getStaticHotels(loadMore) {
-        console.log("Static search started");
-        //this.setState({log: `${this.state.log} \n Static Search Started`});
-        requester.getStaticHotels(this.state.regionId, this.state.page).then((res) => {
-            if (res.success) {
-                
-                if (!loadMore) {
-                    this.stompAndroid();
-                }
-                res.body.then((data) => {
-                    console.log(data);
-                    let mapInfo = [];
-                    mapInfo = data.content.map((hotel) => {
-                        return {
-                            id: hotel.id,
-                            lat: hotel.latitude,
-                            lon: hotel.longitude,
-                            name: hotel.name,
-                            price: hotel.price,
-                            stars: hotel.star,
-                            thumbnail: { url: hotel.hotelPhoto.url }
-                        };
-                    });
-                    if (loadMore) {
-                        // Add to existing data
-                        this.setState({
-                            isLoading: false,
-                            listings: [...this.state.listings, ...mapInfo]
-                        }, () => {
-                            if (this.state.listings.length <= 0) {
-                                this.setState({ noResultsFound: true });
-                            } else {
-                                this.setState({ noResultsFound: false });
-                            }
-                        });
-                    } else {
-                        this.setState({
-                            isLoading: false,
-                            listings: mapInfo,
-                            totalPages: data.totalPages
-                        }, () => {
-                            if (this.state.listings.length <= 0) {
-                                this.setState({ noResultsFound: true });
-                            } else {
-                                this.setState({ noResultsFound: false });
-                            }
-                        });
-                    }
-                });
-            } else {
-                // error
-            }
-        });
-    }
-
-    getSearchString() {
-        const queryParams = queryString.parse(mainUrl);
-        let search = `?region=${encodeURI(queryParams.region)}`;
-        search += `&currency=${encodeURI(queryParams.currency)}`;
-        search += `&startDate=${encodeURI(queryParams.startDate)}`;
-        search += `&endDate=${encodeURI(queryParams.endDate)}`;
-        search += `&rooms=${encodeURI(queryParams.rooms)}`;
-        return search;
-    }
-
-    getFilterString() {
-        const filtersObj = {
-            showUnavailable: this.state.showUnAvailable,
-            name: this.state.nameFilter,
-            minPrice: this.state.sliderValue[0],
-            maxPrice: this.state.sliderValue[1],
-            stars: this.mapStars(this.state.selectedRating)
-        };
-
-        const page = this.state.page;
-        const sort = this.state.orderBy;
-        const pagination = `&page=${page}&sort=${sort}`;
-        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
-        return filters;
-    }
-
-    applyFilters(loadMore) {
-        console.log("AAAAA");
-        //this.setState({log: `${this.state.log} \n Applying filters`});
-        this.setState({ loadStatic: false });
-        console.log("bAAAA");
-        const search = this.getSearchString();
-        const filters = this.getFilterString();
-        // const page = this.state.page ? this.state.page : 0;
-        requester.getStaticHotelsByFilter(search, filters).then((res) => {
-            console.log("BBAAA");
-            if (res.success) {
-                res.body.then((data) => {
-                    console.log(data);
-                    this.setState({log: `${this.state.log} \n JSON Total Elements: ${data.totalElements} \n Total Pages: ${data.totalPages}`});
-                    let mapInfo = [];
-                    mapInfo = data.content.map((hotel) => {
-                        return {
-                            id: hotel.id,
-                            lat: hotel.latitude,
-                            lon: hotel.longitude,
-                            name: hotel.name,
-                            price: hotel.price,
-                            stars: hotel.star,
-                            thumbnail: { url: hotel.hotelPhoto }
-                        };
-                    });
-                    if (loadMore) {
-                        // Add to existing data
-                        this.setState({
-                            isFilterLoaded: true,
-                            isLoading: false,
-                            listings: [...this.state.listings, ...mapInfo]
-                        }, () => {
-                            if (this.state.listings.length <= 0) {
-                                this.setState({ noResultsFound: true });
-                            } else {
-                                this.setState({ noResultsFound: false });
-                            }
-                        });
-                    } else {
-                        this.setState({
-                            isFilterLoaded: true,
-                            isLoading: false,
-                            listings: mapInfo,
-                            totalPages: data.totalPages
-                        }, () => {
-                            if (this.state.listings.length <= 0) {
-                                this.setState({ noResultsFound: true });
-                            } else {
-                                this.setState({ noResultsFound: false });
-                            }
-                        });
-                    }
-                });
-            } else {
-                // error
-            }
-        });
-    }
-
-    updateFilter(data) {
-        this.setState({
-            listings: [],
-            showUnAvailable: data.showUnAvailable,
-            nameFilter: data.hotelName,
-            selectedRating: data.selectedRating,
-            isLoading: true,
-            orderBy: data.priceSort,
-            sliderValue: data.sliderValue,
-            page: 0
-        }, () => {
-            this.applyFilters(false);
-        });
-    }
-
-    loadMore = () => {
-        if (this.state.page < this.state.totalPages - 1) {
-            this.setState(
-                {
-                    isLoading: true,
-                    page: this.state.page + 1
-                },
-                () => {
-                    if (this.state.loadStatic) {
-                        this.getStaticHotels(true);
-                    }
-                    else {
-                        this.applyFilters(true);
-                    }
-                }
-            );
+    unsubscribe = () => {
+        if (Platform.OS === 'ios') {
+        } else if (Platform.OS === 'android') {
+            androidStomp.close();
         }
     }
 
     stompAndroid() {
-        //this.setState({log: `${this.state.log} \n Socket Request Sent`});
-        androidStomp.startSession(uid, mainUrl, false, () => {
-            // success
-            //this.setState({log: `${this.state.log} \n Socket Session Started`});
-        }, () => {
-            // failure
-            //this.setState({log: `${this.state.log} \n SSL Exception \n Retrying....`});
-            this.stompAndroid();
+        console.log("uid---------------", this.uuid, this.mainUrl);
+        const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.mainUrl + "\"}";
+        const destination = "search/" + this.uuid;
+
+        DeviceEventEmitter.addListener("onStompConnect", () => {
+            console.log("onStompConnect -------------");
         });
-        DeviceEventEmitter.addListener('ERROR_EVENT', ({ message }) => (
-            this.setState({log: `${this.state.log} \n ${message}`})
-        ));
-        DeviceEventEmitter.addListener('SOCK_EVENT', ({ message }) => (
+        
+        DeviceEventEmitter.addListener("onStompError", ({type, message}) => {
+            console.log("onStompError -------------", type, message);
+        });
+
+        DeviceEventEmitter.addListener("onStompMessage", ({message}) => (
             this.handleAndroidSingleHotel(message)
         ));
+
+        androidStomp.getData(message, destination);
     }
 
-    handleAndroidSingleHotel(message) {//eslint-disable-line
+    handleAndroidSingleHotel(message) {
+        if (this.state.isMAP == -1) {
+            this.setState({isMAP: 0});
+        }
         try {
-            const object = JSON.parse(message);
-            if (object.hasOwnProperty('allElements')) {
-                if (object.allElements) {
-                    this.applyFilters(false);
-                    androidStomp.disconnect();
+            const jsonHotel = JSON.parse(message);
+            if (jsonHotel.hasOwnProperty('allElements')) {
+                if (jsonHotel.allElements) {
+                    this.setState({ allElements: true });
+                    if (this.listView) {
+                        this.listView.onDoneSocket();
+                    }
+                    androidStomp.close();
                 }
-            }
-            else {
-                let listings = [...this.state.listings];
-                let index = listings.findIndex(el => el.id === object.id);
-                if (index !== -1) {
-                    listings[index] = { ...listings[index], price: object.price, thumbnail: object.thumbnail };
-                    this.setState({ listings });
+            } else {
+                this.hotelsInfoById[jsonHotel.id] = jsonHotel;
+
+                if (this.state.hotelsInfo.length < this.listView.getRows.length || this.state.hotelsInfo.length % 10 === 0) {
+                    this.setState(prevState => ({
+                        hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
+                    }));
+                }
+                else {
+                    this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
                 }
 
-                this.setState(prevState => ({
-                    listingsMap: [...prevState.listingsMap, object]
-                }));
+                if (this.listView != null) {
+                    const index = this.listView.getIndex(jsonHotel.id);
+                    if (index !== -1) {
+                        this.listView.upgradePrice(index, this.hotelsInfoById[jsonHotel.id].price)
+                    }
+                }
+
+                // this.hotels.push();
+                // if (this.hotels.length <= 10) {
+                //     // this.hotelsDisplay.push(jsonHotel);
+                //     this.listView.onFirstLoad(jsonHotel);
+                //     // if (this.state.isLoading) {
+                //     //     this.setState({
+                //     //         isLoading: false,
+                //     //     });
+                //     //     // this.state.isLoading = false;
+                //     // }
+                //     // this.setState(prevState => ({
+                //     //     listings: [...prevState.listings, jsonHotel]
+                //     // }));
+                // }
+                
+                // this.setState(prevState => ({
+                //     listingsMap: [...prevState.listingsMap, object]
+                // }));
+
             }
         } catch (e) {
-            console.log(e);
+            console.log("handleAndroidSingleHotel2222---", message, e);
+            // Error
         }
     }
 
-    stompIos() {
-        countIos = 0;
-        clientRef = stomp.client('wss://beta.locktrip.com/socket');
-        clientRef.connect({}, (frame) => {
-            const headers = { 'content-length': false };
-            clientRef.subscribe(`search/${uid}`, this.handleReceiveSingleHotel);
-            clientRef.send(
-                'search',
-                headers,
-                JSON.stringify({ uuid: uid, query: mainUrl })
-            )
-        }, (error) => {
-            clientRef.disconnect();
+    onCancel = () => {
+        this.props.navigation.goBack();
+    }
+
+    switchMode = () => {
+        if (this.state.isMAP == 0) {
             this.setState({
-                isLoading: false
-            });
-        });
-    }
-
-    handleReceiveSingleHotel(message) {
-        if (countIos === 0) {
-            this.applyFilters(false);
-        }
-        countIos = 1;
-        const response = JSON.parse(message.body);
-        if (response.hasOwnProperty('allElements')) {
-            if (response.allElements) {
-                if (clientRef) {
-                    clientRef.disconnect();
-                }
-            }
-        } else {
-            this.setState(prevState => ({
-                listingsMap: [...prevState.listingsMap, response]
-            }));
-        }
-    }
-
-    mapStars(stars) {
-        let hasStars = false;
-        const mappedStars = [];
-        stars.forEach((s) => {
-            if (s) {
-                hasStars = true;
-            }
-        });
-
-        if (!hasStars) {
-            for (let i = 0; i <= 5; i++) {
-                mappedStars.push(i);
-            }
-        } else {
-            mappedStars.push(0);
-            stars.forEach((s, i) => {
-                if (s) {
-                    mappedStars.push(i + 1);
-                }
+                isMAP: 1,
             });
         }
-
-        return mappedStars;
+        else {
+            this.setState({
+                isMAP: 0,
+            });
+        }
     }
 
-    alterMap() {
-        this.setState({ showResultsOnMap: !this.state.showResultsOnMap });
-    }
-
-    gotoSettings() {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-        this.props.navigation.navigate('HotelFilterScreen', {
-            isHotelSelected: true,
-            updateFilter: this.updateFilter,
-            selectedRating: this.state.selectedRating,
-            showUnAvailable: this.state.showUnAvailable,
-            hotelName: this.state.nameFilter,
-            currency: this.state.currency,
-            currencySign: this.state.currencySign,
-        });
-    }
-
-    gotoHotelDetailsPage(item) {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-        if (Platform.OS === 'android') {
-            androidStomp.disconnect();
-        }
-        this.setState({ isLoadingHotelDetails: true });
-        requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
+    gotoHotelDetailsPage = (item) => {
+        console.log("gotoHotelDetailsPage", item);
+        
+        this.setState({isLoadingHotelDetails: true});
+        requester.getHotelById(item.id, this.mainUrl.split('&')).then((res) => {
             // here you set the response in to json
             res.body.then((data) => {
                 const hotelPhotos = [];
@@ -451,7 +307,7 @@ class Property extends Component {
                 this.props.navigation.navigate('HotelDetails', {
                     guests: this.state.guests,
                     hotelDetail: item,
-                    urlForService: this.state.urlForService,
+                    urlForService: this.mainUrl,
                     locRate: this.state.locRate,
                     currency: this.state.currency,
                     currencySign: this.state.currencySign,
@@ -465,15 +321,11 @@ class Property extends Component {
         });
     }
 
-    calloutClick = (item) => {
-        if (clientRef) {
-            clientRef.disconnect();
-        }
-        if (Platform.OS === 'android') {
-            androidStomp.disconnect();
-        }
-        this.setState({ isLoadingHotelDetails: true });
-        requester.getHotelById(item.id, this.state.urlForService.split('&')).then((res) => {
+    onClickHotelOnMap = (item) => {
+        console.log("onClickHotelOnMap", item);
+
+        this.setState({isLoadingHotelDetails: true});
+        requester.getHotelById(item.id, this.mainUrl.split('&')).then((res) => {
             // here you set the response in to json
             res.body.then((data) => {
                 const hotelPhotos = [];
@@ -486,12 +338,13 @@ class Property extends Component {
                 this.props.navigation.navigate('HotelDetails', {
                     guests: this.state.guests,
                     hotelDetail: item,
-                    urlForService: this.state.urlForService,
+                    urlForService: this.mainUrl,
                     locRate: this.state.locRate,
                     currency: this.state.currency,
                     currencySign: this.state.currencySign,
                     hotelFullDetails: data,
-                    dataSourcePreview: hotelPhotos
+                    dataSourcePreview: hotelPhotos,
+                    daysDifference: this.state.daysDifference
                 });
             }).catch((err) => {
                 console.log(err);
@@ -499,207 +352,361 @@ class Property extends Component {
         });
     }
 
-    renderLoader() {
+    onFetch = async (page = 1, startFetch, abortFetch) => {
+        console.log("onFetch", page);
+        try {
+            requester.getStaticHotels(this.state.regionId, page - 1).then(res => {
+                res.body.then(data => {
+                  const listings = data.content;
+                  listings.forEach(l => {
+                    if (this.hotelsInfoById[l.id]) {
+                      l.price = this.hotelsInfoById[l.id].price;
+                    }
+                  });
+                  const hotels = listings;
+                  console.log("onFetch--=- res  ", hotels);
+        
+                  startFetch(hotels, hotels.length)
+                });
+            });
+        } catch (err) {
+            console.log("onFetch--=- error  ", err);
+          abortFetch() // manually stop the refresh or pagination if it encounters network error
+        //   console.log(err)
+        }
+    }
+
+    onSearchHandler = (value) => {
+        this.setState({ search: value });
+        if (value === '') {
+            this.setState({ cities: [] });
+        } else {
+            requester.getRegionsBySearchParameter([`query=${value}`]).then(res => {
+                res.body.then(data => {
+                    if (this.state.search != '') {
+                        this.setState({ cities: data });
+                    }
+                });
+            });
+        }
+    }
+
+    updateData(data) {
+        this.setState({
+            adults: data.adults,
+            children: data.children,
+            infants: data.infants,
+            guests: data.adults + data.children + data.infants,
+            childrenBool: data.childrenBool
+        });
+    }
+
+    gotoGuests = () => {
+        this.props.navigation.navigate('GuestsScreen', {
+            guests: this.state.guests,
+            adults: this.state.adults,
+            children: this.state.children,
+            infants: this.state.infants,
+            updateData: this.updateData,
+            childrenBool: this.state.childrenBool
+        });
+    }
+
+    gotoSearch = () => {
+    }
+
+    onDatesSelect = ({ startDate, endDate }) => {
+        const year = (new Date()).getFullYear();
+        this.setState({
+            checkInDate: startDate,
+            checkOutDate: endDate,
+            checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
+                .format('DD/MM/')
+                .toString()) + year,
+            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM')
+                .format('DD/MM/')
+                .toString()) + year
+        });
+    }
+
+    gotoSettings() {
+        // if (this.state.allElements) {
+        //     if (searchHotel) {
+        //         this.props.navigation.navigate('HotelFilterScreen', {
+        //             isHotelSelected: true,
+        //             updateFilter: this.updateFilter,
+        //             selectedRating: this.state.selectedRating,
+        //             showUnAvailable: this.state.showUnAvailable,
+        //             hotelName: this.state.nameFilter
+        //         });
+        //     }
+        // }
+    }
+
+    // updateFilter = (data) => {
+    //     this.setState({
+    //         listings: [],
+    //         showUnAvailable: data.showUnAvailable,
+    //         nameFilter: data.hotelName,
+    //         selectedRating: data.selectedRating,
+    //         isLoading: true,
+    //         orderBy: data.priceSort,
+    //         sliderValue: data.sliderValue,
+    //         page: 0
+    //     }, () => {
+    //         this.applyFilters(false);
+    //     });
+    // }
+
+    renderItem = (item) => {
         return (
-            <View style={{
-                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
-            }}
-            >
-                <Image
+            <HotelItemView
+                item = {item}
+                currencySign = {this.state.currencySign}
+                locRate = {this.state.locRate}
+                gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
+            />
+        )
+    }
+
+    renderPaginationFetchingView = () => (
+        <View style={{width, height:height - 160, justifyContent: 'center', alignItems: 'center'}}>
+            <Image style={{width:50, height:50}} source={require('../../../assets/loader.gif')}/>
+        </View>
+    )
+    
+    renderPaginationWaitingView = () => {
+        return (
+            <View style={
+                {
+                    flex: 0,
+                    width,
+                    height: 55,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }
+            }>
+                <DotIndicator color='#d97b61' count={3} size={9} animationDuration={777}/>
+            </View>
+        )
+    }
+
+    renderPaginationAllLoadedView = () => {
+        return (<View/>)
+    }
+
+    renderHotelTopView() {
+        return (
+            <View style={styles.SearchAndPickerwarp}>
+                <View style={styles.searchAreaView}>
+                    <SearchBar
+                        autoCorrect={false}
+                        value={this.state.search}
+                        onChangeText={this.onSearchHandler}
+                        placeholder="Discover your next experience"
+                        placeholderTextColor="#bdbdbd"
+                        leftIcon="arrow-back"
+                        onLeftPress={this.onCancel}
+                    />
+                </View>
+            </View>
+        );
+    }
+
+    renderHomeTopView() {
+        console.log("this.state.countries", this.state.countries);
+        return (
+            //Home
+            <View style={styles.SearchAndPickerwarp}>
+                <View style={styles.countriesSpinner}>
+                    <TouchableOpacity onPress={this.onCancel}>
+                        <View style={styles.leftIconView}>
+                            <Text style={styles.leftIconText}>
+                                <Icon name="arrow-back" size={22} color="#000" />
+                                {/* <FontAwesome>{Icons[leftIcon]}</FontAwesome> */}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.pickerWrapHomes}>
+                        <RNPickerSelect
+                            items={this.state.countries}
+                            placeholder={{
+                                label: 'Choose a location',
+                                value: 0
+                            }}
+                            onValueChange={(value) => {
+                                this.setState({
+                                    countryId: value.id,
+                                    countryName: value.name,
+                                    value: value
+                                });
+                            }}
+                            value={this.state.value}
+                            style={{ ...pickerSelectStyles }}
+                        >
+                        </RNPickerSelect>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+
+    renderAutocomplete() {
+        const nCities = this.state.cities.length;
+        if (nCities > 0) {
+            return (
+                <ScrollView
                     style={{
-                        height: 35, width: 35
+                        marginLeft: 15,
+                        marginRight: 15,
+                        minHeight: 100,
+                        zIndex: 99,
                     }}
-                    source={{
-                        uri: 'https://alpha.locktrip.com/images/loader.gif'
-                    }}
-                />
-            </View>
-        );
-    }
-
-
-    renderInfoTv() {
-        return (
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                margin: 10
-            }}
-            >
-                <Text style={{
-                    width: '100%', height: 35, fontSize: 20, textAlign: 'center'
-                }}
                 >
-                    No Results Found
-                </Text>
-            </View>
-        );
+                    {
+                        this.state.cities.map((result, i) => { //eslint-disable-line
+                            return (//eslint-disable-line
+                                <TouchableOpacity
+                                    key={result.id}
+                                    style={i == nCities - 1 ? [styles.autocompleteTextWrapper, {borderBottomWidth: 1, elevation: 1}] : styles.autocompleteTextWrapper}
+                                    onPress={() => this.handleAutocompleteSelect(result.id, result.query)}
+                                >
+                                    <Text style={styles.autocompleteText}>{result.query}</Text>
+                                </TouchableOpacity>
+                            );//eslint-disable-line
+                        })
+                    }
+                </ScrollView>
+            );
+        } else {//eslint-disable-line
+            return null;//eslint-disable-line
+        }
     }
 
-    renderFilter() {
+    renderFilterBar() {
         return (
-            <View style={{ width: '100%', height: 80 }}>
+            <View style={{height:70, width:'100%'}}>
                 <DateAndGuestPicker
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
-                    adults={this.state.guests}
-                    children={0} //eslint-disable-line
-                    guests={0}
-                    infants={0}
+                    adults={this.state.adults}
+                    children={this.state.children}
+                    guests={this.state.guests}
+                    infants={this.state.infants}
                     gotoGuests={this.gotoGuests}
                     gotoSearch={this.gotoSearch}
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
-                    showSearchButton={false}
-                    disableDateAndGuest
                 />
             </View>
         );
     }
 
+    renderImageInCallout(hotel) {
+        if(Platform.OS === 'ios') {
+          return(
+            <Image
+                style={{ width: 120, height: 90}}
+                source={{uri: imgHost + hotel.thumbnail.url }}
+            />
+          )
+        } else {
+          return(
+            <WebView
+                style={{ width: 120, height: 90, marginLeft:-3.5, backgroundColor:'#fff'}}
+                source={{html: "<img src=" + imgHost + hotel.thumbnail.url + " width='120'/>" }}
+                javaScriptEnabledAndroid={true}
+            />
+          )
+        }
+    }
+
+    renderCallout(hotel) {
+        return (
+            <MapView.Callout tooltip={true}>
+                <View style={ styles.map_item }>
+                    <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
+                        { 
+                            hotel.thumbnail !== null && this.renderImageInCallout(hotel)
+                        }
+                    </View>
+                    <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
+                        {hotel.name}
+                    </Text>
+                    <Text style={styles.description}>
+                        LOC {hotel.price.toFixed(2)} / Night
+                    </Text>
+                    <Text style={styles.ratingsMap}>
+                        {
+                            Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                        }
+                    </Text>
+                </View>
+            </MapView.Callout>
+        );
+    }
+
+    renderMap = () => {
+        return (                            
+            <MapView
+                initialRegion={{
+                    latitude: this.state.hotelsInfo.length >= 1 ?
+                                    parseFloat(this.state.hotelsInfo[0].lat) : this.state.initialLat,
+                    longitude: this.state.hotelsInfo.length >= 1 ?
+                        parseFloat(this.state.hotelsInfo[0].lon) : this.state.initialLon,
+                    latitudeDelta: 0.5,
+                    longitudeDelta: 0.5
+                }}
+                style={styles.map}
+            >
+            {/* Marker */}
+            {this.state.hotelsInfo.map(marker => marker.lat != null && (
+                <Marker
+                    coordinate={{
+                        latitude: parseFloat(marker.lat),
+                        longitude: parseFloat(marker.lon)
+                    }}
+                    onCalloutPress={() => {this.onClickHotelOnMap(marker)}} //eslint-disable-line
+                >
+                    {this.renderCallout(marker)}
+                    
+                </Marker>
+            ))}
+            </MapView>
+        );
+    }
+
     render() {
-        const {
-            search, searchedCity
-        } = this.state;
         return (
             <View style={styles.container}>
-                {/* Back Button */}
-                <TouchableOpacity onPress={() => this.onBackPress()} style={styles.backButton}>
-                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/png/arrow-back.png')} />
-                </TouchableOpacity>
-                {/* Search Text Field */}
-                <Text>{this.state.log}</Text>
-                <TouchableOpacity onPress={() => this.onBackPress()} style={styles.searchAreaView}>
-                    <View pointerEvents="none">
-                        <SearchBar
-                            autoCorrect={false}
-                            value={search}
-                            onChangeText={this.onSearchHandler}
-                            placeholder={searchedCity}
-                            placeholderTextColor="#bdbdbd"
-                            leftIcon="search"
-                        />
-                    </View>
-                </TouchableOpacity>
-                {/* Filter Box */}
-                {this.state.isFilterLoaded && this.renderFilter()}
-
-                {/* No Results Text */}
-                {this.state.noResultsFound && this.renderInfoTv()}
-
-                {/* Show map button */}
-
-                {this.state.showResultsOnMap &&
-                    <TouchableOpacity onPress={this.alterMap}>
-                        <View style={{
-                            marginTop: 20, alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
-                        }}
-                        >
-                            <ImageBackground source={require('../../../assets/map_button.jpg')} style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={styles.searchButtonText}>See Results List</Text>
-                            </ImageBackground>
-                        </View>
-                    </TouchableOpacity>}
-                {/* View for map and list */}
-                <View style={styles.itemView}>
-                    {this.state.showResultsOnMap ?
-                        // MapView
-                        <MapView
-                            initialRegion={{
-                                latitude: this.state.listingsMap.length >= 1 ?
-                                    parseFloat(this.state.listingsMap[0].lat) : this.state.initialLat,
-                                longitude: this.state.listingsMap.length >= 1 ?
-                                    parseFloat(this.state.listingsMap[0].lon) : this.state.initialLon,
-                                latitudeDelta: 1,
-                                longitudeDelta: 1
-                            }}
-                            style={styles.map}
-                        >
-                            {/* Marker */}
-                            {this.state.listingsMap.map(marker => marker.lat != null && (
-                                <Marker
-                                    coordinate={{
-                                        latitude: parseFloat(marker.lat),
-                                        longitude: parseFloat(marker.lon)
-                                    }}
-                                    onCalloutPress={this.calloutClick.bind(this, marker)} //eslint-disable-line
-                                >
-                                    {/* Marker click */}
-                                    <MapView.Callout
-                                        tooltip
-                                    >
-                                        <View style={
-                                            {
-                                                paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'
-                                            }
-                                        }
-                                        >
-                                            <Image
-                                                style={{ width: 100, height: 60 }}
-                                                source={marker.thumbnail !== null && { uri: imgHost + marker.thumbnail.url }}
-                                            />
-                                            <Text style={styles.location}>
-                                                {marker.name}
-                                            </Text>
-                                            <Text style={styles.description}>
-                                                LOC {marker.price} / Night
-                                            </Text>
-                                            <Text style={styles.ratingsMap}>
-                                                {
-                                                    Array(marker.stars !== null && marker.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-                                                }
-                                            </Text>
-                                        </View>
-                                    </MapView.Callout>
-                                </Marker>
-                            ))}
-                        </MapView>
-                        :
-                        // FlatList
-                        <FlatList
-                            bounces={false}
-                            style={styles.flatList}
-                            data={this.state.listings}
-                            onEndReachedThreshold={0.5}
-                            onEndReached={() => {
-                                if (!this.onEndReachedCalledDuringMomentum) {
-                                    this.loadMore();
-                                    this.onEndReachedCalledDuringMomentum = true;
-                                }
-                            }
-                            }
-                            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
-                            refreshing={false}
-                            ListHeaderComponent={
-                                !this.state.isLoading ?
-                                    <TouchableOpacity
-                                        disabled={!this.state.isFilterLoaded && true}
-                                        onPress={this.alterMap}>
-                                        <View style={{
-                                            alignItems: 'center', backgroundColor: '#fff', minHeight: 120, maxHeight: 120, padding: 7
-                                        }}
-                                        >
-                                            <ImageBackground source={require('../../../assets/map_button.jpg')} style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                                                <Text style={styles.searchButtonText}>{this.state.isFilterLoaded ? "See results on map" : "Loading..."}</Text>
-                                            </ImageBackground>
-                                        </View>
-                                    </TouchableOpacity>
-                                    :
-                                    <View />
-                            }
-                            ListFooterComponent={
-                                this.state.isLoading && this.renderLoader()
-                            }
-                            renderItem={
-                                ({ item }) =>
-                                    (<HotelItemView
-                                        item={item}
-                                        currencySign={this.state.currencySign}
-                                        locRate={this.state.locRate}
-                                        gotoHotelDetailsPage={this.gotoHotelDetailsPage}
-                                    />)
-                            }
-                        />
+                {/* <CloseButton onPress={this.onCancel} /> */}
+                {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
+                {this.renderAutocomplete()}
+                {this.renderFilterBar()}
+                <View style={styles.containerHotels}>
+                    {
+                        this.state.isMAP == 1 && this.renderMap()
+                    }
+                    <UltimateListView
+                        ref = {ref => this.listView = ref}
+                        isDoneSocket = {this.state.allElements}
+                        key = {'list'} // this is important to distinguish different FlatList, default is numColumns
+                        onFetch = {this.onFetch}
+                        keyExtractor = {(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
+                        firstLoader = { false }
+                        refreshable = { false }
+                        item = {this.renderItem} // this takes three params (item, index, separator)
+                        numColumns = {1} // to use grid layout, simply set gridColumn > 1
+                        paginationFetchingView = {this.renderPaginationFetchingView}
+                        paginationWaitingView = {this.renderPaginationWaitingView}
+                        paginationAllLoadedView = {this.renderPaginationAllLoadedView}
+                    />
+                    {
+                        this.state.isMAP != -1 &&
+                            <TouchableOpacity onPress={this.switchMode} style={styles.switchButton}>
+                                <FontAwesome style={styles.icon}>{this.state.isMAP == 0? Icons.mapMarker : Icons.listUl}</FontAwesome>
+                            </TouchableOpacity>
                     }
                 </View>
                 <ProgressDialog
@@ -708,10 +715,74 @@ class Property extends Component {
                     message="Loading..."
                     animationType="slide"
                     activityIndicatorSize="large"
-                    activityIndicatorColor="black"
-                />
+                    activityIndicatorColor="black"/>
             </View>
         );
     }
+
+    stompIos() {
+        countIos = 0;
+        clientRef = stomp.client('wss://beta.locktrip.com/socket');
+        clientRef.connect({}, (frame) => {
+            var headers = {'content-length': false};
+            clientRef.subscribe(`search/${this.uuid}`, this.handleReceiveSingleHotel);
+            clientRef.send("search",
+                headers,
+                JSON.stringify({uuid: this.uuid, query : mainUrl})
+            )
+        }, (error) => {
+            clientRef.disconnect();
+            this.setState({
+                isLoading: false,
+            });
+        });
+    }
+    
+    handleReceiveSingleHotel(message) {
+        if (countIos === 0) {
+            this.applyFilters(false);
+        }
+        countIos = 1;
+        const response = JSON.parse(message.body);
+        if (response.hasOwnProperty('allElements')) {
+            if (response.allElements) {         
+                if (clientRef) {
+                    clientRef.disconnect();
+                }
+            }
+        } else {
+            this.setState(prevState => ({
+                listingsMap: [...prevState.listingsMap, response]
+            }));
+        }
+    }
 }
-export default withNavigation(Property);
+
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+        locRate: state.currency.locRate,
+        countries: state.country.countries
+    };
+}
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(currencyActions, dispatch)
+})
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        height: 50,
+        fontSize: 16,
+        paddingTop: 13,
+        paddingHorizontal: 10,
+        paddingBottom: 12,
+        backgroundColor: 'white',
+        color: 'black'
+    }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Property));
+
+// export default withNavigation(Property);

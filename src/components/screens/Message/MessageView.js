@@ -9,7 +9,7 @@ import Image from 'react-native-remote-svg';
 import moment from 'moment';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
-import { imgHost } from '../../../config.js'
+import { imgHost, PUBLIC_URL } from '../../../config.js'
 import styles from './styles';
 
 TimeAgo.locale(en);
@@ -18,10 +18,10 @@ const timeAgo = new TimeAgo('en-US');
 export default function MessageView(props) {
     const messageCreatedAt = moment(props.message.createdAt, 'DD/MM/YYYY HH:mm:ss');
 
-    let imageAvatar = 'https://staging.locktrip.com/images/default.png';
+    let imageAvatar = PUBLIC_URL + 'images/default.png';
     if (props.message.sender.image != '') {
-        if (props.message.sender.image == 'https://staging.locktrip.com/images/default.png' || props.message.sender.image == 'images/default.png') {
-            imageAvatar = {uri:'https://staging.locktrip.com/images/default.png'};
+        if (props.message.sender.image.indexOf("images/default.png".toLowerCase()) != -1){ 
+            imageAvatar = { uri: PUBLIC_URL + 'images/default.png' };
         }
         else {
             imageAvatar ={uri:imgHost+props.message.sender.image}

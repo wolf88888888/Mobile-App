@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         backgroundColor: '#f0f1f3',
         padding: 15
     },
@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
         color: '#000',
         fontFamily: 'FuturaStd-Medium',
         fontSize: 22,
-        marginTop: 64,
     },
 
     paragraph: {
@@ -21,17 +20,12 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light',
         fontSize: 17,
         lineHeight: 20,
-        marginTop: 64,
     },
-    topContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
+
     buttonsView: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         marginBottom: 10
     },
     acceptButtonView: {

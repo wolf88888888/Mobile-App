@@ -17,6 +17,11 @@ export const hasLetterAndNumber = (password) => {
     return re.test(password);
 };
 
+export const hasLetter = (password) => {
+    const re = /^(?=.*?[A-Z a-z])/; // eslint-disable-line
+    return re.test(password);
+};
+
 export const hasSymbol = (password) => {
     const re = /^(?=.*?[#?!@$%^&*-]).{8,}$/; // eslint-disable-line
     return re.test(password);

@@ -126,7 +126,9 @@ const styles = StyleSheet.create({
   modalContainer: {
     marginHorizontal: 16,
     marginVertical: 106,
-    minWidth: width * 0.8,
+    // minWidth: width * 0.8,
+    width: width * 0.8,
+    // minWidth: 300,
     borderRadius: 2,
     elevation: 24,
     overflow: 'hidden',

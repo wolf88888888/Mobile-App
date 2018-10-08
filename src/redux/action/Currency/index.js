@@ -38,7 +38,7 @@ export const getCurrency = (currency, isRefresh = true, isPrefer = true) => {
                     dispatch(setPreferLocRate({locRate:locPrice}));
                 }
             }).catch(err => {
-                console.log(err);
+                console.log("getCurrency error", err);
             });
         });
     }

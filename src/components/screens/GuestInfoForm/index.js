@@ -4,8 +4,8 @@ import Image from 'react-native-remote-svg';
 import GuestFormRow from './GuestFormRow';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import thunk from 'redux-thunk';
 import Toast from 'react-native-easy-toast';
+import { hasLetter } from '../../../utils/validation';
 
 let testingArray = [];
 var newElement = {};
@@ -13,12 +13,9 @@ var newElement = {};
 export default class GuestInfoForm extends Component {
     constructor(props) {
         super(props);
-        //console.log(props.navigation.state.params.guests);
-        this.onProceedClick = this.onProceedClick.bind(this);
         // Save guests array for dynamic form generation
         this.state = {
-            arr : [],
-            guestRecordArray : [{}],
+            guests : [],
             guest: {
                 title: 'Mr',
                 firstName: '',
@@ -27,21 +24,24 @@ export default class GuestInfoForm extends Component {
             guestRecord : {},
             testGuestArray : [{}]
         };
-    }
-
-    onProceedClick(key, value){
-        console.log(value);
-        // this.state.guestRecord[key] = value;
-        // this.setState(
-        //     {
-        //         guestRecord : this.state.guestRecord
-        //     }
-        // );
-        // console.log(this.state.guestRecord);
+        
+        for (var i = 0; i < this.props.navigation.state.params.guests; i++){
+            this.state.guests.push({
+                key: i,
+                genderRepresentation: 'Mr',
+                firstName: '',
+                lastName: ''
+                }
+            );
+        }
     }
 
     handleFirstName(key,text){
         console.log('firstName----', key, text);
+
+        if (text === "") {
+            text = "Optional"
+        }
         newElement = {};
         newElement['title'] = 'Mr';
         newElement['firstName'] = text;
@@ -50,6 +50,9 @@ export default class GuestInfoForm extends Component {
 
     handleLastName(key,text){
         console.log('lastName----', key, text);
+        if (text === "") {
+            text = "Optional"
+        }
         newElement['lastName'] = text;
         testingArray[key] = newElement;
     }
@@ -66,24 +69,15 @@ export default class GuestInfoForm extends Component {
         else{
         }
     }
-    // Keys for flatlist
-    _keyExtractor = (item, index) => item.key;
 
     componentDidMount(){
         console.disableYellowBox = true
-        for (var i = 0; i < this.props.navigation.state.params.guests; i++){
-            this.state.arr.push({
-                key: i,
-                genderRepresentation: 'Mr',
-                firstName: '',
-                lastName: ''
-                }
-            );
-        }
+        console.log("componentDidMount", this.state.guests);
     }
 
     render() {
         const {params} = this.props.navigation.state
+        console.log("GuestInfoForm", params);
         return (
             <View style={styles.container}>
                 <Toast
@@ -116,21 +110,22 @@ export default class GuestInfoForm extends Component {
                         </View>
                     </View>
                     
-                        <FlatList
-                            style={styles.flatList}
-                            data={this.state.arr}
-                            keyExtractor={this._keyExtractor}
-                            renderItem={({ item, index }) => (
-                                <KeyboardAvoidingView keyboardVerticalOffset={-50} behavior="position" enabled>
-                                <GuestFormRow
-                                    guest={item}
-                                    itemIndex={index}
-                                    onFirstNameChange={(key, text) => this.handleFirstName(index, text)}
-                                    onLastNameChange={(key, text) => this.handleLastName(index, text)}
-                                />
-                                </KeyboardAvoidingView>
-                            )}
-                        />
+                    <FlatList
+                        style={styles.flatList}
+                        data={this.state.guests}
+                        
+                        keyExtractor={(item, index) => item.key}
+                        renderItem={({ item, index }) => (
+                            <KeyboardAvoidingView keyboardVerticalOffset={-50} behavior="position" enabled>
+                            <GuestFormRow
+                                guest={item}
+                                itemIndex={index}
+                                onFirstNameChange={(key, text) => this.handleFirstName(index, text)}
+                                onLastNameChange={(key, text) => this.handleLastName(index, text)}
+                            />
+                            </KeyboardAvoidingView>
+                        )}
+                    />
                 </View>
 
                 {/*Bottom Bar*/}
@@ -158,8 +153,22 @@ export default class GuestInfoForm extends Component {
     }
     onProceedPress = () => {
         const {params} = this.props.navigation.state;
-        if (testingArray.length != this.state.arr.length){
+        var isValid = true;
+        for (var i = 0; i < testingArray.length; i ++) {
+            isValid = hasLetter(testingArray[i]['firstName']);
+             if (!isValid) {
+                 break;
+             }
+             isValid = hasLetter(testingArray[i]['lastName']);
+             if (!isValid) {
+                 break;
+             }
+        }
+        if (testingArray.length != this.state.guests.length){
             this.refs.toast.show("Please enter details for all the guests", 2000);
+        }
+        else if (!isValid) {
+            this.refs.toast.show("Names should be at least 1 characters long and contain only characters.", 2000);
         }
         else {
             this.props.navigation.navigate('RoomDetailsReview', {

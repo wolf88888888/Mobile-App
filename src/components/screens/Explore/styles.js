@@ -8,47 +8,55 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#f0f1f3'
     },
+
     scrollView: {
-        
+        position: 'absolute',
+        top: 100,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
 
     searchAreaView: {
         flex:1,
         backgroundColor: '#f0f1f3',
         paddingTop: 40,
-        paddingLeft: 17,
-        paddingRight: 17
+        paddingLeft: 15,
+        paddingRight: 15
     },
+
     blank:{
         height: 70,
         backgroundColor: '#fff'
     },
+
     SearchAndPickerwarp:{
         display: 'flex',
         flexDirection: 'row',
         marginBottom:10
     },
+
     bottomWrapper:{
      marginTop:20,
       flex: 1,
      justifyContent: 'center', 
      alignItems: 'center'
     },
-    getStartedButtonView:
-    {
+
+    getStartedButtonView: {
         width: '50%',
+        height: dimensionWindows.height * 0.07,
         backgroundColor: '#DA7B61',
         marginTop: 10,
         marginBottom: 10,
         paddingVertical: 0,
         alignItems: 'center',
-
     },
 
     pickerWrap:{
         width: '32%',
         paddingTop: 40,
-        paddingRight: 17,
+        paddingRight: 15,
         alignSelf: 'flex-start',
         justifyContent: 'flex-end',  
         alignItems: 'flex-start'
@@ -133,8 +141,8 @@ const styles = StyleSheet.create({
         //justifyContent:'flex-start',
         //alignItems: 'flex-start',
         paddingTop: 10,
-        paddingLeft: 17,
-        paddingRight: 17,
+        paddingLeft: 15,
+        paddingRight: 15,
         //alignContent: 'flex-start',
         alignItems: 'center',
         justifyContent: 'center',
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
     catTitle: {
         justifyContent:'flex-start',
         fontSize: 24,
-        paddingLeft: 17,
+        paddingLeft: 15,
         fontFamily: 'FuturaStd-Light',
         paddingTop: 10
     },
@@ -162,11 +170,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
-        height: dimensionWindows.height*0.08,
+        height: dimensionWindows.height * 0.07,
         marginTop: 10,
         marginBottom: 10,
-        marginLeft: 17,
-        marginRight: 17
+        marginLeft: 15,
+        marginRight: 15
     },
     searchButtonText: {
         color: '#fff',
@@ -184,8 +192,8 @@ const styles = StyleSheet.create({
     },
     sectionView: {
         width: '100%',
-        paddingLeft: 17,
-        paddingRight: 17
+        paddingLeft: 15,
+        paddingRight: 15
     },
     subtitleView: {
         width: '100%',
@@ -517,14 +525,14 @@ const styles = StyleSheet.create({
         fontFamily: 'FuturaStd-Light'
     },
     autocompleteTextWrapper: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fff',
+        borderColor:'#00000011',
         width: width - 34,
         justifyContent: 'center',
         paddingTop: 10,
         paddingBottom: 10,
-        paddingLeft: 17,
-        paddingRight: 17,
-        backgroundColor: 'lightgray'
+        paddingLeft: 15,
+        paddingRight: 15,
     },
     SearchAndPickerwarp:{
         display: 'flex',
@@ -537,7 +545,7 @@ const styles = StyleSheet.create({
     pickerWrap:{
         width: '32%',
         paddingTop: 40,
-        paddingRight: 17,
+        paddingRight: 15,
         alignSelf: 'flex-start',
         justifyContent: 'flex-end',  
         alignItems: 'flex-start'
@@ -569,9 +577,10 @@ const styles = StyleSheet.create({
 
     scrollViewTitles:{
         fontFamily: 'FuturaStd-Medium',
-        fontSize: dimensionWindows.width*0.05,
+        fontSize: dimensionWindows.width*0.048,
         color: '#1f2427',
-        top: 2
+        top: 2,
+        marginLeft:15
     },
 
     viewDiscover: {
@@ -595,28 +604,41 @@ const styles = StyleSheet.create({
     
     imageViewDiscoverLeft: {
         flex: 1,
-        marginRight: 4
+        marginRight: 5
     },
-    imageViewDiscoverRight: {height: '100%', flex:1, marginLeft: 4},
+
+    imageViewDiscoverRight: {
+        height: '100%', 
+        flex:1,
+        marginLeft: 5
+    },
+
     viewPopularHotels: {
         marginTop:10,
         flex: 0.3,
         flexDirection: 'row'},
 
-        homehotelsView: {
-            width: dimensionWindows.width/2.2,
-            height: dimensionWindows.width/4,
-            marginRight: 4
-        },
+    homehotelsView: {
+        width: dimensionWindows.width / 2.2 - 4,
+        height: dimensionWindows.width / 4
+    },
 
-    imageViewHotelsHomes: {width: dimensionWindows.width/2.2,height: dimensionWindows.width/4},
+    imageViewHotelsHomes: {
+        width: '100%',
+        height: '100%'
+    },
     
     subViewPopularHotelsLeft: {
-        width: dimensionWindows.width/2.2,
-        height: dimensionWindows.width/3,
-        marginRight: 4
+        width: dimensionWindows.width / 2.2 - 4,
+        height: dimensionWindows.width / 3,
+        marginRight: 5
     },
-    subViewPopularHotelsRight : {width: dimensionWindows.width/2.2,height: dimensionWindows.width/3,marginRight: 4},
+    subViewPopularHotelsRight : {
+    	width: dimensionWindows.width /  2.2 - 4,
+        height: dimensionWindows.width / 3,
+        marginLeft: 5
+
+ 	},
     imageViewPopularHotels: {width: dimensionWindows.width/2.2,height: dimensionWindows.width/3},
     bottomView: {flexDirection: 'column', justifyContent: 'space-between',alignItems: 'center'},
     bottomViewText: {margin:10, width:dimensionWindows.width/2, height: dimensionWindows.height/7},
@@ -628,8 +650,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-end',
-        paddingLeft: 17,
-        paddingRight: 17
+        paddingLeft: 15,
+        paddingRight: 15
     },
 });
 export default styles;

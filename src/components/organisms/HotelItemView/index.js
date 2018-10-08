@@ -3,21 +3,22 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Dimensions,
-    ViewPropTypes
 } from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
+import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
+import _ from 'lodash';
 import styles from './styles';
+import FastImage from 'react-native-fast-image'
 
 const RNPropTypes = PropTypes || React.PropTypes;
 
 class HotelItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.array,
-        currencySign: RNPropTypes.object,
+        item: RNPropTypes.object,
+        currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
         gotoHotelDetailsPage: PropTypes.func.isRequired
     };
@@ -37,21 +38,27 @@ class HotelItemView extends Component {
         this.props.gotoHotelDetailsPage(item);
     }
 
-    checkStars(count) {
+    renderStars = (count) => {
         const indents = [];
-        for (let i = 0; i < 5; i++) {
-            if (count > 0) {
-                indents.push(<Text style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-            } else {
-                indents.push(<Text style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-            }
-            count--;
+        for (let i = 0; i < count; i ++) {
+            indents.push(<Text key = {`star - ${i}`} style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
         }
+        for (let i = count; i < 5; i ++) {
+            indents.push(<Text key = {`star - ${i}`} style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+        }
+        // for (let i = 0; i < 5; i++) {
+        //     if (count > 0) {
+        //         indents.push(<Text style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+        //     } else {
+        //         indents.push(<Text style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+        //     }
+        //     count--;
+        // }
         return indents;
     }
 
     ratingTitle(count){
-        if (count < 1){
+        if (count <= 1){
             return 'Poor'
         }
         else if (count > 1 && count <= 2){
@@ -68,67 +75,75 @@ class HotelItemView extends Component {
         }
     }
 
-    renderLoader() {
-        return (
-            <View style={{
-                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
-            }}
-            >
-                <Image
-                    style={{
-                        height: 35, width: 35
-                    }}
-                    source={{
-                        uri: 'https://alpha.locktrip.com/images/loader.gif'
-                    }}
-                />
-            </View>
-        );
-    }
-
     render() {
         const {
             item, currencySign, locRate
         } = this.props;
+        
+
+        let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
+                 (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
+                 : 
+                 "";
+        let stars = item.star;
+        let isLoadingPricing = true;
+
+        if (item.price != undefined && item.price != null) {
+            isLoadingPricing = false;
+        }
+        
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
-                <View style={styles.card}>
-                    <Image
-                        source={item.thumbnail !== null && { uri: imgHost + item.thumbnail.url }}
-                        style={styles.popularHotelsImage}
-                    />
+                <CardView 
+                    style = {styles.card}
+                    cardElevation = {0.5}
+                    cardMaxElevation = {0.5}
+                    cornerRadius = {0}>
+                    <View style={styles.popularHotelsImage}>
+                        {
+                            urlThumbnail != null && urlThumbnail != "" &&
+                            <FastImage
+                                style={{flex:1}}
+                                source={{
+                                    uri: urlThumbnail,
+                                    priority: FastImage.priority.high,
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                        }
+                        <TouchableOpacity style={styles.favoritesButton}>
+                            <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon} resizeMode='contain'/>
+                        </TouchableOpacity>
+                    </View>
 
-                    <TouchableOpacity style={styles.favoritesButton}>
-                        <Image source={require('../../../assets/png/heart.png')} style={styles.favoriteIcon} />
-                    </TouchableOpacity>
 
                     <View style={styles.cardContent}>
 
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
 
                         <View style={styles.aboutPlaceView}>
-                            <Text style={styles.placeReviewText}>{this.ratingTitle(item.stars)}</Text>
-                            <Text style={styles.placeReviewNumber}> {item.stars}/5 </Text>
+                            <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text>
+                            <Text style={styles.placeReviewNumber}> {stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
-                                {this.checkStars(item.stars)}
+                                {this.renderStars(stars)}
                             </View>
                             {/* <Text style={styles.totalReviews}> 73 Reviews </Text> */}
                         </View>
 
                         {
-                            item.price === undefined ?
-
+                        !isLoadingPricing?
                             <View style={styles.costView}>
-                            <Text style={styles.perNight}>Loading...</Text>
-                            </View> :
+                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(item.price).toFixed(2)}</Text>
+                                <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
+                                <Text style={styles.perNight}>per night</Text>
+                            </View>
+                        :
                             <View style={styles.costView}>
-                                <Text style={styles.cost} adjustsFontSizeToFit={true} minimumFontScale={0.01} numberOfLines={1} ellipsizeMode="tail">{currencySign}{item.price}</Text>
-                                <Text style={styles.costLoc} adjustsFontSizeToFit={true} minimumFontScale={0.01} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
-                                <Text style={styles.perNight} adjustsFontSizeToFit={true} minimumFontScale={0.01}>per night</Text>
+                                <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
                             </View>
                         }
                     </View>
-                </View>
+                </CardView>
             </TouchableOpacity>
         );
     }

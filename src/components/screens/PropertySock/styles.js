@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const dimensionWindows = Dimensions.get('window');
+const { width } = dimensionWindows;
 
 const styles = StyleSheet.create({
     container: {
@@ -9,325 +10,106 @@ const styles = StyleSheet.create({
         paddingLeft: 17,
         paddingRight: 17
     },
-    searchAreaView: {
-        width: '100%',
-        backgroundColor: '#f0f1f3',
-        paddingTop: 20,
-    },
-    itemView:{
-        marginTop: 10,
-        flex: 1
-    },
-    sectionView: {
-        width: '100%',
-    },
-    subtitleView: {
-        backgroundColor: 'green',
-        width: '100%',
-        paddingTop: 18,
-        paddingBottom: 5,
-        borderBottomWidth: 0.5,
-        borderColor: '#cc8068'
-    },
-    subtitleText: {
-        fontSize: 16,
-        fontFamily: 'FuturaStd-Light'
-    },
-    tilesView: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between'
-    },
-    text: {
-        color: '#000'
-    },
-    section1: {
-        flex: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        // marginLeft: 18,
-        // marginRight: 18
-    },
-    dateView: {
-        flex: 1,
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginRight: 10
-    },
-    btnCheckInDate: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#ffffff'
-    },
-    btnCheckOutDate: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#ffffff'
-    },
-    btnGuests: {
-        flex: 0.3,
-        alignItems: 'center',
-        backgroundColor: '#ffffff'
-    },
-    btn_text: {
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 16,
-        color: '#1f2427',
-        paddingTop: 10
-    },
-    betweenButtons: {
-        marginTop: 8,
-        marginBottom: 8,
-        width: 1,
-        backgroundColor: '#ccc'
-    },
-    btn_subtext: {
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 12,
-        color: '#d97b61',
-        paddingBottom: 10
-    },
-    btnSettings: {
-        flex: 0.25,
-        marginLeft: 10,
-        alignItems: 'center',
-        backgroundColor: '#ffffff',
-        paddingTop: 15
-    },
-    btn_SettingImages: {
-        height: 25,
-        width: 25,
-        resizeMode: 'contain'
-    },
-    btnSearch: {
-        margin: 10,
-        // marginLeft: 18,
-        // marginRight: 18,
-        padding: 14,
-        alignItems: 'center',
-        backgroundColor: '#cc8068'
-    },
-    searchText: {
 
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 20,
-        color: '#fff'
+    SearchAndPickerwarp:{
+        display: 'flex',
+        flexDirection: 'row'
     },
-    discoverView: {
-        //padding: 18
+    
+    searchAreaView: {
+        //width: '68%',
+       // height: 105,
+       flex:1,
+        backgroundColor: '#f0f1f3',
+        paddingTop: 40,
+        paddingLeft: 15,
+        paddingRight: 15
     },
-    discoverText: {
-        fontSize: 16,
-        marginBottom: 15,
-        fontWeight: '500'
+
+    autocompleteText: {
+        fontFamily: 'FuturaStd-Light'
     },
-    discoverImage: {
-        width: (Dimensions.get('window').width - 42)/2,
-        height: 100
-    },
-    topDestinationsView: {
-        //padding: 18
-    },
-    topDestinationsText: {
-        fontSize: 16,
-        marginBottom: 15,
-        fontWeight: '500'
-    },
-    topDestinationsImage: {
-        width: (Dimensions.get('window').width - 42)/3.5,
-        height: 150
-    },
-    discoverItemButton: {
-        marginRight: 6
-    },
-    popularHotelsView: {
-        //paddingHorizontal: 18,
-        paddingBottom: 18
-    },
-    popularHotelsText: {
-        fontSize: 16,
-        marginBottom: 15,
-        fontWeight: '500'
-    },
-    cardsView: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 10,
-        
-    },
-    flatList:{
-        // marginRight: 18,
-    },
-    card: {
-        height: 230,
-        width: '100%',
+
+    autocompleteTextWrapper: {
         backgroundColor: '#fff',
-        marginBottom: 10,
-        
-    },
-    popularHotelsImage: {
-        height: 150,
-        width: null
-    },
-    cardContent: {
-        padding: 5
-    },
-    locationContainer: {
-        flexDirection: 'row'
-    },
-    locationText: {
-        fontSize: 9,
-        fontFamily: 'FuturaStd-Light',
-        marginTop: 2
-    },
-    placeName: {
-        marginTop: 8,
-        fontSize: 15,
-        color: 'black',
-        fontFamily: 'FuturaStd-Light'
-    },
-    aboutPlaceView: {
-        flexDirection: 'row',
-        marginTop: 2
-    },
-    placeReviewText: {
-        fontSize: 8,
-        color: '#aeaeae'
-    },
-    placeReviewNumber: {
-        fontSize: 8,
-        color: '#aeaeae'
-    },
-    totalReviews: {
-        fontSize: 8,
-        color: '#aeaeae'
-    },
-    ratingIconsWrapper: {
-        flexDirection: 'row'
-    },
-    star: {
-        height: 8,
-        width: 8,
-        marginTop: 2
-    },
-    costView: {
-        flexDirection: 'row',
-        marginTop: 10
-    },
-    cost: {
-        fontSize: 12,
-        fontFamily: 'FuturaStd-Light'
-    },
-    perNight: {
-        fontSize: 10,
-        fontFamily: 'FuturaStd-Light',
-        marginTop: 2
-    },
-    favoritesButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10
-    },
-    favoriteIcon: {
-        height: 20,
-        width: 20
-    },
-    showAllButton: {
-        padding: 14,
-        alignItems: 'center',
-        backgroundColor: '#cc8068'
-    },
-    showAllText: {
-        color: '#fff',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 18
-    },
-    listHotelView: {
-        //padding: 18,
-        alignItems: 'center'
-    },
-    hostHeader: {
-        fontSize: 12,
-        fontFamily: 'FuturaStd-Light',
-    },
-    hostDescription: {
-        fontFamily: 'FuturaStd-Light',
-        textAlign: 'center',
-        fontSize: 18,
-        marginHorizontal: 30
-    },
-    getStartedButton: {
-        paddingVertical: 14,
-        paddingHorizontal: 50,
-        alignItems: 'center',
-        backgroundColor: '#cc8068',
-        marginTop: 15
-    },
-    fab: {
-        position: 'absolute',
-        right: 18,
-        bottom: 10,
-        paddingVertical: 8,
-        paddingHorizontal: 15,
-        alignItems: 'center',
-        backgroundColor: '#cc8068',
-        marginTop: 15,
+        borderColor:'#00000011',
+        width: width - 34,
         justifyContent: 'center',
-        shadowColor: '#858585',
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowRadius: 2,
-        shadowOpacity: 0.5
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
     },
-    fabText: {
-        fontFamily: 'FuturaStd-Light',
-        color: '#fff'
-    },
-    bottomSvg: {
-        height: 80
-    },
-    exploreSvg: {
-        height: 80,
-        width: Dimensions.get('window').width,
-        alignSelf: 'stretch'
-    },
-    bottomGap: {
-        height: 50
-    },
-    backButton:{
-        marginTop: 25,
-    },
-    btn_backImage:{
-        height: 24,
-        width: 24,
-        resizeMode: 'contain'
-      },
-      searchButtonView: {
-        //marginLeft: 18,
-        //marginRight: 18,
+    leftIconView: {
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#cc8068'
+        width: 50,
+        height:50
     },
-    searchButtonText: {
+
+    leftIconText: {
+        color: '#5a5a5c',
+        fontSize: 16
+    },
+    
+    pickerWrapHomes:{
+        height: 50,
         backgroundColor: '#fff',
-        color: '#000',
-        fontFamily: 'FuturaStd-Light',
-        fontSize: 17,
-        padding: 14
+        flex: 1,
+        alignSelf: 'flex-start',
     },
+
+    countriesSpinner: {
+        flex: 1,
+        flexDirection: 'row',
+        marginTop: 40,
+        justifyContent: 'flex-end',
+        marginLeft: 15,
+        marginRight: 15,
+        backgroundColor: '#fff'
+    },
+
+    containerHotels:{
+        marginTop: 2,
+        flex: 1,
+    },
+    
+    switchButton: {
+        position: 'absolute',
+        bottom: 15,
+        right: 20,
+        width: 56,
+        height: 56,
+        borderRadius: 50,
+        backgroundColor: '#D87A61',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    icon: {
+        color: '#fff',
+        fontSize: 24
+    },
+
     map: {
-        marginTop: 18,
-        zIndex: -1,
-        //marginLeft: 18,
-        //marginRight: 18,
         alignItems: 'center',
         height: '100%',
     },
+
+    map_item: {
+        width: 140,
+        paddingLeft: 5, 
+        paddingRight: 5, 
+        paddingTop: 5, 
+        paddingBottom: 5, 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        backgroundColor: '#fff'
+    },
+
     location: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 13,
@@ -342,6 +124,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000000',
     },
+
     ratingsMap: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 10,

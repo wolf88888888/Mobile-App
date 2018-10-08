@@ -40,13 +40,13 @@ class DateAndGuestPicker extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton, disableDateAndGuest
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton
         } = this.props;
 
         return (
             <View style={styles.container}>
                 <View style={styles.pickerRow}>
-                    <View pointerEvents={disableDateAndGuest && "none"} style={{flex:1}}>
+                    <View style={{flex:1}}>
                         <TouchableOpacity
                             onPress={this.onCalendar}
                             style={checkInDate && checkOutDate ? styles.datesPickerViewComplete : styles.datesPickerViewIncomplete}
@@ -65,16 +65,14 @@ class DateAndGuestPicker extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    <View pointerEvents={disableDateAndGuest && "none"}>
-                        <TouchableOpacity
-                            onPress={this.onGuests}
-                        >
-                            <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
-                                <Text style={styles.label}>Guests</Text>
-                                <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        onPress={this.onGuests}
+                    >
+                        <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
+                            <Text style={styles.label}>Guests</Text>
+                            <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
+                        </View>
+                    </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={this.onSettings}>
@@ -105,8 +103,7 @@ DateAndGuestPicker.propTypes = {
     gotoSearch: PropTypes.func.isRequired,
     gotoGuests: PropTypes.func.isRequired,
     gotoSettings : PropTypes.func.isRequired,
-    showSearchButton : PropTypes.bool,
-    disableDateAndGuest: PropTypes.bool
+    showSearchButton : PropTypes.bool
 };
 
 export default withNavigation(DateAndGuestPicker);
