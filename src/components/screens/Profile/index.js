@@ -31,7 +31,7 @@ class Profile extends Component {
         this.props.actions.getCurrency(props.currency, false);
     }
 
-     async componentDidMount() {
+    async componentDidMount() {
         this.listListener = [
             this.props.navigation.addListener('didFocus', () => {
               this.onRefresh()
@@ -69,8 +69,26 @@ class Profile extends Component {
         }
     }
 
-    onRefresh = () => {
+    onRefresh = async () => {
         console.log("onRefresh ---------------");
+
+        if (this.state.walletAddress === null || this.state.walletAddress === '') {
+            
+            let walletAddress = await userInstance.getLocAddress();
+            if (walletAddress !== null && walletAddress !== '') {
+                this.setState({
+                    walletAddress: walletAddress,
+                });
+                Wallet.getBalance(walletAddress).then(x => {
+                    const ethBalance = x / (Math.pow(10, 18));
+                    this.setState({ ethBalance: ethBalance });
+                });
+                Wallet.getTokenBalance(walletAddress).then(y => {
+                    const locBalance = y / (Math.pow(10, 18));
+                    this.setState({ locBalance: locBalance });
+                });
+            }
+        }
     }
 
     onCurrency = () => {

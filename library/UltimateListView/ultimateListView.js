@@ -338,7 +338,7 @@ static propTypes = {
   postPaginate = (rows = [], pageLimit) => {
     console.log("postPaginate", rows)
     console.log("postPaginate before", this.getRows())
-    console.log("postPaginate this.isDoneSocket", this.props.isDoneSocket)
+    console.log("postPaginate this. ", this.props.isDoneSocket)
     this.setPage(this.getPage() + 1)
 
     let refineHotels = [];
@@ -357,7 +357,12 @@ static propTypes = {
     let paginationStatus
     if (rows.length === 0) {
       paginationStatus = PaginationStatus.allLoaded
-    } else {
+    } 
+    else if (refineHotels.length === 0) {
+      this.onEndReached();
+      return;
+    }
+    else {
       mergedRows = this.getRows().concat(refineHotels)
       paginationStatus = PaginationStatus.waiting
     }

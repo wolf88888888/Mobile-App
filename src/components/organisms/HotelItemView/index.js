@@ -17,7 +17,7 @@ const RNPropTypes = PropTypes || React.PropTypes;
 
 class HotelItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.array,
+        item: RNPropTypes.object,
         currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
         gotoHotelDetailsPage: PropTypes.func.isRequired
@@ -38,16 +38,22 @@ class HotelItemView extends Component {
         this.props.gotoHotelDetailsPage(item);
     }
 
-    checkStars(count) {
+    renderStars = (count) => {
         const indents = [];
-        for (let i = 0; i < 5; i++) {
-            if (count > 0) {
-                indents.push(<Text style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-            } else {
-                indents.push(<Text style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-            }
-            count--;
+        for (let i = 0; i < count; i ++) {
+            indents.push(<Text key = {`star - ${i}`} style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
         }
+        for (let i = count; i < 5; i ++) {
+            indents.push(<Text key = {`star - ${i}`} style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+        }
+        // for (let i = 0; i < 5; i++) {
+        //     if (count > 0) {
+        //         indents.push(<Text style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+        //     } else {
+        //         indents.push(<Text style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+        //     }
+        //     count--;
+        // }
         return indents;
     }
 
@@ -119,7 +125,7 @@ class HotelItemView extends Component {
                             <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text>
                             <Text style={styles.placeReviewNumber}> {stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
-                                {this.checkStars(stars)}
+                                {this.renderStars(stars)}
                             </View>
                             {/* <Text style={styles.totalReviews}> 73 Reviews </Text> */}
                         </View>

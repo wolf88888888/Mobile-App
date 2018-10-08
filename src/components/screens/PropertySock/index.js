@@ -636,7 +636,7 @@ class Property extends Component {
                         {hotel.name}
                     </Text>
                     <Text style={styles.description}>
-                        LOC {hotel.price} / Night
+                        LOC {hotel.price.toFixed(2)} / Night
                     </Text>
                     <Text style={styles.ratingsMap}>
                         {
