@@ -5,23 +5,6 @@ export default styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#eee'
     },
-    backButton:{
-        alignItems: 'center',
-        flexDirection: 'row',
-        marginTop: 25,
-        marginLeft: 15,
-    },
-    btn_backImage:{
-        height: 24,
-        width: 24,
-        resizeMode: 'contain'
-      },
-      titleText: {
-        color: '#000',
-        fontSize: 22,
-        fontFamily: 'FuturaStd-Light',
-        marginLeft: 20,
-    },
     closeView: {
         height: 80,
         justifyContent: 'flex-end',
@@ -137,7 +120,7 @@ export default styles = StyleSheet.create({
     },
     pricingText: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontFamily: 'FuturaStd-Medium',
     },
     set: {
         alignSelf: 'stretch',

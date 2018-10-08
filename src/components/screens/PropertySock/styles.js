@@ -6,9 +6,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#f0f1f3',
-        paddingLeft: 17,
-        paddingRight: 17
+        backgroundColor: '#f0f1f3'
     },
 
     SearchAndPickerwarp:{

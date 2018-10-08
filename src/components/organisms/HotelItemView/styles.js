@@ -64,28 +64,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     costView: {
-        width: '96%',
+        width: '100%',
         flexDirection: 'row',
         position: 'absolute',
         bottom: 10,
-        right: 0,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
     cost: {
-        flex:1.05,
         color: 'black',
         fontSize: 17,
         fontFamily: 'FuturaStd-Medium'
     },
     costLoc: {
-        flex:1.35,
         color: 'black',
         fontSize: 13,
         fontFamily: 'FuturaStd-Medium'
     },
     perNight: {
-        flex:0.6,
         fontSize: 10,
         fontFamily: 'FuturaStd-Light',
         color: 'black',

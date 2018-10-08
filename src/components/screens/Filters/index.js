@@ -83,12 +83,11 @@ export default class Filters extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.backButton}>
-                    <TouchableOpacity onPress={this.onBackPress}>
-                    <Image style={styles.btn_backImage} source={require('../../../../src/assets/icons/icon-back-black.png')}/>
-                    </TouchableOpacity>
-                    <Text style={styles.titleText}>Additional Filters</Text>
-                </View>
+                <TouchableOpacity onPress={this.onBackPress}>
+                    <View style={styles.closeView}>
+                        <Image source={require('../../../assets/close.png')} style={styles.closeSvg}/>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.header}>
                     <View style={styles.residenceView}>
                         <TouchableOpacity onPress={() => this.setState({isHotelSelected: false})} style={[styles.residence, !this.state.isHotelSelected? styles.selected: '']}>
