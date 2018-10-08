@@ -68,7 +68,12 @@ class Guests extends Component {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
-              <CloseButton onPress={this.onClose}/>
+              <View style={styles.backButton}>
+                    <TouchableOpacity onPress={this.onClose}>
+                        <Image style={styles.btn_backImage} source={require('../../../assets/close.png')}/>
+                    </TouchableOpacity>
+                    <Text style={styles.titleText}>How many people per room?</Text>
+                </View>
               <View style={styles.bodyRows}>
                 <GuestRow title={"Adults"} count={this.state.adults} type={"adults"} onChanged={this.onPersonChange}/>
                 {/* <TouchableOpacity onPress={this.changeValue.bind(this)}><Text style={styles.ChildText}>{this.state.childrenBool == false ? "No children" : "With children"}</Text></TouchableOpacity> */}

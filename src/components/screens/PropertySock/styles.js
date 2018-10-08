@@ -6,7 +6,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#f0f1f3'
+        backgroundColor: '#f0f1f3',
+        paddingLeft: 17,
+        paddingRight: 17
     },
 
     SearchAndPickerwarp:{
@@ -38,7 +40,6 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
     },
-
     leftIconView: {
         display: 'flex',
         justifyContent: 'center',

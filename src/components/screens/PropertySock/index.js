@@ -288,7 +288,6 @@ class Property extends Component {
                 isMAP: 0,
             });
         }
-        
     }
 
     gotoHotelDetailsPage = (item) => {

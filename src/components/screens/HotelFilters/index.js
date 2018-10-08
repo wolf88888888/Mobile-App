@@ -120,14 +120,18 @@ export default class HotelFilters extends Component {
     }
 
     render() {
+        const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
-                <TouchableOpacity onPress={this.onBackPress}>
-                    <View style={styles.closeView}>
-                        <Image source={require('../../../assets/close.png')} style={styles.closeSvg}/>
-                    </View>
-                </TouchableOpacity>
-                <View style={styles.header}>
+                <View style={styles.backButton}>
+                    <TouchableOpacity onPress={this.onBackPress}>
+                        <Image style={styles.btn_backImage} source={require('../../../assets/close.png')}/>
+                    </TouchableOpacity>
+                    <Text style={styles.titleText}>Filters</Text>
+                </View>
+                <ScrollView>
+
+                <View style={{height: '100%',}}>
                     <View style={styles.residenceView}>
                         <TouchableOpacity style={[styles.residence, this.state.isHotelSelected? styles.selected: '']}>
                             {
@@ -138,16 +142,14 @@ export default class HotelFilters extends Component {
                         </TouchableOpacity>
                         <Text style={styles.residenceType}>Hotel</Text>
                     </View>
-                </View>
-                <ScrollView>
-                <View style={{height: '100%',}}>
+
                     <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
                        <Text style={styles.pricingText}>Name</Text>
                     </View>                                
                     <TextInput
                         value={this.state.hotelName}
                         ref={(i) => { this.input = i; }}
-                        underlineColorAndroid="#ffffff"
+                        underlineColorAndroid={'transparent'}
                         onChangeText={(text) => this.setState({hotelName: text})}
                         style={{height: 40, margin: 15, borderColor: 'grey', borderWidth: 1, borderRadius: 5, paddingLeft: 5}}
                     />
@@ -183,8 +185,8 @@ export default class HotelFilters extends Component {
                            
                            <View style={styles.starView}>
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating[0] === true ? styles.activeRating: '']} 
-                               onPress={() => this.handleRatingChange(0, this.state.selectedRating[0] ? false : true)}>
-                                   <Text style={[styles.ratingNumber, this.state.selectedRating[0] === true ? styles.activeRatingText: '']}>0, 1</Text>
+                                onPress={() => this.handleRatingChange(0, this.state.selectedRating[0] ? false : true)}>
+                                   <Text style={[styles.ratingNumber, this.state.selectedRating[0] === true ? styles.activeRatingText: '']}>1</Text>
                                    <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
 
@@ -220,8 +222,8 @@ export default class HotelFilters extends Component {
                         
                         <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
                             <View style={{width: '80%', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Text>{this.state.sliderValue[0]}</Text>
-                                <Text>{this.state.sliderValue[1]}</Text>
+                                <Text>{params.currencySign} {this.state.sliderValue[0]}</Text>
+                                <Text>{params.currencySign} {this.state.sliderValue[1]}</Text>
                             </View>
                             <MultiSlider
                             isMarkersSeparated={true}
@@ -238,8 +240,8 @@ export default class HotelFilters extends Component {
                             onValuesChangeFinish={this.multiSliderValuesChange}
                             />
                             <View style={{width: '80%', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Text>$0.000</Text>
-                                <Text>$5.000</Text>
+                                <Text>{params.currencySign} 0</Text>
+                                <Text>{params.currencySign} 5000</Text>
                             </View>
                         </View>
 
@@ -296,6 +298,11 @@ export default class HotelFilters extends Component {
                                </View>
                            </View> */}
                        {/* </View> */}
+                       <TouchableOpacity onPress={this.onBackPress}>
+                            <View style={styles.searchButtonView}>
+                                <Text style={styles.searchButtonText}>Apply Filters</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                        
                 </ScrollView>
