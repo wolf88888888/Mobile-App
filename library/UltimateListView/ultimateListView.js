@@ -343,14 +343,17 @@ static propTypes = {
     }
   }
 
-  postPaginate = (rows = [], pageLimit) => {
+  postPaginate = (rows = [], pageLimit, isLoadPrice) => {
     console.log("postPaginate", rows)
     console.log("postPaginate before", this.getRows())
     console.log("postPaginate this. ", this.props.isDoneSocket)
     this.setPage(this.getPage() + 1)
 
     let refineHotels = [];
-    if (this.props.isDoneSocket)  {
+    if (isLoadPrice) {
+      refineHotels = rows;
+    }
+    else if (this.props.isDoneSocket)  {
       for (var i = 0; i < rows.length; i++){
         if (rows[i].price != undefined && rows[i].price != null && !isNaN(rows[i].price) ) {
           refineHotels.push(rows[i]);

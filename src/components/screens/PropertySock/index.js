@@ -10,7 +10,7 @@ import { Marker } from 'react-native-maps';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 
-import { imgHost, socketHost } from '../../../config';
+import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HotelItemView from '../../organisms/HotelItemView';
@@ -37,6 +37,7 @@ let countIos;
 
 class Property extends Component {
     hotelsInfoById = [];
+    isFilterResult = false;
 
     constructor(props) {
         super(props);
@@ -339,20 +340,43 @@ class Property extends Component {
     onFetch = async (page = 1, startFetch, abortFetch) => {
         console.log("onFetch", page);
         try {
-            requester.getStaticHotels(this.state.regionId, page - 1).then(res => {
-                res.body.then(data => {
-                  const listings = data.content;
-                  listings.forEach(l => {
-                    if (this.hotelsInfoById[l.id]) {
-                      l.price = this.hotelsInfoById[l.id].price;
-                    }
-                  });
-                  const hotels = listings;
-                  console.log("onFetch--=- res  ", hotels);
-        
-                  startFetch(hotels, hotels.length)
+            if (!this.isFilterResult) {
+                requester.getStaticHotels(this.state.regionId, page - 1).then(res => {
+                    res.body.then(data => {
+                      const listings = data.content;
+                      listings.forEach(l => {
+                        if (this.hotelsInfoById[l.id]) {
+                          l.price = this.hotelsInfoById[l.id].price;
+                        }
+                      });
+                      const hotels = listings;
+                      console.log("onFetch--=- res  ", hotels);
+            
+                      startFetch(hotels, hotels.length, false)
+                    });
                 });
-            });
+            }
+            else {
+                const strSearch = this.getSearchString();
+                const strFilters = this.getFilterString(this.listView.getPage());
+
+                console.log("getLastSearchHotelResultsByFilter PPP", strSearch, strFilters);
+                requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
+                    console.log("getLastSearchHotelResultsByFilter", res);
+                    if (res.success) {
+                        res.body.then((data) => {
+                            console.log("getLastSearchHotelResultsByFilter------", data);
+                            const hotels = data.content
+                            startFetch(hotels, hotels.length, true)
+                        });
+                    } 
+                    else {
+                        startFetch([], 0, true)
+                      // console.log('Search expired');
+                    }
+                });
+            }
+            
         } catch (err) {
             console.log("onFetch--=- error  ", err);
           abortFetch() // manually stop the refresh or pagination if it encounters network error
@@ -514,6 +538,7 @@ class Property extends Component {
             if (res.success) {
                 res.body.then((data) => {
                     console.log("fetchFilteredResults", data);
+                    this.isFilterResult = true;
                     this.listView.clearRows();
                     this.listView.clearPage();
                     this.listView.onFirstLoad(data.content, true);
