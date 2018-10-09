@@ -597,6 +597,7 @@ class Property extends Component {
                 currencySign = {this.state.currencySign}
                 locRate = {this.state.locRate}
                 gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
+                daysDifference = {this.state.daysDifference}
             />
         )
     }

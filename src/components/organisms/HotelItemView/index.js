@@ -20,13 +20,15 @@ class HotelItemView extends Component {
         item: RNPropTypes.object | RNPropTypes.array,
         currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
-        gotoHotelDetailsPage: PropTypes.func.isRequired
+        gotoHotelDetailsPage: PropTypes.func.isRequired,
+        daysDifference: PropTypes.number
     };
 
     static defaultProps = {
         item: [],
         currencySign: undefined,
-        locRate: 0
+        locRate: 0,
+        daysDifference : 1
     };
 
     constructor(props) {
@@ -91,6 +93,8 @@ class HotelItemView extends Component {
         if (item.price != undefined && item.price != null) {
             isLoadingPricing = false;
         }
+
+        let price = item.price / this.props.daysDifference;
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
@@ -133,8 +137,8 @@ class HotelItemView extends Component {
                         {
                         !isLoadingPricing?
                             <View style={styles.costView}>
-                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(item.price).toFixed(2)}</Text>
-                                <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(item.price/locRate).toFixed(2)}) </Text>
+                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
+                                <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text>
                                 <Text style={styles.perNight}>per night</Text>
                             </View>
                         :
