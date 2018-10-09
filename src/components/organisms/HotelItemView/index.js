@@ -17,7 +17,7 @@ const RNPropTypes = PropTypes || React.PropTypes;
 
 class HotelItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.object,
+        item: RNPropTypes.object | RNPropTypes.array,
         currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
         gotoHotelDetailsPage: PropTypes.func.isRequired

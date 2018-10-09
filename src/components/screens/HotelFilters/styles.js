@@ -102,7 +102,7 @@ export default styles = StyleSheet.create({
     },
     starRatingText: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontFamily: 'FuturaStd-Medium',
     },
     starView: {
         flexDirection: 'row',
@@ -143,7 +143,7 @@ export default styles = StyleSheet.create({
     },
     pricingText: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontFamily: 'FuturaStd-Medium',
     },
     set: {
         alignSelf: 'stretch',

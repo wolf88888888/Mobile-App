@@ -200,14 +200,18 @@ static propTypes = {
     this.setState({ dataSource: this.rows });
   }
 
-  onFirstLoad = (rows) => {
+  onFirstLoad = (rows, isLoadPrice) => {
     console.log("onFirstLoad", rows);
     
     // this.setState(prevState => ({
     //   dataSource: [...prevState.dataSource, row],
     //   paginationStatus: PaginationStatus.waiting
     // }));
-    if (this.props.isDoneSocket)  {
+
+    if (isLoadPrice) {
+      this.setRows(rows);
+    }
+    else if (this.props.isDoneSocket)  {
       let refineHotels = [];
       for (var i = 0; i < rows.length; i++){
         if (rows[i].price != undefined && rows[i].price != null && !isNaN(rows[i].price) ) {
@@ -276,9 +280,13 @@ static propTypes = {
 
   getPage = () => this.page
 
+  clearPage = () => this.page = 0
+
   setRows = rows => this.rows = rows
 
   getRows = () => this.rows
+
+  clearRows = () => this.rows = []
 
   sleep = time => new Promise(resolve => setTimeout(() => resolve(), time))
 

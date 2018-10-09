@@ -86,7 +86,10 @@ class Property extends Component {
 
             //filters
             showUnAvailable: false,
+            nameFilter: '',
             selectedRating: [false, false, false, false, false],
+            orderBy: 'priceForSort,asc',
+            priceRange: [1, 5000],
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
 
@@ -170,7 +173,7 @@ class Property extends Component {
 
                 console.log("getStaticHotels", content);
                 const hotels = content;
-                this.listView.onFirstLoad(hotels);
+                this.listView.onFirstLoad(hotels, false);
                 this.getHotelsInfoBySocket();
             });
           });
@@ -246,25 +249,6 @@ class Property extends Component {
                         this.listView.upgradePrice(index, this.hotelsInfoById[jsonHotel.id].price)
                     }
                 }
-
-                // this.hotels.push();
-                // if (this.hotels.length <= 10) {
-                //     // this.hotelsDisplay.push(jsonHotel);
-                //     this.listView.onFirstLoad(jsonHotel);
-                //     // if (this.state.isLoading) {
-                //     //     this.setState({
-                //     //         isLoading: false,
-                //     //     });
-                //     //     // this.state.isLoading = false;
-                //     // }
-                //     // this.setState(prevState => ({
-                //     //     listings: [...prevState.listings, jsonHotel]
-                //     // }));
-                // }
-                
-                // this.setState(prevState => ({
-                //     listingsMap: [...prevState.listingsMap, object]
-                // }));
 
             }
         } catch (e) {
@@ -415,6 +399,14 @@ class Property extends Component {
     gotoSearch = () => {
     }
 
+    handleAutocompleteSelect = (id, name) => {
+        this.setState({
+            cities: [],
+            search: name,
+            regionId: id
+        });
+    }
+
     onDatesSelect = ({ startDate, endDate }) => {
         const year = (new Date()).getFullYear();
         this.setState({
@@ -429,36 +421,151 @@ class Property extends Component {
         });
     }
 
-    gotoSettings() {
-        // if (this.state.allElements) {
-        //     if (searchHotel) {
-        //         this.props.navigation.navigate('HotelFilterScreen', {
-        //             isHotelSelected: true,
-        //             updateFilter: this.updateFilter,
-        //             selectedRating: this.state.selectedRating,
-        //             showUnAvailable: this.state.showUnAvailable,
-        //             hotelName: this.state.nameFilter
-        //         });
-        //     }
-        // }
+    gotoSettings = () => {
+        if (this.state.allElements) {
+            if (this.state.searchHotel) {
+                this.props.navigation.navigate('HotelFilterScreen', {
+                    isHotelSelected: true,
+                    updateFilter: this.updateFilter,
+                    selectedRating: this.state.selectedRating,
+                    showUnAvailable: this.state.showUnAvailable,
+                    hotelName: this.state.nameFilter,
+                    currencySign: this.state.currencySign
+                });
+            }
+        }
     }
 
-    // updateFilter = (data) => {
-    //     this.setState({
-    //         listings: [],
-    //         showUnAvailable: data.showUnAvailable,
-    //         nameFilter: data.hotelName,
-    //         selectedRating: data.selectedRating,
-    //         isLoading: true,
-    //         orderBy: data.priceSort,
-    //         sliderValue: data.sliderValue,
-    //         page: 0
-    //     }, () => {
-    //         this.applyFilters(false);
-    //     });
-    // }
+    getSearchString = () => {
+    //     let search = `?region=${encodeURI(this.state.regionId)}`;
+    //     search += `&currency=${encodeURI(this.state.currency)}`;
+    //     search += `&startDate=${encodeURI(this.state.checkInDateFormated)}`;
+    //     search += `&endDate=${encodeURI(this.state.checkOutDateFormated)}`;
+    //     search += `&rooms=${encodeURI(this.state.roomsDummyData)}`;
+
+        let search = `?region=${this.state.regionId}`;
+        search += `&currency=${this.state.currency}`;
+        search += `&startDate=${this.state.checkInDateFormated}`;
+        search += `&endDate=${this.state.checkOutDateFormated}`;
+        search += `&rooms=${this.state.roomsDummyData}`;
+        return search;
+    }
+
+    mapStars(stars) {
+        let hasStars = false;
+        const mappedStars = [];
+        stars.forEach((s) => {
+            if (s) {
+                hasStars = true;
+            }
+        });
+
+        if (!hasStars) {
+            for (let i = 0; i <= 5; i++) {
+                mappedStars.push(i);
+            }
+        } else {
+            mappedStars.push(0);
+            stars.forEach((s, i) => {
+                if (s) {
+                    mappedStars.push(i + 1);
+                }
+            });
+        }
+
+        return mappedStars;
+    }
+
+    getFilterString = (page) => {
+        const filtersObj = {
+            showUnavailable: this.state.showUnAvailable,
+            name: this.state.nameFilter,
+            minPrice: this.state.priceRange[0],
+            maxPrice: this.state.priceRange[1],
+            stars: this.mapStars(this.state.selectedRating)
+        };
+
+        // const page = page;//this.listView.getPage();
+        const sort = this.state.orderBy;
+        const pagination = `&page=${page}&sort=${sort}`;
+        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
+        return filters;
+    }
+
+    updateFilter = (data) => {
+        console.log("updateFilter", data);
+        this.setState({
+            showUnAvailable: data.showUnAvailable,
+            nameFilter: data.hotelName,
+            selectedRating: data.selectedRating,
+            orderBy: data.priceSort,
+            priceRange: data.sliderValue,
+        }, () => {
+            // this.applyFilters();
+            const search = this.getSearchString();
+            const filters = this.getFilterString(0);
+            this.fetchFilteredResults(search, filters);
+        });
+    }
+
+    fetchFilteredResults = (strSearch, strFilters) => {
+        console.log("fetchFilteredResults query", strSearch, strFilters)
+        requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
+            if (res.success) {
+                res.body.then((data) => {
+                    console.log("fetchFilteredResults", data);
+                    this.listView.clearRows();
+                    this.listView.clearPage();
+                    this.listView.onFirstLoad(data.content, true);
+                    // let mapInfo = [];
+                    // mapInfo = data.content.map((hotel) => {
+                    //     return {
+                    //         id: hotel.id,
+                    //         lat: hotel.latitude,
+                    //         lon: hotel.longitude,
+                    //         name: hotel.name,
+                    //         price: hotel.price,
+                    //         stars: hotel.star,
+                    //         thumbnail: { url: hotel.hotelPhoto }
+                    //     };
+                    // });
+                    // if (loadMore) {
+                    //     // Add to existing data
+                    //     this.setState({
+                    //         isFilterLoaded: true,
+                    //         isLoading: false,
+                    //         listings: [...this.state.listings, ...mapInfo] 
+                    //     }, () => {
+                    //         if (this.state.listings.length <= 0) {
+                    //             this.setState({ noResultsFound: true });
+                    //         } else {
+                    //             this.setState({ noResultsFound: false });
+                    //         }
+                    //     });
+                    // } else {
+                    //     this.setState({
+                    //         isFilterLoaded: true,
+                    //         isLoading: false,
+                    //         listings: mapInfo,
+                    //         totalPages: data.totalPages
+                    //     }, () => {
+                    //         if (this.state.listings.length <= 0) {
+                    //             this.setState({ noResultsFound: true });
+                    //         } else {
+                    //             this.setState({ noResultsFound: false });
+                    //         }
+                    //     });
+                    // }
+                });
+            } 
+            else {
+              // console.log('Search expired');
+            }
+        });
+    }
 
     renderItem = (item) => {
+        console.log("HotelItemView", item);
         return (
             <HotelItemView
                 item = {item}
@@ -683,31 +790,33 @@ class Property extends Component {
                 {/* <CloseButton onPress={this.onCancel} /> */}
                 {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 {this.renderAutocomplete()}
-                {this.renderFilterBar()}
-                <View style={styles.containerHotels}>
-                    {
-                        this.state.isMAP == 1 && this.renderMap()
-                    }
-                    <UltimateListView
-                        ref = {ref => this.listView = ref}
-                        isDoneSocket = {this.state.allElements}
-                        key = {'list'} // this is important to distinguish different FlatList, default is numColumns
-                        onFetch = {this.onFetch}
-                        keyExtractor = {(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
-                        firstLoader = { false }
-                        refreshable = { false }
-                        item = {this.renderItem} // this takes three params (item, index, separator)
-                        numColumns = {1} // to use grid layout, simply set gridColumn > 1
-                        paginationFetchingView = {this.renderPaginationFetchingView}
-                        paginationWaitingView = {this.renderPaginationWaitingView}
-                        paginationAllLoadedView = {this.renderPaginationAllLoadedView}
-                    />
-                    {
-                        this.state.isMAP != -1 &&
-                            <TouchableOpacity onPress={this.switchMode} style={styles.switchButton}>
-                                <FontAwesome style={styles.icon}>{this.state.isMAP == 0? Icons.mapMarker : Icons.listUl}</FontAwesome>
-                            </TouchableOpacity>
-                    }
+                <View style={{position: 'absolute', top: 100, left: 0, right: 0, bottom: 0, width:'100%'}}>
+                    {this.renderFilterBar()}
+                    <View style={styles.containerHotels}>
+                        {
+                            this.state.isMAP == 1 && this.renderMap()
+                        }
+                        <UltimateListView
+                            ref = {ref => this.listView = ref}
+                            isDoneSocket = {this.state.allElements}
+                            key = {'list'} // this is important to distinguish different FlatList, default is numColumns
+                            onFetch = {this.onFetch}
+                            keyExtractor = {(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
+                            firstLoader = { false }
+                            refreshable = { false }
+                            item = {this.renderItem} // this takes three params (item, index, separator)
+                            numColumns = {1} // to use grid layout, simply set gridColumn > 1
+                            paginationFetchingView = {this.renderPaginationFetchingView}
+                            paginationWaitingView = {this.renderPaginationWaitingView}
+                            paginationAllLoadedView = {this.renderPaginationAllLoadedView}
+                        />
+                        {
+                            this.state.isMAP != -1 &&
+                                <TouchableOpacity onPress={this.switchMode} style={styles.switchButton}>
+                                    <FontAwesome style={styles.icon}>{this.state.isMAP == 0? Icons.mapMarker : Icons.listUl}</FontAwesome>
+                                </TouchableOpacity>
+                        }
+                    </View>
                 </View>
                 <ProgressDialog
                     visible={this.state.isLoadingHotelDetails}
