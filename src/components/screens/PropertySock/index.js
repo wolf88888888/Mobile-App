@@ -542,45 +542,6 @@ class Property extends Component {
                     this.listView.clearRows();
                     this.listView.clearPage();
                     this.listView.onFirstLoad(data.content, true);
-                    // let mapInfo = [];
-                    // mapInfo = data.content.map((hotel) => {
-                    //     return {
-                    //         id: hotel.id,
-                    //         lat: hotel.latitude,
-                    //         lon: hotel.longitude,
-                    //         name: hotel.name,
-                    //         price: hotel.price,
-                    //         stars: hotel.star,
-                    //         thumbnail: { url: hotel.hotelPhoto }
-                    //     };
-                    // });
-                    // if (loadMore) {
-                    //     // Add to existing data
-                    //     this.setState({
-                    //         isFilterLoaded: true,
-                    //         isLoading: false,
-                    //         listings: [...this.state.listings, ...mapInfo] 
-                    //     }, () => {
-                    //         if (this.state.listings.length <= 0) {
-                    //             this.setState({ noResultsFound: true });
-                    //         } else {
-                    //             this.setState({ noResultsFound: false });
-                    //         }
-                    //     });
-                    // } else {
-                    //     this.setState({
-                    //         isFilterLoaded: true,
-                    //         isLoading: false,
-                    //         listings: mapInfo,
-                    //         totalPages: data.totalPages
-                    //     }, () => {
-                    //         if (this.state.listings.length <= 0) {
-                    //             this.setState({ noResultsFound: true });
-                    //         } else {
-                    //             this.setState({ noResultsFound: false });
-                    //         }
-                    //     });
-                    // }
                 });
             } 
             else {

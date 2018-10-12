@@ -4,6 +4,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import requester from '../../../../initDependencies';
 import { PUBLIC_URL } from '../../../../config';
+import Toast from 'react-native-simple-toast';
 
 import styles from './styles';
 
