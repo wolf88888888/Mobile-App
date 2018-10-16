@@ -39,6 +39,8 @@ class Property extends Component {
     hotelsInfoById = [];
     isFilterResult = false;
 
+    previousState = {};
+
     constructor(props) {
         super(props);
         console.disableYellowBox = true;
@@ -52,12 +54,12 @@ class Property extends Component {
             search: '',
             countryId: 0,
             countryName: '',
-            value: '',
+            home: '',
 
             countries: [],
             cities: [],
 
-            searchHotel: true,
+            isHotel: true,
             regionId : '',
             currency: props.currency,
             currencySign: props.currencySign,
@@ -95,33 +97,36 @@ class Property extends Component {
             editable: false,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
+        console.log("Property -----------", params);
 
         if (params) {
+            this.state.isHotel = params.isHotel;
             this.state.search = params.searchedCity;
-            this.state.value = params.home;
+            this.state.regionId = params.regionId;
+            this.state.home = params.home;
             this.state.checkInDate = params.checkInDate;
+            this.state.checkInDateFormated = params.checkInDateFormated;
             this.state.checkOutDate = params.checkOutDate;
+            this.state.checkOutDateFormated = params.checkOutDateFormated;
+
             this.state.guests = params.guests;
             this.state.adults = params.adults;
             this.state.children = params.children;
             this.state.infants = params.infants;
             this.state.childrenBool = params.childrenBool;
 
-            this.state.searchHotel = params.searchHotel;
-            this.state.regionId = params.regionId;
-            this.state.checkInDateFormated = params.checkInDateFormated;
-            this.state.checkOutDateFormated = params.checkOutDateFormated;
             this.state.roomsDummyData = params.roomsDummyData;
             this.state.filter = params.filter;
             this.state.daysDifference = params.daysDifference;
-            console.log("Property this.state", this.state);
         }
 
-        this.mainUrl = '?region='+this.state.regionId
-                    +'&currency='+this.state.currency
-                    +'&startDate='+this.state.checkInDateFormated
-                    +'&endDate='+this.state.checkOutDateFormated
-                    +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
+        if (this.state.isHotel) {
+            this.mainUrl = '?region='+this.state.regionId
+                +'&currency='+this.state.currency
+                +'&startDate='+this.state.checkInDateFormated
+                +'&endDate='+this.state.checkOutDateFormated
+                +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -154,7 +159,7 @@ class Property extends Component {
 
     componentWillMount() {
         this.setCountriesInfo();
-        if(this.state.searchHotel) {
+        if(this.state.isHotel) {
             this.getHotels();
         }
     }
@@ -449,9 +454,19 @@ class Property extends Component {
         });
     }
 
+    saveState = () => {
+        this.previousState.search = this.state.search;
+        this.previousState.home = this.state.home;
+
+        this.previousState.checkInDate = this.state.checkInDate;
+        this.previousState.checkInDateFormated = this.state.checkInDateFormated;
+        this.previousState.checkOutDate = this.state.checkOutDate;
+        this.previousState.checkOutDateFormated = this.state.checkOutDateFormated;
+    }
+
     gotoSettings = () => {
         if (this.state.allElements) {
-            if (this.state.searchHotel) {
+            if (this.state.isHotel) {
                 this.props.navigation.navigate('HotelFilterScreen', {
                     isHotelSelected: true,
                     updateFilter: this.updateFilter,
@@ -555,7 +570,6 @@ class Property extends Component {
     }
 
     renderItem = (item) => {
-        console.log("HotelItemView", item);
         return (
             <HotelItemView
                 item = {item}
@@ -639,10 +653,10 @@ class Property extends Component {
                                 this.setState({
                                     countryId: value.id,
                                     countryName: value.name,
-                                    value: value
+                                    home: value
                                 });
                             }}
-                            value={this.state.value}
+                            value={this.state.home}
                             style={{ ...pickerSelectStyles }}
                         >
                         </RNPickerSelect>
@@ -698,7 +712,7 @@ class Property extends Component {
                     gotoSearch={this.gotoSearch}
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
-                    disabled={true}
+                    disabled={!this.state.editable}
                 />
             </View>
         );
@@ -781,8 +795,7 @@ class Property extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {/* <CloseButton onPress={this.onCancel} /> */}
-                {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
+                {this.state.isHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 {this.renderAutocomplete()}
                 <View style={{position: 'absolute', top: 100, left: 0, right: 0, bottom: 0, width:'100%'}}>
                     {this.renderFilterBar()}

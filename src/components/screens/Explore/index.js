@@ -53,8 +53,7 @@ class Explore extends Component {
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.showToast = this.showToast.bind(this);
         this.state = {
-            searchHotel: true,
-            isHotelSelected: true,
+            isHotel: true,
             countryId: 0,
             countryName: '',
             value: '',
@@ -235,10 +234,10 @@ class Explore extends Component {
     }
 
     updateFilter(data) {
-        this.setState({
-            isHotelSelected: data.isHotelSelected,
-            count: data.count
-        });
+        // this.setState({
+        //     isHotelSelected: data.isHotelSelected,
+        //     count: data.count
+        // });
     }
 
     gotoGuests() {
@@ -254,7 +253,7 @@ class Explore extends Component {
 
     gotoSettings() {
         this.props.navigation.navigate('FilterScreen', {
-            isHotelSelected: this.state.isHotelSelected,
+            isHotelSelected: this.state.isHotel,
             count: this.state.count,
             updateFilter: this.updateFilter,
             searchedCity: this.state.search,
@@ -276,7 +275,7 @@ class Explore extends Component {
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
             this.props.navigation.navigate('PropertySock', {
-                searchHotel: this.state.searchHotel,
+                isHotel: this.state.isHotel,
                 searchedCity: this.state.search,
                 home: this.state.value,
                 checkInDate: this.state.checkInDate,
@@ -288,7 +287,6 @@ class Explore extends Component {
                 childrenBool: this.state.childrenBool,
                 countryId: this.state.countryId,
                 regionId: this.state.regionId,
-                isHotelSelected: this.state.isHotelSelected,
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
                 roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
@@ -299,7 +297,7 @@ class Explore extends Component {
             });
         }
         else if (shouldBeNative) {
-            if (!this.state.searchHotel) {
+            if (!this.state.isHotel) {
                 // user searched for home
                 this.props.navigation.navigate('PropertyList', {
                     currency: this.state.currency,
@@ -321,7 +319,7 @@ class Explore extends Component {
                     endDate: this.state.checkOutDateFormated
                 });
             }
-        } else if (!this.state.searchHotel) {
+        } else if (!this.state.isHotel) {
             this.props.navigation.navigate('PropertyList', {
                 currency: this.state.currency,
                 locRate: this.state.locRate,
@@ -348,7 +346,7 @@ class Explore extends Component {
                         children: this.state.children,
                         countryId: this.state.countryId,
                         regionId: this.state.regionId,
-                        isHotelSelected: this.state.isHotelSelected,
+                        isHotelSelected: this.state.isHotel,
                         currency: this.state.currency,
                         checkOutDateFormated: this.state.checkOutDateFormated,
                         checkInDateFormated: this.state.checkInDateFormated,
@@ -374,7 +372,7 @@ class Explore extends Component {
             cities: [],
             search: name,
             regionId: id,
-            searchHotel: true
+            isHotel: true
         });
     }
 
@@ -557,7 +555,7 @@ class Explore extends Component {
                     opacity={1.0}
                     textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
-                {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
+                {this.state.isHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 {this.renderAutocomplete()}
 
                     <ScrollView  style={styles.scrollView} automaticallyAdjustContentInsets={true}>
@@ -585,16 +583,16 @@ class Explore extends Component {
 
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft:15, marginRight:15 }}>
 
-                                <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
+                                <TouchableOpacity onPress={() => this.setState({ isHotel: true })}
                                     style={[styles.homehotelsView, {marginRight:5}]}>
                                     <Image
                                         style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                         source={require('../../../assets/home_images/hotels.png')} />
-                                    {this.state.searchHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
+                                    {this.state.isHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={() => this.setState({
-                                    searchHotel: false,
+                                    isHotel: false,
                                     cities: [],
                                     search: '',
                                     regionId: 0
@@ -602,7 +600,7 @@ class Explore extends Component {
                                 style={[styles.homehotelsView, {marginLeft:5}]}>
                                     <Image style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                         source={require('../../../assets/home_images/homes.png')} />
-                                    {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
+                                    {!this.state.isHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
                                 </TouchableOpacity>
 
                             </View>
