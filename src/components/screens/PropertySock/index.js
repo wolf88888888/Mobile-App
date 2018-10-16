@@ -91,6 +91,8 @@ class Property extends Component {
             selectedRating: [false, false, false, false, false],
             orderBy: 'priceForSort,asc',
             priceRange: [1, 5000],
+
+            editable: false,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
 
@@ -226,11 +228,13 @@ class Property extends Component {
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
                 if (jsonHotel.allElements) {
-                    this.setState({ allElements: true });
+                    this.setState({ allElements: true, editable: true });
                     if (this.listView) {
                         this.listView.onDoneSocket();
                     }
                     androidStomp.close();
+
+
                 }
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
@@ -602,6 +606,7 @@ class Property extends Component {
                         placeholderTextColor="#bdbdbd"
                         leftIcon="arrow-back"
                         onLeftPress={this.onCancel}
+                        editable={this.state.editable}
                     />
                 </View>
             </View>
@@ -624,6 +629,7 @@ class Property extends Component {
                     </TouchableOpacity>
                     <View style={styles.pickerWrapHomes}>
                         <RNPickerSelect
+                            disabled={!this.state.editable}
                             items={this.state.countries}
                             placeholder={{
                                 label: 'Choose a location',
@@ -692,6 +698,7 @@ class Property extends Component {
                     gotoSearch={this.gotoSearch}
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
+                    disabled={true}
                 />
             </View>
         );

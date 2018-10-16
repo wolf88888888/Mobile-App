@@ -575,6 +575,7 @@ class Explore extends Component {
                                 onDatesSelect={this.onDatesSelect}
                                 gotoSettings={this.gotoSettings}
                                 showSearchButton={true}
+                                disabled={false}
                             />
                         </View>
 

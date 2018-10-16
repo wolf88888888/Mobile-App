@@ -2,31 +2,26 @@ package com.locktrip;
 
 import android.app.Application;
 
+import com.airbnb.android.react.maps.MapsPackage;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
-
-import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;    //import package
-import com.kishanjvaghela.cardview.RNCardViewPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.imagepicker.ImagePickerPackage;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.facebook.appevents.AppEventsLogger;
-
-import co.airbitz.fastcrypto.RNFastCryptoPackage;
-
-import com.dylanvann.fastimage.FastImageViewPackage;
-
+import com.facebook.soloader.SoLoader;
+import com.imagepicker.ImagePickerPackage;
+import com.kishanjvaghela.cardview.RNCardViewPackage;
+import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 
 import java.util.Arrays;
 import java.util.List;
+
+import co.airbitz.fastcrypto.RNFastCryptoPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -54,7 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
           new FBSDKPackage(mCallbackManager),
           new RNFastCryptoPackage(),
           new StompPackage(),
-          new FastImageViewPackage()
+          new FastImageViewPackage(),
+          new VectorIconsPackage()
       );
     }
 

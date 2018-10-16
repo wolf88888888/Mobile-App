@@ -76,6 +76,12 @@ export default StyleSheet.create({
         color: '#000',
         top: 2
     },
+    label_disabled: {
+        fontFamily: 'FuturaStd-Light',
+        fontSize: 17,
+        color: '#d9d9d9',
+        top: 2
+    },
     value: {
         fontFamily: 'FuturaStd-Light',
         fontSize: 10,

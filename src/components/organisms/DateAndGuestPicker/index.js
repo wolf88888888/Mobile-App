@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './styles';
 import { withNavigation } from 'react-navigation';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 
 class DateAndGuestPicker extends Component {
@@ -40,7 +41,7 @@ class DateAndGuestPicker extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton, disabled
         } = this.props;
 
         return (
@@ -50,16 +51,16 @@ class DateAndGuestPicker extends Component {
                         <TouchableOpacity
                             onPress={this.onCalendar}
                             style={checkInDate && checkOutDate ? styles.datesPickerViewComplete : styles.datesPickerViewIncomplete}
-                        >
+                            disabled={disabled}>
                             <View style={styles.datePickerView}>
-                                <Text style={styles.label}>Check In</Text>
+                                <Text style={disabled ? styles.label_disabled : styles.label}>Check In</Text>
                                 <Text style={styles.value}>{ checkInDate || 'Select Date' }</Text>
                             </View>
 
                             <View style={styles.separator} />
 
                             <View style={styles.datePickerView}>
-                                <Text style={styles.label}>Check Out</Text>
+                                <Text style={disabled ? styles.label_disabled : styles.label}>Check Out</Text>
                                 <Text style={styles.value}>{ checkOutDate || '------' }</Text>
                             </View>
                         </TouchableOpacity>
@@ -67,18 +68,18 @@ class DateAndGuestPicker extends Component {
 
                     <TouchableOpacity
                         onPress={this.onGuests}
-                    >
+                        disabled={disabled}>
                         <View style={adults + children + infants ? styles.guestPickerViewComplete : styles.guestPickerViewIncomplete}>
-                            <Text style={styles.label}>Guests</Text>
+                            <Text style={disabled ? styles.label_disabled : styles.label}>Guests</Text>
                             <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
                         </View>
                     </TouchableOpacity>
 
                     <TouchableOpacity
+                        disabled={disabled}
                         onPress={this.onSettings}>
                         <View style={styles.optionsPickerViewIncomplete}>
-                            <Image style={styles.iconText} resizeMode='contain'
-                                source={require('../../../assets/icons/settings.png')}/>
+                            <Icon name={"setting"} size={25} color={disabled?'#d9d9d9':"#000"}/>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -103,7 +104,23 @@ DateAndGuestPicker.propTypes = {
     gotoSearch: PropTypes.func.isRequired,
     gotoGuests: PropTypes.func.isRequired,
     gotoSettings : PropTypes.func.isRequired,
-    showSearchButton : PropTypes.bool
+    showSearchButton : PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired
 };
+
+DateAndGuestPicker.defaultProps = {
+    checkInDate: '',
+    checkOutDate: '',
+    onDatesSelect: ()=>{},
+    adults: 2,
+    children: 0,
+    infants: 0, 
+    gotoSearch: ()=>{},
+    gotoGuests: ()=>{},
+    gotoSettings: ()=>{},
+    showSearchButton: false,
+    disabled: false,
+};
+
 
 export default withNavigation(DateAndGuestPicker);
