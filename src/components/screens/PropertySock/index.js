@@ -95,6 +95,8 @@ class Property extends Component {
             priceRange: [1, 5000],
 
             editable: false,
+
+            isNewSearch: false,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
         console.log("Property -----------", params);
@@ -430,14 +432,31 @@ class Property extends Component {
     }
 
     gotoSearch = () => {
+
+    }
+
+    gotoCancel = () => {
+
     }
 
     handleAutocompleteSelect = (id, name) => {
-        this.setState({
-            cities: [],
-            search: name,
-            regionId: id
-        });
+        if (this.previousState.regionId != id) {
+            this.setState({
+                cities: [],
+                search: name,
+                regionId: id,
+                isNewSearch: true
+            });
+        }
+        else {
+            this.setState({
+                cities: [],
+                search: name,
+                regionId: id
+            });
+        }
+
+
     }
 
     onDatesSelect = ({ startDate, endDate }) => {
@@ -456,12 +475,23 @@ class Property extends Component {
 
     saveState = () => {
         this.previousState.search = this.state.search;
+        this.previousState.regionId = this.state.regionId;
+        
         this.previousState.home = this.state.home;
+        this.previousState.countryId = this.state.countryId; //home
 
         this.previousState.checkInDate = this.state.checkInDate;
         this.previousState.checkInDateFormated = this.state.checkInDateFormated;
         this.previousState.checkOutDate = this.state.checkOutDate;
         this.previousState.checkOutDateFormated = this.state.checkOutDateFormated;
+        this.previousState.daysDifference = this.state.daysDifference;
+
+        this.previousState.adults = this.state.adults;
+        this.previousState.children = this.state.children;
+        this.previousState.infants = this.state.infants;
+        this.previousState.guests = this.state.guests;
+        this.previousState.childrenBool = this.state.childrenBool;
+
     }
 
     gotoSettings = () => {
@@ -700,19 +730,23 @@ class Property extends Component {
 
     renderFilterBar() {
         return (
-            <View style={{height:70, width:'100%'}}>
+            <View style={this.state.isNewSearch ?  {height:190, width:'100%'} : {height:70, width:'100%'}}>
                 <DateAndGuestPicker
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
                     adults={this.state.adults}
                     children={this.state.children}
-                    guests={this.state.guests}
                     infants={this.state.infants}
+                    guests={this.state.guests}
                     gotoGuests={this.gotoGuests}
                     gotoSearch={this.gotoSearch}
+                    gotoCancel={this.gotoCancel}
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
                     disabled={!this.state.editable}
+                    showSearchButton={this.state.isNewSearch}
+                    showCancelButton={this.state.isNewSearch}
+                    isFilterable={true}
                 />
             </View>
         );
@@ -899,6 +933,6 @@ const pickerSelectStyles = StyleSheet.create({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Property));
+export default connect(mapStateToProps, mapDispatchToProps)(Property);
 
 // export default withNavigation(Property);

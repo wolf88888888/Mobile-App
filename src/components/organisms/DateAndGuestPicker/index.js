@@ -9,28 +9,26 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 class DateAndGuestPicker extends Component {
     constructor(props) {
         super(props);
-        this.onGuests = this.onGuests.bind(this);
-        this.onSearch = this.onSearch.bind(this);
-        this.onSettings = this.onSettings.bind(this);
-        this.onCalendar = this.onCalendar.bind(this);
+        console.log("DateAndGuestPicker", props);
     }
 
-    componentDidMount() {
-    }
-
-    onSettings(){
+    onSettings = () => {
         this.props.gotoSettings();
     }
 
-    onGuests() {
+    onGuests = () => {
         this.props.gotoGuests();
     }
 
-    onSearch() {
+    onSearch = () => {
         this.props.gotoSearch();
     }
 
-    onCalendar() {
+    onCancel = () => {
+        this.props.gotoCancel();
+    }
+
+    onCalendar = () => {
         this.props.navigation.navigate('CalendarScreen', {
             startDate: this.props.checkInDate,
             endDate: this.props.checkOutDate,
@@ -41,7 +39,7 @@ class DateAndGuestPicker extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton, disabled
+            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton, showCancelButton, disabled, isFilterable
         } = this.props;
 
         return (
@@ -74,19 +72,28 @@ class DateAndGuestPicker extends Component {
                             <Text style={styles.value}>{ adults + children + infants || '-' }</Text>
                         </View>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        disabled={disabled}
-                        onPress={this.onSettings}>
-                        <View style={styles.optionsPickerViewIncomplete}>
-                            <Icon name={"settings"} size={28} color={disabled?'#d9d9d9':"#565656"}/>
-                        </View>
-                    </TouchableOpacity>
+                    {
+                        isFilterable && 
+                            (
+                                <TouchableOpacity
+                                    disabled={disabled}
+                                    onPress={this.onSettings}>
+                                    <View style={styles.optionsPickerViewIncomplete}>
+                                        <Icon name={"settings"} size={28} color={disabled?'#d9d9d9':"#565656"}/>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                    }
                 </View>
 
                 <TouchableOpacity onPress={this.onSearch}>
                     <View style={showSearchButton ?  styles.searchButtonView : {height: 0}}>
                         <Text style={showSearchButton ? styles.searchButtonText : {height: 0}}>Search</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.onCancel}>
+                    <View style={showCancelButton ?  styles.searchButtonView : {height: 0}}>
+                        <Text style={showCancelButton ? styles.searchButtonText : {height: 0}}>Cancel</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -102,10 +109,13 @@ DateAndGuestPicker.propTypes = {
     children: PropTypes.number.isRequired,
     infants: PropTypes.number.isRequired,
     gotoSearch: PropTypes.func.isRequired,
+    gotoCancel: PropTypes.func.isRequired,
     gotoGuests: PropTypes.func.isRequired,
     gotoSettings : PropTypes.func.isRequired,
     showSearchButton : PropTypes.bool.isRequired,
-    disabled: PropTypes.bool.isRequired
+    showCancelButton : PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    isFilterable: PropTypes.bool.isRequired
 };
 
 DateAndGuestPicker.defaultProps = {
@@ -116,10 +126,13 @@ DateAndGuestPicker.defaultProps = {
     children: 0,
     infants: 0, 
     gotoSearch: ()=>{},
+    gotoCancel: ()=>{},
     gotoGuests: ()=>{},
     gotoSettings: ()=>{},
     showSearchButton: false,
+    showCancelButton : false,
     disabled: false,
+    isFilterable: true
 };
 
 

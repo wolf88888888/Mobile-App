@@ -290,8 +290,6 @@ class Explore extends Component {
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
                 roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                email: this.state.email,
-                token: this.state.token,
                 daysDifference: this.state.daysDifference,
                 filter: encodeURI(JSON.stringify(this.state.filter)),
             });
@@ -574,6 +572,7 @@ class Explore extends Component {
                                 gotoSettings={this.gotoSettings}
                                 showSearchButton={true}
                                 disabled={false}
+                                isFilterable={false}
                             />
                         </View>
 
