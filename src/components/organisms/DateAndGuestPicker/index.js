@@ -39,7 +39,7 @@ class DateAndGuestPicker extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, adults, children, infants, onDatesSelect, showSearchButton, showCancelButton, disabled, isFilterable
+            checkInDate, checkOutDate, adults, children, infants, showSearchButton, showCancelButton, disabled, isFilterable
         } = this.props;
 
         return (

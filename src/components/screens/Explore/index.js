@@ -52,6 +52,12 @@ class Explore extends Component {
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.showToast = this.showToast.bind(this);
+
+        let roomsData = [{
+            adults: 2,
+            children: []
+        }];
+
         this.state = {
             isHotel: true,
             countryId: 0,
@@ -70,10 +76,7 @@ class Explore extends Component {
             adults: 2,
             children: 0,
             infants: 0,
-            roomsDummyData: [{
-                adults: 2,
-                children: []
-            }],
+            roomsDummyData: encodeURI(JSON.stringify(roomsData)),
             filter: {
                 showUnavailable: true, name: '', minPrice: 1, maxPrice: 5000, stars: [0, 1, 2, 3, 4, 5]
             },
@@ -224,12 +227,24 @@ class Explore extends Component {
     };
 
     updateData(data) {
+        let baseInfo = {};
+        baseInfo['adults'] = data.adults;
+        baseInfo['children'] = [];
+        for (let i = 0; i < data.children; i ++) {
+            baseInfo['children'].push({"age": 0});
+        }
+        let roomsData = [baseInfo];
+        let roomsDummyData = encodeURI(JSON.stringify(roomsData));
+        console.log("--------------------------- roomsData", roomsData);
+        console.log("--------------------------- roomsDummyData", roomsDummyData);
+
         this.setState({
             adults: data.adults,
             children: data.children,
             infants: data.infants,
             guests: data.adults + data.children + data.infants,
-            childrenBool: data.childrenBool
+            childrenBool: data.childrenBool,
+            roomsDummyData: roomsDummyData
         });
     }
 
@@ -252,23 +267,23 @@ class Explore extends Component {
     }
 
     gotoSettings() {
-        this.props.navigation.navigate('FilterScreen', {
-            isHotelSelected: this.state.isHotel,
-            count: this.state.count,
-            updateFilter: this.updateFilter,
-            searchedCity: this.state.search,
-            searchedCityId: 72,
-            checkInDate: this.state.checkInDate,
-            checkOutDate: this.state.checkOutDate,
-            guests: this.state.guests,
-            adults: this.state.adults,
-            children: this.state.children,
-            regionId: this.state.regionId,
-            currency: this.state.currency,
-            checkOutDateFormated: this.state.checkOutDateFormated,
-            checkInDateFormated: this.state.checkInDateFormated,
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
-        });
+        // this.props.navigation.navigate('FilterScreen', {
+        //     isHotelSelected: this.state.isHotel,
+        //     count: this.state.count,
+        //     updateFilter: this.updateFilter,
+        //     searchedCity: this.state.search,
+        //     searchedCityId: 72,
+        //     checkInDate: this.state.checkInDate,
+        //     checkOutDate: this.state.checkOutDate,
+        //     guests: this.state.guests,
+        //     adults: this.state.adults,
+        //     children: this.state.children,
+        //     regionId: this.state.regionId,
+        //     currency: this.state.currency,
+        //     checkOutDateFormated: this.state.checkOutDateFormated,
+        //     checkInDateFormated: this.state.checkInDateFormated,
+        //     roomsDummyData: this.state.roomsDummyData//encodeURI(JSON.stringify())
+        // });
     }
 
     gotoSearch() {
@@ -289,7 +304,7 @@ class Explore extends Component {
                 regionId: this.state.regionId,
                 checkOutDateFormated: this.state.checkOutDateFormated,
                 checkInDateFormated: this.state.checkInDateFormated,
-                roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+                roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
                 daysDifference: this.state.daysDifference,
                 filter: encodeURI(JSON.stringify(this.state.filter)),
             });
@@ -348,7 +363,7 @@ class Explore extends Component {
                         currency: this.state.currency,
                         checkOutDateFormated: this.state.checkOutDateFormated,
                         checkInDateFormated: this.state.checkInDateFormated,
-                        roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+                        roomsDummyData: this.state.roomsDummyData,//encodeURI(JSON.stringify(this.state.roomsData)),
                         locRate: this.state.locRate,
                         email: this.state.email,
                         token: this.state.token

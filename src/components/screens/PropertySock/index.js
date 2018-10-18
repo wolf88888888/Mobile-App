@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { StyleSheet, Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions, WebView, Modal } from 'react-native';
-import { withNavigation } from 'react-navigation';
-
 
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
@@ -82,11 +80,11 @@ class Property extends Component {
             infants: 0,
             childrenBool: false,
             daysDifference: 1,
-            roomsDummyData: [{
+            roomsData: [{
                 adults: 2,
                 children: []
             }],
-
+            roomsDummyData: '',
             //filters
             showUnAvailable: false,
             nameFilter: '',
@@ -122,13 +120,7 @@ class Property extends Component {
             this.state.daysDifference = params.daysDifference;
         }
 
-        if (this.state.isHotel) {
-            this.mainUrl = '?region='+this.state.regionId
-                +'&currency='+this.state.currency
-                +'&startDate='+this.state.checkInDateFormated
-                +'&endDate='+this.state.checkOutDateFormated
-                +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
-        }
+        this.saveState();
     }
 
     componentDidUpdate(prevProps) {
@@ -410,16 +402,6 @@ class Property extends Component {
         }
     }
 
-    updateData(data) {
-        this.setState({
-            adults: data.adults,
-            children: data.children,
-            infants: data.infants,
-            guests: data.adults + data.children + data.infants,
-            childrenBool: data.childrenBool
-        });
-    }
-
     gotoGuests = () => {
         this.props.navigation.navigate('GuestsScreen', {
             guests: this.state.guests,
@@ -432,7 +414,7 @@ class Property extends Component {
     }
 
     gotoSearch = () => {
-
+        this.saveState();
     }
 
     gotoCancel = () => {
@@ -460,6 +442,10 @@ class Property extends Component {
     }
 
     onDatesSelect = ({ startDate, endDate }) => {
+        if (this.state.checkInDate === startDate && this.state.checkOutDate === endDate) {
+            return;
+        }
+        
         const year = (new Date()).getFullYear();
         this.setState({
             checkInDate: startDate,
@@ -469,7 +455,25 @@ class Property extends Component {
                 .toString()) + year,
             checkOutDateFormated: (moment(endDate, 'ddd, DD MMM')
                 .format('DD/MM/')
-                .toString()) + year
+                .toString()) + year,
+            isNewSearch: true
+        });
+    }
+
+    updateData(data) {
+        if (this.state.adults === data.adults
+                && this.state.children === data.children
+                && this.state.infants === data.infants
+                && this.state.childrenBool === data.childrenBool) {
+            return;
+        }
+        this.setState({
+            adults: data.adults,
+            children: data.children,
+            infants: data.infants,
+            guests: data.adults + data.children + data.infants,
+            childrenBool: data.childrenBool,
+            isNewSearch: true
         });
     }
 
@@ -492,6 +496,13 @@ class Property extends Component {
         this.previousState.guests = this.state.guests;
         this.previousState.childrenBool = this.state.childrenBool;
 
+        if (this.state.isHotel) {
+            this.mainUrl = '?region='+this.state.regionId
+                +'&currency='+this.state.currency
+                +'&startDate='+this.state.checkInDateFormated
+                +'&endDate='+this.state.checkOutDateFormated
+                +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
+        }
     }
 
     gotoSettings = () => {
