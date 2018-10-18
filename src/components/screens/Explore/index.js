@@ -235,8 +235,6 @@ class Explore extends Component {
         }
         let roomsData = [baseInfo];
         let roomsDummyData = encodeURI(JSON.stringify(roomsData));
-        console.log("--------------------------- roomsData", roomsData);
-        console.log("--------------------------- roomsDummyData", roomsDummyData);
 
         this.setState({
             adults: data.adults,

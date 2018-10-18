@@ -48,6 +48,11 @@ class Property extends Component {
         const endDate = moment()
             .add(2, 'day');
         
+        let roomsData = [{
+            adults: 2,
+            children: []
+        }];
+
         this.state = {
             search: '',
             countryId: 0,
@@ -80,11 +85,7 @@ class Property extends Component {
             infants: 0,
             childrenBool: false,
             daysDifference: 1,
-            roomsData: [{
-                adults: 2,
-                children: []
-            }],
-            roomsDummyData: '',
+            roomsDummyData: encodeURI(JSON.stringify(roomsData)),
             //filters
             showUnAvailable: false,
             nameFilter: '',
@@ -97,7 +98,6 @@ class Property extends Component {
             isNewSearch: false,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
-        console.log("Property -----------", params);
 
         if (params) {
             this.state.isHotel = params.isHotel;
@@ -163,23 +163,30 @@ class Property extends Component {
     }
 
     getHotels() {
-        this.setState({isMAP: -1});
-        requester.getStaticHotels(this.state.regionId).then(res => {
-            res.body.then(data => {
-                const { content } = data;
-                content.forEach(l => {
-                    if (this.hotelsInfoById[l.id]) {
-                    l.price = this.hotelsInfoById[l.id].price;
-                    }
+        this.setState({
+            isMAP: -1, 
+            hotelsInfo : [],
+            allElements: false, 
+            editable: false
+        }, () => {
+            requester.getStaticHotels(this.state.regionId).then(res => {
+                res.body.then(data => {
+                    const { content } = data;
+                    content.forEach(l => {
+                        if (this.hotelsInfoById[l.id]) {
+                            l.price = this.hotelsInfoById[l.id].price;
+                        }
+                    });
+    
+                    console.log("getStaticHotels", content);
+                    const hotels = content;
+                    this.listView.clearRows();
+                    this.listView.clearPage();
+                    this.listView.onFirstLoad(hotels, false);
+                    this.getHotelsInfoBySocket();
                 });
-
-                console.log("getStaticHotels", content);
-                const hotels = content;
-                this.listView.onFirstLoad(hotels, false);
-                this.getHotelsInfoBySocket();
             });
-          });
-
+        });
     }
 
     async getHotelsInfoBySocket() {
@@ -200,7 +207,7 @@ class Property extends Component {
     }
 
     stompAndroid() {
-        console.log("uid---------------", this.uuid, this.mainUrl);
+        console.log("stompAndroid---------------", this.uuid, this.mainUrl);
         const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.mainUrl + "\"}";
         const destination = "search/" + this.uuid;
 
@@ -224,6 +231,7 @@ class Property extends Component {
             this.setState({isMAP: 0});
         }
         try {
+            console.log("jsonHotel ---", message);
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
                 if (jsonHotel.allElements) {
@@ -414,11 +422,45 @@ class Property extends Component {
     }
 
     gotoSearch = () => {
+        this.isFilterResult = false;
         this.saveState();
+
+        if(this.state.isHotel) {
+            this.getHotels();
+        }
     }
 
     gotoCancel = () => {
+        let baseInfo = {};
+        baseInfo['adults'] = this.previousState.adults;
+        baseInfo['children'] = [];
+        for (let i = 0; i < this.previousState.children.children; i ++) {
+            baseInfo['children'].push({"age": 0});
+        }
+        let roomsData = [baseInfo];
+        let roomsDummyData = encodeURI(JSON.stringify(roomsData));
 
+        this.setState({
+            search: this.previousState.search,
+            regionId: this.previousState.regionId,
+            home: this.previousState.home,
+            countryId: this.previousState.countryId,
+
+            checkInDate: this.previousState.checkInDate,
+            checkInDateFormated: this.previousState.checkInDateFormated,
+            checkOutDate: this.previousState.checkOutDate,
+            checkOutDateFormated: this.previousState.checkOutDateFormated,
+            daysDifference: this.previousState.daysDifference,
+
+            adults: this.previousState.adults,
+            children: this.previousState.children,
+            infants: this.previousState.infants,
+            guests: this.previousState.guests,
+            childrenBool: this.previousState.childrenBool,
+            roomsDummyData: roomsDummyData,
+            
+            isNewSearch: false,
+        });
     }
 
     handleAutocompleteSelect = (id, name) => {
@@ -460,24 +502,46 @@ class Property extends Component {
         });
     }
 
-    updateData(data) {
+    updateData = (data) => {
         if (this.state.adults === data.adults
                 && this.state.children === data.children
                 && this.state.infants === data.infants
                 && this.state.childrenBool === data.childrenBool) {
             return;
         }
+        
+        let baseInfo = {};
+        baseInfo['adults'] = data.adults;
+        baseInfo['children'] = [];
+        for (let i = 0; i < data.children; i ++) {
+            baseInfo['children'].push({"age": 0});
+        }
+        let roomsData = [baseInfo];
+        let roomsDummyData = encodeURI(JSON.stringify(roomsData));
+
         this.setState({
             adults: data.adults,
             children: data.children,
             infants: data.infants,
             guests: data.adults + data.children + data.infants,
             childrenBool: data.childrenBool,
+            roomsDummyData: roomsDummyData,
             isNewSearch: true
         });
     }
 
     saveState = () => {
+        this.setState({
+            //filters
+            showUnAvailable: false,
+            nameFilter: '',
+            selectedRating: [false, false, false, false, false],
+            orderBy: 'priceForSort,asc',
+            priceRange: [1, 5000],
+            
+            isNewSearch: false,
+        });
+
         this.previousState.search = this.state.search;
         this.previousState.regionId = this.state.regionId;
         
