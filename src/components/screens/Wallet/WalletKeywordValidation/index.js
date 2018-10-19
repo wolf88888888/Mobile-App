@@ -16,10 +16,6 @@ import WhiteBackButton from '../../../atoms/WhiteBackButton';
 import  { userInstance } from '../../../../utils/userInstance';
 import requester from '../../../../initDependencies';
 
-var min = 1,
-    max = 12,
-    r;
-
 var arr = [];
 
 class WalletKeywordValidation extends Component {
@@ -217,7 +213,7 @@ class WalletKeywordValidation extends Component {
                                 <SmartInput
                                     value={this.state.keywordWrittenByUser}
                                     onChangeText={this.onChangeHandler(0)}
-                                    placeholder={`Enter ${this.suffix(this.state.keysArray[0])} nmenoic keyword`}
+                                    placeholder={`Enter ${this.suffix(this.state.keysArray[0])} mnemonic keyword`}
                                     placeholderTextColor="#fff"
                                 />
                             </View>
@@ -227,7 +223,7 @@ class WalletKeywordValidation extends Component {
                                     autoCorrect={false}
                                     value={this.state.keywordWrittenByUser}
                                     onChangeText={this.onChangeHandler(1)}
-                                    placeholder={`Enter ${this.suffix(this.state.keysArray[1])} nmenoic keyword`}
+                                    placeholder={`Enter ${this.suffix(this.state.keysArray[1])} mnemonic keyword`}
                                     placeholderTextColor="#fff"
                                 />
                             </View>
@@ -237,7 +233,7 @@ class WalletKeywordValidation extends Component {
                                     autoCorrect={false}
                                     value={this.state.keywordWrittenByUser}
                                     onChangeText={this.onChangeHandler(2)}
-                                    placeholder={`Enter ${this.suffix(this.state.keysArray[2])} nmenoic keyword`}
+                                    placeholder={`Enter ${this.suffix(this.state.keysArray[2])} mnemonic keyword`}
                                     placeholderTextColor="#fff"
                                 />
                             </View>

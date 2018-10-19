@@ -116,6 +116,10 @@ export default class HotelFilters extends Component {
 
     onBackPress = () => {
         this.props.navigation.goBack();
+    }
+
+    onFilter = () => {
+        this.props.navigation.goBack();
         this.props.navigation.state.params.updateFilter(this.state);
     }
 
@@ -154,7 +158,7 @@ export default class HotelFilters extends Component {
                         style={{height: 40, margin: 15, borderColor: 'grey', borderWidth: 1, borderRadius: 5, paddingLeft: 5}}
                     />
                     <View style= {this.state.isHotelSelected ? styles.pricingView :styles.emptyPricingView}>
-                       <Text style={styles.pricingText}>Availibility</Text>
+                       <Text style={styles.pricingText}>Availability</Text>
                     </View>
                     <CheckBox
                         checkboxStyle={{height: 15, width: 15, marginLeft: 15}}
@@ -298,7 +302,7 @@ export default class HotelFilters extends Component {
                                </View>
                            </View> */}
                        {/* </View> */}
-                       <TouchableOpacity onPress={this.onBackPress}>
+                       <TouchableOpacity onPress={this.onFilter}>
                             <View style={styles.searchButtonView}>
                                 <Text style={styles.searchButtonText}>Apply Filters</Text>
                             </View>

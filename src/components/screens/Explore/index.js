@@ -287,25 +287,27 @@ class Explore extends Component {
     gotoSearch() {
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
-            this.props.navigation.navigate('PropertySock', {
-                isHotel: this.state.isHotel,
-                searchedCity: this.state.search,
-                home: this.state.value,
-                checkInDate: this.state.checkInDate,
-                checkOutDate: this.state.checkOutDate,
-                guests: this.state.guests,
-                adults: this.state.adults,
-                children: this.state.children,
-                infants: this.state.infants,
-                childrenBool: this.state.childrenBool,
-                countryId: this.state.countryId,
-                regionId: this.state.regionId,
-                checkOutDateFormated: this.state.checkOutDateFormated,
-                checkInDateFormated: this.state.checkInDateFormated,
-                roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
-                daysDifference: this.state.daysDifference,
-                filter: encodeURI(JSON.stringify(this.state.filter)),
-            });
+            if (this.state.isHotel) {
+                this.props.navigation.navigate('HotelsSearchScreen', {
+                    isHotel: this.state.isHotel,
+                    searchedCity: this.state.search,
+                    home: this.state.value,
+                    checkInDate: this.state.checkInDate,
+                    checkOutDate: this.state.checkOutDate,
+                    guests: this.state.guests,
+                    adults: this.state.adults,
+                    children: this.state.children,
+                    infants: this.state.infants,
+                    childrenBool: this.state.childrenBool,
+                    countryId: this.state.countryId,
+                    regionId: this.state.regionId,
+                    checkOutDateFormated: this.state.checkOutDateFormated,
+                    checkInDateFormated: this.state.checkInDateFormated,
+                    roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
+                    daysDifference: this.state.daysDifference,
+                    filter: encodeURI(JSON.stringify(this.state.filter)),
+                });
+            }
         }
         else if (shouldBeNative) {
             if (!this.state.isHotel) {

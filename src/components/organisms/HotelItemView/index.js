@@ -21,23 +21,26 @@ class HotelItemView extends Component {
         currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
         gotoHotelDetailsPage: PropTypes.func.isRequired,
-        daysDifference: PropTypes.number
+        daysDifference: PropTypes.number,
+        isDoneSocket: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
         item: [],
         currencySign: undefined,
         locRate: 0,
-        daysDifference : 1
+        daysDifference : 1,
+        isDoneSocket: false
     };
 
     constructor(props) {
         super(props);
-        this.onFlatClick = this.onFlatClick.bind(this);
     }
 
-    onFlatClick(item) {
-        this.props.gotoHotelDetailsPage(item);
+    onFlatClick = (item) => {
+        if (item.price != undefined && item.price != null) {
+            this.props.gotoHotelDetailsPage(item);
+        }
     }
 
     renderStars = (count) => {
@@ -59,7 +62,7 @@ class HotelItemView extends Component {
         return indents;
     }
 
-    ratingTitle(count){
+    ratingTitle = (count) => {
         if (count <= 1){
             return 'Poor'
         }
@@ -79,7 +82,7 @@ class HotelItemView extends Component {
 
     render() {
         const {
-            item, currencySign, locRate
+            item, currencySign, locRate, isDoneSocket
         } = this.props;
         
 
@@ -143,7 +146,12 @@ class HotelItemView extends Component {
                             </View>
                         :
                             <View style={styles.costView}>
-                                <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
+                                {
+                                    isDoneSocket ?
+                                    <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">Unavailable</Text>
+                                    :
+                                    <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
+                                }
                             </View>
                         }
                     </View>

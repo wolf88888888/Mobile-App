@@ -33,7 +33,7 @@ const stomp = require('stomp-websocket-js');
 const clientRef = undefined;
 let countIos;
 
-class Property extends Component {
+class HotelsSearchScreen extends Component {
     hotelsInfoById = [];
     isFilterResult = false;
 
@@ -163,6 +163,9 @@ class Property extends Component {
     }
 
     getHotels() {
+        if (this.listView != undefined && this.listView != null) {
+            this.listView.initListView();
+        }
         this.setState({
             isMAP: -1, 
             hotelsInfo : [],
@@ -180,8 +183,6 @@ class Property extends Component {
     
                     console.log("getStaticHotels", content);
                     const hotels = content;
-                    this.listView.clearRows();
-                    this.listView.clearPage();
                     this.listView.onFirstLoad(hotels, false);
                     this.getHotelsInfoBySocket();
                 });
@@ -207,7 +208,7 @@ class Property extends Component {
     }
 
     stompAndroid() {
-        console.log("stompAndroid---------------", this.uuid, this.mainUrl);
+        // console.log("stompAndroid---------------", this.uuid, this.mainUrl);
         const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.mainUrl + "\"}";
         const destination = "search/" + this.uuid;
 
@@ -319,6 +320,10 @@ class Property extends Component {
 
     onClickHotelOnMap = (item) => {
         console.log("onClickHotelOnMap", item);
+        
+        if (item.price == null || item.price == undefined) {
+            return;
+        }
 
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.mainUrl.split('&')).then((res) => {
@@ -354,16 +359,16 @@ class Property extends Component {
             if (!this.isFilterResult) {
                 requester.getStaticHotels(this.state.regionId, page - 1).then(res => {
                     res.body.then(data => {
-                      const listings = data.content;
-                      listings.forEach(l => {
-                        if (this.hotelsInfoById[l.id]) {
-                          l.price = this.hotelsInfoById[l.id].price;
-                        }
-                      });
-                      const hotels = listings;
-                      console.log("onFetch--=- res  ", hotels);
-            
-                      startFetch(hotels, hotels.length, false)
+                        const listings = data.content;
+                        listings.forEach(l => {
+                            if (this.hotelsInfoById[l.id]) {
+                                l.price = this.hotelsInfoById[l.id].price;
+                            }
+                        });
+                        const hotels = listings;
+                        console.log("onFetch--=- res  ", hotels);
+                
+                        startFetch(hotels, hotels.length, false)
                     });
                 });
             }
@@ -371,13 +376,14 @@ class Property extends Component {
                 const strSearch = this.getSearchString();
                 const strFilters = this.getFilterString(this.listView.getPage());
 
-                console.log("getLastSearchHotelResultsByFilter PPP", strSearch, strFilters);
                 requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
-                    console.log("getLastSearchHotelResultsByFilter", res);
                     if (res.success) {
                         res.body.then((data) => {
-                            console.log("getLastSearchHotelResultsByFilter------", data);
                             const hotels = data.content
+                            
+                            this.setState({
+                                hotelsInfo: [...this.state.hotelsInfo, ...hotels]
+                            });
                             startFetch(hotels, hotels.length, true)
                         });
                     } 
@@ -390,7 +396,7 @@ class Property extends Component {
             
         } catch (err) {
             console.log("onFetch--=- error  ", err);
-          abortFetch() // manually stop the refresh or pagination if it encounters network error
+            abortFetch() // manually stop the refresh or pagination if it encounters network error
         //   console.log(err)
         }
     }
@@ -642,14 +648,23 @@ class Property extends Component {
 
     updateFilter = (data) => {
         console.log("updateFilter", data);
+        
+        this.isFilterResult = true;
+        
+        if (this.listView != undefined && this.listView != null) {
+            this.listView.initListView();
+        }
+        
         this.setState({
             showUnAvailable: data.showUnAvailable,
             nameFilter: data.hotelName,
             selectedRating: data.selectedRating,
             orderBy: data.priceSort,
             priceRange: data.sliderValue,
+            hotelsInfo: []
         }, () => {
             // this.applyFilters();
+
             const search = this.getSearchString();
             const filters = this.getFilterString(0);
             this.fetchFilteredResults(search, filters);
@@ -662,14 +677,12 @@ class Property extends Component {
             if (res.success) {
                 res.body.then((data) => {
                     console.log("fetchFilteredResults", data);
-                    this.isFilterResult = true;
-                    this.listView.clearRows();
-                    this.listView.clearPage();
+                    this.setState({hotelsInfo: data.content});
                     this.listView.onFirstLoad(data.content, true);
                 });
             } 
             else {
-              // console.log('Search expired');
+                // console.log('Search expired');
             }
         });
     }
@@ -682,6 +695,7 @@ class Property extends Component {
                 locRate = {this.state.locRate}
                 gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
                 daysDifference = {this.state.daysDifference}
+                isDoneSocket = {this.state.allElements}
             />
         )
     }
@@ -828,18 +842,25 @@ class Property extends Component {
     }
 
     renderImageInCallout(hotel) {
+        let thumbnailURL;
+        if (!this.isFilterResult) {
+            thumbnailURL = imgHost + hotel.thumbnail.url;
+        }
+        else {
+            thumbnailURL = imgHost + hotel.hotelPhoto;
+        }
         if(Platform.OS === 'ios') {
           return(
             <Image
                 style={{ width: 120, height: 90}}
-                source={{uri: imgHost + hotel.thumbnail.url }}
+                source={{uri: thumbnailURL }}
             />
           )
         } else {
           return(
             <WebView
                 style={{ width: 120, height: 90, marginLeft:-3.5, backgroundColor:'#fff'}}
-                source={{html: "<img src=" + imgHost + hotel.thumbnail.url + " width='120'/>" }}
+                source={{html: "<img src=" + thumbnailURL + " width='120'/>" }}
                 javaScriptEnabledAndroid={true}
             />
           )
@@ -858,9 +879,16 @@ class Property extends Component {
                     <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
                         {hotel.name}
                     </Text>
-                    <Text style={styles.description}>
-                        LOC {hotel.price.toFixed(2)} / Night
-                    </Text>
+                    {
+                        hotel.price == null || hotel.price == undefined ?
+                            <Text style={styles.description}>
+                                Unavailable
+                            </Text>
+                        : 
+                            <Text style={styles.description}>
+                                LOC {hotel.price.toFixed(2)} / Night
+                            </Text>
+                    }
                     <Text style={styles.ratingsMap}>
                         {
                             Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
@@ -872,24 +900,35 @@ class Property extends Component {
     }
 
     renderMap = () => {
+        console.log("renderMap", this.state.hotelsInfo);
+        let baseLat = this.state.initialLat;
+        let baseLon = this.state.initialLon;
+        if (this.state.hotelsInfo.length >= 1) {
+            if (this.isFilterResult) {
+                baseLat = parseFloat(this.state.hotelsInfo[0].latitude);
+                baseLon = parseFloat(this.state.hotelsInfo[0].longitude);
+            }
+            else {
+                baseLat = parseFloat(this.state.hotelsInfo[0].lat);
+                baseLon = parseFloat(this.state.hotelsInfo[0].lon);
+            }
+        }
         return (                            
             <MapView
                 initialRegion={{
-                    latitude: this.state.hotelsInfo.length >= 1 ?
-                                    parseFloat(this.state.hotelsInfo[0].lat) : this.state.initialLat,
-                    longitude: this.state.hotelsInfo.length >= 1 ?
-                        parseFloat(this.state.hotelsInfo[0].lon) : this.state.initialLon,
+                    latitude: baseLat,
+                    longitude: baseLon,
                     latitudeDelta: 0.5,
                     longitudeDelta: 0.5
                 }}
                 style={styles.map}
             >
             {/* Marker */}
-            {this.state.hotelsInfo.map(marker => marker.lat != null && (
+            {this.state.hotelsInfo.map(marker => (marker.lat != null || marker.latitude != null) && (
                 <Marker
                     coordinate={{
-                        latitude: parseFloat(marker.lat),
-                        longitude: parseFloat(marker.lon)
+                        latitude: this.isFilterResult? parseFloat(marker.latitude) : parseFloat(marker.lat),
+                        longitude: this.isFilterResult? parseFloat(marker.longitude) : parseFloat(marker.lon)
                     }}
                     onCalloutPress={() => {this.onClickHotelOnMap(marker)}} //eslint-disable-line
                 >
@@ -1008,6 +1047,6 @@ const pickerSelectStyles = StyleSheet.create({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Property);
+export default connect(mapStateToProps, mapDispatchToProps)(HotelsSearchScreen);
 
 // export default withNavigation(Property);
