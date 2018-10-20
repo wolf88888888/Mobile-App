@@ -79,6 +79,7 @@ import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
 import HotelsSearchScreen from '../components/screens/HotelsSearchScreen';
+import HomesSearchScreen from '../components/screens/HomesSearchScreen';
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
@@ -155,6 +156,7 @@ const RootNavigator = createStackNavigator(
         Chat: {screen: Chat},
 
         HotelsSearchScreen: {screen: HotelsSearchScreen},
+        HomesSearchScreen: {screen: HomesSearchScreen},
         MapFullScreen: {screen: MapFullScreen}
     },
     {

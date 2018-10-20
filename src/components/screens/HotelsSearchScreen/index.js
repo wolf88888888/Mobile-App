@@ -21,8 +21,6 @@ import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
 import * as currencyActions from '../../../redux/action/Currency'
-import RNPickerSelect from 'react-native-picker-select';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import styles from './styles';
 
@@ -55,11 +53,6 @@ class HotelsSearchScreen extends Component {
 
         this.state = {
             search: '',
-            countryId: 0,
-            countryName: '',
-            home: '',
-
-            countries: [],
             cities: [],
 
             isHotel: true,
@@ -103,7 +96,6 @@ class HotelsSearchScreen extends Component {
             this.state.isHotel = params.isHotel;
             this.state.search = params.searchedCity;
             this.state.regionId = params.regionId;
-            this.state.home = params.home;
             this.state.checkInDate = params.checkInDate;
             this.state.checkInDateFormated = params.checkInDateFormated;
             this.state.checkOutDate = params.checkOutDate;
@@ -116,7 +108,6 @@ class HotelsSearchScreen extends Component {
             this.state.childrenBool = params.childrenBool;
 
             this.state.roomsDummyData = params.roomsDummyData;
-            this.state.filter = params.filter;
             this.state.daysDifference = params.daysDifference;
         }
 
@@ -128,31 +119,9 @@ class HotelsSearchScreen extends Component {
         if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
             this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
         }
-
-        if (this.props.countries != prevProps.countries) {
-            this.setCountriesInfo();
-        }
     }
-
-    setCountriesInfo() {
-        console.log("setCountriesInfo");
-        countryArr = [];
-        this.props.countries.map((item, i) => {
-            countryArr.push({
-                'label': item.name,
-                'value': item
-            });
-        });
-        this.setState({
-            countries: countryArr,
-            countriesLoaded: true,
-            countryId: countryArr[0].value.id,
-            countryName: countryArr[0].label
-        });
-    }
-
+    
     componentWillMount() {
-        this.setCountriesInfo();
         if(this.state.isHotel) {
             this.getHotels();
         }
@@ -449,8 +418,6 @@ class HotelsSearchScreen extends Component {
         this.setState({
             search: this.previousState.search,
             regionId: this.previousState.regionId,
-            home: this.previousState.home,
-            countryId: this.previousState.countryId,
 
             checkInDate: this.previousState.checkInDate,
             checkInDateFormated: this.previousState.checkInDateFormated,
@@ -550,9 +517,6 @@ class HotelsSearchScreen extends Component {
 
         this.previousState.search = this.state.search;
         this.previousState.regionId = this.state.regionId;
-        
-        this.previousState.home = this.state.home;
-        this.previousState.countryId = this.state.countryId; //home
 
         this.previousState.checkInDate = this.state.checkInDate;
         this.previousState.checkInDateFormated = this.state.checkInDateFormated;
@@ -591,12 +555,6 @@ class HotelsSearchScreen extends Component {
     }
 
     getSearchString = () => {
-    //     let search = `?region=${encodeURI(this.state.regionId)}`;
-    //     search += `&currency=${encodeURI(this.state.currency)}`;
-    //     search += `&startDate=${encodeURI(this.state.checkInDateFormated)}`;
-    //     search += `&endDate=${encodeURI(this.state.checkOutDateFormated)}`;
-    //     search += `&rooms=${encodeURI(this.state.roomsDummyData)}`;
-
         let search = `?region=${this.state.regionId}`;
         search += `&currency=${this.state.currency}`;
         search += `&startDate=${this.state.checkInDateFormated}`;
@@ -741,45 +699,6 @@ class HotelsSearchScreen extends Component {
                         onLeftPress={this.onCancel}
                         editable={this.state.editable}
                     />
-                </View>
-            </View>
-        );
-    }
-
-    renderHomeTopView() {
-        console.log("this.state.countries", this.state.countries);
-        return (
-            //Home
-            <View style={styles.SearchAndPickerwarp}>
-                <View style={styles.countriesSpinner}>
-                    <TouchableOpacity onPress={this.onCancel}>
-                        <View style={styles.leftIconView}>
-                            <Text style={styles.leftIconText}>
-                                <Icon name="arrow-back" size={22} color="#000" />
-                                {/* <FontAwesome>{Icons[leftIcon]}</FontAwesome> */}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.pickerWrapHomes}>
-                        <RNPickerSelect
-                            disabled={!this.state.editable}
-                            items={this.state.countries}
-                            placeholder={{
-                                label: 'Choose a location',
-                                value: 0
-                            }}
-                            onValueChange={(value) => {
-                                this.setState({
-                                    countryId: value.id,
-                                    countryName: value.name,
-                                    home: value
-                                });
-                            }}
-                            value={this.state.home}
-                            style={{ ...pickerSelectStyles }}
-                        >
-                        </RNPickerSelect>
-                    </View>
                 </View>
             </View>
         );
@@ -943,7 +862,7 @@ class HotelsSearchScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {this.state.isHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
+                {this.renderHotelTopView()}
                 {this.renderAutocomplete()}
                 <View style={{position: 'absolute', top: 100, left: 0, right: 0, bottom: 0, width:'100%'}}>
                     {this.renderFilterBar()}
@@ -1026,8 +945,7 @@ let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
         currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate,
-        countries: state.country.countries
+        locRate: state.currency.locRate
     };
 }
 

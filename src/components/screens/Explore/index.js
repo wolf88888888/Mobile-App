@@ -200,27 +200,6 @@ class Explore extends Component {
         }
     }
 
-    // getCountryValues() {
-    //     requester.getCountries(true).then(res => {
-    //         res.body.then(data => {
-    //             countryArr = [];
-    //             data.map((item, i) => {
-    //                 countryArr.push({
-    //                     'label': item.name,
-    //                     'value': item
-    //                 });
-    //             });
-    //             console.log(countryArr[0].value.id);
-    //             this.setState({
-    //                 countries: countryArr,
-    //                 countriesLoaded: true,
-    //                 countryId: countryArr[0].value.id,
-    //                 countryName: countryArr[0].label
-    //             });
-    //         });
-    //     });
-    // }
-
     onValueChange = (value) => {
         console.log(value);
         console.log(this.state.loc);
@@ -291,6 +270,27 @@ class Explore extends Component {
                 this.props.navigation.navigate('HotelsSearchScreen', {
                     isHotel: this.state.isHotel,
                     searchedCity: this.state.search,
+                    regionId: this.state.regionId,
+                    checkInDate: this.state.checkInDate,
+                    checkOutDate: this.state.checkOutDate,
+                    guests: this.state.guests,
+                    adults: this.state.adults,
+                    children: this.state.children,
+                    infants: this.state.infants,
+                    childrenBool: this.state.childrenBool,
+                    checkOutDateFormated: this.state.checkOutDateFormated,
+                    checkInDateFormated: this.state.checkInDateFormated,
+                    roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
+                    daysDifference: this.state.daysDifference,
+                });
+            }
+            else {
+                if (this.state.countryId === 0) {
+                    this.refs.toast.show('Please select country to book home.', 1500);
+                    return;
+                }
+                this.props.navigation.navigate('HomesSearchScreen', {
+                    countryId: this.state.countryId,
                     home: this.state.value,
                     checkInDate: this.state.checkInDate,
                     checkOutDate: this.state.checkOutDate,
@@ -299,13 +299,10 @@ class Explore extends Component {
                     children: this.state.children,
                     infants: this.state.infants,
                     childrenBool: this.state.childrenBool,
-                    countryId: this.state.countryId,
-                    regionId: this.state.regionId,
                     checkOutDateFormated: this.state.checkOutDateFormated,
                     checkInDateFormated: this.state.checkInDateFormated,
                     roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
-                    daysDifference: this.state.daysDifference,
-                    filter: encodeURI(JSON.stringify(this.state.filter)),
+                    daysDifference: this.state.daysDifference
                 });
             }
         }
