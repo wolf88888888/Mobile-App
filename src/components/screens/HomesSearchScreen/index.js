@@ -11,7 +11,7 @@ import Image from 'react-native-remote-svg';
 import { imgHost } from '../../../config';
 import SearchBar from '../../molecules/SearchBar';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import HotelItemView from '../../organisms/HotelItemView';
+import HomeItemView from '../../organisms/HomeItemView';
 import requester from '../../../initDependencies';
 
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -76,7 +76,8 @@ class HomesSearchScreen extends Component {
             cities: [], 
             propertyTypes: [],
 
-            editable: false,
+            totalPages: 0,
+
             isNewSearch: false,
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
@@ -125,15 +126,19 @@ class HomesSearchScreen extends Component {
         });
         this.setState({
             countries: countryArr,
-            countriesLoaded: true,
-            countryId: countryArr[0].value.id,
-            countryName: countryArr[0].label
+            countriesLoaded: true
         });
     }
 
     componentWillMount() {
         this.setCountriesInfo();
+        this.getHomes();
+    }
 
+    getHomes() {
+        if (this.listView != undefined && this.listView != null) {
+            this.listView.initListView();
+        }
         let searchTerms = [];
         searchTerms.push(`countryId=${this.state.countryId}`);
         searchTerms.push(`startDate=${this.state.checkInDateFormated}`);
@@ -141,47 +146,57 @@ class HomesSearchScreen extends Component {
         searchTerms.push(`guests=${this.state.guests}`);
         searchTerms.push(`priceMin=${this.state.priceRange[0]}`);
         searchTerms.push(`priceMax=${this.state.priceRange[1]}`);
-        
-        // searchTerms['countryId'] = this.state.countryId;
-        // searchTerms['startDate'] = this.state.checkInDateFormated;
-        // searchTerms['endDate'] = this.state.checkOutDateFormated;
-        // searchTerms['guests'] = this.state.guests;
-        // searchTerms['priceMin'] = this.state.priceRange[0];
-        // searchTerms['priceMax'] = this.state.priceRange[1];
-        console.log("getListingsByFilter --- data", searchTerms);
+        searchTerms.push(`page=0`);
+        console.log("searchTerms", searchTerms);
 
         requester.getListingsByFilter(searchTerms).then(res => {
-            console.log("getListingsByFilter --- res", res);
             res.body.then(data => {
-                console.log("getListingsByFilter --- data", data);
-                // this.setState({
-                //     listings: data.filteredListings.content,
-                //     totalItems: data.filteredListings.totalElements,
-                //     loading: false,
-                //     cities: data.cities,
-                //     propertyTypes: data.types
-                // });
+                this.setState({
+                    // listings: data.filteredListings.content,
+                    totalPages: data.filteredListings.totalPages,
+                    cities: data.cities,
+                    propertyTypes: data.types
+                }, () => {
+                    this.listView.onFirstLoad(data.filteredListings.content, false);
+                });
             });
         });
+    }
+    
+    onFetch = async (page = 1, startFetch, abortFetch) => {
+        console.log("onFetch", page);
+        try {
+            if (page < this.state.totalPages) {
+                let searchTerms = [];
+                searchTerms.push(`countryId=${this.state.countryId}`);
+                searchTerms.push(`startDate=${this.state.checkInDateFormated}`);
+                searchTerms.push(`endDate=${this.state.checkOutDateFormated}`);
+                searchTerms.push(`guests=${this.state.guests}`);
+                searchTerms.push(`priceMin=${this.state.priceRange[0]}`);
+                searchTerms.push(`priceMax=${this.state.priceRange[1]}`);
+                searchTerms.push(`page=${page - 1}`);
+                console.log("onFetch - searchTerms", searchTerms);
+
+                requester.getListingsByFilter(searchTerms).then(res => {
+                    console.log("onFetch - requester.getListingsByFilter", res);
+                    res.body.then(data => {
+                        startFetch(data.filteredListings.content, data.filteredListings.content.length, false);
+                    });
+                })
+            }
+            else {
+                startFetch([], 0, false);
+                abortFetch();
+            } 
+        } catch (err) {
+            startFetch([], 0, false);
+            abortFetch(); 
+        }
     }
 
     onCancel = () => {
         this.props.navigation.goBack();
     }
-
-    switchMode = () => {
-        if (this.state.isMAP == 0) {
-            this.setState({
-                isMAP: 1,
-            });
-        }
-        else {
-            this.setState({
-                isMAP: 0,
-            });
-        }
-    }
-
 
     saveState = () => {
         this.setState({
@@ -218,7 +233,7 @@ class HomesSearchScreen extends Component {
     gotoSearch = () => {
         this.isFilterResult = false;
         this.saveState();
-
+        this.getHomes();
     }
 
     gotoCancel = () => {
@@ -303,15 +318,24 @@ class HomesSearchScreen extends Component {
         
     }
 
+    gotoHomeDetailPage = (home) => {
+        console.log (" home ---", home);
+        // requester.getListing(193).then(res => {
+        //     console.log("--------------1", res);
+        //     res.body.then(data => {
+        //         console.log("--------------data1", data);
+        //     });
+        // });
+    }
+
     renderItem = (item) => {
         return (
-            <HotelItemView
+            <HomeItemView
                 item = {item}
                 currencySign = {this.state.currencySign}
                 locRate = {this.state.locRate}
-                gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
+                gotoHomeDetailPage = {this.gotoHomeDetailPage}
                 daysDifference = {this.state.daysDifference}
-                isDoneSocket = {this.state.allElements}
             />
         )
     }
@@ -344,7 +368,6 @@ class HomesSearchScreen extends Component {
     }
 
     renderHomeTopView() {
-        console.log("this.state.countries", this.state.countries);
         return (
             //Home
             <View style={styles.SearchAndPickerwarp}>
@@ -359,17 +382,20 @@ class HomesSearchScreen extends Component {
                     </TouchableOpacity>
                     <View style={styles.pickerWrapHomes}>
                         <RNPickerSelect
-                            disabled={!this.state.editable}
                             items={this.state.countries}
                             placeholder={{
                                 label: 'Choose a location',
                                 value: 0
                             }}
                             onValueChange={(value) => {
+                                if (this.state.countryId === value.id) {
+                                    return;
+                                }
                                 this.setState({
                                     countryId: value.id,
                                     countryName: value.name,
-                                    home: value
+                                    home: value,
+                                    isNewSearch: true,
                                 });
                             }}
                             value={this.state.home}
@@ -397,7 +423,6 @@ class HomesSearchScreen extends Component {
                     gotoCancel={this.gotoCancel}
                     onDatesSelect={this.onDatesSelect}
                     gotoSettings={this.gotoSettings}
-                    disabled={!this.state.editable}
                     showSearchButton={this.state.isNewSearch}
                     showCancelButton={this.state.isNewSearch}
                     isFilterable={true}

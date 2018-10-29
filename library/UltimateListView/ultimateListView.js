@@ -345,7 +345,7 @@ export default class UltimateListView extends Component {
     }
 
     endFetch = () => {
-        console.log('endRefresh()');
+        console.log('endRefresh()', this.mounted);
         if (this.mounted) {
             this.setState({ isRefreshing: false })
             if (this.props.refreshableMode === 'advanced' && this._flatList._listRef._scrollRef.onRefreshEnd) {
