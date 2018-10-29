@@ -55,7 +55,9 @@ export default class Calendar extends Component {
             startDate,
             endDate
         } = this.state;
+        console.log("onChoose", startDate, endDate);
         if ((!startDate && !endDate) || day < startDate || (startDate && endDate)) {
+            console.log("startDate", day);
             this.setState({
                 startDate: day,
                 endDate: null,
@@ -65,6 +67,7 @@ export default class Calendar extends Component {
                 endWeekdayText: ''
             });
         } else if (startDate && !endDate && day > startDate) {
+            console.log("endDate", day);
             this.setState({
                 endDate: day,
                 endDateText: this.i18n(day, 'date'),
@@ -77,11 +80,11 @@ export default class Calendar extends Component {
         const { 
             maxDate,
             minDate,
-            format 
+            format_input 
         } = this.props.navigation.state.params;
 
-        let max = Moment(maxDate, format);
-        let min = Moment(minDate, format);
+        let max = Moment(maxDate, format_input);
+        let min = Moment(minDate, format_input);
         const maxValid = max.isValid();
         const minValid = min.isValid();
         if (!maxValid && !minValid) {
@@ -104,11 +107,13 @@ export default class Calendar extends Component {
         const { 
             startDate,
             endDate,
-            format
+            format_input
         } = this.props.navigation.state.params;
 
-        const start = Moment(startDate, format);
-        const end = Moment(endDate, format);
+        console.log("resetCalendar --", startDate, endDate, format_input);
+
+        const start = Moment(startDate, format_input);
+        const end = Moment(endDate, format_input);
         const isStartValid = start.isValid() && start >= this.minDate && start <= this.maxDate;
         const isEndValid = end.isValid() && end >= this.minDate && end <= this.maxDate;
         this.setState({
@@ -135,7 +140,7 @@ export default class Calendar extends Component {
 
     cancel() {
         this.props.navigation.goBack();
-        this.resetCalendar();
+        // this.resetCalendar();
     }
     
     clear() {
@@ -156,8 +161,8 @@ export default class Calendar extends Component {
         const startMoment = startDate ? startDate : null;
         const endMoment = endDate ? endDate : null;
         this.props.navigation.state.params.onConfirm({
-            startDate: startMoment ? startMoment.format(this.props.navigation.state.params.format) : null,
-            endDate: endMoment ? endMoment.format(this.props.navigation.state.params.format) : null,
+            startDate: startMoment ? startMoment.format(this.props.navigation.state.params.format_display) : null,
+            endDate: endMoment ? endMoment.format(this.props.navigation.state.params.format_display) : null,
             startMoment,
             endMoment
         });

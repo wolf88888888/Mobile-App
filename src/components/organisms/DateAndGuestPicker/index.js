@@ -30,9 +30,10 @@ class DateAndGuestPicker extends Component {
 
     onCalendar = () => {
         this.props.navigation.navigate('CalendarScreen', {
-            startDate: this.props.checkInDate,
-            endDate: this.props.checkOutDate,
-            format: "ddd, DD MMM",
+            startDate: this.props.checkInDateFormated,
+            endDate: this.props.checkOutDateFormated,
+            format_input: "DD/MM/YYYY",
+            format_display: "ddd, DD MMM",
             onConfirm: this.props.onDatesSelect
         });
     }

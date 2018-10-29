@@ -20,8 +20,7 @@
         android:background="@color/lockchain_orange"
         android:theme="@style/AppTheme"
         android:largeHeap="true"
-        android:supportsRtl="true"
-        android:hardwareAccelerated="false">
+        android:supportsRtl="true">
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
             android:name=".MainActivity"

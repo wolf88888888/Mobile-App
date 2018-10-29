@@ -25,7 +25,7 @@ import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectM
 
 import * as currencyActions from '../../../redux/action/Currency';
 
-const shouldBeNative = true; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
 const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];//eslint-disable-line
 
@@ -169,7 +169,8 @@ class Explore extends Component {
         };
     }
 
-    onDatesSelect({ startDate, endDate }) {
+    onDatesSelect({ startDate, endDate, startMoment, endMoment }) {
+        console.log("onDatesSelect", startDate, endDate);
         const year = (new Date()).getFullYear();
         const start = moment(startDate, 'ddd, DD MMM');
         const end = moment(endDate, 'ddd, DD MMM');
@@ -177,12 +178,14 @@ class Explore extends Component {
             daysDifference: moment.duration(end.diff(start)).asDays(),
             checkInDate: startDate,
             checkOutDate: endDate,
-            checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year,
-            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year
+            checkInDateFormated: startMoment.format('DD/MM/YYYY'),
+            //  (moment(startDate, 'ddd, DD MMM')
+            //     .format('DD/MM/')
+            //     .toString()) + year,
+            checkOutDateFormated: endMoment.format('DD/MM/YYYY'),
+            // (moment(endDate, 'ddd, DD MMM')
+            //     .format('DD/MM/')
+            //     .toString()) + year
         });
     }
     onSearchHandler(value) {
@@ -264,6 +267,7 @@ class Explore extends Component {
     }
 
     gotoSearch() {
+        console.log("gotoSearch", this.state.checkOutDateFormated, this.state.checkInDateFormated);
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
             if (this.state.isHotel) {
@@ -339,7 +343,7 @@ class Explore extends Component {
                 endDate: this.state.checkOutDateFormated,
                 guests: 2
             });
-            }
+        }
             else {
                 if (this.state.regionId == '') {
                     //Empty location
@@ -551,7 +555,7 @@ class Explore extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, guests
+            checkInDate, checkOutDate, checkInDateFormated, checkOutDateFormated, guests
         } = this.state;
         return (
             <View style={styles.container}>
@@ -574,6 +578,8 @@ class Explore extends Component {
                             <DateAndGuestPicker
                                 checkInDate={checkInDate}
                                 checkOutDate={checkOutDate}
+                                checkInDateFormated={checkInDateFormated}
+                                checkOutDateFormated={checkOutDateFormated}
                                 adults={this.state.adults}
                                 children={this.state.children}
                                 guests={this.state.guests}
