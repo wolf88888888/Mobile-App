@@ -15,14 +15,13 @@ import FastImage from 'react-native-fast-image'
 
 const RNPropTypes = PropTypes || React.PropTypes;
 
-class HotelItemView extends Component {
+class HomeItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.object | RNPropTypes.array,
+        item: RNPropTypes.object,
         currencySign: RNPropTypes.string,
         locRate: RNPropTypes.number,
-        gotoHotelDetailsPage: PropTypes.func.isRequired,
-        daysDifference: PropTypes.number,
-        isDoneSocket: PropTypes.bool.isRequired
+        gotoHomeDetailPage: PropTypes.func.isRequired,        
+        daysDifference: RNPropTypes.number,
     };
 
     static defaultProps = {
@@ -30,7 +29,6 @@ class HotelItemView extends Component {
         currencySign: undefined,
         locRate: 0,
         daysDifference : 1,
-        isDoneSocket: false
     };
 
     constructor(props) {
@@ -38,9 +36,7 @@ class HotelItemView extends Component {
     }
 
     onFlatClick = (item) => {
-        if (item.price != undefined && item.price != null) {
-            this.props.gotoHotelDetailsPage(item);
-        }
+        this.props.gotoHomeDetailPage(item);
     }
 
     renderStars = (count) => {
@@ -51,14 +47,6 @@ class HotelItemView extends Component {
         for (let i = count; i < 5; i ++) {
             indents.push(<Text key = {`star - ${i}`} style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
         }
-        // for (let i = 0; i < 5; i++) {
-        //     if (count > 0) {
-        //         indents.push(<Text style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-        //     } else {
-        //         indents.push(<Text style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-        //     }
-        //     count--;
-        // }
         return indents;
     }
 
@@ -82,22 +70,17 @@ class HotelItemView extends Component {
 
     render() {
         const {
-            item, currencySign, locRate, isDoneSocket
+            item, currencySign, locRate
         } = this.props;
         
-
-        let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
-                 (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
-                 : 
-                 "";
-        let stars = item.star;
-        let isLoadingPricing = true;
-
-        if (item.price != undefined && item.price != null) {
-            isLoadingPricing = false;
+        let pictures = JSON.parse(item.pictures);
+        let urlThumbnail = "";
+        if (pictures.length > 0) {
+            urlThumbnail = imgHost + pictures[0].thumbnail;
         }
 
-        let price = item.price / this.props.daysDifference;
+        let stars = item.averageRating;
+        let price = item.defaultDailyPrice / this.props.daysDifference;
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
@@ -137,23 +120,11 @@ class HotelItemView extends Component {
                             {/* <Text style={styles.totalReviews}> 73 Reviews </Text> */}
                         </View>
 
-                        {
-                        !isLoadingPricing?
-                            <View style={styles.costView}>
-                                <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
-                                <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text>
-                                <Text style={styles.perNight}>per night</Text>
-                            </View>
-                        :
-                            <View style={styles.costView}>
-                                {
-                                    isDoneSocket ?
-                                    <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">Unavailable</Text>
-                                    :
-                                    <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
-                                }
-                            </View>
-                        }
+                        <View style={styles.costView}>
+                            <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
+                            <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text>
+                            <Text style={styles.perNight}>per night</Text>
+                        </View>
                     </View>
                 </CardView>
             </TouchableOpacity>
@@ -161,4 +132,4 @@ class HotelItemView extends Component {
     }
 }
 
-export default HotelItemView;
+export default HomeItemView;

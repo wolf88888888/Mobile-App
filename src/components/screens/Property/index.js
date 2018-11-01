@@ -16,7 +16,7 @@ var utf8 = require('utf8');
 var binaryToBase64 = require('binaryToBase64');
 let uid = '';
 let baseHomeUrl = 'https://beta.locktrip.com/homes/listings/?'
-let baseHotelUrl = 'https://beta.locktrip.com/mobile/search?'
+let baseHotelUrl = 'https://beta.locktrip.com/mobile/hotels/listings?'
 
 class Property extends Component {
     webViewRef = {

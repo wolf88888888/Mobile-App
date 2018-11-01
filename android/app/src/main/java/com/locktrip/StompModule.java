@@ -170,7 +170,7 @@ public class StompModule extends ReactContextBaseJavaModule {
             _session.send("search", _message);
         }
         else {
-        Log.e(TAG, "subscription2");
+            Log.e(TAG, "subscription2");
             _isOnce = true;
             connect();
         }

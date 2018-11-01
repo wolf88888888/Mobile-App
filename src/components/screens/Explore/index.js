@@ -25,7 +25,7 @@ import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectM
 
 import * as currencyActions from '../../../redux/action/Currency';
 
-const shouldBeNative = true; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
 const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];//eslint-disable-line
 
@@ -52,9 +52,14 @@ class Explore extends Component {
         this.onDatesSelect = this.onDatesSelect.bind(this);
         this.onSearchHandler = this.onSearchHandler.bind(this);
         this.showToast = this.showToast.bind(this);
+
+        let roomsData = [{
+            adults: 2,
+            children: []
+        }];
+
         this.state = {
-            searchHotel: true,
-            isHotelSelected: true,
+            isHotel: true,
             countryId: 0,
             countryName: '',
             value: '',
@@ -71,10 +76,7 @@ class Explore extends Component {
             adults: 2,
             children: 0,
             infants: 0,
-            roomsDummyData: [{
-                adults: 2,
-                children: []
-            }],
+            roomsDummyData: encodeURI(JSON.stringify(roomsData)),
             filter: {
                 showUnavailable: true, name: '', minPrice: 1, maxPrice: 5000, stars: [0, 1, 2, 3, 4, 5]
             },
@@ -167,7 +169,8 @@ class Explore extends Component {
         };
     }
 
-    onDatesSelect({ startDate, endDate }) {
+    onDatesSelect({ startDate, endDate, startMoment, endMoment }) {
+        console.log("onDatesSelect", startDate, endDate);
         const year = (new Date()).getFullYear();
         const start = moment(startDate, 'ddd, DD MMM');
         const end = moment(endDate, 'ddd, DD MMM');
@@ -175,12 +178,14 @@ class Explore extends Component {
             daysDifference: moment.duration(end.diff(start)).asDays(),
             checkInDate: startDate,
             checkOutDate: endDate,
-            checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year,
-            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year
+            checkInDateFormated: startMoment.format('DD/MM/YYYY'),
+            //  (moment(startDate, 'ddd, DD MMM')
+            //     .format('DD/MM/')
+            //     .toString()) + year,
+            checkOutDateFormated: endMoment.format('DD/MM/YYYY'),
+            // (moment(endDate, 'ddd, DD MMM')
+            //     .format('DD/MM/')
+            //     .toString()) + year
         });
     }
     onSearchHandler(value) {
@@ -198,47 +203,36 @@ class Explore extends Component {
         }
     }
 
-    // getCountryValues() {
-    //     requester.getCountries(true).then(res => {
-    //         res.body.then(data => {
-    //             countryArr = [];
-    //             data.map((item, i) => {
-    //                 countryArr.push({
-    //                     'label': item.name,
-    //                     'value': item
-    //                 });
-    //             });
-    //             console.log(countryArr[0].value.id);
-    //             this.setState({
-    //                 countries: countryArr,
-    //                 countriesLoaded: true,
-    //                 countryId: countryArr[0].value.id,
-    //                 countryName: countryArr[0].label
-    //             });
-    //         });
-    //     });
-    // }
-
     onValueChange = (value) => {
         console.log(value);
         console.log(this.state.loc);
     };
 
     updateData(data) {
+        let baseInfo = {};
+        baseInfo['adults'] = data.adults;
+        baseInfo['children'] = [];
+        for (let i = 0; i < data.children; i ++) {
+            baseInfo['children'].push({"age": 0});
+        }
+        let roomsData = [baseInfo];
+        let roomsDummyData = encodeURI(JSON.stringify(roomsData));
+
         this.setState({
             adults: data.adults,
             children: data.children,
             infants: data.infants,
             guests: data.adults + data.children + data.infants,
-            childrenBool: data.childrenBool
+            childrenBool: data.childrenBool,
+            roomsDummyData: roomsDummyData
         });
     }
 
     updateFilter(data) {
-        this.setState({
-            isHotelSelected: data.isHotelSelected,
-            count: data.count
-        });
+        // this.setState({
+        //     isHotelSelected: data.isHotelSelected,
+        //     count: data.count
+        // });
     }
 
     gotoGuests() {
@@ -253,53 +247,71 @@ class Explore extends Component {
     }
 
     gotoSettings() {
-        this.props.navigation.navigate('FilterScreen', {
-            isHotelSelected: this.state.isHotelSelected,
-            count: this.state.count,
-            updateFilter: this.updateFilter,
-            searchedCity: this.state.search,
-            searchedCityId: 72,
-            checkInDate: this.state.checkInDate,
-            checkOutDate: this.state.checkOutDate,
-            guests: this.state.guests,
-            adults: this.state.adults,
-            children: this.state.children,
-            regionId: this.state.regionId,
-            currency: this.state.currency,
-            checkOutDateFormated: this.state.checkOutDateFormated,
-            checkInDateFormated: this.state.checkInDateFormated,
-            roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData))
-        });
+        // this.props.navigation.navigate('FilterScreen', {
+        //     isHotelSelected: this.state.isHotel,
+        //     count: this.state.count,
+        //     updateFilter: this.updateFilter,
+        //     searchedCity: this.state.search,
+        //     searchedCityId: 72,
+        //     checkInDate: this.state.checkInDate,
+        //     checkOutDate: this.state.checkOutDate,
+        //     guests: this.state.guests,
+        //     adults: this.state.adults,
+        //     children: this.state.children,
+        //     regionId: this.state.regionId,
+        //     currency: this.state.currency,
+        //     checkOutDateFormated: this.state.checkOutDateFormated,
+        //     checkInDateFormated: this.state.checkInDateFormated,
+        //     roomsDummyData: this.state.roomsDummyData//encodeURI(JSON.stringify())
+        // });
     }
 
     gotoSearch() {
+        console.log("gotoSearch", this.state.checkOutDateFormated, this.state.checkInDateFormated);
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
-            this.props.navigation.navigate('PropertySock', {
-                searchHotel: this.state.searchHotel,
-                searchedCity: this.state.search,
-                home: this.state.value,
-                checkInDate: this.state.checkInDate,
-                checkOutDate: this.state.checkOutDate,
-                guests: this.state.guests,
-                adults: this.state.adults,
-                children: this.state.children,
-                infants: this.state.infants,
-                childrenBool: this.state.childrenBool,
-                countryId: this.state.countryId,
-                regionId: this.state.regionId,
-                isHotelSelected: this.state.isHotelSelected,
-                checkOutDateFormated: this.state.checkOutDateFormated,
-                checkInDateFormated: this.state.checkInDateFormated,
-                roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
-                email: this.state.email,
-                token: this.state.token,
-                daysDifference: this.state.daysDifference,
-                filter: encodeURI(JSON.stringify(this.state.filter)),
-            });
+            if (this.state.isHotel) {
+                this.props.navigation.navigate('HotelsSearchScreen', {
+                    isHotel: this.state.isHotel,
+                    searchedCity: this.state.search,
+                    regionId: this.state.regionId,
+                    checkInDate: this.state.checkInDate,
+                    checkOutDate: this.state.checkOutDate,
+                    guests: this.state.guests,
+                    adults: this.state.adults,
+                    children: this.state.children,
+                    infants: this.state.infants,
+                    childrenBool: this.state.childrenBool,
+                    checkOutDateFormated: this.state.checkOutDateFormated,
+                    checkInDateFormated: this.state.checkInDateFormated,
+                    roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
+                    daysDifference: this.state.daysDifference,
+                });
+            }
+            else {
+                if (this.state.countryId === 0) {
+                    this.refs.toast.show('Please select country to book home.', 1500);
+                    return;
+                }
+                this.props.navigation.navigate('HomesSearchScreen', {
+                    countryId: this.state.countryId,
+                    home: this.state.value,
+                    checkInDate: this.state.checkInDate,
+                    checkOutDate: this.state.checkOutDate,
+                    guests: this.state.guests,
+                    adults: this.state.adults,
+                    children: this.state.children,
+                    infants: this.state.infants,
+                    childrenBool: this.state.childrenBool,
+                    checkOutDateFormated: this.state.checkOutDateFormated,
+                    checkInDateFormated: this.state.checkInDateFormated,
+                    roomsDummyData: this.state.roomsDummyData, //encodeURI(JSON.stringify(this.state.roomsData)),
+                    daysDifference: this.state.daysDifference
+                });
+            }
         }
         else if (shouldBeNative) {
-            if (!this.state.searchHotel) {
+            if (!this.state.isHotel) {
                 // user searched for home
                 this.props.navigation.navigate('PropertyList', {
                     currency: this.state.currency,
@@ -321,7 +333,7 @@ class Explore extends Component {
                     endDate: this.state.checkOutDateFormated
                 });
             }
-        } else if (!this.state.searchHotel) {
+        } else if (!this.state.isHotel) {
             this.props.navigation.navigate('PropertyList', {
                 currency: this.state.currency,
                 locRate: this.state.locRate,
@@ -331,7 +343,7 @@ class Explore extends Component {
                 endDate: this.state.checkOutDateFormated,
                 guests: 2
             });
-            }
+        }
             else {
                 if (this.state.regionId == '') {
                     //Empty location
@@ -348,11 +360,11 @@ class Explore extends Component {
                         children: this.state.children,
                         countryId: this.state.countryId,
                         regionId: this.state.regionId,
-                        isHotelSelected: this.state.isHotelSelected,
+                        isHotelSelected: this.state.isHotel,
                         currency: this.state.currency,
                         checkOutDateFormated: this.state.checkOutDateFormated,
                         checkInDateFormated: this.state.checkInDateFormated,
-                        roomsDummyData: encodeURI(JSON.stringify(this.state.roomsDummyData)),
+                        roomsDummyData: this.state.roomsDummyData,//encodeURI(JSON.stringify(this.state.roomsData)),
                         locRate: this.state.locRate,
                         email: this.state.email,
                         token: this.state.token
@@ -374,7 +386,7 @@ class Explore extends Component {
             cities: [],
             search: name,
             regionId: id,
-            searchHotel: true
+            isHotel: true
         });
     }
 
@@ -543,7 +555,7 @@ class Explore extends Component {
 
     render() {
         const {
-            checkInDate, checkOutDate, guests
+            checkInDate, checkOutDate, checkInDateFormated, checkOutDateFormated, guests
         } = this.state;
         return (
             <View style={styles.container}>
@@ -557,7 +569,7 @@ class Explore extends Component {
                     opacity={1.0}
                     textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
-                {this.state.searchHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
+                {this.state.isHotel ? this.renderHotelTopView() : this.renderHomeTopView()}
                 {this.renderAutocomplete()}
 
                     <ScrollView  style={styles.scrollView} automaticallyAdjustContentInsets={true}>
@@ -566,6 +578,8 @@ class Explore extends Component {
                             <DateAndGuestPicker
                                 checkInDate={checkInDate}
                                 checkOutDate={checkOutDate}
+                                checkInDateFormated={checkInDateFormated}
+                                checkOutDateFormated={checkOutDateFormated}
                                 adults={this.state.adults}
                                 children={this.state.children}
                                 guests={this.state.guests}
@@ -575,6 +589,8 @@ class Explore extends Component {
                                 onDatesSelect={this.onDatesSelect}
                                 gotoSettings={this.gotoSettings}
                                 showSearchButton={true}
+                                disabled={false}
+                                isFilterable={false}
                             />
                         </View>
 
@@ -584,16 +600,16 @@ class Explore extends Component {
 
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft:15, marginRight:15 }}>
 
-                                <TouchableOpacity onPress={() => this.setState({ searchHotel: true })}
+                                <TouchableOpacity onPress={() => this.setState({ isHotel: true })}
                                     style={[styles.homehotelsView, {marginRight:5}]}>
                                     <Image
                                         style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                         source={require('../../../assets/home_images/hotels.png')} />
-                                    {this.state.searchHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
+                                    {this.state.isHotel ? this.renderHotelSelected() : this.renderHotelDeSelected()}
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={() => this.setState({
-                                    searchHotel: false,
+                                    isHotel: false,
                                     cities: [],
                                     search: '',
                                     regionId: 0
@@ -601,7 +617,7 @@ class Explore extends Component {
                                 style={[styles.homehotelsView, {marginLeft:5}]}>
                                     <Image style={styles.imageViewHotelsHomes} resizeMode='stretch'
                                         source={require('../../../assets/home_images/homes.png')} />
-                                    {!this.state.searchHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
+                                    {!this.state.isHotel ? this.renderHomeSelected() : this.renderHomeDeSelected()}
                                 </TouchableOpacity>
 
                             </View>

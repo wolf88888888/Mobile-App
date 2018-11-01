@@ -18,6 +18,13 @@ export const getCurrency = (currency, isRefresh = true, isPrefer = true) => {
                 dispatch(setPreferCurrency({currency}));
             }
         }
+        requester.getCurrencyRates().then(res => {
+            res.body.then(currencyExchangeRates => {
+              //this.props.dispatch(setCurrencyExchangeRates(currencyExchangeRates));
+              console.log("currencyExchangeRates", currencyExchangeRates);
+            });
+        });
+
         requester.getLocRateByCurrency(currency).then(res => {
             res.body.then(data => {
                 console.log("action getCurrency data", data);

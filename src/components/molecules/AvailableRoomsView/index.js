@@ -97,22 +97,23 @@ class AvailableRoomsView extends Component {
                 dataSource={this.state.rooms}
                 showsVeticalScrollIndicator={false}
                 renderRow={(rowData) =>
-                    <CardView style={styles.listItem}
-                        cardElevation={1.5}
-                        cardMaxElevation={1.5}
-                        cornerRadius={0}>
-                        <Text style={styles.name} numberOfLines={1} ellipsizeMode ={'tail'}>{rowData.roomsResults[0].name + "(" + rowData.roomsResults[0].mealType + ")"}</Text>
-                        <Text
-                            style={styles.price}>
-                            {this.props.daysDifference} nights:
-                            { this.props.currencySign} 
-                            {rowData.roomsResults[0].price === undefined ? "" :
-                            ((rowData.roomsResults[0].price) * this.props.daysDifference).toFixed(2)} (LOC {(((rowData.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2)})</Text>
-                        {/* <Text style={styles.price}>{"1 night:" + Number(((parseFloat(rowData.roomsResults[0].price))).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text> */}
-                        <TouchableOpacity onPress={() => {this.onRoomPress(rowData)}}>
-                            <Text style={styles.book}>Book Now</Text>
-                        </TouchableOpacity>
-                    </CardView>
+                    <TouchableOpacity onPress={() => {this.onRoomPress(rowData)}}>
+                        <CardView style={styles.listItem}
+                            cardElevation={1.5}
+                            cardMaxElevation={1.5}
+                            cornerRadius={0}>
+                            <Text style={styles.name} numberOfLines={1} ellipsizeMode ={'tail'}>{rowData.roomsResults[0].name + "(" + rowData.roomsResults[0].mealType + ")"}</Text>
+                            <Text
+                                style={styles.price}>
+                                {this.props.daysDifference} nights:
+                                { this.props.currencySign} 
+                                {rowData.roomsResults[0].price === undefined ? "" :
+                                ((rowData.roomsResults[0].price) * this.props.daysDifference).toFixed(2)} (LOC {(((rowData.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2)})</Text>
+                            {/* <Text style={styles.price}>{"1 night:" + Number(((parseFloat(rowData.roomsResults[0].price))).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text> */}
+                            
+                                <Text style={styles.book}>Book Now</Text>
+                        </CardView>
+                    </TouchableOpacity>
                 }
                 />
                 :

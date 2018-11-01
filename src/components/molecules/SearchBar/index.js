@@ -8,11 +8,13 @@ import styles from './styles';
 class SearchBar extends Component {
     static propTypes = {
         onLeftPress: PropTypes.func,
-        leftIcon: PropTypes.string
+        leftIcon: PropTypes.string,
+        editable: PropTypes.bool
     }
     static defaultProps = {
         onLeftPress: () => {},
-        leftIcon: ''
+        leftIcon: '',
+        editable: true,
     }
     constructor() {
         super();
@@ -56,7 +58,7 @@ class SearchBar extends Component {
                 <TextInput
                     ref={(i) => { this.input = i; }}
                     underlineColorAndroid="#ffffff"
-                    style={styles.input}
+                    style={this.props.editable? styles.input : styles.input_disable}
                     {...this.props}
                 />
             </View>

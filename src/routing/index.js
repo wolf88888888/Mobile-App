@@ -78,7 +78,8 @@ import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
-import PropertySock from '../components/screens/PropertySock';
+import HotelsSearchScreen from '../components/screens/HotelsSearchScreen';
+import HomesSearchScreen from '../components/screens/HomesSearchScreen';
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
@@ -153,7 +154,9 @@ const RootNavigator = createStackNavigator(
         SingleWishlist: {screen: SingleWishlist},
         Debug : {screen: Debug},
         Chat: {screen: Chat},
-        PropertySock: {screen: PropertySock},
+
+        HotelsSearchScreen: {screen: HotelsSearchScreen},
+        HomesSearchScreen: {screen: HomesSearchScreen},
         MapFullScreen: {screen: MapFullScreen}
     },
     {
