@@ -223,5 +223,4 @@ public class StompModule extends ReactContextBaseJavaModule {
     private void emitEventToJS(String eventName, @Nullable WritableMap eventData){
         this._reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
     }
-    //         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
 }
