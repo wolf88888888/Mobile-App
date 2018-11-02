@@ -171,7 +171,12 @@ class HotelsSearchScreen extends Component {
 
     unsubscribe = () => {
         if (Platform.OS === 'ios') {
-        } else if (Platform.OS === 'android') {
+        } 
+        else if (Platform.OS === 'android') {
+            DeviceEventEmitter.removeAllListeners("onStompConnect");
+            DeviceEventEmitter.removeAllListeners("onStompError");
+            DeviceEventEmitter.removeAllListeners("onStompMessage");
+
             androidStomp.close();
         }
     }
@@ -181,14 +186,17 @@ class HotelsSearchScreen extends Component {
         const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.mainUrl + "\"}";
         const destination = "search/" + this.uuid;
 
+        DeviceEventEmitter.removeAllListeners("onStompConnect");
         DeviceEventEmitter.addListener("onStompConnect", () => {
             console.log("onStompConnect -------------");
         });
         
+        DeviceEventEmitter.removeAllListeners("onStompError");
         DeviceEventEmitter.addListener("onStompError", ({type, message}) => {
             console.log("onStompError -------------", type, message);
         });
 
+        DeviceEventEmitter.removeAllListeners("onStompMessage");
         DeviceEventEmitter.addListener("onStompMessage", ({message}) => (
             this.handleAndroidSingleHotel(message)
         ));

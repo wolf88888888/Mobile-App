@@ -62,23 +62,23 @@ class HotelItemView extends Component {
         return indents;
     }
 
-    ratingTitle = (count) => {
-        if (count <= 1){
-            return 'Poor'
-        }
-        else if (count > 1 && count <= 2){
-            return 'Fair'
-        }
-        else if (count > 2 && count <= 3){
-            return 'Good'
-        }
-        else if (count > 3 && count <= 4){
-            return 'Very Good'
-        }
-        else if (count > 4 && count <= 5){
-            return 'Excellent'
-        }
-    }
+    // ratingTitle = (count) => {
+    //     if (count <= 1){
+    //         return 'Poor'
+    //     }
+    //     else if (count > 1 && count <= 2){
+    //         return 'Fair'
+    //     }
+    //     else if (count > 2 && count <= 3){
+    //         return 'Good'
+    //     }
+    //     else if (count > 3 && count <= 4){
+    //         return 'Very Good'
+    //     }
+    //     else if (count > 4 && count <= 5){
+    //         return 'Excellent'
+    //     }
+    // }
 
     render() {
         const {
@@ -129,7 +129,7 @@ class HotelItemView extends Component {
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
 
                         <View style={styles.aboutPlaceView}>
-                            <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text>
+                            {/* <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text> */}
                             <Text style={styles.placeReviewNumber}> {stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
                                 {this.renderStars(stars)}
