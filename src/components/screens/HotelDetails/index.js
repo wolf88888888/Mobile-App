@@ -36,7 +36,6 @@ class HotelDetails extends Component {
 
         this.onClose = this.onClose.bind(this);
         this.onFacilityMore = this.onFacilityMore.bind(this);
-        this.onBooking = this.onBooking.bind(this);
 
         this.state = {
             hotel: {},
@@ -44,7 +43,7 @@ class HotelDetails extends Component {
             hotelAmenities: [],
             dataSourcePreview: [],
             description: '',
-            urlForService: '',
+            searchString: '',
             guests: 0,
             mainAddress: '',
             countryName: '',
@@ -60,7 +59,7 @@ class HotelDetails extends Component {
         const { params } = this.props.navigation.state;
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
-        this.state.urlForService = params ? params.urlForService : '';
+        this.state.searchString = params ? params.searchString : '';
         this.state.currency = params ? params.currency : [];
         this.state.currencySign = params ? params.currencySign : '€';
         this.state.locRate = params ? params.locRate : '';
@@ -93,11 +92,24 @@ class HotelDetails extends Component {
     onFacilityMore() {
     }
 
-    onBooking(roomData) {
+    onBooking = (roomDetail) => {
+        // onRoomPress = (roomDetail) => {
+        console.log("onRoomPress", roomDetail);
+        this.props.navigation.navigate('GuestInfoForm', { 
+            roomDetail: roomDetail, 
+            guests: this.state.guests, 
+            'price': ((roomDetail.roomsResults[0].price) * this.state.daysDifference).toFixed(2),
+            'priceLOC': (((roomDetail.roomsResults[0].price) / this.state.locRate)*this.state.daysDifference).toFixed(2), 
+            'daysDifference': this.props.daysDifference,
+            currency: this.state.daysDifference,
+            currencySign: this.state.currencySign,
+            'hotelDetails': this.state.hotelFullDetails,
+            searchString: this.state.searchString,
+        });
+        // }
     }
 
     render() {
-        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -125,7 +137,6 @@ class HotelDetails extends Component {
                             reviewNum={0}
                             address={this.state.mainAddress}
                             description={this.state.description}
-                            onBooking={this.onBooking}
                         />
 
                         {/* { this.state.hotelAmenities.map
@@ -143,8 +154,7 @@ class HotelDetails extends Component {
 
                         <AvailableRoomsView
                             id={this.state.hotel.id}
-                            navigate={navigate}
-                            search={this.state.urlForService}
+                            search={this.state.searchString}
                             onBooking={this.onBooking}
                             guests={this.state.guests}
                             hotelDetails={this.state.hotelFullDetails}

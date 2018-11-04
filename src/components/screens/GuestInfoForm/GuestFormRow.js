@@ -1,9 +1,7 @@
-import { Item, Picker, Text, TextInput, View, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Picker, Text, TextInput, View, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import RNPickerSelect from 'react-native-picker-select';
-import requester from '../../../initDependencies';
 import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
 
@@ -12,7 +10,6 @@ export default class GuestFormRow extends Component {
         super(props);
 
         this.handleGuestInfo = this.handleGuestInfo.bind(this);
-        this.getUserName = this.getUserName.bind(this);
 
         this.state = {
             gender: [
@@ -27,31 +24,33 @@ export default class GuestFormRow extends Component {
             ],
             guest: {
                 genderRepresentation: 'Mr',
-                firstName: '',
-                lastName: ''
+                firstName: 'aa',
+                lastName: 'aa'
             },
             guestRecord: {}
         }
-        this.getUserName();
+        // this.getUserName();
 
         console.log("GuestFormRow--------------");
     }
 
-    async getUserName() {
-        if (this.props.itemIndex == 0) {
-            let firstName = await userInstance.getFirstName();
-            let lastName = await userInstance.getLastName();
-            this.setState({
-                guest: { ...this.state.guest, firstName: firstName == null ? '' : firstName, lastName: lastName == null ? '' : lastName },
-            });
-            this.props.onFirstNameChange(0, firstName == null ? '' : firstName);
-            this.props.onLastNameChange(0, lastName == null ? '' : lastName);
-        }
-        else {
-            this.props.onFirstNameChange(0, "Optional");
-            this.props.onLastNameChange(0, "Optional");
-        }
-    }
+    // async getUserName() {
+    //     if (this.props.itemIndex == 0) {
+    //         let firstName = await userInstance.getFirstName();
+    //         let lastName = await userInstance.getLastName();
+
+    //         console.log("--------getUserNamegetUserName--", firstName, lastName);
+    //         this.setState({
+    //             guest: { ...this.state.guest, firstName: firstName == null ? '' : firstName, lastName: lastName == null ? '' : lastName },
+    //         });
+    //         this.props.onFirstNameChange(0, firstName == null ? '' : firstName);
+    //         this.props.onLastNameChange(0, lastName == null ? '' : lastName);
+    //     }
+    //     else {
+    //         this.props.onFirstNameChange(0, "Optional");
+    //         this.props.onLastNameChange(0, "Optional");
+    //     }
+    // }
 
     handleGuestInfo() {
         this.setState(
@@ -102,11 +101,11 @@ export default class GuestFormRow extends Component {
 
                             <Picker 
                                 selectedValue={this.state.guest.genderRepresentation}
-                                style={{ height: '100%', width: '100%', }}
+                                style={{ height: '100%', width: '100%'}}
                                 itemStyle={{backgroundColor: '#fff', height: '100%', fontFamily: 'FuturaStd-Light', fontSize:17}}
                                 onValueChange={this.onValueChange}>
-                                <Item label="Mr" value="Mr" />
-                                <Item label="Mrs" value="Mrs" />
+                                <Picker.Item label="Mr" value="Mr" />
+                                <Picker.Item label="Mrs" value="Mrs" />
                             </Picker>
                         </View>
                     </View>
@@ -123,7 +122,7 @@ export default class GuestFormRow extends Component {
                         <TextInput
                             style={styles.formField}
                             onChangeText={(text) => { this.props.onLastNameChange(this.props.itemIndex, text), this.setState({ guest: { ...this.state.guest, lastName: text } }) }}
-                            placeholder={this.props.itemIndex == 0 ? this.state.guest.lastName : "Optional"}
+                            placeholder={this.props.itemIndex == 0 ? "Last Name" : "Optional"}
                             underlineColorAndroid="#fff"
                             value={this.state.guest.lastName}
                         />

@@ -6,6 +6,7 @@ import styles from './styles';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast';
 import { hasLetter } from '../../../utils/validation';
+import { userInstance } from '../../../utils/userInstance';
 
 let testingArray = [];
 var newElement = {};
@@ -15,6 +16,7 @@ export default class GuestInfoForm extends Component {
         super(props);
         // Save guests array for dynamic form generation
         this.state = {
+            isLoading: true,
             guests : [],
             guest: {
                 title: 'Mr',
@@ -24,16 +26,47 @@ export default class GuestInfoForm extends Component {
             guestRecord : {},
             testGuestArray : [{}]
         };
-        
+    }
+
+
+    // async componentDidMount(){
+    //     console.disableYellowBox = true
+    //     console.log("componentDidMount", this.state.guests);
+    // }
+
+    async componentWillMount() {
+        console.log("GuestInfoForm componentWillMount", this.props.navigation.state.params.guests);
+        let firstName = await userInstance.getFirstName();
+        let lastName = await userInstance.getLastName();
+
+        var guests = [];
         for (var i = 0; i < this.props.navigation.state.params.guests; i++){
-            this.state.guests.push({
-                key: i,
-                genderRepresentation: 'Mr',
-                firstName: '',
-                lastName: ''
-                }
-            );
+            if (i == 0) {
+                guests.push({
+                    key: i,
+                    genderRepresentation: 'Mr',
+                    firstName: firstName,
+                    lastName: lastName
+                    }
+                );
+
+                this.handleFirstName(i, firstName == null ? '' : firstName);
+                this.handleLastName(i, lastName == null ? '' : lastName);
+            }
+            else {
+                guests.push({
+                    key: i,
+                    genderRepresentation: 'Mr',
+                    firstName: '',
+                    lastName: ''
+                    }
+                );
+                this.handleFirstName(i, "Optional");
+                this.handleLastName(i, "Optional");
+            }
         }
+        
+        this.setState({guests: guests, isLoading: false});
     }
 
     handleFirstName(key,text){
@@ -69,10 +102,45 @@ export default class GuestInfoForm extends Component {
         else{
         }
     }
-
-    componentDidMount(){
-        console.disableYellowBox = true
-        console.log("componentDidMount", this.state.guests);
+    
+    onProceedPress = () => {
+        if (this.state.isLoading) {
+            return;
+        }
+        const {params} = this.props.navigation.state;
+        var isValid = true;
+        for (var i = 0; i < testingArray.length; i ++) {
+            isValid = hasLetter(testingArray[i]['firstName']);
+             if (!isValid) {
+                 break;
+             }
+             isValid = hasLetter(testingArray[i]['lastName']);
+             if (!isValid) {
+                 break;
+             }
+        }
+        if (testingArray.length != this.state.guests.length){
+            this.refs.toast.show("Please enter details for all the guests", 2000);
+        }
+        else if (!isValid) {
+            this.refs.toast.show("Names should be at least 1 characters long and contain only characters.", 2000);
+        }
+        else {
+            this.props.navigation.navigate('RoomDetailsReview', {
+                'roomDetails' : params.roomDetail, 
+                'quoteId': params.roomDetail.quoteId, 
+                'guests': testingArray.length,
+                'hotelDetails': params.hotelDetails, 
+                'price': params.price, 
+                'priceLOC': params.priceLOC,
+                currency: params.currency,
+                currencySign: params.currencySign,
+                'daysDifference': params.daysDifference,
+                'guestRecord': testingArray,
+                searchString: params.searchString
+            });
+        }
+        
     }
 
     render() {
@@ -117,12 +185,12 @@ export default class GuestInfoForm extends Component {
                         keyExtractor={(item, index) => item.key}
                         renderItem={({ item, index }) => (
                             <KeyboardAvoidingView keyboardVerticalOffset={-50} behavior="position" enabled>
-                            <GuestFormRow
-                                guest={item}
-                                itemIndex={index}
-                                onFirstNameChange={(key, text) => this.handleFirstName(index, text)}
-                                onLastNameChange={(key, text) => this.handleLastName(index, text)}
-                            />
+                                <GuestFormRow
+                                    guest={item}
+                                    itemIndex={index}
+                                    onFirstNameChange={(text) => this.handleFirstName(index, text)}
+                                    onLastNameChange={(text) => this.handleLastName(index, text)}
+                                />
                             </KeyboardAvoidingView>
                         )}
                     />
@@ -150,40 +218,6 @@ export default class GuestInfoForm extends Component {
             </View>
             
         )
-    }
-    onProceedPress = () => {
-        const {params} = this.props.navigation.state;
-        var isValid = true;
-        for (var i = 0; i < testingArray.length; i ++) {
-            isValid = hasLetter(testingArray[i]['firstName']);
-             if (!isValid) {
-                 break;
-             }
-             isValid = hasLetter(testingArray[i]['lastName']);
-             if (!isValid) {
-                 break;
-             }
-        }
-        if (testingArray.length != this.state.guests.length){
-            this.refs.toast.show("Please enter details for all the guests", 2000);
-        }
-        else if (!isValid) {
-            this.refs.toast.show("Names should be at least 1 characters long and contain only characters.", 2000);
-        }
-        else {
-            this.props.navigation.navigate('RoomDetailsReview', {
-                'roomDetails' : params.roomDetail, 
-                'quoteId': params.roomDetail.quoteId, 
-                'guests': testingArray.length,
-                'hotelDetails': params.hotelDetails, 
-                'price': params.price, 
-                'priceLOC': params.priceLOC,
-                currency: params.currency,
-                currencySign: params.currencySign,
-                'daysDifference': params.daysDifference,
-                'guestRecord': testingArray});
-        }
-        
     }
 }
 

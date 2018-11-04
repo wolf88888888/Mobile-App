@@ -124,64 +124,194 @@ export default class RoomDetailsReview extends Component {
         return wei;
     }
 
-    handleSubmit() {
+    requestLockOnQuoteId(paymentMethod) {
+        const { params } = this.props.navigation.state;
+        const quoteId = params.quoteId;
+        if (quoteId) {
+            const body = { quoteId, paymentMethod };
+            console.log(body);
+            return requester.markQuoteIdAsLocked(quoteId, body)
+                .then(res => res.body)
+                .then(res => {
+                    return new Promise((resolve, reject) => {
+                        console.log("-----------", res);
+                        if (res.success) {
+                            resolve(true);
+                        } else {
+                            // this.redirectToHotelDetailsPage();
+                            reject(false);
+                        }
+                    });
+                }
+            );
+        }
+    }
 
-        this.setState({ modalVisible: false, isLoading: true });
-        this.refs.toast.show('We are working on your transaction this might take some time.', 1500);
+    approveQuote() {
+        // this.isQuoteApproved = true;
+    }
+    
+    stopQuote() {
+        // Websocket.sendMessage(DEFAULT_QUOTE_LOC_ID, 'approveQuote', { bookingId: this.props.reservation.preparedBookingId });
+    
+        // this.setState({
+        //   isQuoteStopped: true
+        // });
+    }
+    
+    restartQuote() {
+        // Websocket.sendMessage(DEFAULT_QUOTE_LOC_ID, 'quoteLoc', { bookingId: this.props.reservation.preparedBookingId });
+    
+        // this.setState({
+        //   isQuoteStopped: false
+        // });
+    }
 
-        requester.getCancellationFees(this.state.bookingId).then(res => {
-            res.body.then(data => {
-                const password = this.state.password;
+    payWithLocSingleWithdrawer = () => {
+        const { params } = this.props.navigation.state;
+        // this.setState({ modalVisible: false });
+        this.refs.toast.show('We are working on your transaction this might take some time.', 1000);
+        setTimeout(() => {
+            this.setState({ modalVisible: false, isLoading: true });
+            // this.setState({ modalVisible: false });
+
+            this.requestLockOnQuoteId('privateWallet').then( () => {
+                console.log("requestLockOnQuoteId -- ");
+
+                const { password } = this.state;
                 const preparedBookingId = this.state.bookingId;
+                const locAmount = params.priceLOC;
+                
+                const wei = (this.tokensToWei(locAmount.toString()));
+
+                console.log(wei);
+
                 const booking = this.state.hotelBooking;
-                const startDate = moment(booking.arrivalDate, 'YYYY-MM-DD');
-                const endDate = moment(booking.arrivalDate, 'YYYY-MM-DD')
-                    .add(booking.nights, 'days');
-                const hotelId = booking.hotelId;
-                const roomId = this.state.booking.quoteId;
-                const cancellationFees = data;
-                const daysBeforeStartOfRefund = [];
-                const refundPercentages = [];
-                const wei = (this.tokensToWei(this.state.data.locPrice.toString()));
-                const numberOfTravelers = 2;
+                console.log("this.state.hotelBooking", this.state.hotelBooking);
+                const endDate = moment.utc(booking.arrivalDate, 'YYYY-MM-DD').add(booking.nights, 'days');
+
+                const queryString = params.searchString;
+                console.log("this.state.hotelBooking", this.state.hotelBooking, endDate, queryString);
 
                 requester.getMyJsonFile().then(res => {
                     res.body.then(data => {
-                        setTimeout(() => {
-                            HotelReservation.createReservation(//this line needs to be checked
-                                data.jsonFile,
-                                password,
-                                preparedBookingId.toString(),
-                                wei,
-                                startDate.unix()
-                                    .toString(),
-                                endDate.unix()
-                                    .toString(),
-                                daysBeforeStartOfRefund,
-                                refundPercentages,
-                                hotelId,
-                                roomId,
-                                numberOfTravelers.toString()
-                            )
-                                .then(transaction => {
-                                    this.setState({isLoading: false});
-                                    this.refs.toast.show('' + transaction, 1500);
-                                })
-                                .catch((err) => {
-                                    this.setState({isLoading: false});
-                                    this.refs.toast.show('' + err, 1500);
+                        console.log("getMyJsonFile -- ", data);
+
+                        HotelReservation.createSimpleReservationSingleWithdrawer(
+                            data.jsonFile,
+                            password,
+                            wei.toString(),
+                            endDate.unix().toString(),
+                        ).then(transaction => {
+                            console.log('transaction', transaction);
+                            setTimeout(() => {
+                                this.setState({isLoading: false}, ()=>{
+                                    const bookingConfirmObj = {
+                                        bookingId: preparedBookingId,
+                                        transactionHash: transaction.hash,
+                                        queryString: queryString,
+                                        locAmount
+                                    };
+                    
+                                    requester.confirmBooking(bookingConfirmObj).then(() => {
+                                        // NotificationManager.success('LOC Payment has been initiated. We will send you a confirmation message once it has been processed by the Blockchain.', '', LONG);
+                                        this.refs.toast.show('LOC Payment has been initiated. We will send you a confirmation message once it has been processed by the Blockchain.', 2000);
+                                        setTimeout(() => {
+                                            this.props.navigation.pop(5);
+                                        }, 2000);
+                                    }).catch(error => {
+                                        this.restartQuote();
+                                        this.refs.toast.show('Something with your transaction went wrong...', 2000);
+                                        console.log(error);
+                                    });
                                 });
-                        }, 3000);
-                    }).catch((err) => {
-                        this.setState({isLoading: false});
-                        this.refs.toast.show('' + err, 1500);
-                    });
+                            }, 1000);
+                            
+                        }).catch(error => {
+                            console.log("--------payWithLocSingleWithdrawer------", error);
+                            this.restartQuote();
+                            this.setState({isLoading: false }, () => {
+                                setTimeout(() => {
+                                    if (error.hasOwnProperty('message')) {
+                                        if (error.message === 'nonce too low') {
+                                            this.refs.toast.show('You have a pending transaction. Please try again later.', 2000);
+                                        } else {
+                                            this.refs.toast.show(error.message, 2000);
+                                        }
+                                    } 
+                                    else if (error.hasOwnProperty('err') && error.err.hasOwnProperty('message')) {
+                                        this.refs.toast.show(error.err.message, 2000);
+                                    } 
+                                    else if (typeof x === 'string') {
+                                        console.log("--------payWithLocSingleWithdrawer string------", error);
+                                        this.refs.toast.show(error, 2000);
+                                    } 
+                                    else {
+                                        console.log("--------payWithLocSingleWithdrawer else------", error);
+                                        this.refs.toast.show(error, 2000);
+                                    }
+                                }, 1000);
+                            });
+                            // this.setState({ userConfirmedPaymentWithLOC: false });
+                        });
+                    })
                 });
             });
-        }).catch((err) => {
-            this.setState({isLoading: false});
-            this.refs.toast.show('' + err, 1500);
-        });
+        }, 1000);
+        
+        // requester.getCancellationFees(this.state.bookingId).then(res => {
+        //     res.body.then(data => {
+        //         const password = this.state.password;
+        //         const preparedBookingId = this.state.bookingId;
+        //         const booking = this.state.hotelBooking;
+        //         const startDate = moment(booking.arrivalDate, 'YYYY-MM-DD');
+        //         const endDate = moment(booking.arrivalDate, 'YYYY-MM-DD')
+        //             .add(booking.nights, 'days');
+        //         const hotelId = booking.hotelId;
+        //         const roomId = this.state.booking.quoteId;
+        //         const cancellationFees = data;
+        //         const daysBeforeStartOfRefund = [];
+        //         const refundPercentages = [];
+        //         const wei = (this.tokensToWei(this.state.data.locPrice.toString()));
+        //         const numberOfTravelers = 2;
+
+        //         requester.getMyJsonFile().then(res => {
+        //             res.body.then(data => {
+        //                 setTimeout(() => {
+        //                     HotelReservation.createReservation(//this line needs to be checked
+        //                         data.jsonFile,
+        //                         password,
+        //                         preparedBookingId.toString(),
+        //                         wei,
+        //                         startDate.unix()
+        //                             .toString(),
+        //                         endDate.unix()
+        //                             .toString(),
+        //                         daysBeforeStartOfRefund,
+        //                         refundPercentages,
+        //                         hotelId,
+        //                         roomId,
+        //                         numberOfTravelers.toString()
+        //                     )
+        //                         .then(transaction => {
+        //                             this.setState({isLoading: false});
+        //                             this.refs.toast.show('' + transaction, 1500);
+        //                         })
+        //                         .catch((err) => {
+        //                             this.setState({isLoading: false});
+        //                             this.refs.toast.show('' + err, 1500);
+        //                         });
+        //                 }, 3000);
+        //             }).catch((err) => {
+        //                 this.setState({isLoading: false});
+        //                 this.refs.toast.show('' + err, 1500);
+        //             });
+        //         });
+        //     });
+        // }).catch((err) => {
+        //     this.setState({isLoading: false});
+        //     this.refs.toast.show('' + err, 1500);
+        // });
     }
 
     // Keys for flatlist
@@ -189,7 +319,8 @@ export default class RoomDetailsReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
-        console.log(params);
+        // console.log(params);
+        // console.log(this.state);
         return (
             <View style={styles.container}>
                 <Toast
@@ -202,19 +333,11 @@ export default class RoomDetailsReview extends Component {
                     opacity={1.0}
                     textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
-                <View style={{ height: 0 }}>
-                    <WebView
-                        ref={el => this.webView = el}
-                        source={{ html: '<html><body></body></html>' }}
-                        onMessage={this.handleMessage}
-                    />
-                </View>
                 <Modal
                     animationType="fade"
                     transparent={true}//eslint-disable-line
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-
                     }}
                 >
                     <View style={styles.modalView}>
@@ -242,7 +365,7 @@ export default class RoomDetailsReview extends Component {
                             />
                             <TouchableOpacity
                                 style={styles.confirmButton}
-                                onPress={() => this.runJSInBackground('window.postMessage("test")')}
+                                onPress={this.payWithLocSingleWithdrawer}
                             >
                                 <Text style={styles.confirmButtonText}>Confirm</Text>
                             </TouchableOpacity>
@@ -388,20 +511,12 @@ export default class RoomDetailsReview extends Component {
                 <ProgressDialog
                     visible={this.state.isLoading}
                     title="Please Wait"
-                    message="Loading..."
+                    message="Processing..."
                     animationType="slide"
                     activityIndicatorSize="large"
                     activityIndicatorColor="black"/>
             </View>
         );
-    }
-
-    runJSInBackground(code) {
-        this.webView.injectJavaScript(code)
-    }
-
-    handleMessage = (e) => {
-        this.handleSubmit();
     }
 }
 

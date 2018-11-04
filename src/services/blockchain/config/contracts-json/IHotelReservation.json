@@ -1,63 +1,6 @@
 {
   "contractName": "IHotelReservation",
   "abi": [{
-      "constant": false,
-      "inputs": [{
-        "name": "_newImpl",
-        "type": "address"
-      }],
-      "name": "upgradeImplementation",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getOwner",
-      "outputs": [{
-        "name": "",
-        "type": "address"
-      }],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getImplementation",
-      "outputs": [{
-        "name": "",
-        "type": "address"
-      }],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "init",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [{
-        "name": "newOwner",
-        "type": "address"
-      }],
-      "name": "transferOwnership",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "anonymous": false,
       "inputs": [{
           "indexed": false,
@@ -364,19 +307,19 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.17;\n\nimport \"./../Upgradeability/OwnableUpgradeableImplementation/IOwnableUpgradeableImplementation.sol\";\n\ncontract IHotelReservation is IOwnableUpgradeableImplementation {\n\nevent LogCreateHotelReservation(bytes32 _hotelReservationId, address _customerAddress, uint _reservationStartDate, uint _reservationEndDate);\nevent LogCancelHotelReservation(bytes32 _hotelReservationId, address _customerAddress);\n\n\tfunction createHotelReservation(\n\t\tbytes32 _hotelReservationId,\n\t\taddress customerAddress,\n\t\tuint _reservationCostLOC,\n\t\tuint _reservationStartDate,\n\t\tuint _reservationEndDate,\n\t\tuint[] _daysBeforeStartForRefund,\n\t\tuint[] _refundPercentages,\n\t\tbytes32 _hotelId,\n\t\tbytes32 _roomId,\n\t\tuint _numberOfTravelers\n\t) public returns (bool success);\n\n\tfunction getHotelReservation() public view \n\treturns(\n\t\tbytes32 _hotelReservationId,\n\t\taddress _customerAddress,\n\t\tuint _reservationCostLOC,\n\t\tuint _reservationStartDate,\n\t\tuint _reservationEndDate,\n\t\tuint[] _daysBeforeStartForRefund,\n\t\tuint[] _refundPercentages,\n\t\tbytes32 _hotelId,\n\t\tbytes32 _roomId ,\n\t\tuint _numberOfTravelers,\n\t\tbool _isDisputeOpen);\n\n\tfunction validateCancelation(address _customerAddress) public view returns (bool success);\n\tfunction validateRefundForCreation(uint[] _daysBeforeStartForRefund, uint[] _refundPercentages, uint _startDate) public view returns (bool success);\n\tfunction getLocToBeRefunded() public view returns (uint _locToBeRefunded, uint _locRemainder);\n\tfunction getCustomerAddress() public view returns (address _customerAddress);\n\tfunction validateReservationForWithdraw() public view returns (bool success);\n\tfunction getLocForWithdraw() public view returns  (uint _locAmountForWithdraw);\n\tfunction getHotelReservationId() public view returns (bytes32 _hotelReservationId);\n\tfunction getHotelReservationCost() public view returns (uint _hotelReservationCostLOC);\n\tfunction validateDispute(address _customerAddress) public view returns (bool success);\n\tfunction getReservationDisputeStatus() public view returns (bool _isDisputeOpen);\n\tfunction setReservationDisputeStatus(bool _isDisputeOpen) public;\n}",
+  "source": "pragma solidity ^0.4.17;\n\nimport \"./../Upgradeability/OwnableUpgradeableImplementation/IOwnableUpgradeableImplementation.sol\";\nimport \"./../Upgradeability/SharedStorage.sol\";\n\ncontract IHotelReservation {\n\nevent LogCreateHotelReservation(bytes32 _hotelReservationId, address _customerAddress, uint _reservationStartDate, uint _reservationEndDate);\nevent LogCancelHotelReservation(bytes32 _hotelReservationId, address _customerAddress);\n\n\tfunction createHotelReservation(\n\t\tbytes32 _hotelReservationId,\n\t\taddress customerAddress,\n\t\tuint _reservationCostLOC,\n\t\tuint _reservationStartDate,\n\t\tuint _reservationEndDate,\n\t\tuint[] _daysBeforeStartForRefund,\n\t\tuint[] _refundPercentages,\n\t\tbytes32 _hotelId,\n\t\tbytes32 _roomId,\n\t\tuint _numberOfTravelers\n\t) public returns (bool success);\n\n\tfunction getHotelReservation() public view \n\treturns(\n\t\tbytes32 _hotelReservationId,\n\t\taddress _customerAddress,\n\t\tuint _reservationCostLOC,\n\t\tuint _reservationStartDate,\n\t\tuint _reservationEndDate,\n\t\tuint[] _daysBeforeStartForRefund,\n\t\tuint[] _refundPercentages,\n\t\tbytes32 _hotelId,\n\t\tbytes32 _roomId ,\n\t\tuint _numberOfTravelers,\n\t\tbool _isDisputeOpen);\n\n\tfunction validateCancelation(address _customerAddress) public view returns (bool success);\n\tfunction validateRefundForCreation(uint[] _daysBeforeStartForRefund, uint[] _refundPercentages, uint _startDate) public view returns (bool success);\n\tfunction getLocToBeRefunded() public view returns (uint _locToBeRefunded, uint _locRemainder);\n\tfunction getCustomerAddress() public view returns (address _customerAddress);\n\tfunction validateReservationForWithdraw() public view returns (bool success);\n\tfunction getLocForWithdraw() public view returns  (uint _locAmountForWithdraw);\n\tfunction getHotelReservationId() public view returns (bytes32 _hotelReservationId);\n\tfunction getHotelReservationCost() public view returns (uint _hotelReservationCostLOC);\n\tfunction validateDispute(address _customerAddress) public view returns (bool success);\n\tfunction getReservationDisputeStatus() public view returns (bool _isDisputeOpen);\n\tfunction setReservationDisputeStatus(bool _isDisputeOpen) public;\n}",
   "sourcePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/HotelReservation/IHotelReservation.sol",
   "ast": {
     "absolutePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/HotelReservation/IHotelReservation.sol",
     "exportedSymbols": {
       "IHotelReservation": [
-        2157
+        2178
       ]
     },
-    "id": 2158,
+    "id": 2179,
     "nodeType": "SourceUnit",
     "nodes": [{
-        "id": 2014,
+        "id": 2036,
         "literals": [
           "solidity",
           "^",
@@ -384,70 +327,59 @@
           ".17"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:7"
+        "src": "0:24:8"
       },
       {
         "absolutePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/Upgradeability/OwnableUpgradeableImplementation/IOwnableUpgradeableImplementation.sol",
         "file": "./../Upgradeability/OwnableUpgradeableImplementation/IOwnableUpgradeableImplementation.sol",
-        "id": 2015,
+        "id": 2037,
         "nodeType": "ImportDirective",
-        "scope": 2158,
-        "sourceUnit": 3418,
-        "src": "26:100:7",
+        "scope": 2179,
+        "sourceUnit": 6752,
+        "src": "26:100:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "baseContracts": [{
-          "arguments": null,
-          "baseName": {
-            "contractScope": null,
-            "id": 2016,
-            "name": "IOwnableUpgradeableImplementation",
-            "nodeType": "UserDefinedTypeName",
-            "referencedDeclaration": 3417,
-            "src": "158:33:7",
-            "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IOwnableUpgradeableImplementation_$3417",
-              "typeString": "contract IOwnableUpgradeableImplementation"
-            }
-          },
-          "id": 2017,
-          "nodeType": "InheritanceSpecifier",
-          "src": "158:33:7"
-        }],
-        "contractDependencies": [
-          2415,
-          3417
-        ],
+        "absolutePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/Upgradeability/SharedStorage.sol",
+        "file": "./../Upgradeability/SharedStorage.sol",
+        "id": 2038,
+        "nodeType": "ImportDirective",
+        "scope": 2179,
+        "sourceUnit": 6819,
+        "src": "127:47:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2157,
+        "id": 2178,
         "linearizedBaseContracts": [
-          2157,
-          3417,
-          2415
+          2178
         ],
         "name": "IHotelReservation",
         "nodeType": "ContractDefinition",
         "nodes": [{
             "anonymous": false,
             "documentation": null,
-            "id": 2027,
+            "id": 2048,
             "name": "LogCreateHotelReservation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2026,
+              "id": 2047,
               "nodeType": "ParameterList",
               "parameters": [{
                   "constant": false,
-                  "id": 2019,
+                  "id": 2040,
                   "indexed": false,
                   "name": "_hotelReservationId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "227:27:7",
+                  "scope": 2048,
+                  "src": "238:27:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -455,10 +387,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 2018,
+                    "id": 2039,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "227:7:7",
+                    "src": "238:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -469,12 +401,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2021,
+                  "id": 2042,
                   "indexed": false,
                   "name": "_customerAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "256:24:7",
+                  "scope": 2048,
+                  "src": "267:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -482,10 +414,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2020,
+                    "id": 2041,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "256:7:7",
+                    "src": "267:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -496,12 +428,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2023,
+                  "id": 2044,
                   "indexed": false,
                   "name": "_reservationStartDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "282:26:7",
+                  "scope": 2048,
+                  "src": "293:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -509,253 +441,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2022,
+                    "id": 2043,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "282:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2025,
-                  "indexed": false,
-                  "name": "_reservationEndDate",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "310:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2024,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "310:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "226:109:7"
-            },
-            "src": "195:141:7"
-          },
-          {
-            "anonymous": false,
-            "documentation": null,
-            "id": 2033,
-            "name": "LogCancelHotelReservation",
-            "nodeType": "EventDefinition",
-            "parameters": {
-              "id": 2032,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                  "constant": false,
-                  "id": 2029,
-                  "indexed": false,
-                  "name": "_hotelReservationId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2033,
-                  "src": "369:27:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2028,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "369:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2031,
-                  "indexed": false,
-                  "name": "_customerAddress",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2033,
-                  "src": "398:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 2030,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "398:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "368:55:7"
-            },
-            "src": "337:87:7"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2060,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "createHotelReservation",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2056,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                  "constant": false,
-                  "id": 2035,
-                  "name": "_hotelReservationId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "462:27:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2034,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "462:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2037,
-                  "name": "customerAddress",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "493:23:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 2036,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "493:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2039,
-                  "name": "_reservationCostLOC",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "520:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2038,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "520:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2041,
-                  "name": "_reservationStartDate",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "548:26:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2040,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "548:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2043,
-                  "name": "_reservationEndDate",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "578:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2042,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "578:4:7",
+                    "src": "293:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -767,134 +456,11 @@
                 {
                   "constant": false,
                   "id": 2046,
-                  "name": "_daysBeforeStartForRefund",
+                  "indexed": false,
+                  "name": "_reservationEndDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "606:32:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2044,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "606:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2045,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "606:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2049,
-                  "name": "_refundPercentages",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "642:25:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2047,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "642:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2048,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "642:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2051,
-                  "name": "_hotelId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "671:16:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2050,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "671:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2053,
-                  "name": "_roomId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "691:15:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2052,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "691:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2055,
-                  "name": "_numberOfTravelers",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "710:23:7",
+                  "scope": 2048,
+                  "src": "321:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -902,10 +468,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2054,
+                    "id": 2045,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "710:4:7",
+                    "src": "321:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -915,73 +481,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "458:278:7"
+              "src": "237:109:8"
             },
-            "payable": false,
-            "returnParameters": {
-              "id": 2059,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                "constant": false,
-                "id": 2058,
-                "name": "success",
-                "nodeType": "VariableDeclaration",
-                "scope": 2060,
-                "src": "753:12:7",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_bool",
-                  "typeString": "bool"
-                },
-                "typeName": {
-                  "id": 2057,
-                  "name": "bool",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "753:4:7",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              }],
-              "src": "752:14:7"
-            },
-            "scope": 2157,
-            "src": "427:340:7",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "public"
+            "src": "206:141:8"
           },
           {
-            "body": null,
+            "anonymous": false,
             "documentation": null,
-            "id": 2087,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "getHotelReservation",
-            "nodeType": "FunctionDefinition",
+            "id": 2054,
+            "name": "LogCancelHotelReservation",
+            "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2061,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "798:2:7"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2086,
+              "id": 2053,
               "nodeType": "ParameterList",
               "parameters": [{
                   "constant": false,
-                  "id": 2063,
+                  "id": 2050,
+                  "indexed": false,
                   "name": "_hotelReservationId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "826:27:7",
+                  "scope": 2054,
+                  "src": "380:27:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -989,10 +509,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 2062,
+                    "id": 2049,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "826:7:7",
+                    "src": "380:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1003,11 +523,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2065,
+                  "id": 2052,
+                  "indexed": false,
                   "name": "_customerAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "857:24:7",
+                  "scope": 2054,
+                  "src": "409:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1015,10 +536,80 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2064,
+                    "id": 2051,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "857:7:7",
+                    "src": "409:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "379:55:8"
+            },
+            "src": "348:87:8"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2081,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "createHotelReservation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2077,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                  "constant": false,
+                  "id": 2056,
+                  "name": "_hotelReservationId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "473:27:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2055,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "473:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2058,
+                  "name": "customerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "504:23:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2057,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "504:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1029,11 +620,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2067,
+                  "id": 2060,
                   "name": "_reservationCostLOC",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "885:24:7",
+                  "scope": 2081,
+                  "src": "531:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1041,10 +632,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2066,
+                    "id": 2059,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "885:4:7",
+                    "src": "531:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1055,11 +646,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2069,
+                  "id": 2062,
                   "name": "_reservationStartDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "913:26:7",
+                  "scope": 2081,
+                  "src": "559:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1067,10 +658,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2068,
+                    "id": 2061,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "913:4:7",
+                    "src": "559:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1081,11 +672,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2071,
+                  "id": 2064,
                   "name": "_reservationEndDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "943:24:7",
+                  "scope": 2081,
+                  "src": "589:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1093,13 +684,111 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2070,
+                    "id": 2063,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "943:4:7",
+                    "src": "589:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2067,
+                  "name": "_daysBeforeStartForRefund",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "617:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2065,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "617:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2066,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "617:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2070,
+                  "name": "_refundPercentages",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "653:25:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2068,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "653:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2069,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "653:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2072,
+                  "name": "_hotelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "682:16:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2071,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "682:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "value": null,
@@ -1108,108 +797,10 @@
                 {
                   "constant": false,
                   "id": 2074,
-                  "name": "_daysBeforeStartForRefund",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "971:32:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2072,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "971:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2073,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "971:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2077,
-                  "name": "_refundPercentages",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1007:25:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2075,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "1007:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2076,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "1007:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2079,
-                  "name": "_hotelId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1036:16:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2078,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1036:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2081,
                   "name": "_roomId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1056:15:7",
+                  "scope": 2081,
+                  "src": "702:15:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1217,10 +808,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 2080,
+                    "id": 2073,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1056:7:7",
+                    "src": "702:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1231,11 +822,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2083,
+                  "id": 2076,
                   "name": "_numberOfTravelers",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1076:23:7",
+                  "scope": 2081,
+                  "src": "721:23:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1243,10 +834,149 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2082,
+                    "id": 2075,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1076:4:7",
+                    "src": "721:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "469:278:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2080,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                "constant": false,
+                "id": 2079,
+                "name": "success",
+                "nodeType": "VariableDeclaration",
+                "scope": 2081,
+                "src": "764:12:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 2078,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "764:4:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }],
+              "src": "763:14:8"
+            },
+            "scope": 2178,
+            "src": "438:340:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2108,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getHotelReservation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2082,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "809:2:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2107,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                  "constant": false,
+                  "id": 2084,
+                  "name": "_hotelReservationId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "837:27:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2083,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "837:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2086,
+                  "name": "_customerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "868:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2085,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "868:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2088,
+                  "name": "_reservationCostLOC",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "896:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2087,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "896:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1257,138 +987,63 @@
                 },
                 {
                   "constant": false,
-                  "id": 2085,
-                  "name": "_isDisputeOpen",
+                  "id": 2090,
+                  "name": "_reservationStartDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1103:19:7",
+                  "scope": 2108,
+                  "src": "924:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2084,
-                    "name": "bool",
+                    "id": 2089,
+                    "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1103:4:7",
+                    "src": "924:4:8",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
-                }
-              ],
-              "src": "822:301:7"
-            },
-            "scope": 2157,
-            "src": "770:354:7",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2094,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "validateCancelation",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2090,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                "constant": false,
-                "id": 2089,
-                "name": "_customerAddress",
-                "nodeType": "VariableDeclaration",
-                "scope": 2094,
-                "src": "1156:24:7",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
                 },
-                "typeName": {
-                  "id": 2088,
-                  "name": "address",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "1156:7:7",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              }],
-              "src": "1155:26:7"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2093,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                "constant": false,
-                "id": 2092,
-                "name": "success",
-                "nodeType": "VariableDeclaration",
-                "scope": 2094,
-                "src": "1203:12:7",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_bool",
-                  "typeString": "bool"
-                },
-                "typeName": {
-                  "id": 2091,
-                  "name": "bool",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "1203:4:7",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              }],
-              "src": "1202:14:7"
-            },
-            "scope": 2157,
-            "src": "1127:90:7",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2107,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "validateRefundForCreation",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2103,
-              "nodeType": "ParameterList",
-              "parameters": [{
+                {
                   "constant": false,
-                  "id": 2097,
+                  "id": 2092,
+                  "name": "_reservationEndDate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "954:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2091,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "954:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2095,
                   "name": "_daysBeforeStartForRefund",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2107,
-                  "src": "1254:32:7",
+                  "scope": 2108,
+                  "src": "982:32:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1397,19 +1052,55 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 2095,
+                      "id": 2093,
                       "name": "uint",
                       "nodeType": "ElementaryTypeName",
-                      "src": "1254:4:7",
+                      "src": "982:4:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 2096,
+                    "id": 2094,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "1254:6:7",
+                    "src": "982:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2098,
+                  "name": "_refundPercentages",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1018:25:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2096,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1018:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2097,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1018:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -1421,10 +1112,215 @@
                 {
                   "constant": false,
                   "id": 2100,
-                  "name": "_refundPercentages",
+                  "name": "_hotelId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2107,
-                  "src": "1288:25:7",
+                  "scope": 2108,
+                  "src": "1047:16:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2099,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1047:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2102,
+                  "name": "_roomId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1067:15:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2101,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1067:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2104,
+                  "name": "_numberOfTravelers",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1087:23:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2103,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1087:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2106,
+                  "name": "_isDisputeOpen",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1114:19:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 2105,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1114:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "833:301:8"
+            },
+            "scope": 2178,
+            "src": "781:354:8",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2115,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "validateCancelation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2111,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                "constant": false,
+                "id": 2110,
+                "name": "_customerAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 2115,
+                "src": "1167:24:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 2109,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1167:7:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }],
+              "src": "1166:26:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2114,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                "constant": false,
+                "id": 2113,
+                "name": "success",
+                "nodeType": "VariableDeclaration",
+                "scope": 2115,
+                "src": "1214:12:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 2112,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1214:4:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }],
+              "src": "1213:14:8"
+            },
+            "scope": 2178,
+            "src": "1138:90:8",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2128,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "validateRefundForCreation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2124,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                  "constant": false,
+                  "id": 2118,
+                  "name": "_daysBeforeStartForRefund",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2128,
+                  "src": "1265:32:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1433,19 +1329,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 2098,
+                      "id": 2116,
                       "name": "uint",
                       "nodeType": "ElementaryTypeName",
-                      "src": "1288:4:7",
+                      "src": "1265:4:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 2099,
+                    "id": 2117,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "1288:6:7",
+                    "src": "1265:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -1456,11 +1352,47 @@
                 },
                 {
                   "constant": false,
-                  "id": 2102,
+                  "id": 2121,
+                  "name": "_refundPercentages",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2128,
+                  "src": "1299:25:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2119,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1299:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2120,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1299:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2123,
                   "name": "_startDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2107,
-                  "src": "1315:15:7",
+                  "scope": 2128,
+                  "src": "1326:15:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1468,10 +1400,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2101,
+                    "id": 2122,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1315:4:7",
+                    "src": "1326:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1481,19 +1413,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1253:78:7"
+              "src": "1264:78:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2106,
+              "id": 2127,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2105,
+                "id": 2126,
                 "name": "success",
                 "nodeType": "VariableDeclaration",
-                "scope": 2107,
-                "src": "1353:12:7",
+                "scope": 2128,
+                "src": "1364:12:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1501,10 +1433,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2104,
+                  "id": 2125,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1353:4:7",
+                  "src": "1364:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -1513,10 +1445,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1352:14:7"
+              "src": "1363:14:8"
             },
-            "scope": 2157,
-            "src": "1219:148:7",
+            "scope": 2178,
+            "src": "1230:148:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1524,7 +1456,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2114,
+            "id": 2135,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1532,22 +1464,22 @@
             "name": "getLocToBeRefunded",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2108,
+              "id": 2129,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1396:2:7"
+              "src": "1407:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2113,
+              "id": 2134,
               "nodeType": "ParameterList",
               "parameters": [{
                   "constant": false,
-                  "id": 2110,
+                  "id": 2131,
                   "name": "_locToBeRefunded",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2114,
-                  "src": "1420:21:7",
+                  "scope": 2135,
+                  "src": "1431:21:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1555,10 +1487,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2109,
+                    "id": 2130,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1420:4:7",
+                    "src": "1431:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1569,11 +1501,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2112,
+                  "id": 2133,
                   "name": "_locRemainder",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2114,
-                  "src": "1443:18:7",
+                  "scope": 2135,
+                  "src": "1454:18:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1581,10 +1513,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2111,
+                    "id": 2132,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1443:4:7",
+                    "src": "1454:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1594,10 +1526,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1419:43:7"
+              "src": "1430:43:8"
             },
-            "scope": 2157,
-            "src": "1369:94:7",
+            "scope": 2178,
+            "src": "1380:94:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1605,7 +1537,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2119,
+            "id": 2140,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1613,22 +1545,22 @@
             "name": "getCustomerAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2115,
+              "id": 2136,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1492:2:7"
+              "src": "1503:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2118,
+              "id": 2139,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2117,
+                "id": 2138,
                 "name": "_customerAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 2119,
-                "src": "1516:24:7",
+                "scope": 2140,
+                "src": "1527:24:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1636,10 +1568,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2116,
+                  "id": 2137,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1516:7:7",
+                  "src": "1527:7:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -1648,10 +1580,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1515:26:7"
+              "src": "1526:26:8"
             },
-            "scope": 2157,
-            "src": "1465:77:7",
+            "scope": 2178,
+            "src": "1476:77:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1659,7 +1591,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2124,
+            "id": 2145,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1667,22 +1599,22 @@
             "name": "validateReservationForWithdraw",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2120,
+              "id": 2141,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1583:2:7"
+              "src": "1594:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2123,
+              "id": 2144,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2122,
+                "id": 2143,
                 "name": "success",
                 "nodeType": "VariableDeclaration",
-                "scope": 2124,
-                "src": "1607:12:7",
+                "scope": 2145,
+                "src": "1618:12:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1690,10 +1622,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2121,
+                  "id": 2142,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1607:4:7",
+                  "src": "1618:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -1702,10 +1634,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1606:14:7"
+              "src": "1617:14:8"
             },
-            "scope": 2157,
-            "src": "1544:77:7",
+            "scope": 2178,
+            "src": "1555:77:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1713,7 +1645,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2129,
+            "id": 2150,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1721,22 +1653,22 @@
             "name": "getLocForWithdraw",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2125,
+              "id": 2146,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1649:2:7"
+              "src": "1660:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2128,
+              "id": 2149,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2127,
+                "id": 2148,
                 "name": "_locAmountForWithdraw",
                 "nodeType": "VariableDeclaration",
-                "scope": 2129,
-                "src": "1674:26:7",
+                "scope": 2150,
+                "src": "1685:26:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1744,10 +1676,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2126,
+                  "id": 2147,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1674:4:7",
+                  "src": "1685:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1756,10 +1688,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1673:28:7"
+              "src": "1684:28:8"
             },
-            "scope": 2157,
-            "src": "1623:79:7",
+            "scope": 2178,
+            "src": "1634:79:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1767,7 +1699,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2134,
+            "id": 2155,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1775,22 +1707,22 @@
             "name": "getHotelReservationId",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2130,
+              "id": 2151,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1734:2:7"
+              "src": "1745:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2133,
+              "id": 2154,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2132,
+                "id": 2153,
                 "name": "_hotelReservationId",
                 "nodeType": "VariableDeclaration",
-                "scope": 2134,
-                "src": "1758:27:7",
+                "scope": 2155,
+                "src": "1769:27:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1798,10 +1730,10 @@
                   "typeString": "bytes32"
                 },
                 "typeName": {
-                  "id": 2131,
+                  "id": 2152,
                   "name": "bytes32",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1758:7:7",
+                  "src": "1769:7:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes32",
                     "typeString": "bytes32"
@@ -1810,10 +1742,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1757:29:7"
+              "src": "1768:29:8"
             },
-            "scope": 2157,
-            "src": "1704:83:7",
+            "scope": 2178,
+            "src": "1715:83:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1821,7 +1753,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2139,
+            "id": 2160,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1829,22 +1761,22 @@
             "name": "getHotelReservationCost",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2135,
+              "id": 2156,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1821:2:7"
+              "src": "1832:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2138,
+              "id": 2159,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2137,
+                "id": 2158,
                 "name": "_hotelReservationCostLOC",
                 "nodeType": "VariableDeclaration",
-                "scope": 2139,
-                "src": "1845:29:7",
+                "scope": 2160,
+                "src": "1856:29:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1852,10 +1784,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2136,
+                  "id": 2157,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1845:4:7",
+                  "src": "1856:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1864,10 +1796,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1844:31:7"
+              "src": "1855:31:8"
             },
-            "scope": 2157,
-            "src": "1789:87:7",
+            "scope": 2178,
+            "src": "1800:87:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1875,7 +1807,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2146,
+            "id": 2167,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1883,15 +1815,15 @@
             "name": "validateDispute",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2142,
+              "id": 2163,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2141,
+                "id": 2162,
                 "name": "_customerAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 2146,
-                "src": "1903:24:7",
+                "scope": 2167,
+                "src": "1914:24:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1899,10 +1831,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2140,
+                  "id": 2161,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1903:7:7",
+                  "src": "1914:7:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -1911,19 +1843,19 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1902:26:7"
+              "src": "1913:26:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2145,
+              "id": 2166,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2144,
+                "id": 2165,
                 "name": "success",
                 "nodeType": "VariableDeclaration",
-                "scope": 2146,
-                "src": "1950:12:7",
+                "scope": 2167,
+                "src": "1961:12:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1931,10 +1863,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2143,
+                  "id": 2164,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1950:4:7",
+                  "src": "1961:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -1943,10 +1875,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1949:14:7"
+              "src": "1960:14:8"
             },
-            "scope": 2157,
-            "src": "1878:86:7",
+            "scope": 2178,
+            "src": "1889:86:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1954,7 +1886,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2151,
+            "id": 2172,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1962,22 +1894,22 @@
             "name": "getReservationDisputeStatus",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2147,
+              "id": 2168,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2002:2:7"
+              "src": "2013:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2150,
+              "id": 2171,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2149,
+                "id": 2170,
                 "name": "_isDisputeOpen",
                 "nodeType": "VariableDeclaration",
-                "scope": 2151,
-                "src": "2026:19:7",
+                "scope": 2172,
+                "src": "2037:19:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1985,10 +1917,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2148,
+                  "id": 2169,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "2026:4:7",
+                  "src": "2037:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -1997,10 +1929,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "2025:21:7"
+              "src": "2036:21:8"
             },
-            "scope": 2157,
-            "src": "1966:81:7",
+            "scope": 2178,
+            "src": "1977:81:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -2008,7 +1940,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2156,
+            "id": 2177,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -2016,15 +1948,15 @@
             "name": "setReservationDisputeStatus",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2154,
+              "id": 2175,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2153,
+                "id": 2174,
                 "name": "_isDisputeOpen",
                 "nodeType": "VariableDeclaration",
-                "scope": 2156,
-                "src": "2086:19:7",
+                "scope": 2177,
+                "src": "2097:19:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -2032,10 +1964,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2152,
+                  "id": 2173,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "2086:4:7",
+                  "src": "2097:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -2044,39 +1976,39 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "2085:21:7"
+              "src": "2096:21:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2155,
+              "id": 2176,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2113:0:7"
+              "src": "2124:0:8"
             },
-            "scope": 2157,
-            "src": "2049:65:7",
+            "scope": 2178,
+            "src": "2060:65:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2158,
-        "src": "128:1988:7"
+        "scope": 2179,
+        "src": "176:1951:8"
       }
     ],
-    "src": "0:2116:7"
+    "src": "0:2127:8"
   },
   "legacyAST": {
     "absolutePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/HotelReservation/IHotelReservation.sol",
     "exportedSymbols": {
       "IHotelReservation": [
-        2157
+        2178
       ]
     },
-    "id": 2158,
+    "id": 2179,
     "nodeType": "SourceUnit",
     "nodes": [{
-        "id": 2014,
+        "id": 2036,
         "literals": [
           "solidity",
           "^",
@@ -2084,70 +2016,59 @@
           ".17"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:7"
+        "src": "0:24:8"
       },
       {
         "absolutePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/Upgradeability/OwnableUpgradeableImplementation/IOwnableUpgradeableImplementation.sol",
         "file": "./../Upgradeability/OwnableUpgradeableImplementation/IOwnableUpgradeableImplementation.sol",
-        "id": 2015,
+        "id": 2037,
         "nodeType": "ImportDirective",
-        "scope": 2158,
-        "sourceUnit": 3418,
-        "src": "26:100:7",
+        "scope": 2179,
+        "sourceUnit": 6752,
+        "src": "26:100:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "baseContracts": [{
-          "arguments": null,
-          "baseName": {
-            "contractScope": null,
-            "id": 2016,
-            "name": "IOwnableUpgradeableImplementation",
-            "nodeType": "UserDefinedTypeName",
-            "referencedDeclaration": 3417,
-            "src": "158:33:7",
-            "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IOwnableUpgradeableImplementation_$3417",
-              "typeString": "contract IOwnableUpgradeableImplementation"
-            }
-          },
-          "id": 2017,
-          "nodeType": "InheritanceSpecifier",
-          "src": "158:33:7"
-        }],
-        "contractDependencies": [
-          2415,
-          3417
-        ],
+        "absolutePath": "/Users/martingrigorov/Work/Projects/LockChain/DApp/contracts/Upgradeability/SharedStorage.sol",
+        "file": "./../Upgradeability/SharedStorage.sol",
+        "id": 2038,
+        "nodeType": "ImportDirective",
+        "scope": 2179,
+        "sourceUnit": 6819,
+        "src": "127:47:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2157,
+        "id": 2178,
         "linearizedBaseContracts": [
-          2157,
-          3417,
-          2415
+          2178
         ],
         "name": "IHotelReservation",
         "nodeType": "ContractDefinition",
         "nodes": [{
             "anonymous": false,
             "documentation": null,
-            "id": 2027,
+            "id": 2048,
             "name": "LogCreateHotelReservation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2026,
+              "id": 2047,
               "nodeType": "ParameterList",
               "parameters": [{
                   "constant": false,
-                  "id": 2019,
+                  "id": 2040,
                   "indexed": false,
                   "name": "_hotelReservationId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "227:27:7",
+                  "scope": 2048,
+                  "src": "238:27:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2155,10 +2076,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 2018,
+                    "id": 2039,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "227:7:7",
+                    "src": "238:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -2169,12 +2090,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2021,
+                  "id": 2042,
                   "indexed": false,
                   "name": "_customerAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "256:24:7",
+                  "scope": 2048,
+                  "src": "267:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2182,10 +2103,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2020,
+                    "id": 2041,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "256:7:7",
+                    "src": "267:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -2196,12 +2117,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2023,
+                  "id": 2044,
                   "indexed": false,
                   "name": "_reservationStartDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "282:26:7",
+                  "scope": 2048,
+                  "src": "293:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2209,253 +2130,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2022,
+                    "id": 2043,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "282:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2025,
-                  "indexed": false,
-                  "name": "_reservationEndDate",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2027,
-                  "src": "310:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2024,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "310:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "226:109:7"
-            },
-            "src": "195:141:7"
-          },
-          {
-            "anonymous": false,
-            "documentation": null,
-            "id": 2033,
-            "name": "LogCancelHotelReservation",
-            "nodeType": "EventDefinition",
-            "parameters": {
-              "id": 2032,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                  "constant": false,
-                  "id": 2029,
-                  "indexed": false,
-                  "name": "_hotelReservationId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2033,
-                  "src": "369:27:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2028,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "369:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2031,
-                  "indexed": false,
-                  "name": "_customerAddress",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2033,
-                  "src": "398:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 2030,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "398:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "368:55:7"
-            },
-            "src": "337:87:7"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2060,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "createHotelReservation",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2056,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                  "constant": false,
-                  "id": 2035,
-                  "name": "_hotelReservationId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "462:27:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2034,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "462:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2037,
-                  "name": "customerAddress",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "493:23:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 2036,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "493:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2039,
-                  "name": "_reservationCostLOC",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "520:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2038,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "520:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2041,
-                  "name": "_reservationStartDate",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "548:26:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2040,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "548:4:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2043,
-                  "name": "_reservationEndDate",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "578:24:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2042,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "578:4:7",
+                    "src": "293:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2467,134 +2145,11 @@
                 {
                   "constant": false,
                   "id": 2046,
-                  "name": "_daysBeforeStartForRefund",
+                  "indexed": false,
+                  "name": "_reservationEndDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "606:32:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2044,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "606:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2045,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "606:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2049,
-                  "name": "_refundPercentages",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "642:25:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2047,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "642:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2048,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "642:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2051,
-                  "name": "_hotelId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "671:16:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2050,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "671:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2053,
-                  "name": "_roomId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "691:15:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2052,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "691:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2055,
-                  "name": "_numberOfTravelers",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2060,
-                  "src": "710:23:7",
+                  "scope": 2048,
+                  "src": "321:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2602,10 +2157,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2054,
+                    "id": 2045,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "710:4:7",
+                    "src": "321:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2615,73 +2170,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "458:278:7"
+              "src": "237:109:8"
             },
-            "payable": false,
-            "returnParameters": {
-              "id": 2059,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                "constant": false,
-                "id": 2058,
-                "name": "success",
-                "nodeType": "VariableDeclaration",
-                "scope": 2060,
-                "src": "753:12:7",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_bool",
-                  "typeString": "bool"
-                },
-                "typeName": {
-                  "id": 2057,
-                  "name": "bool",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "753:4:7",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              }],
-              "src": "752:14:7"
-            },
-            "scope": 2157,
-            "src": "427:340:7",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "public"
+            "src": "206:141:8"
           },
           {
-            "body": null,
+            "anonymous": false,
             "documentation": null,
-            "id": 2087,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "getHotelReservation",
-            "nodeType": "FunctionDefinition",
+            "id": 2054,
+            "name": "LogCancelHotelReservation",
+            "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2061,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "798:2:7"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2086,
+              "id": 2053,
               "nodeType": "ParameterList",
               "parameters": [{
                   "constant": false,
-                  "id": 2063,
+                  "id": 2050,
+                  "indexed": false,
                   "name": "_hotelReservationId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "826:27:7",
+                  "scope": 2054,
+                  "src": "380:27:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2689,10 +2198,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 2062,
+                    "id": 2049,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "826:7:7",
+                    "src": "380:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -2703,11 +2212,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2065,
+                  "id": 2052,
+                  "indexed": false,
                   "name": "_customerAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "857:24:7",
+                  "scope": 2054,
+                  "src": "409:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2715,10 +2225,80 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2064,
+                    "id": 2051,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "857:7:7",
+                    "src": "409:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "379:55:8"
+            },
+            "src": "348:87:8"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2081,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "createHotelReservation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2077,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                  "constant": false,
+                  "id": 2056,
+                  "name": "_hotelReservationId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "473:27:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2055,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "473:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2058,
+                  "name": "customerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "504:23:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2057,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "504:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -2729,11 +2309,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2067,
+                  "id": 2060,
                   "name": "_reservationCostLOC",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "885:24:7",
+                  "scope": 2081,
+                  "src": "531:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2741,10 +2321,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2066,
+                    "id": 2059,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "885:4:7",
+                    "src": "531:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2755,11 +2335,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2069,
+                  "id": 2062,
                   "name": "_reservationStartDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "913:26:7",
+                  "scope": 2081,
+                  "src": "559:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2767,10 +2347,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2068,
+                    "id": 2061,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "913:4:7",
+                    "src": "559:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2781,11 +2361,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2071,
+                  "id": 2064,
                   "name": "_reservationEndDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "943:24:7",
+                  "scope": 2081,
+                  "src": "589:24:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2793,13 +2373,111 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2070,
+                    "id": 2063,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "943:4:7",
+                    "src": "589:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2067,
+                  "name": "_daysBeforeStartForRefund",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "617:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2065,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "617:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2066,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "617:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2070,
+                  "name": "_refundPercentages",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "653:25:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2068,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "653:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2069,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "653:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2072,
+                  "name": "_hotelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "682:16:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2071,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "682:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "value": null,
@@ -2808,108 +2486,10 @@
                 {
                   "constant": false,
                   "id": 2074,
-                  "name": "_daysBeforeStartForRefund",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "971:32:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2072,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "971:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2073,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "971:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2077,
-                  "name": "_refundPercentages",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1007:25:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[]"
-                  },
-                  "typeName": {
-                    "baseType": {
-                      "id": 2075,
-                      "name": "uint",
-                      "nodeType": "ElementaryTypeName",
-                      "src": "1007:4:7",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "id": 2076,
-                    "length": null,
-                    "nodeType": "ArrayTypeName",
-                    "src": "1007:6:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[]"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2079,
-                  "name": "_hotelId",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1036:16:7",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes32",
-                    "typeString": "bytes32"
-                  },
-                  "typeName": {
-                    "id": 2078,
-                    "name": "bytes32",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1036:7:7",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes32",
-                      "typeString": "bytes32"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2081,
                   "name": "_roomId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1056:15:7",
+                  "scope": 2081,
+                  "src": "702:15:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2917,10 +2497,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 2080,
+                    "id": 2073,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1056:7:7",
+                    "src": "702:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -2931,11 +2511,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2083,
+                  "id": 2076,
                   "name": "_numberOfTravelers",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1076:23:7",
+                  "scope": 2081,
+                  "src": "721:23:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2943,10 +2523,149 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2082,
+                    "id": 2075,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1076:4:7",
+                    "src": "721:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "469:278:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2080,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                "constant": false,
+                "id": 2079,
+                "name": "success",
+                "nodeType": "VariableDeclaration",
+                "scope": 2081,
+                "src": "764:12:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 2078,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "764:4:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }],
+              "src": "763:14:8"
+            },
+            "scope": 2178,
+            "src": "438:340:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2108,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getHotelReservation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2082,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "809:2:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2107,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                  "constant": false,
+                  "id": 2084,
+                  "name": "_hotelReservationId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "837:27:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2083,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "837:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2086,
+                  "name": "_customerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "868:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2085,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "868:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2088,
+                  "name": "_reservationCostLOC",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "896:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2087,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "896:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2957,138 +2676,63 @@
                 },
                 {
                   "constant": false,
-                  "id": 2085,
-                  "name": "_isDisputeOpen",
+                  "id": 2090,
+                  "name": "_reservationStartDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2087,
-                  "src": "1103:19:7",
+                  "scope": 2108,
+                  "src": "924:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2084,
-                    "name": "bool",
+                    "id": 2089,
+                    "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1103:4:7",
+                    "src": "924:4:8",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
-                }
-              ],
-              "src": "822:301:7"
-            },
-            "scope": 2157,
-            "src": "770:354:7",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2094,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "validateCancelation",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2090,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                "constant": false,
-                "id": 2089,
-                "name": "_customerAddress",
-                "nodeType": "VariableDeclaration",
-                "scope": 2094,
-                "src": "1156:24:7",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
                 },
-                "typeName": {
-                  "id": 2088,
-                  "name": "address",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "1156:7:7",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              }],
-              "src": "1155:26:7"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2093,
-              "nodeType": "ParameterList",
-              "parameters": [{
-                "constant": false,
-                "id": 2092,
-                "name": "success",
-                "nodeType": "VariableDeclaration",
-                "scope": 2094,
-                "src": "1203:12:7",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_bool",
-                  "typeString": "bool"
-                },
-                "typeName": {
-                  "id": 2091,
-                  "name": "bool",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "1203:4:7",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              }],
-              "src": "1202:14:7"
-            },
-            "scope": 2157,
-            "src": "1127:90:7",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2107,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "validateRefundForCreation",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2103,
-              "nodeType": "ParameterList",
-              "parameters": [{
+                {
                   "constant": false,
-                  "id": 2097,
+                  "id": 2092,
+                  "name": "_reservationEndDate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "954:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2091,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "954:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2095,
                   "name": "_daysBeforeStartForRefund",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2107,
-                  "src": "1254:32:7",
+                  "scope": 2108,
+                  "src": "982:32:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3097,19 +2741,55 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 2095,
+                      "id": 2093,
                       "name": "uint",
                       "nodeType": "ElementaryTypeName",
-                      "src": "1254:4:7",
+                      "src": "982:4:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 2096,
+                    "id": 2094,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "1254:6:7",
+                    "src": "982:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2098,
+                  "name": "_refundPercentages",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1018:25:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2096,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1018:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2097,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1018:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -3121,10 +2801,215 @@
                 {
                   "constant": false,
                   "id": 2100,
-                  "name": "_refundPercentages",
+                  "name": "_hotelId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2107,
-                  "src": "1288:25:7",
+                  "scope": 2108,
+                  "src": "1047:16:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2099,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1047:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2102,
+                  "name": "_roomId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1067:15:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2101,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1067:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2104,
+                  "name": "_numberOfTravelers",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1087:23:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2103,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1087:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2106,
+                  "name": "_isDisputeOpen",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2108,
+                  "src": "1114:19:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 2105,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1114:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "833:301:8"
+            },
+            "scope": 2178,
+            "src": "781:354:8",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2115,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "validateCancelation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2111,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                "constant": false,
+                "id": 2110,
+                "name": "_customerAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 2115,
+                "src": "1167:24:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 2109,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1167:7:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }],
+              "src": "1166:26:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2114,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                "constant": false,
+                "id": 2113,
+                "name": "success",
+                "nodeType": "VariableDeclaration",
+                "scope": 2115,
+                "src": "1214:12:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 2112,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1214:4:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }],
+              "src": "1213:14:8"
+            },
+            "scope": 2178,
+            "src": "1138:90:8",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2128,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "validateRefundForCreation",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2124,
+              "nodeType": "ParameterList",
+              "parameters": [{
+                  "constant": false,
+                  "id": 2118,
+                  "name": "_daysBeforeStartForRefund",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2128,
+                  "src": "1265:32:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3133,19 +3018,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 2098,
+                      "id": 2116,
                       "name": "uint",
                       "nodeType": "ElementaryTypeName",
-                      "src": "1288:4:7",
+                      "src": "1265:4:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 2099,
+                    "id": 2117,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "1288:6:7",
+                    "src": "1265:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -3156,11 +3041,47 @@
                 },
                 {
                   "constant": false,
-                  "id": 2102,
+                  "id": 2121,
+                  "name": "_refundPercentages",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2128,
+                  "src": "1299:25:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2119,
+                      "name": "uint",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1299:4:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 2120,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1299:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2123,
                   "name": "_startDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2107,
-                  "src": "1315:15:7",
+                  "scope": 2128,
+                  "src": "1326:15:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3168,10 +3089,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2101,
+                    "id": 2122,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1315:4:7",
+                    "src": "1326:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3181,19 +3102,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1253:78:7"
+              "src": "1264:78:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2106,
+              "id": 2127,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2105,
+                "id": 2126,
                 "name": "success",
                 "nodeType": "VariableDeclaration",
-                "scope": 2107,
-                "src": "1353:12:7",
+                "scope": 2128,
+                "src": "1364:12:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3201,10 +3122,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2104,
+                  "id": 2125,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1353:4:7",
+                  "src": "1364:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -3213,10 +3134,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1352:14:7"
+              "src": "1363:14:8"
             },
-            "scope": 2157,
-            "src": "1219:148:7",
+            "scope": 2178,
+            "src": "1230:148:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3224,7 +3145,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2114,
+            "id": 2135,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3232,22 +3153,22 @@
             "name": "getLocToBeRefunded",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2108,
+              "id": 2129,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1396:2:7"
+              "src": "1407:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2113,
+              "id": 2134,
               "nodeType": "ParameterList",
               "parameters": [{
                   "constant": false,
-                  "id": 2110,
+                  "id": 2131,
                   "name": "_locToBeRefunded",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2114,
-                  "src": "1420:21:7",
+                  "scope": 2135,
+                  "src": "1431:21:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3255,10 +3176,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2109,
+                    "id": 2130,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1420:4:7",
+                    "src": "1431:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3269,11 +3190,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2112,
+                  "id": 2133,
                   "name": "_locRemainder",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2114,
-                  "src": "1443:18:7",
+                  "scope": 2135,
+                  "src": "1454:18:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3281,10 +3202,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2111,
+                    "id": 2132,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1443:4:7",
+                    "src": "1454:4:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3294,10 +3215,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1419:43:7"
+              "src": "1430:43:8"
             },
-            "scope": 2157,
-            "src": "1369:94:7",
+            "scope": 2178,
+            "src": "1380:94:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3305,7 +3226,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2119,
+            "id": 2140,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3313,22 +3234,22 @@
             "name": "getCustomerAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2115,
+              "id": 2136,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1492:2:7"
+              "src": "1503:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2118,
+              "id": 2139,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2117,
+                "id": 2138,
                 "name": "_customerAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 2119,
-                "src": "1516:24:7",
+                "scope": 2140,
+                "src": "1527:24:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3336,10 +3257,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2116,
+                  "id": 2137,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1516:7:7",
+                  "src": "1527:7:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -3348,10 +3269,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1515:26:7"
+              "src": "1526:26:8"
             },
-            "scope": 2157,
-            "src": "1465:77:7",
+            "scope": 2178,
+            "src": "1476:77:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3359,7 +3280,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2124,
+            "id": 2145,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3367,22 +3288,22 @@
             "name": "validateReservationForWithdraw",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2120,
+              "id": 2141,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1583:2:7"
+              "src": "1594:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2123,
+              "id": 2144,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2122,
+                "id": 2143,
                 "name": "success",
                 "nodeType": "VariableDeclaration",
-                "scope": 2124,
-                "src": "1607:12:7",
+                "scope": 2145,
+                "src": "1618:12:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3390,10 +3311,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2121,
+                  "id": 2142,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1607:4:7",
+                  "src": "1618:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -3402,10 +3323,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1606:14:7"
+              "src": "1617:14:8"
             },
-            "scope": 2157,
-            "src": "1544:77:7",
+            "scope": 2178,
+            "src": "1555:77:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3413,7 +3334,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2129,
+            "id": 2150,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3421,22 +3342,22 @@
             "name": "getLocForWithdraw",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2125,
+              "id": 2146,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1649:2:7"
+              "src": "1660:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2128,
+              "id": 2149,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2127,
+                "id": 2148,
                 "name": "_locAmountForWithdraw",
                 "nodeType": "VariableDeclaration",
-                "scope": 2129,
-                "src": "1674:26:7",
+                "scope": 2150,
+                "src": "1685:26:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3444,10 +3365,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2126,
+                  "id": 2147,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1674:4:7",
+                  "src": "1685:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -3456,10 +3377,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1673:28:7"
+              "src": "1684:28:8"
             },
-            "scope": 2157,
-            "src": "1623:79:7",
+            "scope": 2178,
+            "src": "1634:79:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3467,7 +3388,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2134,
+            "id": 2155,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3475,22 +3396,22 @@
             "name": "getHotelReservationId",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2130,
+              "id": 2151,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1734:2:7"
+              "src": "1745:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2133,
+              "id": 2154,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2132,
+                "id": 2153,
                 "name": "_hotelReservationId",
                 "nodeType": "VariableDeclaration",
-                "scope": 2134,
-                "src": "1758:27:7",
+                "scope": 2155,
+                "src": "1769:27:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3498,10 +3419,10 @@
                   "typeString": "bytes32"
                 },
                 "typeName": {
-                  "id": 2131,
+                  "id": 2152,
                   "name": "bytes32",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1758:7:7",
+                  "src": "1769:7:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bytes32",
                     "typeString": "bytes32"
@@ -3510,10 +3431,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1757:29:7"
+              "src": "1768:29:8"
             },
-            "scope": 2157,
-            "src": "1704:83:7",
+            "scope": 2178,
+            "src": "1715:83:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3521,7 +3442,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2139,
+            "id": 2160,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3529,22 +3450,22 @@
             "name": "getHotelReservationCost",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2135,
+              "id": 2156,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1821:2:7"
+              "src": "1832:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2138,
+              "id": 2159,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2137,
+                "id": 2158,
                 "name": "_hotelReservationCostLOC",
                 "nodeType": "VariableDeclaration",
-                "scope": 2139,
-                "src": "1845:29:7",
+                "scope": 2160,
+                "src": "1856:29:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3552,10 +3473,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2136,
+                  "id": 2157,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1845:4:7",
+                  "src": "1856:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -3564,10 +3485,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1844:31:7"
+              "src": "1855:31:8"
             },
-            "scope": 2157,
-            "src": "1789:87:7",
+            "scope": 2178,
+            "src": "1800:87:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3575,7 +3496,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2146,
+            "id": 2167,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3583,15 +3504,15 @@
             "name": "validateDispute",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2142,
+              "id": 2163,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2141,
+                "id": 2162,
                 "name": "_customerAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 2146,
-                "src": "1903:24:7",
+                "scope": 2167,
+                "src": "1914:24:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3599,10 +3520,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2140,
+                  "id": 2161,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1903:7:7",
+                  "src": "1914:7:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -3611,19 +3532,19 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1902:26:7"
+              "src": "1913:26:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2145,
+              "id": 2166,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2144,
+                "id": 2165,
                 "name": "success",
                 "nodeType": "VariableDeclaration",
-                "scope": 2146,
-                "src": "1950:12:7",
+                "scope": 2167,
+                "src": "1961:12:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3631,10 +3552,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2143,
+                  "id": 2164,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1950:4:7",
+                  "src": "1961:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -3643,10 +3564,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "1949:14:7"
+              "src": "1960:14:8"
             },
-            "scope": 2157,
-            "src": "1878:86:7",
+            "scope": 2178,
+            "src": "1889:86:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3654,7 +3575,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2151,
+            "id": 2172,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3662,22 +3583,22 @@
             "name": "getReservationDisputeStatus",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2147,
+              "id": 2168,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2002:2:7"
+              "src": "2013:2:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2150,
+              "id": 2171,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2149,
+                "id": 2170,
                 "name": "_isDisputeOpen",
                 "nodeType": "VariableDeclaration",
-                "scope": 2151,
-                "src": "2026:19:7",
+                "scope": 2172,
+                "src": "2037:19:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3685,10 +3606,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2148,
+                  "id": 2169,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "2026:4:7",
+                  "src": "2037:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -3697,10 +3618,10 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "2025:21:7"
+              "src": "2036:21:8"
             },
-            "scope": 2157,
-            "src": "1966:81:7",
+            "scope": 2178,
+            "src": "1977:81:8",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -3708,7 +3629,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2156,
+            "id": 2177,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -3716,15 +3637,15 @@
             "name": "setReservationDisputeStatus",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2154,
+              "id": 2175,
               "nodeType": "ParameterList",
               "parameters": [{
                 "constant": false,
-                "id": 2153,
+                "id": 2174,
                 "name": "_isDisputeOpen",
                 "nodeType": "VariableDeclaration",
-                "scope": 2156,
-                "src": "2086:19:7",
+                "scope": 2177,
+                "src": "2097:19:8",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3732,10 +3653,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2152,
+                  "id": 2173,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "2086:4:7",
+                  "src": "2097:4:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -3744,27 +3665,27 @@
                 "value": null,
                 "visibility": "internal"
               }],
-              "src": "2085:21:7"
+              "src": "2096:21:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2155,
+              "id": 2176,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2113:0:7"
+              "src": "2124:0:8"
             },
-            "scope": 2157,
-            "src": "2049:65:7",
+            "scope": 2178,
+            "src": "2060:65:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2158,
-        "src": "128:1988:7"
+        "scope": 2179,
+        "src": "176:1951:8"
       }
     ],
-    "src": "0:2116:7"
+    "src": "0:2127:8"
   },
   "compiler": {
     "name": "solc",
@@ -3772,5 +3693,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-08T14:41:32.890Z"
+  "updatedAt": "2018-06-05T12:18:47.217Z"
 }

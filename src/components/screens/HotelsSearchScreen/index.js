@@ -182,8 +182,8 @@ class HotelsSearchScreen extends Component {
     }
 
     stompAndroid() {
-        // console.log("stompAndroid---------------", this.uuid, this.mainUrl);
-        const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.mainUrl + "\"}";
+        // console.log("stompAndroid---------------", this.uuid, this.searchString);
+        const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.searchString + "\"}";
         const destination = "search/" + this.uuid;
 
         DeviceEventEmitter.removeAllListeners("onStompConnect");
@@ -267,8 +267,12 @@ class HotelsSearchScreen extends Component {
     gotoHotelDetailsPage = (item) => {
         console.log("gotoHotelDetailsPage", item);
         
+        if (item.price == null || item.price == undefined) {
+            return;
+        }
+
         this.setState({isLoadingHotelDetails: true});
-        requester.getHotelById(item.id, this.mainUrl.split('&')).then((res) => {
+        requester.getHotelById(item.id, this.searchString.split('&')).then((res) => {
             // here you set the response in to json
             res.body.then((data) => {
                 const hotelPhotos = [];
@@ -281,7 +285,7 @@ class HotelsSearchScreen extends Component {
                 this.props.navigation.navigate('HotelDetails', {
                     guests: this.state.guests,
                     hotelDetail: item,
-                    urlForService: this.mainUrl,
+                    searchString: this.searchString,
                     locRate: this.state.locRate,
                     currency: this.state.currency,
                     currencySign: this.state.currencySign,
@@ -303,7 +307,7 @@ class HotelsSearchScreen extends Component {
         }
 
         this.setState({isLoadingHotelDetails: true});
-        requester.getHotelById(item.id, this.mainUrl.split('&')).then((res) => {
+        requester.getHotelById(item.id, this.searchString.split('&')).then((res) => {
             // here you set the response in to json
             res.body.then((data) => {
                 const hotelPhotos = [];
@@ -316,7 +320,7 @@ class HotelsSearchScreen extends Component {
                 this.props.navigation.navigate('HotelDetails', {
                     guests: this.state.guests,
                     hotelDetail: item,
-                    urlForService: this.mainUrl,
+                    searchString: this.searchString,
                     locRate: this.state.locRate,
                     currency: this.state.currency,
                     currencySign: this.state.currencySign,
@@ -539,11 +543,12 @@ class HotelsSearchScreen extends Component {
         this.previousState.childrenBool = this.state.childrenBool;
 
         if (this.state.isHotel) {
-            this.mainUrl = '?region='+this.state.regionId
-                +'&currency='+this.state.currency
-                +'&startDate='+this.state.checkInDateFormated
-                +'&endDate='+this.state.checkOutDateFormated
-                +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
+            this.searchString = this.getSearchString();
+                // '?region='+this.state.regionId
+                // +'&currency='+this.state.currency
+                // +'&startDate='+this.state.checkInDateFormated
+                // +'&endDate='+this.state.checkOutDateFormated
+                // +'&rooms='+this.state.roomsDummyData; //eslint-disable-line
         }
     }
 
@@ -919,7 +924,7 @@ class HotelsSearchScreen extends Component {
             clientRef.subscribe(`search/${this.uuid}`, this.handleReceiveSingleHotel);
             clientRef.send("search",
                 headers,
-                JSON.stringify({uuid: this.uuid, query : mainUrl})
+                JSON.stringify({uuid: this.uuid, query : searchString})
             )
         }, (error) => {
             clientRef.disconnect();

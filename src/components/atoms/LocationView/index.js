@@ -67,8 +67,9 @@ class LocationView extends Component {
                     <View style={{flexDirection:'column'}}>
                         <View style={styles.info}>
                             <View style={styles.infoContainer}>
-                                <Text style={styles.location}>{this.props.location}</Text>
-                                <Text style={styles.description}>{this.props.description}</Text>
+                                {/* <Text style={styles.location}>{this.props.location}</Text> */}
+                                <Text style={styles.location}>{this.props.hotelName}</Text>
+                                {/* <Text style={styles.description}>{this.props.description}</Text> */}
                             </View>
                         </View>
                         <MapView
@@ -86,8 +87,8 @@ class LocationView extends Component {
                             debug={false}>
                             <MapView.Marker
                                 coordinate={{latitude: this.props.lat, longitude: this.props.lon}}
-                                title={this.props.hotelName}
-                                description={this.props.hotelPrice}
+                                // title={this.props.hotelName}
+                                // description={this.props.hotelPrice}
                             >
                             </MapView.Marker>
                             <MapView.Circle

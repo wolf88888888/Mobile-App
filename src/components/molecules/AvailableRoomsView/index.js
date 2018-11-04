@@ -18,7 +18,6 @@ class AvailableRoomsView extends Component {
         id: PropTypes.string,
         search: PropTypes.string,
         roomDetail: PropTypes.object,
-        navigate: PropTypes.func,
         guests: PropTypes.number,
         hotelDetails: PropTypes.object,
         currency: PropTypes.string,
@@ -58,11 +57,9 @@ class AvailableRoomsView extends Component {
 
     componentDidMount() {
         let request = this.props.search.replace(/\?/ig, "")
-        console.log("requester.getHotelRooms request", this.props.id, request);
         requester.getHotelRooms(this.props.id, request.split('&')).then(res => {
             if (res.success) {
                 res.body.then(data => {
-                    console.log("requester.getHotelRooms", data);
                     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
                     this.setState({ rooms: ds.cloneWithRows(this.sortArray(data, 'price')), loading: false });
                 });
@@ -97,7 +94,7 @@ class AvailableRoomsView extends Component {
                 dataSource={this.state.rooms}
                 showsVeticalScrollIndicator={false}
                 renderRow={(rowData) =>
-                    <TouchableOpacity onPress={() => {this.onRoomPress(rowData)}}>
+                    <TouchableOpacity onPress={() => {this.props.onBooking(rowData)}}>
                         <CardView style={styles.listItem}
                             cardElevation={1.5}
                             cardMaxElevation={1.5}
@@ -122,18 +119,18 @@ class AvailableRoomsView extends Component {
             </View>
         );
     }
-    onRoomPress = (roomDetail) => {
-        console.log("onRoomPress", roomDetail, this.props);
-        this.props.navigate('GuestInfoForm', { 
-            roomDetail: roomDetail, 
-            guests: this.props.guests, 
-            'price': ((roomDetail.roomsResults[0].price) * this.props.daysDifference).toFixed(2),
-            'priceLOC': (((roomDetail.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2), 
-            'daysDifference': this.props.daysDifference,
-            currency: this.props.currency,
-            currencySign: this.props.currencySign,
-            'hotelDetails': this.props.hotelDetails });
-    }
+    // onRoomPress = (roomDetail) => {
+    //     console.log("onRoomPress", roomDetail, this.props);
+    //     this.props.navigate('GuestInfoForm', { 
+    //         roomDetail: roomDetail, 
+    //         guests: this.props.guests, 
+    //         'price': ((roomDetail.roomsResults[0].price) * this.props.daysDifference).toFixed(2),
+    //         'priceLOC': (((roomDetail.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2), 
+    //         'daysDifference': this.props.daysDifference,
+    //         currency: this.props.currency,
+    //         currencySign: this.props.currencySign,
+    //         'hotelDetails': this.props.hotelDetails });
+    // }
 }
 
 export default AvailableRoomsView;
