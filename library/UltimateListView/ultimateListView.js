@@ -197,7 +197,18 @@ export default class UltimateListView extends Component {
             }
         }
         this.setRows(refineHotels);
-        this.setState({ dataSource: this.rows });
+
+        if (this.rows.length > 0) {
+            this.setState({ dataSource: this.getRows() });
+        }
+        else {
+            this.setState( 
+                { 
+                    paginationStatus: PaginationStatus.allLoaded, 
+                    dataSource: this.getRows(),
+                } 
+            );
+        }
     }
 
     initListView = () => {

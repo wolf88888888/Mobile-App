@@ -38,6 +38,10 @@ export default class HotelFilters extends Component {
             sliderValue: [1,5000],
             priceItems: [
                 {
+                    label: 'Rank',
+                    value: 'rank,desc'
+                },
+                {
                     label: 'Lowest price',
                     value: 'priceForSort,asc'
                 },

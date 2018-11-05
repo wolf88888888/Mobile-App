@@ -83,7 +83,7 @@ class HotelsSearchScreen extends Component {
             showUnAvailable: false,
             nameFilter: '',
             selectedRating: [false, false, false, false, false],
-            orderBy: 'priceForSort,asc',
+            orderBy: 'rank,desc',
             priceRange: [1, 5000],
 
             editable: false,
@@ -135,6 +135,7 @@ class HotelsSearchScreen extends Component {
         if (this.listView != undefined && this.listView != null) {
             this.listView.initListView();
         }
+        this.hotelsInfoById = [];
         this.setState({
             isMAP: -1, 
             hotelsInfo : [],
@@ -182,6 +183,7 @@ class HotelsSearchScreen extends Component {
     }
 
     stompAndroid() {
+        console.log("stompAndroid -------------");
         // console.log("stompAndroid---------------", this.uuid, this.searchString);
         const message = "{\"uuid\":\"" + this.uuid + "\",\"query\":\"" + this.searchString + "\"}";
         const destination = "search/" + this.uuid;
@@ -205,7 +207,7 @@ class HotelsSearchScreen extends Component {
     }
 
     handleAndroidSingleHotel(message) {
-        if (this.state.isMAP == -1) {
+        if (this.state.isMAP == -1 && this.state.hotelsInfo.length > 0) {
             this.setState({isMAP: 0});
         }
         try {
@@ -218,8 +220,6 @@ class HotelsSearchScreen extends Component {
                         this.listView.onDoneSocket();
                     }
                     androidStomp.close();
-
-
                 }
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
@@ -468,21 +468,16 @@ class HotelsSearchScreen extends Component {
 
     }
 
-    onDatesSelect = ({ startDate, endDate }) => {
-        if (this.state.checkInDate === startDate && this.state.checkOutDate === endDate) {
-            return;
-        }
-        
-        const year = (new Date()).getFullYear();
+    
+    onDatesSelect = ({ startDate, endDate, startMoment, endMoment }) => {
+        const start = moment(startDate, 'ddd, DD MMM');
+        const end = moment(endDate, 'ddd, DD MMM');
         this.setState({
+            daysDifference: moment.duration(end.diff(start)).asDays(),
             checkInDate: startDate,
             checkOutDate: endDate,
-            checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year,
-            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year,
+            checkInDateFormated: startMoment.format('DD/MM/YYYY'),
+            checkOutDateFormated: endMoment.format('DD/MM/YYYY'),
             isNewSearch: true
         });
     }
@@ -521,7 +516,7 @@ class HotelsSearchScreen extends Component {
             showUnAvailable: false,
             nameFilter: '',
             selectedRating: [false, false, false, false, false],
-            orderBy: 'priceForSort,asc',
+            orderBy: 'rank,desc',
             priceRange: [1, 5000],
             
             isNewSearch: false,
@@ -755,6 +750,8 @@ class HotelsSearchScreen extends Component {
                 <DateAndGuestPicker
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
+                    checkInDateFormated={this.state.checkInDateFormated}
+                    checkOutDateFormated={this.state.checkOutDateFormated}
                     adults={this.state.adults}
                     children={this.state.children}
                     infants={this.state.infants}
@@ -800,6 +797,9 @@ class HotelsSearchScreen extends Component {
     }
 
     renderCallout(hotel) {
+        const {
+            currencySign, locRate
+        } = this.props;
         return (
             <MapView.Callout tooltip={true}>
                 <View style={ styles.map_item }>
@@ -818,7 +818,7 @@ class HotelsSearchScreen extends Component {
                             </Text>
                         : 
                             <Text style={styles.description}>
-                                LOC {hotel.price.toFixed(2)} / Night
+                                 {currencySign}{hotel.price.toFixed(2)}(LOC{parseFloat(hotel.price/locRate).toFixed(2)}) / Night
                             </Text>
                     }
                     <Text style={styles.ratingsMap}>
@@ -965,18 +965,6 @@ let mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(currencyActions, dispatch)
 })
-
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        height: 50,
-        fontSize: 16,
-        paddingTop: 13,
-        paddingHorizontal: 10,
-        paddingBottom: 12,
-        backgroundColor: 'white',
-        color: 'black'
-    }
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(HotelsSearchScreen);
 

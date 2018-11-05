@@ -188,6 +188,7 @@ class Explore extends Component {
             //     .toString()) + year
         });
     }
+    
     onSearchHandler(value) {
         this.setState({ search: value });
         if (value === '') {
