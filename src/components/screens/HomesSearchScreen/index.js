@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions, WebView, Modal } from 'react-native';
+import { StyleSheet, Text,  TouchableOpacity, View, Dimensions } from 'react-native';
 
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 
-import { imgHost } from '../../../config';
-import SearchBar from '../../molecules/SearchBar';
 import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
 import HomeItemView from '../../organisms/HomeItemView';
 import requester from '../../../initDependencies';
 
-import UUIDGenerator from 'react-native-uuid-generator';
 import { UltimateListView } from '../../../../library/UltimateListView';
 import { DotIndicator } from 'react-native-indicators';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
@@ -23,6 +17,7 @@ import moment from 'moment';
 import * as currencyActions from '../../../redux/action/Currency'
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { imgHost } from '../../../config';
 
 import styles from './styles';
 
@@ -48,6 +43,8 @@ class HomesSearchScreen extends Component {
         }];
 
         this.state = {
+            isLoadingDetails: false,
+
             countriesLoaded: false,
             countries: [],
             countryId: 0,
@@ -74,7 +71,9 @@ class HomesSearchScreen extends Component {
             //filters
             priceRange: [1, 5000],
             cities: [], 
+            citiesToggled: '',
             propertyTypes: [],
+            propertyTypesToggled: '',
 
             totalPages: 0,
 
@@ -115,6 +114,11 @@ class HomesSearchScreen extends Component {
         }
     }
 
+    componentWillMount() {
+        this.setCountriesInfo();
+        this.getHomes();
+    }
+
     setCountriesInfo() {
         console.log("setCountriesInfo");
         countryArr = [];
@@ -130,11 +134,6 @@ class HomesSearchScreen extends Component {
         });
     }
 
-    componentWillMount() {
-        this.setCountriesInfo();
-        this.getHomes();
-    }
-
     getHomes() {
         if (this.listView != undefined && this.listView != null) {
             this.listView.initListView();
@@ -146,19 +145,38 @@ class HomesSearchScreen extends Component {
         searchTerms.push(`guests=${this.state.guests}`);
         searchTerms.push(`priceMin=${this.state.priceRange[0]}`);
         searchTerms.push(`priceMax=${this.state.priceRange[1]}`);
+
+        if (this.state.citiesToggled != '') {
+            searchTerms.push(`cities=${this.state.citiesToggled}`);
+        }
+        if (this.state.propertyTypesToggled != '') {
+            searchTerms.push(`propertyTypes=${this.state.propertyTypesToggled}`);
+        }
         searchTerms.push(`page=0`);
         console.log("searchTerms", searchTerms);
 
         requester.getListingsByFilter(searchTerms).then(res => {
             res.body.then(data => {
-                this.setState({
-                    // listings: data.filteredListings.content,
-                    totalPages: data.filteredListings.totalPages,
-                    cities: data.cities,
-                    propertyTypes: data.types
-                }, () => {
-                    this.listView.onFirstLoad(data.filteredListings.content, false);
-                });
+                console.log("requester.getListingsByFilter", data);
+
+                if (this.isFilterResult) {
+                    this.setState({
+                        // listings: data.filteredListings.content,
+                        totalPages: data.filteredListings.totalPages
+                    }, () => {
+                        this.listView.onFirstLoad(data.filteredListings.content, false);
+                    });
+                }
+                else {
+                    this.setState({
+                        // listings: data.filteredListings.content,
+                        totalPages: data.filteredListings.totalPages,
+                        cities: data.cities,
+                        propertyTypes: data.types
+                    }, () => {
+                        this.listView.onFirstLoad(data.filteredListings.content, false);
+                    });
+                }
             });
         });
     }
@@ -174,6 +192,12 @@ class HomesSearchScreen extends Component {
                 searchTerms.push(`guests=${this.state.guests}`);
                 searchTerms.push(`priceMin=${this.state.priceRange[0]}`);
                 searchTerms.push(`priceMax=${this.state.priceRange[1]}`);
+                if (citiesToggled != '') {
+                    searchTerms.push(`cities=${this.state.citiesToggled}`);
+                }
+                if (propertyTypesToggled != '') {
+                    searchTerms.push(`propertyTypes=${this.state.propertyTypesToggled}`);
+                }
                 searchTerms.push(`page=${page - 1}`);
                 console.log("onFetch - searchTerms", searchTerms);
 
@@ -315,17 +339,95 @@ class HomesSearchScreen extends Component {
     }
 
     gotoSettings = () => {
+        if (this.state.cities == null || this.state.cities.length == 0) {
+            return;
+        }
+        this.props.navigation.navigate("HomeFilterScreen", {
+            cities: this.state.cities,
+            properties: this.state.propertyTypes,
+            priceRange: this.state.priceRange,
+            updateFilter: this.updateFilter,
+        });
+    }
+
+    updateFilter = (data) => {
+        console.log("updateFilter", data);
         
+        this.isFilterResult = true;
+        
+        if (this.listView != undefined && this.listView != null) {
+            this.listView.initListView();
+        }
+        
+        this.setState({
+            cities: data.cities,
+            properties: data.properties,
+            priceRange: data.sliderValue,
+        }, () => {
+            // this.applyFilters();
+            this.state.citiesToggled = '';
+            for (var i = 0; i < data.cities.length; i ++) {
+                if (data.cities[i].isChecked) {
+                    if (i != 0) {
+                        this.state.citiesToggled += ',';
+                    }
+                    this.state.citiesToggled += data.cities[i].text;
+                }
+            }
+            this.state.propertyTypesToggled = '';
+            for (var i = 0; i < data.properties.length; i ++) {
+                if (data.properties[i].isChecked) {
+                    if (i != 0) {
+                        this.state.propertyTypesToggled += ',';
+                    }
+                    this.state.propertyTypesToggled += data.properties[i].text;
+                }
+            }
+            this.getHomes();
+        });
+    }
+
+    calculateCheckInOuts(listing) {
+        let checkInStart = listing.checkinStart && Number(listing.checkinStart.substring(0, 2));
+        let checkInEnd = listing.checkinEnd && Number(listing.checkinEnd.substring(0, 2));
+        checkInEnd = checkInEnd && checkInStart < checkInEnd ? checkInEnd : 24;
+      
+        let checkOutStart = listing.checkoutStart && Number(listing.checkoutStart.substring(0, 2));
+        let checkOutEnd = listing.checkoutEnd && Number(listing.checkoutEnd.substring(0, 2));
+        checkOutStart = checkOutStart && checkOutStart < checkOutEnd ? checkOutStart : 0;
+      
+        let checks = {
+          checkInStart,
+          checkInEnd,
+          checkOutStart,
+          checkOutEnd
+        };
+      
+        return checks;
     }
 
     gotoHomeDetailPage = (home) => {
         console.log (" home ---", home);
-        // requester.getListing(193).then(res => {
-        //     console.log("--------------1", res);
-        //     res.body.then(data => {
-        //         console.log("--------------data1", data);
-        //     });
-        // });
+
+        this.setState({isLoadingDetails: true});
+        requester.getListing(home.id).then(res => {
+            res.body.then(listing => {
+                this.setState({isLoadingDetails: false}, () => {
+                    const checks = this.calculateCheckInOuts(listing);
+                    const homePhotos = [];
+                    for (let i = 0; i < listing.pictures.length; i++) {
+                        homePhotos.push({ uri: imgHost + listing.pictures[i].original });
+                    }
+
+                    console.log("123123123", listing, checks);
+                    this.props.navigation.navigate('HomeDetailsScreen', {
+                        data: listing,
+                        homePhotos: homePhotos,
+                        checks: checks
+                    });
+                });
+            });
+        });
     }
 
     renderItem = (item) => {
@@ -455,7 +557,7 @@ class HomesSearchScreen extends Component {
                     </View>
                 </View>
                 <ProgressDialog
-                    visible={this.state.isLoadingHotelDetails}
+                    visible={this.state.isLoadingDetails}
                     title="Please Wait"
                     message="Loading..."
                     animationType="slide"

@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AvailableRoomsView from '../../molecules/AvailableRoomsView';
 import FacilitiesView from '../../molecules/FacilitiesView';
-import HotelDetailView from '../../organisms/HotelDetailView';
+import HomeDetailView from '../../organisms/HomeDetailView';
 import LocationView from '../../atoms/LocationView';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
 import styles from './styles';
@@ -18,78 +18,44 @@ const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;
 const logoHeight = logoWidth * 35 / 54;//eslint-disable-line
 
-class HotelDetails extends Component {
-    static propTypes = {
-        navigation: PropTypes.shape({
-            navigate: PropTypes.func
-        })
-    }
+class HomeDetails extends Component {
 
-    static defaultProps = {
-        navigation: {
-            navigate: () => { }
-        }
-    }
-
+    //https://github.com/LockTrip/Centralized-App/blob/master/src/components/homes/details/HomeDetailsPage.jsx
+    //requester.getListing(this.props.match.params.id).then
+//https://staging.locktrip.com/api/listings/990
+    //requester.getCalendarByListingIdAndDateRange(searchTermMap)
+//https://staging.locktrip.com/api/calendars/search/findAllByListingIdAndDateBetween?listing=990&startDate=06/11/2018&endDate=06/11/2019&page=0&toCode=EUR&size=365
+    //requester.getHomeBookingDetails(this.props.match.params.id)
+//https://staging.locktrip.com/api/listings/rooms/990
     constructor(props) {
         super(props);
 
-        this.onClose = this.onClose.bind(this);
-        this.onFacilityMore = this.onFacilityMore.bind(this);
+        const { params } = this.props.navigation.state;
+        console.log("HomeDetails", params);
 
         this.state = {
-            hotel: {},
-            hotelFullDetails: [],
+            dataSourcePreview: params ? params.homePhotos : [],
+            homeData: params ? params.data : [],
+            checks: params ? params.checks : [],
             hotelAmenities: [],
-            dataSourcePreview: [],
-            description: '',
-            searchString: '',
-            guests: 0,
-            mainAddress: '',
-            countryName: '',
-            latitude: 37.78825,
-            longitude: -122.4324,
-            currency: 'EUR',
-            currencySign: '€',
-            locRate: 0,
-            hotelRatingStars: 0,
-            daysDifference: 1
         }
-
-        const { params } = this.props.navigation.state;
-        this.state.hotel = params ? params.hotelDetail : [];
-        this.state.guests = params ? params.guests : 0;
-        this.state.searchString = params ? params.searchString : '';
-        this.state.currency = params ? params.currency : [];
-        this.state.currencySign = params ? params.currencySign : '€';
-        this.state.locRate = params ? params.locRate : '';
-        this.state.hotelFullDetails = params ? params.hotelFullDetails : [];
-        this.state.hotelAmenities = params ? params.hotelFullDetails.hotelAmenities : [];
-        this.state.mainAddress = params ? params.hotelFullDetails.additionalInfo.mainAddress : '';
-        this.state.regionName = params ? params.hotelFullDetails.city : '';
-        this.state.countryName = params ? params.hotelFullDetails.country : '';
-        this.state.description = params ? params.hotelFullDetails.generalDescription : '';
-        this.state.latitude = params ? params.hotelFullDetails.latitude : 0.0;
-        this.state.longitude = params ? params.hotelFullDetails.longitude : 0.0;
-        this.state.dataSourcePreview = params ? params.dataSourcePreview : [];
-        this.state.hotelRatingStars = params ? params.hotelDetail.stars : 0;
-        this.state.daysDifference = params ? params.daysDifference : 1;
     }
 
-    onMapTap() {
-        this.props.navigation.navigate('MapFullScreen', {
-            lat: this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0,
-            lng: this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0,
-            name: this.state.hotel.name,
-            address: `${this.state.mainAddress}, ${this.state.countryName}`
-        });
-    }
-
-    onClose() {
+    onClose = () => {
         this.props.navigation.goBack();
     }
 
-    onFacilityMore() {
+    onMapTap = () => {
+        // this.props.navigation.navigate('MapFullScreen', {
+        //     lat: this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0,
+        //     lng: this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0,
+        //     name: this.state.hotel.name,
+        //     address: `${this.state.mainAddress}, ${this.state.countryName}`
+        // });
+    }
+
+    onFacilityMore = () => {
+
     }
 
     onBooking = (roomDetail) => {
@@ -130,29 +96,25 @@ class HotelDetails extends Component {
                             />
                         </View>
 
-                        <HotelDetailView
-                            dataSourcePreview={this.state.dataSourcePreview}
-                            title={this.state.hotel.name}
-                            rateVal={this.state.hotel.star}
+                        <HomeDetailView
+                            title={this.state.homeData.name}
+                            rateVal={this.state.homeData.averageRating}
                             reviewNum={0}
-                            address={this.state.mainAddress}
-                            description={this.state.description}
+                            address={this.state.homeData.street + ', ' + this.state.homeData.city.name + '•' + this.state.homeData.country.name}
+                            description={this.state.homeData.descriptionText}
                         />
 
-                        {/* { this.state.hotelAmenities.map
-                        (listing => <FacilityView image={require('../../../assets/Facilities/Homes/BathTub.png')}/>) } */}
-
-                        <FacilitiesView
+                        {/* <FacilitiesView
                             style={styles.roomfacility}
                             data={this.state.hotelAmenities}
                             onFacilityMore={this.onFacilityMore}
-                        />
+                        /> 
                         <View style={[styles.lineStyle, {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15
                         }]}
                         />
 
-                        <AvailableRoomsView
+                       <AvailableRoomsView
                             id={this.state.hotel.id}
                             search={this.state.searchString}
                             onBooking={this.onBooking}
@@ -162,7 +124,7 @@ class HotelDetails extends Component {
                             currencySign={this.state.currencySign}
                             locRate={this.state.locRate}
                             daysDifference={this.state.daysDifference}
-                        />
+                        />*/}
 
                         <View style={[styles.lineStyle, {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15
@@ -170,16 +132,14 @@ class HotelDetails extends Component {
                         />
                         <TouchableOpacity activeOpacity={1} onPress={() => this.onMapTap()}>
                             <LocationView
-                                location={`${this.state.mainAddress}, ${this.state.countryName}`}
                                 titleStyle={{ fontSize: 17 }}
-                                name={this.state.hotel.name}
-                                description={this.state.hotel.generalDescription}
-                                lat={this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0}
-                                lon={this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0}
+                                name={this.state.homeData.name}
+                                lat={this.state.homeData.latitude != null ? parseFloat(this.state.homeData.latitude) : 0.0}
+                                lon={this.state.homeData.longitude != null ? parseFloat(this.state.homeData.longitude) : 0.0}
                                 radius={200}
                             />
                         </TouchableOpacity>
-                        <View style={{ marginBottom: 50 }} />
+                        <View style={{ marginBottom: 50 }} /> 
                     </View>
                 </ScrollView>
             </View>
@@ -187,4 +147,4 @@ class HotelDetails extends Component {
     }
 }
 
-export default HotelDetails;
+export default HomeDetails;

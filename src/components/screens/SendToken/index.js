@@ -50,14 +50,38 @@ class SendToken extends Component {
         });
     }
 
+    tokensToWei(tokens) {
+        let index = tokens.indexOf('.');
+        let trailingZeroes = 0;
+        let wei = '';
+        if (index === -1) {
+            trailingZeroes = 18;
+        } 
+        else {
+            trailingZeroes = 18 - (tokens.length - 1 - index);
+        }
+    
+        wei = tokens.replace(/[.,]/g, '');
+        if (trailingZeroes >= 0) {
+            wei = wei + '0'.repeat(trailingZeroes);
+        } 
+        else {
+            wei = wei.substring(0, index + 18);
+        }
+    
+        return wei;
+    }
+
     onClickSend() { 
         this.setState({ showProgress: true });
         setTimeout(() => {
+            const wei = (this.tokensToWei(this.state.loc_amount.toString()));
+            console.log("onClickSend - wei", wei);
             TokenTransactions.sendTokens(
               this.state.jsonFile,
               this.state.wallet_password,
               this.state.wallet_address,
-              (parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
+              wei.toString()//(parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
             ).then(() => {
                 alert('Transaction made successfully');
                 this.setState({
@@ -70,15 +94,18 @@ class SendToken extends Component {
                 this.setState({ showProgress: false });
                 if (x.hasOwnProperty('message')) {
                     alert(x.message);
-                } else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
+                } 
+                else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
                     alert(x.err.message);
-                } else if (typeof x === 'string') {
+                }
+                else if (typeof x === 'string') {
                     alert(x);
-                } else {
+                } 
+                else {
                     console.log(x);
                 }
             });
-          }, 1000);
+        }, 1000);
     }
 
     @autobind

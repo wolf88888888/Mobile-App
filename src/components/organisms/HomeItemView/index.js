@@ -73,10 +73,13 @@ class HomeItemView extends Component {
             item, currencySign, locRate
         } = this.props;
         
-        let pictures = JSON.parse(item.pictures);
         let urlThumbnail = "";
-        if (pictures.length > 0) {
-            urlThumbnail = imgHost + pictures[0].thumbnail;
+        if (item.pictures != null) {
+            let pictures = JSON.parse(item.pictures);
+    
+            if (pictures.length > 0) {
+                urlThumbnail = imgHost + pictures[0].thumbnail;
+            }
         }
 
         let stars = item.averageRating;
@@ -112,7 +115,7 @@ class HomeItemView extends Component {
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
 
                         <View style={styles.aboutPlaceView}>
-                            <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text>
+                            {/* <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text> */}
                             <Text style={styles.placeReviewNumber}> {stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
                                 {this.renderStars(stars)}

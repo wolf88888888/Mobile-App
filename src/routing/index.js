@@ -64,7 +64,6 @@ import GuestInfoForm from '../components/screens/GuestInfoForm';
 import PropertyScreen from '../components/screens/Property';
 import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
-import HotelFilters from '../components/screens/HotelFilters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
@@ -79,7 +78,10 @@ import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
 import HotelsSearchScreen from '../components/screens/HotelsSearchScreen';
+import HotelFilters from '../components/screens/HotelFilters';
 import HomesSearchScreen from '../components/screens/HomesSearchScreen';
+import HomeFilters from '../components/screens/HomeFilters';
+import HomeDetails from '../components/screens/HomeDetails';
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
@@ -138,7 +140,6 @@ const RootNavigator = createStackNavigator(
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
-        HotelFilterScreen: { screen: HotelFilters },
         AvailableRoomsView: { screen: AvailableRoomsView},
         Notifications: { screen: Notifications},
         CreditCard :  { screen: CreditCard},
@@ -156,7 +157,10 @@ const RootNavigator = createStackNavigator(
         Chat: {screen: Chat},
 
         HotelsSearchScreen: {screen: HotelsSearchScreen},
+        HotelFilterScreen: { screen: HotelFilters },
         HomesSearchScreen: {screen: HomesSearchScreen},
+        HomeFilterScreen: { screen: HomeFilters },
+        HomeDetailsScreen: { screen: HomeDetails },
         MapFullScreen: {screen: MapFullScreen}
     },
     {

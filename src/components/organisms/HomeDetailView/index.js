@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
         Text,
         View,
-        Dimensions,
       } from 'react-native';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types'
@@ -11,13 +10,9 @@ import StarRatings from '../../atoms/StarRatings';
 
 import styles from './styles';
 
-const dimensionWindows = Dimensions.get('window');
-const logoWidth = dimensionWindows.width;
-const logoHeight = logoWidth * 35 / 54;
-
 const RNPropTypes = PropTypes || React.PropTypes;
 
-class HotelDetailView extends Component {
+class HomeDetailView extends Component {
 
     static propTypes = {
         title: RNPropTypes.string.isRequired,
@@ -107,4 +102,4 @@ class HotelDetailView extends Component {
     }
 }
 
-export default HotelDetailView;
+export default HomeDetailView;
