@@ -106,7 +106,7 @@ android {
         applicationId "com.locktrip"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 15
+        versionCode 16
         versionName "1.0." + versionCode
         multiDexEnabled  true
         ndk {
@@ -170,7 +170,7 @@ android {
           // Or, if you prefer, you can continue to check for errors in release builds,
           // but continue the build even when errors are found:
           abortOnError false
-      }
+    }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
