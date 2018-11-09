@@ -509,9 +509,12 @@ class EditUserProfile extends Component {
             jsonFile: this.state.jsonFile
         };
 
+        console.log("user info", userInfo);
+
         Object.keys(userInfo).forEach((key) => (userInfo[key] === null || userInfo[key] === '') && delete userInfo[key]);
 
         requester.updateUserInfo(userInfo, null).then(res => {
+            console.log("------", res)
             if (res.success) {
                 userInstance.setFirstName(userInfo.firstName);
                 userInstance.setLastName(userInfo.lastName);
