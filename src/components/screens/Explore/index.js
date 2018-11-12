@@ -663,7 +663,7 @@ class Explore extends Component {
                             </TouchableOpacity>
 
                             <View style={styles.bottomView}>
-                                <Image style={styles.bottomViewText} resizeMode='center'
+                                <Image style={styles.bottomViewText} resizeMode='stretch'
                                     source={require('../../../assets/texthome.png')} />
                                 <TouchableOpacity onPress={this.showToast} style={styles.getStartedButtonView}>
                                     <View >

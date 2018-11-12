@@ -639,12 +639,25 @@ const styles = StyleSheet.create({
         marginLeft: 5
 
  	},
-    imageViewPopularHotels: {width: dimensionWindows.width/2.2,height: dimensionWindows.width/3},
-    bottomView: {flexDirection: 'column', justifyContent: 'space-between',alignItems: 'center'},
-    bottomViewText: {margin:10, width:dimensionWindows.width/2, height: dimensionWindows.height/7},
+    imageViewPopularHotels: {
+        width: dimensionWindows.width/2.2,
+        height: dimensionWindows.width/3
+    },
+    bottomView: {
+        flexDirection: 'column', 
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    bottomViewText: {
+        margin:10, 
+        width:dimensionWindows.width / 2, 
+        height: dimensionWindows.width / 14 * 1.66 
+    },
     bottomViewBanner: {
         marginTop:10,
-        height: dimensionWindows.height/7, width: dimensionWindows.width},
+        height: dimensionWindows.height/7, 
+        width: dimensionWindows.width
+    },
     countriesSpinner: {
         marginTop: 40,
         flex: 1,
