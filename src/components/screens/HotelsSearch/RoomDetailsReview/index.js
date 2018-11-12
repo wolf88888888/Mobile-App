@@ -1,14 +1,14 @@
 import { AsyncStorage, Modal, ScrollView, Text, TextInput, TouchableOpacity, View, WebView } from 'react-native';
 import React, { Component } from 'react';
 
-import { HotelReservation } from '../../../services/blockchain/hotelReservation';
+import { HotelReservation } from '../../../../services/blockchain/hotelReservation';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast';
 import moment from 'moment';
-import requester from '../../../initDependencies';
+import requester from '../../../../initDependencies';
 import styles from './styles';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 
 export default class RoomDetailsReview extends Component {
     constructor() {
@@ -351,7 +351,7 @@ export default class RoomDetailsReview extends Component {
                                         }}
                                     >
                                         <Image style={styles.closeButtonSvg}
-                                            source={require('../../../../src/assets/png/close.png')} />
+                                            source={require('../../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -392,7 +392,7 @@ export default class RoomDetailsReview extends Component {
                                         }}
                                     >
                                         <Image style={styles.closeButtonSvg}
-                                            source={require('../../../../src/assets/png/close.png')} />
+                                            source={require('../../../../../src/assets/png/close.png')} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -424,7 +424,7 @@ export default class RoomDetailsReview extends Component {
                     }} >
                         <Image
                             style={styles.btn_backImage}
-                            source={require('../../../../src/assets/png/arrow-back.png')}
+                            source={require('../../../../../src/assets/png/arrow-back.png')}
                         />
                     </TouchableOpacity>
                     <View style={styles.content}>
@@ -432,7 +432,7 @@ export default class RoomDetailsReview extends Component {
                         <Text style={styles.heading}>Review room details</Text>
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
-                                <Image source={require('../../../../src/assets/apartment.png')}
+                                <Image source={require('../../../../../src/assets/apartment.png')}
                                     style={styles.hotelThumb} />
                             </View>
                             <View style={styles.hotelInfoView}>

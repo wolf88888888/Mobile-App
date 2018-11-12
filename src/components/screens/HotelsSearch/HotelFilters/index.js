@@ -133,7 +133,7 @@ export default class HotelFilters extends Component {
             <View style={styles.container}>
                 <View style={styles.backButton}>
                     <TouchableOpacity onPress={this.onBackPress}>
-                        <Image style={styles.btn_backImage} source={require('../../../assets/close.png')}/>
+                        <Image style={styles.btn_backImage} source={require('../../../../assets/close.png')}/>
                     </TouchableOpacity>
                     <Text style={styles.titleText}>Filters</Text>
                 </View>
@@ -144,9 +144,9 @@ export default class HotelFilters extends Component {
                         <TouchableOpacity style={[styles.residence, this.state.isHotelSelected? styles.selected: '']}>
                             {
                                 this.state.isHotelSelected &&
-                                <Image source={require('../../../assets/png/Filters/check.png')} style={styles.tick}/>
+                                <Image source={require('../../../../assets/png/Filters/check.png')} style={styles.tick}/>
                             }
-                            <Image source={require('../../../assets/png/Filters/hotel.png')} style={styles.headerIcons}/>
+                            <Image source={require('../../../../assets/png/Filters/hotel.png')} style={styles.headerIcons}/>
                         </TouchableOpacity>
                         <Text style={styles.residenceType}>Hotel</Text>
                     </View>
@@ -195,31 +195,31 @@ export default class HotelFilters extends Component {
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating[0] === true ? styles.activeRating: '']} 
                                 onPress={() => this.handleRatingChange(0, this.state.selectedRating[0] ? false : true)}>
                                    <Text style={[styles.ratingNumber, this.state.selectedRating[0] === true ? styles.activeRatingText: '']}>1</Text>
-                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                   <Image source={require('../../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
 
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating[1] === true ? styles.activeRating: '']} 
                                onPress={() => this.handleRatingChange(1, this.state.selectedRating[1] ? false : true)}>
                                    <Text style={[styles.ratingNumber, this.state.selectedRating[1] === true ? styles.activeRatingText: '']}>2</Text>
-                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                   <Image source={require('../../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
 
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating[2] === true ? styles.activeRating: '']} 
                                onPress={() => this.handleRatingChange(2, this.state.selectedRating[2] ? false : true)}>
                                    <Text style={[styles.ratingNumber, this.state.selectedRating[2] === true ? styles.activeRatingText: '']}>3</Text>
-                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                   <Image source={require('../../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
 
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating[3] === true ? styles.activeRating: '']} 
                                onPress={() => this.handleRatingChange(3, this.state.selectedRating[3] ? false : true)}>
                                    <Text style={[styles.ratingNumber, this.state.selectedRating[3] === true ? styles.activeRatingText: '']}>4</Text>
-                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                   <Image source={require('../../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
 
                                <TouchableOpacity style={[styles.starBox, this.state.selectedRating[4] === true ? styles.activeRating: '']} 
                                onPress={() => this.handleRatingChange(4, this.state.selectedRating[4] ? false : true)}>
                                    <Text style={[styles.ratingNumber, this.state.selectedRating[4] === true ? styles.activeRatingText: '']}>5</Text>
-                                   <Image source={require('../../../assets/png/empty-star.png')} style={styles.star}/>
+                                   <Image source={require('../../../../assets/png/empty-star.png')} style={styles.star}/>
                                </TouchableOpacity>
                            </View>
                        </View>

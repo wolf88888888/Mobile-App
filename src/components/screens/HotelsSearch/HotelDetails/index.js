@@ -6,13 +6,13 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AvailableRoomsView from '../../molecules/AvailableRoomsView';
-import FacilitiesView from '../../molecules/FacilitiesView';
-import HotelDetailView from '../../organisms/HotelDetailView';
-import LocationView from '../../atoms/LocationView';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
+import AvailableRoomsView from '../../../molecules/AvailableRoomsView';
+import FacilitiesView from '../../../molecules/FacilitiesView';
+import HotelDetailView from '../../../organisms/HotelDetailView';
+import LocationView from '../../../atoms/LocationView';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
 import styles from './styles';
-import ImageCarousel from '../../atoms/ImagePage';
+import ImageCarousel from '../../../atoms/ImagePage';
 
 const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;

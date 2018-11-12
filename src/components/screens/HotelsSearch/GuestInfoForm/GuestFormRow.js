@@ -2,7 +2,6 @@ import { Picker, Text, TextInput, View, KeyboardAvoidingView, ScrollView } from 
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
 
 export default class GuestFormRow extends Component {

@@ -8,19 +8,19 @@ import { Marker } from 'react-native-maps';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 
-import { imgHost } from '../../../config';
-import SearchBar from '../../molecules/SearchBar';
-import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import HotelItemView from '../../organisms/HotelItemView';
-import requester from '../../../initDependencies';
+import { imgHost } from '../../../../config';
+import SearchBar from '../../../molecules/SearchBar';
+import DateAndGuestPicker from '../../../organisms/DateAndGuestPicker';
+import HotelItemView from '../../../organisms/HotelItemView';
+import requester from '../../../../initDependencies';
 
 import UUIDGenerator from 'react-native-uuid-generator';
-import { UltimateListView } from '../../../../library/UltimateListView';
+import { UltimateListView } from '../../../../../library/UltimateListView';
 import { DotIndicator } from 'react-native-indicators';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
-import * as currencyActions from '../../../redux/action/Currency'
+import * as currencyActions from '../../../../redux/action/Currency'
 
 import styles from './styles';
 
@@ -668,7 +668,7 @@ class HotelsSearchScreen extends Component {
 
     renderPaginationFetchingView = () => (
         <View style={{width, height:height - 160, justifyContent: 'center', alignItems: 'center'}}>
-            <Image style={{width:50, height:50}} source={require('../../../assets/loader.gif')}/>
+            <Image style={{width:50, height:50}} source={require('../../../../assets/loader.gif')}/>
         </View>
     )
     

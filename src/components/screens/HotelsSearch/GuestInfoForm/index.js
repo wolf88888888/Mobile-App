@@ -5,8 +5,8 @@ import GuestFormRow from './GuestFormRow';
 import styles from './styles';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast';
-import { hasLetter } from '../../../utils/validation';
-import { userInstance } from '../../../utils/userInstance';
+import { hasLetter } from '../../../../utils/validation';
+import { userInstance } from '../../../../utils/userInstance';
 
 let testingArray = [];
 var newElement = {};
@@ -160,7 +160,7 @@ export default class GuestInfoForm extends Component {
                 />
                 <TouchableOpacity onPress={() => {this.props.navigation.goBack()}}>
                     <Image style={styles.btn_backImage}
-                            source={require('../../../../src/assets/png/arrow-back.png')}/>
+                            source={require('../../../../../src/assets/png/arrow-back.png')}/>
                 </TouchableOpacity>
                 
                 <View style={styles.content}>
@@ -170,7 +170,7 @@ export default class GuestInfoForm extends Component {
                     
                     <View style={styles.hotelInfoContainer}>
                         <View style={styles.hotelThumbView}>
-                            <Image source={require('../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
+                            <Image source={require('../../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
                         </View>
                         <View style={styles.hotelInfoView}>
                             <Text style={styles.hotelName}>{params.hotelDetails.name}</Text>

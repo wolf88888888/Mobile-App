@@ -58,11 +58,7 @@ import ReviewSend from '../components/screens/Booking/ReviewSend';
 import ReviewTrip from '../components/screens/Booking/ReviewTrip';
 import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
-import RoomDetailsReview from '../components/screens/RoomDetailsReview';
-import GuestInfoForm from '../components/screens/GuestInfoForm';
-
 import PropertyScreen from '../components/screens/Property';
-import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
@@ -77,8 +73,12 @@ import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
-import HotelsSearchScreen from '../components/screens/HotelsSearchScreen';
-import HotelFilters from '../components/screens/HotelFilters';
+import HotelsSearchScreen from '../components/screens/HotelsSearch/HotelsSearchScreen';
+import HotelFilters from '../components/screens/HotelsSearch/HotelFilters';
+import HotelDetails from '../components/screens/HotelsSearch/HotelDetails'
+import GuestInfoForm from '../components/screens/HotelsSearch/GuestInfoForm';
+import RoomDetailsReview from '../components/screens/HotelsSearch/RoomDetailsReview';
+
 import HomesSearchScreen from '../components/screens/HomesSearchScreen';
 import HomeFilters from '../components/screens/HomeFilters';
 import HomeDetails from '../components/screens/HomeDetails';
