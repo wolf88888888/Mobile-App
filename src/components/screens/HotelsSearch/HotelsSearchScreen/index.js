@@ -11,7 +11,6 @@ import Image from 'react-native-remote-svg';
 import { imgHost } from '../../../../config';
 import SearchBar from '../../../molecules/SearchBar';
 import DateAndGuestPicker from '../../../organisms/DateAndGuestPicker';
-import HotelItemView from '../../../organisms/HotelItemView';
 import requester from '../../../../initDependencies';
 
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -21,6 +20,11 @@ import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
 import * as currencyActions from '../../../../redux/action/Currency'
+
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+
+import ListModeHotelsSearch from '../ListModeHotelsSearch'
+import MapModeHotelsSearch from '../MapModeHotelsSearch'
 
 import styles from './styles';
 
@@ -89,6 +93,12 @@ class HotelsSearchScreen extends Component {
             editable: false,
 
             isNewSearch: false,
+
+            index: 0,
+            routes: [
+                { key: 'list', title: 'List Mode' },
+                { key: 'map', title: 'Map Mode' },
+            ],
         };
         const { params } = this.props.navigation.state;//eslint-disable-line
 
@@ -153,7 +163,7 @@ class HotelsSearchScreen extends Component {
     
                     console.log("getStaticHotels", content);
                     const hotels = content;
-                    this.listView.onFirstLoad(hotels, false);
+                     this.listView.onFirstLoad(hotels, false);
                     this.getHotelsInfoBySocket();
                 });
             });
@@ -224,7 +234,7 @@ class HotelsSearchScreen extends Component {
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
 
-                if (this.state.hotelsInfo.length < this.listView.getRows.length || this.state.hotelsInfo.length % 10 === 0) {
+                if (this.listView != null && (this.state.hotelsInfo.length < this.listView.getRows().length || this.state.hotelsInfo.length % 10 === 0)) {
                     this.setState(prevState => ({
                         hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
                     }));
@@ -255,11 +265,13 @@ class HotelsSearchScreen extends Component {
         if (this.state.isMAP == 0) {
             this.setState({
                 isMAP: 1,
+                index: 1,
             });
         }
         else {
             this.setState({
                 isMAP: 0,
+                index: 0,
             });
         }
     }
@@ -334,7 +346,7 @@ class HotelsSearchScreen extends Component {
         });
     }
 
-    onFetch = async (page = 1, startFetch, abortFetch) => {
+    onFetch = (page = 1, startFetch, abortFetch) => {
         console.log("onFetch", page);
         try {
             if (!this.isFilterResult) {
@@ -653,46 +665,6 @@ class HotelsSearchScreen extends Component {
         });
     }
 
-    renderItem = (item) => {
-        return (
-            <HotelItemView
-                item = {item}
-                currencySign = {this.state.currencySign}
-                locRate = {this.state.locRate}
-                gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
-                daysDifference = {this.state.daysDifference}
-                isDoneSocket = {this.state.allElements}
-            />
-        )
-    }
-
-    renderPaginationFetchingView = () => (
-        <View style={{width, height:height - 160, justifyContent: 'center', alignItems: 'center'}}>
-            <Image style={{width:50, height:50}} source={require('../../../../assets/loader.gif')}/>
-        </View>
-    )
-    
-    renderPaginationWaitingView = () => {
-        return (
-            <View style={
-                {
-                    flex: 0,
-                    width,
-                    height: 55,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }
-            }>
-                <DotIndicator color='#d97b61' count={3} size={9} animationDuration={777}/>
-            </View>
-        )
-    }
-
-    renderPaginationAllLoadedView = () => {
-        return (<View/>)
-    }
-
     renderHotelTopView() {
         return (
             <View style={styles.SearchAndPickerwarp}>
@@ -872,6 +844,26 @@ class HotelsSearchScreen extends Component {
         );
     }
 
+    renderScene = ({ route }) => {
+        switch (route.key) {
+            case 'list':
+                return <ListModeHotelsSearch 
+                            ref = {ref => this.listView = ref}
+                            allElements = {this.state.allElements}
+                            currency = {this.state.currency}
+                            currencySign = {this.state.currencySign}
+                            locRate = {this.state.locRate}
+                            daysDifference = {this.state.daysDifference}
+                            onFetch = {this.onFetch}
+                            gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
+                            />;
+            case 'map':
+                return <MapModeHotelsSearch/>;
+            default:
+                return null;
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -880,10 +872,17 @@ class HotelsSearchScreen extends Component {
                 <View style={{position: 'absolute', top: 100, left: 0, right: 0, bottom: 0, width:'100%'}}>
                     {this.renderFilterBar()}
                     <View style={styles.containerHotels}>
-                        {
+                        {/* {
                             this.state.isMAP == 1 && this.renderMap()
-                        }
-                        <UltimateListView
+                        } */}
+                        <TabView
+                            navigationState={this.state}
+                            renderScene={this.renderScene}
+                            onIndexChange={index => this.setState({ index })}
+                            initialLayout={{ width: width }}
+                            swipeEnabled={false}
+                        />
+                        {/* <UltimateListView
                             ref = {ref => this.listView = ref}
                             isDoneSocket = {this.state.allElements}
                             key = {'list'} // this is important to distinguish different FlatList, default is numColumns
@@ -896,7 +895,7 @@ class HotelsSearchScreen extends Component {
                             paginationFetchingView = {this.renderPaginationFetchingView}
                             paginationWaitingView = {this.renderPaginationWaitingView}
                             paginationAllLoadedView = {this.renderPaginationAllLoadedView}
-                        />
+                        /> */}
                         {
                             this.state.isMAP != -1 &&
                                 <TouchableOpacity onPress={this.switchMode} style={styles.switchButton}>
