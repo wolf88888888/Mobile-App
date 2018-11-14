@@ -12,6 +12,8 @@ const { width, height } = Dimensions.get('window');
 
 class ListModeHotelsSearch extends Component {
 
+    isRefresh = false;
+
     constructor(props) {
         super(props);
 
@@ -24,9 +26,13 @@ class ListModeHotelsSearch extends Component {
         };
     }
 
-	shouldComponentUpdate(nextProps) {
-		return false;
-	}
+	// shouldComponentUpdate(nextProps) {
+    //     if (this.isRefresh) {
+    //         this.isRefresh = false;
+    //         return true;
+    //     }
+	// 	return false;
+	// }
 
     componentDidUpdate(prevProps) {
         // if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
@@ -54,13 +60,14 @@ class ListModeHotelsSearch extends Component {
         }
 
         if (isChanged) {
-            //this.setState(newState);
+            // this.isRefresh = true;
+            this.setState(newState);
+            console.log("this.isRefresh", newState);
         }
         // }
     }
 
     initListView = () => {
-        console.log("------------------initListView");
         return this.listView.initListView();
     }
 
@@ -69,29 +76,24 @@ class ListModeHotelsSearch extends Component {
     }
 
     onDoneSocket = () => {
-        console.log("------------------onDoneSocket");
         return this.listView.onDoneSocket();
     }
 
     upgradePrice = (index, price) => {
-        console.log("------------------upgradePrice");
-        // return this.listView.upgradePrice(index, price);
+        return this.listView.upgradePrice(index, price);
     }
 
     getIndex = (id) => {
-        console.log("------------------getIndex");
-        // return this.listView.getIndex(id);
+        return this.listView.getIndex(id);
     }
 
     
     getPage = () => {
-        console.log("------------------getPage");
-        // return this.listView.getPage();
+        return this.listView.getPage();
     }
 
     getRows = () => {
-        console.log("------------------getRows");
-        // return this.listView.getRows();
+        return this.listView.getRows();
     }
 
     // onFetch = (page = 1, startFetch, abortFetch) => {
@@ -140,7 +142,6 @@ class ListModeHotelsSearch extends Component {
     }
 
     render() {
-        console.log("----------------- render123");
         return (
             <View style={styles.container}>
                 <UltimateListView

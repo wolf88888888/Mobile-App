@@ -239,9 +239,10 @@ class HotelsSearchScreen extends Component {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
 
                 if (this.listView != null && (this.state.hotelsInfo.length < this.listView.getRows().length || this.state.hotelsInfo.length % 10 === 0)) {
-                    this.setState(prevState => ({
-                        hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
-                    }));
+                    // this.setState(prevState => ({
+                    //     hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
+                    // }));
+                    this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
                 }
                 else {
                     this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
@@ -749,6 +750,13 @@ class HotelsSearchScreen extends Component {
         );
     }
 
+    renderTabBar = () => {
+        return (
+          <View style={styles.tabBar}>
+          </View>
+        );
+    };
+
     renderScene = ({ route }) => {
         switch (route.key) {
             case 'list':
@@ -788,10 +796,12 @@ class HotelsSearchScreen extends Component {
                         } */}
                         <TabView
                             navigationState={this.state}
+                            renderTabBar={this.renderTabBar}
                             renderScene={this.renderScene}
                             onIndexChange={index => this.setState({ index })}
                             initialLayout={{ width: width }}
                             swipeEnabled={false}
+                            animationEnabled={false}
                         />
                         {/* <UltimateListView
                             ref = {ref => this.listView = ref}

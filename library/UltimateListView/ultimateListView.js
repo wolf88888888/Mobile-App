@@ -624,10 +624,6 @@ export default class UltimateListView extends Component {
         )
     }
 
-    
-	// shouldComponentUpdate(nextProps) {
-	// 	return false;
-	// }
 }
 
 const styles = StyleSheet.create({

@@ -5,11 +5,14 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 import _ from 'lodash';
 import styles from './styles';
 import { imgHost } from '../../../../config';
+import red_marker from '../../../../assets/red_marker.png';
+import blue_marker from '../../../../assets/blue_marker.png';
+import MapMarker from './MapMarker';
 
 const { width, height } = Dimensions.get('window')
 
 class MapModeHotelsSearch extends Component {
-
+    _markers = [];
     constructor(props) {
         super(props);
         this.state = {
@@ -19,13 +22,14 @@ class MapModeHotelsSearch extends Component {
             isFilterResult: props.isFilterResult, 
             initialLat: props.initialLat,
             initialLon: props.initialLon,
-            hotelsInfo: []
+            hotelsInfo: [],
+            selectedMarkerIndex: -1
         }
     }
     
-	shouldComponentUpdate(nextProps) {
-		return false;
-	}
+	// shouldComponentUpdate(nextProps) {
+	// 	return false;
+	// }
 
     componentDidUpdate(prevProps) {
         // if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
@@ -64,6 +68,7 @@ class MapModeHotelsSearch extends Component {
     }
     
     renderImageInCallout = (hotel) => {
+        console.log("----------------- renderImageInCallout");
         let thumbnailURL;
         if (!this.state.isFilterResult) {
             thumbnailURL = imgHost + hotel.thumbnail.url;
@@ -90,8 +95,9 @@ class MapModeHotelsSearch extends Component {
     }
 
     renderCallout = (hotel) => {
+        console.log("----------------- renderCallout");
         return (
-            <MapView.Callout tooltip={true}>
+            <MapView.Callout tooltip={false}>
                 <View style={ styles.map_item }>
                     <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
                         { 
@@ -121,35 +127,51 @@ class MapModeHotelsSearch extends Component {
         );
     }
 
+    onPressMarker = (e, index) => {
+        // this.setState({selectedMarkerIndex: index});
+        // const { image } = this._markers[index];
+        // setTimeout(() => {
+            //this._markers[index].image = blue_marker;
+        // }, 0);
+    }
+
+    onPressMap = () => {
+        // this.setState({selectedMarkerIndex: -1});
+    }
 
     render() {
-        console.log("----------------- render");
         return (
             <View style={styles.container}>
-                {/* <MapView
+                <MapView
                     initialRegion={{
                         latitude: this.state.initialLat,
                         longitude: this.state.initialLon,
-                        latitudeDelta: 0.5,
-                        longitudeDelta: 0.5
+                        latitudeDelta: 0.3,
+                        longitudeDelta: 0.3
                     }}
                     style={styles.map}
+                    onPress={this.onPressMap}
                 >
                 {
-                    this.state.hotelsInfo.map(marker => (marker.lat != null || marker.latitude != null) && (
+                    this.state.hotelsInfo.map((marker, i) => (marker.lat != null || marker.latitude != null) && (
                         <Marker
+                            // image={this.state.selectedMarkerIndex === i ? blue_marker : red_marker}
+                            // style={this.state.selectedMarkerIndex === i ? {zIndex: 1} : null}
+                            key={i}
+                            image={red_marker}
+                            ref={(ref) => this._markers[i] = ref}
                             coordinate={{
                                 latitude: this.state.isFilterResult? parseFloat(marker.latitude) : parseFloat(marker.lat),
                                 longitude: this.state.isFilterResult? parseFloat(marker.longitude) : parseFloat(marker.lon)
                             }}
-                            onCalloutPress={() => {this.props.onClickHotelOnMap(marker)}} //eslint-disable-line
+                            onPress={(e) => this.onPressMarker(e, i)}
+                            // onCalloutPress={() => {this.props.onClickHotelOnMap(marker)}} //eslint-disable-line
                         >
-                            {this.renderCallout(marker)}
-                            
+                            {/* {this.renderCallout(marker)} */}
                         </Marker>
                     ))
                 }
-                </MapView> */}
+                </MapView>
             </View>
         );
     }

@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
     },
+
     leftIconView: {
         display: 'flex',
         justifyContent: 'center',
@@ -128,6 +129,12 @@ const styles = StyleSheet.create({
         fontSize: 10,
         lineHeight:15,
         color: 'grey',
-    }
+    },
+
+    tabBar : {
+        height:0,
+        flexDirection: 'row',
+        paddingTop: 0,
+    },
 });
 export default styles;
