@@ -50,10 +50,7 @@ class ListModeHotelsSearch extends Component {
         }
 
         if (isChanged) {
-            console.log("componentDidUpdate ---- -- -- ", newState);
-            this.setState(newState, () => {
-                console.log("123123123", this.state);
-            });
+            this.setState(newState);
         }
         // }
     }

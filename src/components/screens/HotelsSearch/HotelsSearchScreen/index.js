@@ -37,7 +37,6 @@ let countIos;
 
 class HotelsSearchScreen extends Component {
     hotelsInfoById = [];
-    isFilterResult = false;
 
     previousState = {};
 
@@ -56,6 +55,7 @@ class HotelsSearchScreen extends Component {
         }];
 
         this.state = {
+            isFilterResult: false,
             search: '',
             cities: [],
 
@@ -68,8 +68,8 @@ class HotelsSearchScreen extends Component {
             hotelsInfo : [],
             allElements: false,
             isMAP : -1,
-            initialLat: 51.5074,
-            initialLon: 0.1278,
+            initialLat: 42.698334,
+            initialLon: 23.319941,
             
             checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
             checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
@@ -218,7 +218,11 @@ class HotelsSearchScreen extends Component {
 
     handleAndroidSingleHotel(message) {
         if (this.state.isMAP == -1 && this.state.hotelsInfo.length > 0) {
-            this.setState({isMAP: 0});
+            this.setState({
+                isMAP: 0, 
+                initialLat: parseFloat(this.state.hotelsInfo[0].latitude), 
+                initialLon: parseFloat(this.state.hotelsInfo[0].longitude)
+            });
         }
         try {
             console.log("jsonHotel ---", message);
@@ -349,7 +353,7 @@ class HotelsSearchScreen extends Component {
     onFetch = (page = 1, startFetch, abortFetch) => {
         console.log("onFetch", page);
         try {
-            if (!this.isFilterResult) {
+            if (!this.state.isFilterResult) {
                 requester.getStaticHotels(this.state.regionId, page - 1).then(res => {
                     res.body.then(data => {
                         const listings = data.content;
@@ -421,12 +425,11 @@ class HotelsSearchScreen extends Component {
     }
 
     gotoSearch = () => {
-        this.isFilterResult = false;
-        this.saveState();
+        this.setState({isFilterResult: false}, () => {
+            this.saveState();
 
-        if(this.state.isHotel) {
             this.getHotels();
-        }
+        });
     }
 
     gotoCancel = () => {
@@ -627,13 +630,12 @@ class HotelsSearchScreen extends Component {
     updateFilter = (data) => {
         console.log("updateFilter", data);
         
-        this.isFilterResult = true;
-        
         if (this.listView != undefined && this.listView != null) {
             this.listView.initListView();
         }
         
         this.setState({
+            isFilterResult: true,
             showUnAvailable: data.showUnAvailable,
             nameFilter: data.hotelName,
             selectedRating: data.selectedRating,
@@ -655,8 +657,13 @@ class HotelsSearchScreen extends Component {
             if (res.success) {
                 res.body.then((data) => {
                     console.log("fetchFilteredResults", data);
-                    this.setState({hotelsInfo: data.content});
-                    this.listView.onFirstLoad(data.content, true);
+                    this.setState({
+                        hotelsInfo: data.content, 
+                        initialLat: parseFloat(data.content[0].lat), 
+                        initialLon: parseFloat(data.content[0].lon)
+                    }, () => {
+                        this.listView.onFirstLoad(data.content, true);
+                    });
                 });
             } 
             else {
@@ -742,108 +749,6 @@ class HotelsSearchScreen extends Component {
         );
     }
 
-    renderImageInCallout(hotel) {
-        let thumbnailURL;
-        if (!this.isFilterResult) {
-            thumbnailURL = imgHost + hotel.thumbnail.url;
-        }
-        else {
-            thumbnailURL = imgHost + hotel.hotelPhoto;
-        }
-        if(Platform.OS === 'ios') {
-          return(
-            <Image
-                style={{ width: 120, height: 90}}
-                source={{uri: thumbnailURL }}
-            />
-          )
-        } else {
-          return(
-            <WebView
-                style={{ width: 120, height: 90, marginLeft:-3.5, backgroundColor:'#fff'}}
-                source={{html: "<img src=" + thumbnailURL + " width='120'/>" }}
-                javaScriptEnabledAndroid={true}
-            />
-          )
-        }
-    }
-
-    renderCallout(hotel) {
-        const {
-            currencySign, locRate
-        } = this.props;
-        return (
-            <MapView.Callout tooltip={true}>
-                <View style={ styles.map_item }>
-                    <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
-                        { 
-                            hotel.thumbnail !== null && this.renderImageInCallout(hotel)
-                        }
-                    </View>
-                    <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
-                        {hotel.name}
-                    </Text>
-                    {
-                        hotel.price == null || hotel.price == undefined ?
-                            <Text style={styles.description}>
-                                Unavailable
-                            </Text>
-                        : 
-                            <Text style={styles.description}>
-                                 {currencySign}{hotel.price.toFixed(2)}(LOC{parseFloat(hotel.price/locRate).toFixed(2)}) / Night
-                            </Text>
-                    }
-                    <Text style={styles.ratingsMap}>
-                        {
-                            Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-                        }
-                    </Text>
-                </View>
-            </MapView.Callout>
-        );
-    }
-
-    renderMap = () => {
-        console.log("renderMap", this.state.hotelsInfo);
-        let baseLat = this.state.initialLat;
-        let baseLon = this.state.initialLon;
-        if (this.state.hotelsInfo.length >= 1) {
-            if (this.isFilterResult) {
-                baseLat = parseFloat(this.state.hotelsInfo[0].latitude);
-                baseLon = parseFloat(this.state.hotelsInfo[0].longitude);
-            }
-            else {
-                baseLat = parseFloat(this.state.hotelsInfo[0].lat);
-                baseLon = parseFloat(this.state.hotelsInfo[0].lon);
-            }
-        }
-        return (                            
-            <MapView
-                initialRegion={{
-                    latitude: baseLat,
-                    longitude: baseLon,
-                    latitudeDelta: 0.5,
-                    longitudeDelta: 0.5
-                }}
-                style={styles.map}
-            >
-            {/* Marker */}
-            {this.state.hotelsInfo.map(marker => (marker.lat != null || marker.latitude != null) && (
-                <Marker
-                    coordinate={{
-                        latitude: this.isFilterResult? parseFloat(marker.latitude) : parseFloat(marker.lat),
-                        longitude: this.isFilterResult? parseFloat(marker.longitude) : parseFloat(marker.lon)
-                    }}
-                    onCalloutPress={() => {this.onClickHotelOnMap(marker)}} //eslint-disable-line
-                >
-                    {this.renderCallout(marker)}
-                    
-                </Marker>
-            ))}
-            </MapView>
-        );
-    }
-
     renderScene = ({ route }) => {
         switch (route.key) {
             case 'list':
@@ -855,10 +760,16 @@ class HotelsSearchScreen extends Component {
                             locRate = {this.state.locRate}
                             daysDifference = {this.state.daysDifference}
                             onFetch = {this.onFetch}
-                            gotoHotelDetailsPage = {this.gotoHotelDetailsPage}
-                            />;
+                            gotoHotelDetailsPage = {this.gotoHotelDetailsPage} />;
             case 'map':
-                return <MapModeHotelsSearch/>;
+                return <MapModeHotelsSearch
+                            currency = {this.state.currency}
+                            currencySign = {this.state.currencySign}
+                            locRate = {this.state.locRate}
+                            isFilterResult = {this.state.isFilterResult}
+                            initialLat = {this.state.initialLat}
+                            initialLon = {this.state.initialLon}
+                            hotelsInfo = {this.state.hotelsInfo} />;
             default:
                 return null;
         }
