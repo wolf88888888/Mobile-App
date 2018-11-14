@@ -24,6 +24,10 @@ class ListModeHotelsSearch extends Component {
         };
     }
 
+	shouldComponentUpdate(nextProps) {
+		return false;
+	}
+
     componentDidUpdate(prevProps) {
         // if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
         let newState  = {};
@@ -50,7 +54,7 @@ class ListModeHotelsSearch extends Component {
         }
 
         if (isChanged) {
-            this.setState(newState);
+            //this.setState(newState);
         }
         // }
     }
@@ -71,29 +75,29 @@ class ListModeHotelsSearch extends Component {
 
     upgradePrice = (index, price) => {
         console.log("------------------upgradePrice");
-        return this.listView.upgradePrice(index, price);
+        // return this.listView.upgradePrice(index, price);
     }
 
     getIndex = (id) => {
         console.log("------------------getIndex");
-        return this.listView.getIndex(id);
+        // return this.listView.getIndex(id);
     }
 
     
     getPage = () => {
         console.log("------------------getPage");
-        return this.listView.getPage();
+        // return this.listView.getPage();
     }
 
     getRows = () => {
         console.log("------------------getRows");
-        return this.listView.getRows();
+        // return this.listView.getRows();
     }
 
-    onFetch = (page = 1, startFetch, abortFetch) => {
-        console.log("onFetch", page);
-        this.props.onFetch(page, startFetch, abortFetch);
-    }
+    // onFetch = (page = 1, startFetch, abortFetch) => {
+    //     console.log("onFetch", page);
+    //     this.props.onFetch(page, startFetch, abortFetch);
+    // }
 
     renderItem = (item) => {
         return (
@@ -136,13 +140,14 @@ class ListModeHotelsSearch extends Component {
     }
 
     render() {
+        console.log("----------------- render123");
         return (
             <View style={styles.container}>
                 <UltimateListView
                     ref = {ref => this.listView = ref}
                     isDoneSocket = {this.state.allElements}
                     key = {'list'} // this is important to distinguish different FlatList, default is numColumns
-                    onFetch = {this.onFetch}
+                    onFetch = {this.props.onFetch}
                     keyExtractor = {(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
                     firstLoader = { false }
                     refreshable = { false }

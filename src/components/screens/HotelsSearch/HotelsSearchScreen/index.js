@@ -21,7 +21,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import * as currencyActions from '../../../../redux/action/Currency'
 
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView } from 'react-native-tab-view';
 
 import ListModeHotelsSearch from '../ListModeHotelsSearch'
 import MapModeHotelsSearch from '../MapModeHotelsSearch'
@@ -220,8 +220,8 @@ class HotelsSearchScreen extends Component {
         if (this.state.isMAP == -1 && this.state.hotelsInfo.length > 0) {
             this.setState({
                 isMAP: 0, 
-                initialLat: parseFloat(this.state.hotelsInfo[0].latitude), 
-                initialLon: parseFloat(this.state.hotelsInfo[0].longitude)
+                initialLat: parseFloat(this.state.hotelsInfo[0].lat), 
+                initialLon: parseFloat(this.state.hotelsInfo[0].lon)
             });
         }
         try {
@@ -659,8 +659,8 @@ class HotelsSearchScreen extends Component {
                     console.log("fetchFilteredResults", data);
                     this.setState({
                         hotelsInfo: data.content, 
-                        initialLat: parseFloat(data.content[0].lat), 
-                        initialLon: parseFloat(data.content[0].lon)
+                        initialLat: parseFloat(data.content[0].latitude), 
+                        initialLon: parseFloat(data.content[0].longitude)
                     }, () => {
                         this.listView.onFirstLoad(data.content, true);
                     });

@@ -212,6 +212,7 @@ export default class UltimateListView extends Component {
     }
 
     initListView = () => {
+        console.log("initListView");
         this.clearRows();
         this.clearPage();
         this.setState( 
@@ -601,6 +602,7 @@ export default class UltimateListView extends Component {
     }
 
     render() {
+        console.log("ultimateListView render");
         const { numColumns } = this.props
         return (
             <FlatList
@@ -621,6 +623,11 @@ export default class UltimateListView extends Component {
             />
         )
     }
+
+    
+	// shouldComponentUpdate(nextProps) {
+	// 	return false;
+	// }
 }
 
 const styles = StyleSheet.create({

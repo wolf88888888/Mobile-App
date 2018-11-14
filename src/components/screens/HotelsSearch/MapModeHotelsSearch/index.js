@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions, WebView, Modal } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 import _ from 'lodash';
 import styles from './styles';
+import { imgHost } from '../../../../config';
 
 const { width, height } = Dimensions.get('window')
 
@@ -16,43 +17,48 @@ class MapModeHotelsSearch extends Component {
             currencySign: props.currencySign,
             locRate: props.locRate,
             isFilterResult: props.isFilterResult, 
-            initialLat: props.latitude,
-            initialLon: props.longitude,
+            initialLat: props.initialLat,
+            initialLon: props.initialLon,
             hotelsInfo: []
         }
     }
+    
+	shouldComponentUpdate(nextProps) {
+		return false;
+	}
 
     componentDidUpdate(prevProps) {
         // if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
         let newState  = {};
         let isChanged = false;
 
-        if (this.props.currency != prevProps.currency) {
+        if (this.props.currency !== prevProps.currency) {
             newState = {...newState, currency: this.props.currency, currencySign: this.props.currencySign};
             isChanged = true;
         }
 
-        if (this.props.locRate != prevProps.locRate) {
+        if (this.props.locRate !== prevProps.locRate) {
             newState = {...newState, locRate: this.props.locRate};
             isChanged = true;
         }
 
-        if (this.props.isFilterResult != prevProps.isFilterResult) {
+        if (this.props.isFilterResult !== prevProps.isFilterResult) {
             newState = {...newState, isFilterResult: this.props.isFilterResult};
             isChanged = true;
         }
 
-        if (this.props.initialLat != prevProps.initialLat || this.props.initialLon != prevProps.initialLon) {
+        if (this.props.initialLat !== prevProps.initialLat || this.props.initialLon !== prevProps.initialLon) {
             newState = {...newState, initialLat: this.props.initialLat, initialLon: this.props.initialLon};
             isChanged = true;
         }
 
-        if (this.props.hotelsInfo != prevProps.hotelsInfo) {
+        if (this.props.hotelsInfo !== prevProps.hotelsInfo) {
             newState = {...newState, hotelsInfo: this.props.hotelsInfo};
             isChanged = true;
         }
 
         if (isChanged) {
+            console.log("--------------------", newState);
             this.setState(newState);
         }
     }
@@ -117,9 +123,10 @@ class MapModeHotelsSearch extends Component {
 
 
     render() {
+        console.log("----------------- render");
         return (
             <View style={styles.container}>
-                <MapView
+                {/* <MapView
                     initialRegion={{
                         latitude: this.state.initialLat,
                         longitude: this.state.initialLon,
@@ -142,7 +149,7 @@ class MapModeHotelsSearch extends Component {
                         </Marker>
                     ))
                 }
-                </MapView>
+                </MapView> */}
             </View>
         );
     }
