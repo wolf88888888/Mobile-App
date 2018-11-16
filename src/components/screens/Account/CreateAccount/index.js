@@ -77,7 +77,7 @@ class CreateAccount extends Component {
         this.setState({
             countries: countryArr,
             countriesLoaded: true,
-            country: countryArr[0].value,
+            // country: countryArr[0].value,
         });
     }
 
