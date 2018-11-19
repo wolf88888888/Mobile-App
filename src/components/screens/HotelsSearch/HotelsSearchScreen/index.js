@@ -663,7 +663,7 @@ class HotelsSearchScreen extends Component {
 
     fetchFilteredResults = (strSearch, strFilters) => {
         let searchMap = strSearch + strFilters;
-        searchMap = searchMap.replace('%22', '"');
+        searchMap = searchMap.replace(/%22/g, '"');
         console.log("fetchFilteredResults query", searchMap);
         //searchMap = '?region=15664&currency=EUR&startDate=20/11/2018&endDate=21/11/2018&rooms=%5B%7B"adults":2,"children":%5B%5D%7D%5D&filters=%7B"showUnavailable":false,"name":"","minPrice":1,"maxPrice":5000,"stars":%5B0,5%5D%7D&page=0&sort=priceForSort,asc';
         requester.getMapInfo(searchMap).then(res => {
