@@ -184,6 +184,7 @@ android {
             }
         }
     }
+
 }
 
 dependencies {
@@ -215,7 +216,9 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.facebook.fresco:animated-gif:1.9.0'
     
-    implementation project(':react-native-fast-image')
+    implementation (project(':react-native-fast-image')) {
+        exclude group: "com.android.support"
+    }
     implementation project(':react-native-vector-icons')
 }
 

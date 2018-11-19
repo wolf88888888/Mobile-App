@@ -37,9 +37,7 @@ let countIos;
 
 class HotelsSearchScreen extends Component {
     hotelsInfoById = [];
-
     previousState = {};
-
     constructor(props) {
         super(props);
         console.disableYellowBox = true;
@@ -286,7 +284,7 @@ class HotelsSearchScreen extends Component {
         }
     }
 
-    gotoHotelDetailsPage = (item) => {
+    gotoHotelDetailsPageByList = (item) => {
         console.log("gotoHotelDetailsPage", item);
         
         if (item.price == null || item.price == undefined) {
@@ -321,8 +319,8 @@ class HotelsSearchScreen extends Component {
         });
     }
 
-    onClickHotelOnMap = (item) => {
-        console.log("onClickHotelOnMap", item);
+    gotoHotelDetailsPageByMap = (item) => {
+        console.log("gotoHotelDetailsPageByMap", item);
         
         if (item.price == null || item.price == undefined) {
             return;
@@ -383,11 +381,11 @@ class HotelsSearchScreen extends Component {
                     if (res.success) {
                         res.body.then((data) => {
                             const hotels = data.content
-                            if (this.isCacheExpired) {
-                                this.setState({
-                                    hotelsInfo: [...this.state.hotelsInfo, ...hotels]
-                                });
-                            }
+                            // if (this.isCacheExpired) {
+                            //     this.setState({
+                            //         hotelsInfo: [...this.state.hotelsInfo, ...hotels]
+                            //     });
+                            // }
                             startFetch(hotels, hotels.length, true)
                         });
                     } 
@@ -642,6 +640,10 @@ class HotelsSearchScreen extends Component {
         if (this.listView != undefined && this.listView != null) {
             this.listView.initListView();
         }
+
+        if (this.mapView != undefined && this.mapView != null) {
+            this.mapView.initMapView();
+        }
         
         this.setState({
             isFilterResult: true,
@@ -663,44 +665,42 @@ class HotelsSearchScreen extends Component {
 
     fetchFilteredResults = (strSearch, strFilters) => {
         let searchMap = strSearch + strFilters;
-        searchMap = searchMap.replace(/%22/g, '"');
+        //searchMap = searchMap.replace(/%22/g, '"');
         console.log("fetchFilteredResults query", searchMap);
-        //searchMap = '?region=15664&currency=EUR&startDate=20/11/2018&endDate=21/11/2018&rooms=%5B%7B"adults":2,"children":%5B%5D%7D%5D&filters=%7B"showUnavailable":false,"name":"","minPrice":1,"maxPrice":5000,"stars":%5B0,5%5D%7D&page=0&sort=priceForSort,asc';
-        requester.getMapInfo(searchMap).then(res => {
-            res.body.then(data => {
-                console.log ("getMapInfo", data);
-                this.isCacheExpired = data.isCacheExpired;
-                if (!this.isCacheExpired) {
-                    this.setState({
-                        hotelsInfo: data.content, 
-                        initialLat: parseFloat(data.content[0].latitude), 
-                        initialLon: parseFloat(data.content[0].longitude)
-                    }, () => {
-                        this.listView.onFirstLoad(data.content, true);
-                    });
-                }
-                requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
-                    if (res.success) {
-                        res.body.then((data) => {
-                            console.log("fetchFilteredResults", data);
-                            if (this.isCacheExpired) {
+        //searchMap = '?region=15664&currency=USD&startDate=21/11/2018&endDate=22/11/2018&rooms=%5B%7B"adults":2,"children":%5B%5D%7D%5D&filters=%7B"showUnavailable":true,"name":"","minPrice":1,"maxPrice":5000,"stars":%5B0,1,2,3,4,5%5D%7D&page=0&sort=rank,desc';
+
+        requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
+            if (res.success) {
+                res.body.then((data) => {
+                    console.log("fetchFilteredResults", data);
+                    this.listView.onFirstLoad(data.content, true);
+                    requester.getMapInfo(searchMap).then(res => {
+                        res.body.then(dataMap => {
+                            console.log ("getMapInfo", dataMap);
+                            const isCacheExpired = dataMap.isCacheExpired;
+                            if (!isCacheExpired) {
+                                this.setState({
+                                    hotelsInfo: dataMap.content, 
+                                    initialLat: parseFloat(dataMap.content[0].latitude), 
+                                    initialLon: parseFloat(dataMap.content[0].longitude)
+                                });
+                            }
+                            else {
                                 this.setState({
                                     hotelsInfo: data.content, 
                                     initialLat: parseFloat(data.content[0].latitude), 
                                     initialLon: parseFloat(data.content[0].longitude)
-                                }, () => {
-                                    this.listView.onFirstLoad(data.content, true);
                                 });
                             }
-                            this.listView.onFirstLoad(data.content, true);
                         });
-                    } 
-                    else {
-                        // console.log('Search expired');
-                    }
+                    });
                 });
-            });
+            } 
+            else {
+                // console.log('Search expired');
+            }
         });
+        
 
     }
 
@@ -799,7 +799,7 @@ class HotelsSearchScreen extends Component {
                             locRate = {this.state.locRate}
                             daysDifference = {this.state.daysDifference}
                             onFetch = {this.onFetch}
-                            gotoHotelDetailsPage = {this.gotoHotelDetailsPage} />;
+                            gotoHotelDetailsPage = {this.gotoHotelDetailsPageByList} />;
             case 'map':
                 return <MapModeHotelsSearch
                             ref={(ref) => this.mapView = ref}
@@ -809,7 +809,8 @@ class HotelsSearchScreen extends Component {
                             isFilterResult = {this.state.isFilterResult}
                             initialLat = {this.state.initialLat}
                             initialLon = {this.state.initialLon}
-                            hotelsInfo = {this.state.hotelsInfo} />;
+                            hotelsInfo = {this.state.hotelsInfo}
+                            gotoHotelDetailsPage = {this.gotoHotelDetailsPageByMap} />;
             default:
                 return null;
         }
