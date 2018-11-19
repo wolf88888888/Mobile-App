@@ -229,7 +229,7 @@ class HotelsSearchScreen extends Component {
             const jsonHotel = JSON.parse(message);
             if (jsonHotel.hasOwnProperty('allElements')) {
                 if (jsonHotel.allElements) {
-                    this.setState({ allElements: true, editable: true });
+                    this.setState({ allElements: true, editable: true});
                     if (this.listView) {
                         this.listView.onDoneSocket();
                     }
@@ -237,15 +237,20 @@ class HotelsSearchScreen extends Component {
                 }
             } else {
                 this.hotelsInfoById[jsonHotel.id] = jsonHotel;
+                this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
 
-                if (this.listView != null && (this.state.hotelsInfo.length < this.listView.getRows().length || this.state.hotelsInfo.length % 10 === 0)) {
+                //if (this.listView != null && (this.state.hotelsInfo.length < this.listView.getRows().length || this.state.hotelsInfo.length % 20 === 0)) {
                     // this.setState(prevState => ({
                     //     hotelsInfo: [...prevState.hotelsInfo, jsonHotel]
                     // }));
-                    this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
+                    //this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
+                    //this.setState({refresh: this.state.hotelsInfo.length})
+
+                if (this.state.isMAP === 1 && this.mapView != null && this.state.hotelsInfo.length % 20 === 0) {
+                    this.mapView.refresh(this.state.hotelsInfo);
                 }
                 else {
-                    this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
+                    //this.state.hotelsInfo = [...this.state.hotelsInfo, jsonHotel];
                 }
 
                 if (this.listView != null) {
@@ -378,10 +383,11 @@ class HotelsSearchScreen extends Component {
                     if (res.success) {
                         res.body.then((data) => {
                             const hotels = data.content
-                            
-                            this.setState({
-                                hotelsInfo: [...this.state.hotelsInfo, ...hotels]
-                            });
+                            if (this.isCacheExpired) {
+                                this.setState({
+                                    hotelsInfo: [...this.state.hotelsInfo, ...hotels]
+                                });
+                            }
                             startFetch(hotels, hotels.length, true)
                         });
                     } 
@@ -426,7 +432,7 @@ class HotelsSearchScreen extends Component {
     }
 
     gotoSearch = () => {
-        this.setState({isFilterResult: false}, () => {
+        this.setState({isFilterResult: false, isMAP: 0, index: 0}, () => {
             this.saveState();
 
             this.getHotels();
@@ -624,7 +630,9 @@ class HotelsSearchScreen extends Component {
         // const page = page;//this.listView.getPage();
         const sort = this.state.orderBy;
         const pagination = `&page=${page}&sort=${sort}`;
-        const filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
+    
+        let filters = `&filters=${encodeURI(JSON.stringify(filtersObj))}` + pagination; //eslint-disable-line
+        
         return filters;
     }
 
@@ -648,16 +656,21 @@ class HotelsSearchScreen extends Component {
 
             const search = this.getSearchString();
             const filters = this.getFilterString(0);
+            console.log("search --- filters", search, filters);
             this.fetchFilteredResults(search, filters);
         });
     }
 
     fetchFilteredResults = (strSearch, strFilters) => {
-        console.log("fetchFilteredResults query", strSearch, strFilters)
-        requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
-            if (res.success) {
-                res.body.then((data) => {
-                    console.log("fetchFilteredResults", data);
+        let searchMap = strSearch + strFilters;
+        searchMap = searchMap.replace('%22', '"');
+        console.log("fetchFilteredResults query", searchMap);
+        //searchMap = '?region=15664&currency=EUR&startDate=20/11/2018&endDate=21/11/2018&rooms=%5B%7B"adults":2,"children":%5B%5D%7D%5D&filters=%7B"showUnavailable":false,"name":"","minPrice":1,"maxPrice":5000,"stars":%5B0,5%5D%7D&page=0&sort=priceForSort,asc';
+        requester.getMapInfo(searchMap).then(res => {
+            res.body.then(data => {
+                console.log ("getMapInfo", data);
+                this.isCacheExpired = data.isCacheExpired;
+                if (!this.isCacheExpired) {
                     this.setState({
                         hotelsInfo: data.content, 
                         initialLat: parseFloat(data.content[0].latitude), 
@@ -665,12 +678,30 @@ class HotelsSearchScreen extends Component {
                     }, () => {
                         this.listView.onFirstLoad(data.content, true);
                     });
+                }
+                requester.getLastSearchHotelResultsByFilter(strSearch, strFilters).then((res) => {
+                    if (res.success) {
+                        res.body.then((data) => {
+                            console.log("fetchFilteredResults", data);
+                            if (this.isCacheExpired) {
+                                this.setState({
+                                    hotelsInfo: data.content, 
+                                    initialLat: parseFloat(data.content[0].latitude), 
+                                    initialLon: parseFloat(data.content[0].longitude)
+                                }, () => {
+                                    this.listView.onFirstLoad(data.content, true);
+                                });
+                            }
+                            this.listView.onFirstLoad(data.content, true);
+                        });
+                    } 
+                    else {
+                        // console.log('Search expired');
+                    }
                 });
-            } 
-            else {
-                // console.log('Search expired');
-            }
+            });
         });
+
     }
 
     renderHotelTopView() {
@@ -771,6 +802,7 @@ class HotelsSearchScreen extends Component {
                             gotoHotelDetailsPage = {this.gotoHotelDetailsPage} />;
             case 'map':
                 return <MapModeHotelsSearch
+                            ref={(ref) => this.mapView = ref}
                             currency = {this.state.currency}
                             currencySign = {this.state.currencySign}
                             locRate = {this.state.locRate}

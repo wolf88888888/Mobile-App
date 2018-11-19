@@ -52,8 +52,19 @@ class MapModeHotelsSearch extends Component {
         }
 
         if (this.props.initialLat !== prevProps.initialLat || this.props.initialLon !== prevProps.initialLon) {
-            newState = {...newState, initialLat: this.props.initialLat, initialLon: this.props.initialLon};
-            isChanged = true;
+            //newState = {...newState, initialLat: this.props.initialLat, initialLon: this.props.initialLon};
+            console.log("123123123 change")
+            this.state.initialLat = this.props.initialLat;
+            this.state.initialLon = this.props.initialLon;
+            if (this._map != null) {
+                this._map.animateToRegion({
+                    latitude: this.state.initialLat,
+                    longitude: this.state.initialLon,
+                    latitudeDelta: 0.25,
+                    longitudeDelta: 0.25
+                }, 0);
+            }
+            //isChanged = true;
         }
 
         if (this.props.hotelsInfo !== prevProps.hotelsInfo) {
@@ -65,6 +76,11 @@ class MapModeHotelsSearch extends Component {
             console.log("--------------------", newState);
             this.setState(newState);
         }
+    }
+
+    refresh = (hotelsInfo) => {
+        console.log("refresh--------------------");
+        this.setState({hotelsInfo: hotelsInfo});
     }
     
     renderImageInCallout = (hotel) => {
@@ -128,7 +144,7 @@ class MapModeHotelsSearch extends Component {
     }
 
     onPressMarker = (e, index) => {
-        // this.setState({selectedMarkerIndex: index});
+        this.setState({selectedMarkerIndex: index});
         // const { image } = this._markers[index];
         // setTimeout(() => {
             //this._markers[index].image = blue_marker;
@@ -140,14 +156,16 @@ class MapModeHotelsSearch extends Component {
     }
 
     render() {
+        console.log("map view", this.state);
         return (
             <View style={styles.container}>
                 <MapView
+                    ref={(ref) => this._map = ref}
                     initialRegion={{
                         latitude: this.state.initialLat,
                         longitude: this.state.initialLon,
-                        latitudeDelta: 0.3,
-                        longitudeDelta: 0.3
+                        latitudeDelta: 0.2,
+                        longitudeDelta: 0.2
                     }}
                     style={styles.map}
                     onPress={this.onPressMap}
@@ -155,10 +173,10 @@ class MapModeHotelsSearch extends Component {
                 {
                     this.state.hotelsInfo.map((marker, i) => (marker.lat != null || marker.latitude != null) && (
                         <Marker
-                            // image={this.state.selectedMarkerIndex === i ? blue_marker : red_marker}
-                            // style={this.state.selectedMarkerIndex === i ? {zIndex: 1} : null}
+                            image={this.state.selectedMarkerIndex === i ? blue_marker : red_marker}
+                            style={this.state.selectedMarkerIndex === i ? {zIndex: 1} : null}
                             key={i}
-                            image={red_marker}
+                            // image={red_marker}
                             ref={(ref) => this._markers[i] = ref}
                             coordinate={{
                                 latitude: this.state.isFilterResult? parseFloat(marker.latitude) : parseFloat(marker.lat),
