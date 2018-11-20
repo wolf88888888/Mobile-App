@@ -2,7 +2,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    View
+    View,
+    ScrollView
 } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -190,6 +191,7 @@ class CreateAccount extends Component {
                 enableAutoAutomaticScroll={(Platform.OS === 'ios')}
             >
                 <View style={styles.main_container}>
+                    <ScrollView  style={styles.scrollView} automaticallyAdjustContentInsets={true}>
                     <WhiteBackButton style={styles.closeButton} onPress={() => goBack()} />
                     
                     <View style={styles.lowOpacity}>
@@ -318,6 +320,7 @@ class CreateAccount extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    </ScrollView>
                 </View>
             </KeyboardAwareScrollView>
         );
