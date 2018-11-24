@@ -290,22 +290,17 @@ class HomesSearchScreen extends Component {
             isNewSearch: false,
         });
     }
-
-    onDatesSelect = ({ startDate, endDate }) => {
-        if (this.state.checkInDate === startDate && this.state.checkOutDate === endDate) {
-            return;
-        }
-        
-        const year = (new Date()).getFullYear();
+    
+    
+    onDatesSelect = ({ startDate, endDate, startMoment, endMoment }) => {
+        const start = moment(startDate, 'ddd, DD MMM');
+        const end = moment(endDate, 'ddd, DD MMM');
         this.setState({
+            daysDifference: moment.duration(end.diff(start)).asDays(),
             checkInDate: startDate,
             checkOutDate: endDate,
-            checkInDateFormated: (moment(startDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year,
-            checkOutDateFormated: (moment(endDate, 'ddd, DD MMM')
-                .format('DD/MM/')
-                .toString()) + year,
+            checkInDateFormated: startMoment.format('DD/MM/YYYY'),
+            checkOutDateFormated: endMoment.format('DD/MM/YYYY'),
             isNewSearch: true
         });
     }
@@ -435,6 +430,7 @@ class HomesSearchScreen extends Component {
             <HomeItemView
                 item = {item}
                 currencySign = {this.state.currencySign}
+                currency = {this.state.currency}
                 locRate = {this.state.locRate}
                 gotoHomeDetailPage = {this.gotoHomeDetailPage}
                 daysDifference = {this.state.daysDifference}
@@ -516,6 +512,8 @@ class HomesSearchScreen extends Component {
                 <DateAndGuestPicker
                     checkInDate={this.state.checkInDate}
                     checkOutDate={this.state.checkOutDate}
+                    checkInDateFormated={this.state.checkInDateFormated}
+                    checkOutDateFormated={this.state.checkOutDateFormated}
                     adults={this.state.adults}
                     children={this.state.children}
                     infants={this.state.infants}

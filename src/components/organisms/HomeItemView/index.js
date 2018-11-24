@@ -19,6 +19,7 @@ class HomeItemView extends Component {
     static propTypes = {
         item: RNPropTypes.object,
         currencySign: RNPropTypes.string,
+        currency: RNPropTypes.string,
         locRate: RNPropTypes.number,
         gotoHomeDetailPage: PropTypes.func.isRequired,        
         daysDifference: RNPropTypes.number,
@@ -27,6 +28,7 @@ class HomeItemView extends Component {
     static defaultProps = {
         item: [],
         currencySign: undefined,
+        currency: '',
         locRate: 0,
         daysDifference : 1,
     };
@@ -70,7 +72,7 @@ class HomeItemView extends Component {
 
     render() {
         const {
-            item, currencySign, locRate
+            item, currencySign, locRate, currency
         } = this.props;
         
         let urlThumbnail = "";
@@ -83,7 +85,9 @@ class HomeItemView extends Component {
         }
 
         let stars = item.averageRating;
-        let price = item.defaultDailyPrice / this.props.daysDifference;
+
+        const price = item.prices && currency === item.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(item.prices[currency], 10).toFixed(2);
+        //let price = item.defaultDailyPrice / this.props.daysDifference;
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
