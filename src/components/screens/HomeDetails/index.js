@@ -2,43 +2,29 @@ import {
     Dimensions,
     ScrollView,
     View,
+    Text,
     TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import AvailableRoomsView from '../../molecules/AvailableRoomsView';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+import CheckInOutView from '../../atoms/Property/CheckInOutView';
 import FacilitiesView from '../../molecules/FacilitiesView';
 import HomeDetailView from '../../organisms/HomeDetailView';
 import LocationView from '../../atoms/LocationView';
 import WhiteBackButton from '../../atoms/WhiteBackButton';
-import styles from './styles';
 import ImageCarousel from '../../atoms/ImagePage';
+
+import styles from './styles';
 
 const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;
 const logoHeight = logoWidth * 35 / 54;//eslint-disable-line
 
 class HomeDetails extends Component {
-
-    //https://github.com/LockTrip/Centralized-App/blob/master/src/components/homes/details/HomeDetailsPage.jsx
-    //requester.getListing(this.props.match.params.id).then
-//https://staging.locktrip.com/api/listings/990
-    //requester.getCalendarByListingIdAndDateRange(searchTermMap)
-//https://staging.locktrip.com/api/calendars/search/findAllByListingIdAndDateBetween?listing=990&startDate=06/11/2018&endDate=06/11/2019&page=0&toCode=EUR&size=365
-    //requester.getHomeBookingDetails(this.props.match.params.id)
-//https://staging.locktrip.com/api/listings/rooms/990
     constructor(props) {
         super(props);
-
-        const { params } = this.props.navigation.state;
-        console.log("HomeDetails", params);
-
-        this.state = {
-            dataSourcePreview: params ? params.homePhotos : [],
-            homeData: params ? params.data : [],
-            checks: params ? params.checks : [],
-            hotelAmenities: [],
-        }
+        console.log("param", props.navigation.state.params);
     }
 
     onClose = () => {
@@ -46,36 +32,51 @@ class HomeDetails extends Component {
     }
 
     onMapTap = () => {
-        // this.props.navigation.navigate('MapFullScreen', {
-        //     lat: this.state.latitude != null ? parseFloat(this.state.latitude) : 0.0,
-        //     lng: this.state.longitude != null ? parseFloat(this.state.longitude) : 0.0,
-        //     name: this.state.hotel.name,
-        //     address: `${this.state.mainAddress}, ${this.state.countryName}`
-        // });
+        const { params } = this.props.navigation.state;
+
+        this.props.navigation.navigate('MapFullScreen', {
+            lat: params.homeData.latitude != null ? parseFloat(params.homeData.latitude) : 0.0,
+            lon: params.homeData.longitude != null ? parseFloat(params.homeData.longitude) : 0.0,
+            name: params.homeData.name,
+            address: `${params.homeData.street}, ${params.homeData.city.name} • ${params.homeData.country.name}`
+        });
     }
 
     onFacilityMore = () => {
 
     }
 
-    onBooking = (roomDetail) => {
-        // onRoomPress = (roomDetail) => {
-        console.log("onRoomPress", roomDetail);
-        this.props.navigation.navigate('GuestInfoForm', { 
-            roomDetail: roomDetail, 
-            guests: this.state.guests, 
-            'price': ((roomDetail.roomsResults[0].price) * this.state.daysDifference).toFixed(2),
-            'priceLOC': (((roomDetail.roomsResults[0].price) / this.state.locRate)*this.state.daysDifference).toFixed(2), 
-            'daysDifference': this.props.daysDifference,
-            currency: this.state.daysDifference,
-            currencySign: this.state.currencySign,
-            'hotelDetails': this.state.hotelFullDetails,
-            searchString: this.state.searchString,
-        });
-        // }
+    getPriceForPeriod(startDate, nights, calendar) {
+        let price = 0;
+      
+        let startDateIndex = calendar.findIndex(x => x.date === startDate);
+        if (startDateIndex && startDateIndex < 0) {
+            return 0;
+        }
+        for (let i = startDateIndex; i < nights + startDateIndex; i++) {
+            price += calendar[i].price;
+        }
+        if (nights === 0) {
+            return 0;
+        }
+        return price / nights;
     }
 
     render() {
+        const { params } = this.props.navigation.state;
+        const { 
+            eventsAllowed,
+            smokingAllowed,
+            suitableForPets,
+            suitableForInfants,
+            house_rules } = params.roomDetails;
+        
+        const hasHouseRules = eventsAllowed || smokingAllowed || suitableForPets || suitableForInfants || house_rules;
+        //const houseRules = house_rules && house_rules.split('\r\n');
+
+        const locRate = _.isString(this.props.locRate) ? parseFloat(this.props.locRate) : this.props.locRate;
+        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar) * params.rateExchange;
+
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -92,40 +93,49 @@ class HomeDetails extends Component {
                                 indicatorSize={12.5}
                                 indicatorOffset={20}
                                 indicatorColor="#D87A61"
-                                images={this.state.dataSourcePreview}
+                                images={params.homePhotos}
                             />
                         </View>
 
                         <HomeDetailView
-                            title={this.state.homeData.name}
-                            rateVal={this.state.homeData.averageRating}
+                            title={params.homeData.name}
+                            rateVal={params.homeData.averageRating}
                             reviewNum={0}
-                            address={this.state.homeData.street + ', ' + this.state.homeData.city.name + '•' + this.state.homeData.country.name}
-                            description={this.state.homeData.descriptionText}
+                            address={params.homeData.street + ', ' + params.homeData.city.name + '•' + params.homeData.country.name}
+                            description={params.homeData.descriptionText}
+                            roomDetails= {params.roomDetails}
                         />
 
-                        {/* <FacilitiesView
+                        <FacilitiesView
                             style={styles.roomfacility}
-                            data={this.state.hotelAmenities}
+                            data={params.homeData.amenities}
+                            isHome={true}
                             onFacilityMore={this.onFacilityMore}
-                        /> 
+                        />  
+                        <View style={[styles.lineStyle, {marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15}]}/>
+
+                        <CheckInOutView
+                            checkInStart={params.checks.checkInStart}
+                            checkInEnd={params.checks.checkInEnd}
+                            checkOutStart={params.checks.checkOutStart}
+                            checkOutEnd={params.checks.checkOutEnd}/>
+
                         <View style={[styles.lineStyle, {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15
                         }]}
                         />
-
-                       <AvailableRoomsView
-                            id={this.state.hotel.id}
-                            search={this.state.searchString}
-                            onBooking={this.onBooking}
-                            guests={this.state.guests}
-                            hotelDetails={this.state.hotelFullDetails}
-                            currency={this.state.currency}
-                            currencySign={this.state.currencySign}
-                            locRate={this.state.locRate}
-                            daysDifference={this.state.daysDifference}
-                        />*/}
-
+                        
+                        {
+                            hasHouseRules && (
+                                <View style={styles.etcContaner}>
+                                    <Text style={styles.etcName}>House Rule</Text>
+                                    <Text style={styles.etcButton}>
+                                        Read 
+                                    </Text>
+                                </View>
+                            )
+                        }
+                        
                         <View style={[styles.lineStyle, {
                             marginLeft: 20, marginRight: 20, marginTop: 15, marginBottom: 15
                         }]}
@@ -133,18 +143,47 @@ class HomeDetails extends Component {
                         <TouchableOpacity activeOpacity={1} onPress={() => this.onMapTap()}>
                             <LocationView
                                 titleStyle={{ fontSize: 17 }}
-                                name={this.state.homeData.name}
-                                lat={this.state.homeData.latitude != null ? parseFloat(this.state.homeData.latitude) : 0.0}
-                                lon={this.state.homeData.longitude != null ? parseFloat(this.state.homeData.longitude) : 0.0}
+                                name={params.homeData.name}
+                                lat={params.homeData.latitude != null ? parseFloat(params.homeData.latitude) : 0.0}
+                                lon={params.homeData.longitude != null ? parseFloat(params.homeData.longitude) : 0.0}
                                 radius={200}
                             />
                         </TouchableOpacity>
-                        <View style={{ marginBottom: 50 }} /> 
+                        <View style={{ marginBottom: 100 }} /> 
                     </View>
                 </ScrollView>
+                <View style={styles.floatingBar}>
+                    <View style={styles.detailsView}>
+                        <View style={styles.pricePeriodWrapper}>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price} </Text>
+                            <Text style={styles.period1}> /per night</Text>
+                        </View>
+                        <View style={styles.pricePeriodWrapper}>
+                            <Text style={[styles.price, styles.fontFuturaStd]}>(LOC {parseFloat(price/locRate).toFixed(2)})</Text>
+                            <Text style={styles.period2}> /per night</Text>
+                        </View>
+                    </View>
+                    <View style={styles.payButtonView}>
+                        <TouchableOpacity
+                            style={styles.payButton}
+                            onPress={()=>{}}
+                        >
+                            <Text style={styles.confirmPayText}>Check Availability</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         );
     }
 }
 
-export default HomeDetails;
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+        locRate: state.currency.locRate
+    };
+}
+//export default HomeDetails;
+
+export default connect(mapStateToProps, null)(HomeDetails);

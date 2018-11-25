@@ -11,7 +11,6 @@ import FacilityView from '../../../atoms/FacilityView'
 
 import styles from './styles';
 
-const RNViewPropTypes = ViewPropTypes || View.propTypes;
 const RNPropTypes = PropTypes || React.PropTypes;
 class RoomFacility extends Component {
 

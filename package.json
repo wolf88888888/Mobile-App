@@ -69,7 +69,7 @@
     "react-native-modal-datetime-picker": "^5.1.0",
     "react-native-phone-input": "^0.2.1",
     "react-native-picker-select": "^3.0.1",
-    "react-native-remote-svg": "^1.1.1",
+    "react-native-remote-svg": "^1.3.0",
     "react-native-simple-toast": "0.0.8",
     "react-native-smart-splash-screen": "git://github.com/rgdalessandro/react-native-smart-splash-screen.git#a803be27fececa72f446cb16b4b2d2dd6c5c09e4",
     "react-native-tab-view": "^1.3.0",

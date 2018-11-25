@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     },
 
     facilityImage: {
-        resizeMode: 'center',
         width: imageWidth,
         height: imageWidth,
     },

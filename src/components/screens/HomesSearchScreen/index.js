@@ -22,6 +22,7 @@ import { imgHost } from '../../../config';
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window')
+import Toast from 'react-native-easy-toast';
 
 class HomesSearchScreen extends Component {
     isFilterResult = false;
@@ -401,28 +402,65 @@ class HomesSearchScreen extends Component {
         return checks;
     }
 
-    gotoHomeDetailPage = (home) => {
+    gotoHomeDetailPage = async (home) => {
         console.log (" home ---", home);
-
         this.setState({isLoadingDetails: true});
-        requester.getListing(home.id).then(res => {
-            res.body.then(listing => {
-                this.setState({isLoadingDetails: false}, () => {
-                    const checks = this.calculateCheckInOuts(listing);
-                    const homePhotos = [];
-                    for (let i = 0; i < listing.pictures.length; i++) {
-                        homePhotos.push({ uri: imgHost + listing.pictures[i].original });
-                    }
+        try {
+            const resListing = await requester.getListing(home.id);
+            const data = await resListing.body;
+            const checks = this.calculateCheckInOuts(data);
 
-                    console.log("123123123", listing, checks);
-                    this.props.navigation.navigate('HomeDetailsScreen', {
-                        data: listing,
-                        homePhotos: homePhotos,
-                        checks: checks
-                    });
-                });
+            const DAY_INTERVAL = 365;
+
+            const searchTermMap = [
+                `listing=${home.id}`,
+                `startDate=${this.state.checkInDateFormated}`,
+                `endDate=${this.state.checkOutDateFormated}`,
+                `page=${0}`,
+                `toCode=${this.state.currency}`,
+                `size=${DAY_INTERVAL}`];
+        
+            console.log("searchTermMap", searchTermMap);
+
+            const resCalendar =  await requester.getCalendarByListingIdAndDateRange(searchTermMap);
+            const dataCalendar = await resCalendar.body;
+            console.log("dataCalendar", dataCalendar);
+            let calendar = dataCalendar.content;
+            const resRoomDetails = await requester.getHomeBookingDetails(home.id);
+            const roomDetails = await resRoomDetails.body;
+
+            let nights = this.state.daysDifference;
+            
+            console.log("123123", data, checks, calendar, roomDetails, nights);
+
+            const homePhotos = [];
+            for (let i = 0; i < data.pictures.length; i++) {
+                homePhotos.push({ uri: imgHost + data.pictures[i].original });
+            }
+
+            const defaultPrice = home.defaultDailyPrice
+            const price = home.prices && this.state.currency === home.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(home.prices[this.state.currency], 10).toFixed(2);
+
+            const rateExchange = price / defaultPrice;
+
+            this.setState({isLoadingDetails: false});
+            
+            this.props.navigation.navigate('HomeDetailsScreen', {
+                homeData: data,
+                homePhotos: homePhotos,
+                checks: checks,
+                calendar: calendar,
+                roomDetails: roomDetails,
+                startDate: this.state.checkInDateFormated,
+                endDate: this.state.checkOutDateFormated,
+                nights: nights,
+                rateExchange: rateExchange
             });
-        });
+        } catch (e) {
+            this.setState({isLoadingDetails: false}, () => {
+                this.refs.toast.show('Sorry, Cannot get home details.', 1500);
+            });
+        }
     }
 
     renderItem = (item) => {
@@ -561,6 +599,17 @@ class HomesSearchScreen extends Component {
                     animationType="slide"
                     activityIndicatorSize="large"
                     activityIndicatorColor="black"/>
+                    
+                <Toast
+                    ref="toast"
+                    style={{ backgroundColor: '#DA7B61' }}
+                    position='bottom'
+                    positionValue={150}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
+                />
             </View>
         );
     }

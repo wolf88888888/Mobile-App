@@ -43,7 +43,7 @@ class PropertyFacilites extends Component {
             <View style={styles.item}>
                 <View style={styles.ComponentView}>
                    <Text style={styles.firstText}>{rowData.name}</Text>
-                   <Image source={require('../../../assets/Facilities/Transparent/Homes/TV.png')} style={styles.ImageStyle}/>
+                   <Image source={require('../../../assets/facilities/Transparent/Homes/TV.png')} style={styles.ImageStyle}/>
                 </View>
                 <View style={styles.lineStyle}/>
             </View>

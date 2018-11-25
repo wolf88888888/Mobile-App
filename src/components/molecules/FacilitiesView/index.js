@@ -3,32 +3,14 @@ import {
     Text,
     View
 } from 'react-native';
-import PropTypes from 'prop-types';
 import FacilityView from '../../atoms/FacilityView';
 import { imgHost } from '../../../config';
-
 import styles from './styles';
 
-
 class FacilitiesView extends Component {
-    static propTypes = {
-        data: PropTypes.array
-    };
-
-    static defaultProps = {
-        data: []
-    };
 
     constructor(props) {
         super(props);
-        this.onFacilityMore = this.onFacilityMore.bind(this);
-        this.state = {
-            more: this.props.data.length
-        };
-    }
-
-    onFacilityMore() {
-        this.props.onFacilityMore();
     }
 
     renderFacilitties() {
@@ -36,9 +18,9 @@ class FacilitiesView extends Component {
         for (let i = 0; i < this.props.data.length; i++) {
             const imgUrl = this.props.data[i].picture;
             if (imgUrl != null && imgUrl !== undefined && imgUrl !== '') {
-                indents.push(<FacilityView image={{ uri: imgHost + imgUrl }} />);
+                indents.push();
                 if (i === 4) {
-                    indents.push(<FacilityView more={this.props.data.length - 5} isMore onPress={this.onFacilityMore} />);
+                    indents.push(<FacilityView more={this.props.data.length - 5} isMore onPress={this.props.onFacilityMore} />);
                     break;
                 }
             }
@@ -47,12 +29,35 @@ class FacilitiesView extends Component {
     }
 
     render() {
+        if (!this.props.data || this.props.data.length === 0) {
+            return null;
+        }
+        const mostPopularFacilities = this.props.data.filter(a => a.picture != null).splice(0, 5);
+        const otherFacilities = this.props.data.filter(a => !mostPopularFacilities.includes(a));
+
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>Room Facility</Text>
-                <View style={{ flexDirection: 'row' }}>
-                    {this.renderFacilitties()}
-                </View>
+                {
+                    mostPopularFacilities && mostPopularFacilities.length > 0 &&
+                    (
+                        <View style={{flex: 1, flexDirection: 'row'}}>
+                            {
+                                mostPopularFacilities.map((item, i) => {
+                                    return (
+                                        item.picture != null &&
+                                            (
+                                                // <FacilityView image={{ uri: imgHost + item.picture }} />
+                                                <FacilityView image={item.picture} isHome={this.props.isHome}/>
+                                            )
+                                    )
+                                })
+                            }
+                            <FacilityView more={otherFacilities.length} isMore onPress={this.props.onFacilityMore} />
+                        </View>
+                    )
+                }
+                {/* {this.renderFacilitties()} */}
             </View>
         );
     }

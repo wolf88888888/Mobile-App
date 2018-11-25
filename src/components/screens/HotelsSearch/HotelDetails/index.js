@@ -145,6 +145,7 @@ class HotelDetails extends Component {
                         <FacilitiesView
                             style={styles.roomfacility}
                             data={this.state.hotelAmenities}
+                            isHome={false}
                             onFacilityMore={this.onFacilityMore}
                         />
                         <View style={[styles.lineStyle, {

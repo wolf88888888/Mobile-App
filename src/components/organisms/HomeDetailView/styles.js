@@ -24,23 +24,24 @@ const styles = StyleSheet.create({
 
     rateViewContainer: {
         flexDirection: 'row',
+        marginLeft:10,
+        marginRight:10,
     },
 
     rateText:{
         fontFamily: 'FuturaStd-Light',
-        fontSize:9,
-        paddingLeft:10,
-        paddingRight:10,
+        fontSize: 9,
         color:'#898c8d',
+        marginRight: 5,
     },
 
     addressText: {
         fontFamily: 'FuturaStd-Light',
         fontSize:10,
-        paddingTop:3,
-        paddingBottom:2,
-        paddingLeft:10,
-        paddingRight:10,
+        marginTop:3,
+        marginBottom:2,
+        marginLeft:10,
+        marginRight:10,
         color:'#000',
     },
 
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
 
     readmore: {
         fontFamily: 'FuturaStd-Light',
-        fontSize: 10,
-        marginTop: -2,
+        fontSize: 11,
+        marginTop: -3,
     }
 });
 

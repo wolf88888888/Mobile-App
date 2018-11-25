@@ -11,7 +11,6 @@ import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
 
-import FacilityView from '../../../atoms/FacilityView'
 import StarRatings from '../../../atoms/StarRatings';
 import PropertyDetailsView from '../PropertyDetailsView'
 import ReadMoreView from '../../../atoms/ReadMoreView'
