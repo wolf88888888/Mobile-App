@@ -20,8 +20,8 @@ export const getCurrency = (currency, isRefresh = true, isPrefer = true) => {
         }
         requester.getCurrencyRates().then(res => {
             res.body.then(currencyExchangeRates => {
-              //this.props.dispatch(setCurrencyExchangeRates(currencyExchangeRates));
-              console.log("currencyExchangeRates", currencyExchangeRates);
+                //this.props.dispatch(setCurrencyExchangeRates(currencyExchangeRates));
+                console.log("currencyExchangeRates", currencyExchangeRates);
             });
         });
 
