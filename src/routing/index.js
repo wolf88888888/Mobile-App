@@ -82,6 +82,8 @@ import RoomDetailsReview from '../components/screens/HotelsSearch/RoomDetailsRev
 import HomesSearchScreen from '../components/screens/HomesSearchScreen';
 import HomeFilters from '../components/screens/HomeFilters';
 import HomeDetails from '../components/screens/HomeDetails';
+import HomeReview from '../components/screens/HomeReview';
+import HomeRequestConfirm from '../components/screens/HomeRequestConfirm';
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
@@ -121,6 +123,7 @@ const RootNavigator = createStackNavigator(
         CreateWallet: { screen: CreateWallet },
         WalletRecoveryKeywords: { screen: WalletRecoveryKeywords },
         WalletKeywordValidation: {screen: WalletKeywordValidation},
+
         CongratsWallet: { screen: CongratsWallet },
         CongratulationRegister: { screen: CongratulationRegister },
         MainScreen: { screen: MainNavigator },
@@ -161,6 +164,8 @@ const RootNavigator = createStackNavigator(
         HomesSearchScreen: {screen: HomesSearchScreen},
         HomeFilterScreen: { screen: HomeFilters },
         HomeDetailsScreen: { screen: HomeDetails },
+        HomeReviewScreen: { screen: HomeReview },
+        HomeRequestConfirm: { screen: HomeRequestConfirm },
         MapFullScreen: {screen: MapFullScreen}
     },
     {

@@ -6,20 +6,25 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#f0f1f3',
-        alignItems: 'center',
         justifyContent: 'flex-start'
-    },
-
-    topButtonContainer: {
-        zIndex: 1,
-        flexDirection: 'row',
-        justifyContent:'space-between',
     },
 
     scrollView: {
         flex: 1,
     },
 
+    content: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    
+    heading: {
+        color: 'black',
+        fontFamily: 'FuturaStd-Medium',
+        marginTop: 5,
+        fontSize: 20,
+        marginBottom: 30
+    },
     body: {
         zIndex: -1,
         flexDirection: 'column',
@@ -136,6 +141,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontFamily: 'FuturaStd-Light'
+    },
+
+    subContainer: {
+        flexDirection:'row',
+        justifyContent:'space-between',
+        marginTop:30,
+        marginLeft:20,
+        marginRight:20,
+    },
+
+    subTitle:{
+        color:'black',
+        fontSize:15,
+        fontFamily: 'FuturaStd-Light',
     },
 });
 

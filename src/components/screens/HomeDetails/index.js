@@ -62,6 +62,26 @@ class HomeDetails extends Component {
         return price / nights;
     }
 
+    gotoRequestBooking = () => {
+        const { params } = this.props.navigation.state;
+
+        this.props.navigation.navigate('HomeReviewScreen', {
+            homeID: params.homeData.id,
+            title: params.homeData.name,
+            address: params.homeData.street + ', ' + params.homeData.city.name + '•' + params.homeData.country.name,
+            startDate: params.startDate, 
+            endDate:params.endDate,
+            checkInDate: params.checkInDate,
+            checkOutDate: params.checkOutDate,
+            nights: params.nights,
+            cleaningFee: params.homeData.cleaningFee,
+            calendar: params.calendar,
+            rateExchange: params.rateExchange,
+            guests: params.guests,
+            guestsIncluded: params.homeData.guestsIncluded
+        });
+    }
+
     render() {
         const { params } = this.props.navigation.state;
         const { 
@@ -159,14 +179,14 @@ class HomeDetails extends Component {
                             <Text style={styles.period1}> /per night</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price, styles.fontFuturaStd]}>(LOC {parseFloat(price/locRate).toFixed(2)})</Text>
+                            <Text style={[styles.price, styles.fontFuturaStd]}>LOC {parseFloat(price/locRate).toFixed(2)}</Text>
                             <Text style={styles.period2}> /per night</Text>
                         </View>
                     </View>
                     <View style={styles.payButtonView}>
                         <TouchableOpacity
                             style={styles.payButton}
-                            onPress={()=>{}}
+                            onPress={this.gotoRequestBooking}
                         >
                             <Text style={styles.confirmPayText}>Check Availability</Text>
                         </TouchableOpacity>

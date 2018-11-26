@@ -453,8 +453,11 @@ class HomesSearchScreen extends Component {
                 roomDetails: roomDetails,
                 startDate: this.state.checkInDateFormated,
                 endDate: this.state.checkOutDateFormated,
+                checkInDate: this.state.checkInDate,
+                checkOutDate: this.state.checkOutDate,
                 nights: nights,
-                rateExchange: rateExchange
+                rateExchange: rateExchange,
+                guests:this.state.guests
             });
         } catch (e) {
             this.setState({isLoadingDetails: false}, () => {

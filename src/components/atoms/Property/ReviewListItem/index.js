@@ -7,21 +7,24 @@ import {
 
 import styles from './styles';
 
-const defaulProps = {
-    textFirst: '',
-    textLast:'',
-};
 /* eslint-disable */
 const ReviewListItem = ({
     textFirst,
     textLast,
+    styleContainer,
+    styleFirst,
+    styleLast,
 }) => (
-      <View style={styles.container}>
-          <Text style={styles.textFirst}>{textFirst}</Text>
-          <Text style={styles.textLast}>{textLast}</Text>
+      <View style={[styles.container, styleContainer]}>
+          <Text style={[styles.textFirst, styleFirst]}>{textFirst}</Text>
+          <Text style={[styles.textLast, styleLast]}>{textLast}</Text>
       </View>
 );
 
-ReviewListItem.defaulProps = defaulProps;
+ReviewListItem.defaulProps = {
+    textFirst: '',
+    textLast:'',
+    styleLast: null
+};
 
 export default ReviewListItem;

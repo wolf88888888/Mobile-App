@@ -63,7 +63,6 @@ class HomeDetailView extends Component {
 
 
     render() {
-        console.log("HomeDetailView", this.props);
         const ratingHeight = 12;
         const ratingSize = 9;
         

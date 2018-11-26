@@ -87,6 +87,7 @@ class AppLoading extends Component {
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'MainScreen' : 'Welcome' })],
+            // actions: [NavigationActions.navigate({ routeName: isLoggedIn ? 'HomeRequestConfirm' : 'Welcome' })],
         });
         this.props.navigation.dispatch(resetAction);
     };
