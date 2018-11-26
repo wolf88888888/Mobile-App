@@ -21,7 +21,7 @@ const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;
 const logoHeight = logoWidth * 35 / 54;//eslint-disable-line
 
-class HomeDetails extends Component {
+class HomeRequestBook extends Component {
     constructor(props) {
         super(props);
         console.log("param", props.navigation.state.params);
@@ -153,7 +153,7 @@ class HomeDetails extends Component {
                     </View>
                 </ScrollView>
                 <View style={styles.floatingBar}>
-                    <View style={styles.detailsView}>
+                    {/* <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price} </Text>
                             <Text style={styles.period1}> /per night</Text>
@@ -162,13 +162,13 @@ class HomeDetails extends Component {
                             <Text style={[styles.price, styles.fontFuturaStd]}>(LOC {parseFloat(price/locRate).toFixed(2)})</Text>
                             <Text style={styles.period2}> /per night</Text>
                         </View>
-                    </View>
+                    </View> */}
                     <View style={styles.payButtonView}>
                         <TouchableOpacity
                             style={styles.payButton}
                             onPress={()=>{}}
                         >
-                            <Text style={styles.confirmPayText}>Check Availability</Text>
+                            <Text style={styles.confirmPayText}>Agree & Confirm</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -184,6 +184,4 @@ let mapStateToProps = (state) => {
         locRate: state.currency.locRate
     };
 }
-//export default HomeDetails;
-
-export default connect(mapStateToProps, null)(HomeDetails);
+export default connect(mapStateToProps, null)(HomeRequestBook);
