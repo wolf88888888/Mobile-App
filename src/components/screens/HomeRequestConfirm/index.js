@@ -37,12 +37,12 @@ class HomeRequestConfirm extends Component {
         let email = await userInstance.getEmail();
         let phoneNumber = await userInstance.getPhoneNumber();
 
-        this.state = {
+        this.setState({
             firstname: firstName,
             lastname: lastName,
             phonenumber: phoneNumber,
             email: email,
-        }
+        });
     }
 
     onClose = () => {
@@ -66,10 +66,15 @@ class HomeRequestConfirm extends Component {
     }
 
     isValidNames() {
-        const { firstName, lastName } = this.state;
+        const { firstName, lastName, phoneNumber } = this.state;
     
         if (firstName === '' || lastName === '') {
             this.refs.toast.show('Please input firstnmae and lastname.', 1500);
+            return false;
+        }
+
+        if (phoneNumber === '') {
+            this.refs.toast.show('Please input phonenumber.', 1500);
             return false;
         }
     
@@ -95,7 +100,8 @@ class HomeRequestConfirm extends Component {
             phone: phoneNumber,
         };
 
-        requester.requestBooking(requestInfo, captchaToken).then(res => {
+        requester.requestBooking(requestInfo).then(res => {
+            console.log("ressss----", res);
             if (!res.success) {
                 res.errors.then(e => {
                     this.refs.toast.show(e.message, 2500);
@@ -104,7 +110,8 @@ class HomeRequestConfirm extends Component {
                 res.body.then(data => {
                     console.log("requester.requestBooking", requester.requestBooking);
                     if (data.success) {
-                        this.props.history.push('/profile/trips/homes');
+                        this.props.navigation.pop(5);
+                        //this.props.history.push('/profile/trips/homes');
                     } else {
                         this.refs.toast.show(e.message, 2500);
                     }
@@ -131,7 +138,7 @@ class HomeRequestConfirm extends Component {
     }
 
     render() {
-        // const { params } = this.props.navigation.state;
+        const { params } = this.props.navigation.state;
         const locRate = _.isString(this.props.locRate) ? parseFloat(this.props.locRate) : this.props.locRate;
         const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar) * params.rateExchange;
 
@@ -173,7 +180,7 @@ class HomeRequestConfirm extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price} </Text>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price.toFixed(2)} </Text>
                             <Text style={styles.period1}> /per night</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
@@ -184,22 +191,13 @@ class HomeRequestConfirm extends Component {
                     <View style={styles.payButtonView}>
                         <TouchableOpacity
                             style={styles.payButton}
-                            onPress={()=>{}}
+                            onPress={this.confirmBooking}
                         >
                             <Text style={styles.confirmPayText}>Request Booking</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                
-                <ProgressDialog
-                    visible={this.state.isRequesting}
-                    title="Please Wait"
-                    message="Reguesting..."
-                    animationType="slide"
-                    activityIndicatorSize="large"
-                    activityIndicatorColor="black"/>
-                
                 <Toast
                     ref="toast"
                     style={{ backgroundColor: '#DA7B61' }}
@@ -210,6 +208,13 @@ class HomeRequestConfirm extends Component {
                     opacity={1.0}
                     textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
+                <ProgressDialog
+                    visible={this.state.isRequesting}
+                    title="Please Wait"
+                    message="Reguesting..."
+                    animationType="slide"
+                    activityIndicatorSize="large"
+                    activityIndicatorColor="black"/>
             </View>
         );
     }

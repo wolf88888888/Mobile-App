@@ -175,7 +175,7 @@ class HomeDetails extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price} </Text>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price.toFixed(2)} </Text>
                             <Text style={styles.period1}> /per night</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>

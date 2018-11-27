@@ -67,13 +67,14 @@ class HomeReview extends Component {
     }
 
     gotoConfirm = () => {
+        console.log("gotoConfirm", this.state.guests);
         if (this.state.guests == 0) {
             this.refs.toast.show('Please Select Guest Number.', 1500);
             return;
         }
         const { params } = this.props.navigation.state;
 
-        this.props.navigation.navigate('HomeReviewScreen', {
+        this.props.navigation.navigate('HomeRequestConfirm', {
             homeID: params.homeID, 
             title: params.title,
             address: params.address,
@@ -85,7 +86,7 @@ class HomeReview extends Component {
             // cleaningFee: params.homeData.cleaningFee,
             calendar: params.calendar,
             rateExchange: params.rateExchange,
-            guests: params.guests,
+            guests: this.state.guests,
             // guestsIncluded: params.homeData.guestsIncluded
         });
     }
@@ -175,7 +176,7 @@ class HomeReview extends Component {
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
-                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price} </Text>
+                            <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price.toFixed(2)} </Text>
                             <Text style={styles.period1}> /per night</Text>
                         </View>
                         <View style={styles.pricePeriodWrapper}>
