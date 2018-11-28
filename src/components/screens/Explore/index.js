@@ -98,7 +98,37 @@ class Explore extends Component {
         console.log('explorer  currency', props.currency, props.locRate);
         this.props.actions.getCurrency(props.currency, false);//eslint-disable-line
         Explore.self = this;
+
+        this.testWS();
     }
+
+
+    testWS = () => {
+
+        var ws = new WebSocket('wss://exchanger.locktrip.com/websocket');
+
+        ws.onopen = () => {
+            // connection opened
+            ws.send("{'id': 199, 'method': 'getLocPrice', 'param': { 'fiatAmount': 1000 } }"); // send a message
+            console.log("connected!!!!");
+        };
+    
+        ws.onmessage = (e) => {
+        // a message was received
+            console.log("onmessage", e.data);
+        };
+    
+        ws.onerror = (e) => {
+        // an error occurred
+            console.log("onmessage", e.message);
+        };
+    
+        ws.onclose = (e) => {
+        // connection closed
+            console.log("onclose", e.code, e.reason);
+        };
+    }
+
 
     async componentWillMount() {
         const token_value = await AsyncStorage.getItem(`${domainPrefix}.auth.locktrip`);
