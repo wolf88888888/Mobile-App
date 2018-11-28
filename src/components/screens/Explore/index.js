@@ -25,7 +25,7 @@ import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectM
 
 import * as currencyActions from '../../../redux/action/Currency';
 
-const shouldBeNative = false; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = true; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
 const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];//eslint-disable-line
 
@@ -302,6 +302,11 @@ class Explore extends Component {
         //Open new property screen that uses sock-js
         if (shouldBeNative && openPropertySock){
             if (this.state.isHotel) {
+                console.log("this.state.regionId.", this.state.regionId);
+                if (this.state.regionId === "" || this.state.regionId === 0) {
+                    this.refs.toast.show('Please input location to search hotels.', 2500);
+                    return;
+                }
                 this.props.navigation.navigate('HotelsSearchScreen', {
                     isHotel: this.state.isHotel,
                     searchedCity: this.state.search,
@@ -320,8 +325,9 @@ class Explore extends Component {
                 });
             }
             else {
-                if (this.state.countryId === 0) {
-                    this.refs.toast.show('Please select country to book home.', 1500);
+                console.log("this.state.value.", this.state.value);
+                if (this.state.value === '') {
+                    this.refs.toast.show('Please select country to book home.', 2500);
                     return;
                 }
                 this.props.navigation.navigate('HomesSearchScreen', {
