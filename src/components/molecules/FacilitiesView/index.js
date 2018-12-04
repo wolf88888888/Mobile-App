@@ -4,7 +4,6 @@ import {
     View
 } from 'react-native';
 import FacilityView from '../../atoms/FacilityView';
-import { imgHost } from '../../../config';
 import styles from './styles';
 
 class FacilitiesView extends Component {

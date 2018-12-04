@@ -24,6 +24,7 @@ import { userInstance } from '../../../utils/userInstance';
 import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog';
 
 import * as currencyActions from '../../../redux/action/Currency';
+import { WebsocketClient } from '../../../utils/exchangerWebsocket';
 
 const shouldBeNative = true; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
 const openPropertySock = true;
@@ -96,20 +97,21 @@ class Explore extends Component {
         };
 
         console.log('explorer  currency', props.currency, props.locRate);
-        this.props.actions.getCurrency(props.currency, false);//eslint-disable-line
+        // this.props.actions.getCurrency(props.currency, false);//eslint-disable-line
         Explore.self = this;
 
-        this.testWS();
+        // this.testWS();
+        this.isSendMessage = false;
     }
 
 
     testWS = () => {
 
-        var ws = new WebSocket('wss://exchanger.locktrip.com/websocket');
+        var ws = new WebSocket('wss://echo.websocket.org');//new WebSocket('wss://exchanger.locktrip.com/websocket');
 
         ws.onopen = () => {
             // connection opened
-            ws.send("{'id': 199, 'method': 'getLocPrice', 'param': { 'fiatAmount': 1000 } }"); // send a message
+            ws.send("{'id': 199, 'method': 'getLocPrice', 'params': { 'bookingId': 1000 } }"); // send a message
             console.log("connected!!!!");
         };
     
@@ -169,6 +171,15 @@ class Explore extends Component {
 
         if (this.props.countries != prevProps.countries) {
             this.setCountriesInfo();
+        }
+
+        if (!this.props.isLocPriceWebsocketConnected && this.isSendMessage) {
+            this.isSendMessage = false;
+        }
+        if (this.props.isLocPriceWebsocketConnected && !this.isSendMessage) {
+            this.isSendMessage = true;
+            //WebsocketClient.sendMessage(this.props.exchangeRatesInfo.locRateFiatAmount, null, { fiatAmount: this.props.exchangeRatesInfo.locRateFiatAmount });
+            // WebsocketClient.sendMessage(1000, null, { fiatAmount: 1000 });
         }
     }
 
@@ -733,7 +744,7 @@ class Explore extends Component {
                     onOk = { result => {
                         console.log("select country", result);
                         this.setState({ currencySelectionVisible: false });
-                        this.props.actions.getCurrency(result.selectedItem.label);
+                        // this.props.actions.getCurrency(result.selectedItem.label);
                         // this.setState({ singlePickerSelectedItem: result.selectedItem });
                     }}
                 />
@@ -758,6 +769,7 @@ let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
         currencySign: state.currency.currencySign,
+        isLocPriceWebsocketConnected: state.currency.isLocPriceWebsocketConnected,
         locRate: state.currency.locRate,
         countries: state.country.countries
     };

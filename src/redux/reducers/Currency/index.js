@@ -1,14 +1,16 @@
 import { AsyncStorage } from 'react-native';
 import { handleActions } from 'redux-actions';
-import { setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../action/Currency';
+import { setLocPriceWebsocketConnection, setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../action/Currency';
 
 const initialState = () => ({
+    isLocPriceWebsocketConnected: false,
     currency: 'EUR', 
     currencySign: '€', 
     locRate: 0.0,
     preferCurrency: 'EUR',
     preferCurrencySign: '€', 
     preferLocRate: 0.0,
+    locAmounts: {}
 });
 
 function getCurrencySign(currency) {
@@ -20,12 +22,31 @@ function getCurrencySign(currency) {
 
 export default handleActions(
     {
+        [setLocPriceWebsocketConnection]: (state, {payload}) => {
+            return { ...state, isLocPriceWebsocketConnected: payload.isLocPriceWebsocketConnected};
+        },
+
+        // [updateLocAmounts]: (state, {payload}) => {
+        //     return { ...state,  
+        //         locAmounts: {
+        //             ...state.locAmounts,
+        //             [action.fiatAmount]: {
+        //                 locAmount: payload.locAmount,
+        //                 quotedLoc: payload.quotedLoc,
+        //                 quotedPair: payload.quotedPair,
+        //                 roundedLocInEur: payload.roundedLocInEur,
+        //                 fundsSufficient: payload.fundsSufficient,
+        //                 fiatAmount: payload.fiatAmount
+        //             }
+        //       }};
+        // },
+
         [setCurrency]: (state, {payload}) => {
             let currency = payload.currency;
             let currencySign = getCurrencySign(currency);
             AsyncStorage.setItem('currency', currency);
             AsyncStorage.setItem('locRate', JSON.stringify(0.0));
-            console.log ("handleActions - setCurrency ------------------", currency, currencySign);
+            console.log ("handleActions -setCurrency ------------------", currency, currencySign);
 
             return { ...state, currency: currency,  currencySign: currencySign, locRate: 0.0};
         },
