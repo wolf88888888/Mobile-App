@@ -1,6 +1,12 @@
 import { socketHostPrice } from '../config';
-import { setLocPriceWebsocketConnection } from '../redux/action/Currency';
-import {store} from '../redux/store';
+import {
+    setLocPriceWebsocketConnection
+} from '../redux/action/exchangerSocket';
+import {
+    updateLocAmounts,
+    clearLocAmounts
+} from '../redux/action/locAmounts'
+import store from '../redux/store';
 const WEBSOCKET_RECONNECT_DELAY = 5000;
 
 const DEFAULT_SOCKET_METHOD = 'getLocPrice';
@@ -22,7 +28,8 @@ class WS {
     }
 
     connect() {
-        // store.dispatch(setLocPriceWebsocketConnection(true));
+        console.log("WS-------connect-----");
+        store.dispatch(setLocPriceWebsocketConnection(true));
     }
 
     sendMessage(id, method, params) {
@@ -40,15 +47,15 @@ class WS {
                 const seconds = Math.round(data.params.secondsLeft / 1000);
                 // store.dispatch(setSeconds(seconds));
             }
-            //store.dispatch(updateLocAmounts(data.id, data.params, data.error));
+            store.dispatch(updateLocAmounts({fiatAmount: data.id, params: data.params, error: data.error}));
         }
     }
 
     close() {
         if (this.shoudSocketReconnect) {
             if (store.getState().currency.isLocPriceWebsocketConnected) {
-                // store.dispatch(clearLocAmounts());
-                // store.dispatch(setLocPriceWebsocketConnection(false));
+                store.dispatch(clearLocAmounts());
+                store.dispatch(setLocPriceWebsocketConnection(false));
             }
             setTimeout(() => {
                 this.initSocket();

@@ -2,14 +2,14 @@ import { createAction } from 'redux-actions';
 import requester from '../../../initDependencies';
 
 const currencyInfo = {
-    SET_LOC_PRICE_WEBSOCKET_CONNECTION: 'SET_LOC_PRICE_WEBSOCKET_CONNECTION',
+    SET_CURRENCY_EXCHANGE_RATES: 'SET_CURRENCY_EXCHANGE_RATES',
+    SET_LOC_EUR_RATE: 'SET_LOC_EUR_RATE',
+    SET_LOC_RATE_FIAT_AMOUNT: 'SET_LOC_RATE_FIAT_AMOUNT',
+
     SET_CURRENCY: 'SET_CURRENCY',
     SET_LOCRATE: 'SET_LOCRATE',
     SET_PREFER_CURRENCY: 'SET_PREFER_CURRENCY',
     SET_PREFER_LOCRATE: 'SET_PREFER_LOCRATE',
-    UPDATE_LOC_AMOUNTS: 'UPDATE_LOC_AMOUNTS',
-    REMOVE_LOC_AMOUNT: 'REMOVE_LOC_AMOUNT',
-    CLEAR_LOC_AMOUNTS: 'CLEAR_LOC_AMOUNTS'
 };
 
 export const getCurrency = (currency, isRefresh = true, isPrefer = true) => {
@@ -54,12 +54,11 @@ export const getCurrency = (currency, isRefresh = true, isPrefer = true) => {
         });
     }
 };
+export const setCurrencyExchangeRates = createAction(currencyInfo.SET_CURRENCY_EXCHANGE_RATES);
+export const setLocEurRate = createAction(currencyInfo.SET_LOC_EUR_RATE);
+export const setLocRateFiatAmount = createAction(currencyInfo.SET_LOC_RATE_FIAT_AMOUNT);
 
-export const setLocPriceWebsocketConnection = createAction(currencyInfo.SET_LOC_PRICE_WEBSOCKET_CONNECTION);
 export const setCurrency = createAction(currencyInfo.SET_CURRENCY);
 export const setLocRate = createAction(currencyInfo.SET_LOCRATE);
 export const setPreferCurrency = createAction(currencyInfo.SET_PREFER_CURRENCY);
 export const setPreferLocRate = createAction(currencyInfo.SET_PREFER_LOCRATE);
-export const updateLocAmounts = createAction(currencyInfo.UPDATE_LOC_AMOUNTS);
-export const removeLocAamount = createAction(currencyInfo.REMOVE_LOC_AMOUNT);
-export const clearLocAmounts = createAction(currencyInfo.CLEAR_LOC_AMOUNTS);

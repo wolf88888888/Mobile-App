@@ -178,9 +178,13 @@ class Explore extends Component {
         }
         if (this.props.isLocPriceWebsocketConnected && !this.isSendMessage) {
             this.isSendMessage = true;
-            //WebsocketClient.sendMessage(this.props.exchangeRatesInfo.locRateFiatAmount, null, { fiatAmount: this.props.exchangeRatesInfo.locRateFiatAmount });
+            WebsocketClient.sendMessage(this.props.exchangeRates.locRateFiatAmount, null, { fiatAmount: this.props.exchangeRates.locRateFiatAmount });
             // WebsocketClient.sendMessage(1000, null, { fiatAmount: 1000 });
         }
+    }
+
+    componentWillUnmount() {
+        // Websocket.sendMessage(this.props.exchangeRatesInfo.locRateFiatAmount, 'unsubscribe');
     }
 
     setCountriesInfo() {
@@ -769,9 +773,10 @@ let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
         currencySign: state.currency.currencySign,
-        isLocPriceWebsocketConnected: state.currency.isLocPriceWebsocketConnected,
         locRate: state.currency.locRate,
-        countries: state.country.countries
+        countries: state.country.countries,
+        isLocPriceWebsocketConnected: state.exchangerSocket.isLocPriceWebsocketConnected,
+        exchangeRates: state.exchangeRates,
     };
 }
 
