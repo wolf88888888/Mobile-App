@@ -8,6 +8,7 @@ export let domainPrefix;
 export let PUBLIC_URL;
 export let Config;
 export let xDeviceVersion;
+export let ROOMS_XML_CURRENCY;//const ROOMS_XML_CURRENCY = 'EUR';
 
 if (__DEV__) {
     // alertMessage = "Debug1111 ----- ";
@@ -28,6 +29,7 @@ if (__DEV__) {
     socketHostPrice="wss://exchanger.locktrip.com/websocket";
     socketHost = 'wss://beta.locktrip.com/socket';
     xDeviceVersion = "49365f68-42e1-11e8-842f-0ed5f89f718b";
+    ROOMS_XML_CURRENCY = 'EUR';
     routerPrefix = '.';
     //export const domainPrefix = 'rc';
     domainPrefix = 'local';
@@ -56,6 +58,7 @@ if (__DEV__) {
     socketHostPrice="wss://exchanger.locktrip.com/websocket";
     socketHost = 'wss://beta.locktrip.com/socket';
     xDeviceVersion = "49365f68-42e1-11e8-842f-0ed5f89f718b";
+    ROOMS_XML_CURRENCY = 'EUR';
     routerPrefix = '.';
     //export const domainPrefix = 'rc';
     domainPrefix = 'prod';

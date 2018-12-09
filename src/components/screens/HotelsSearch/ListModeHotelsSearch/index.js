@@ -105,8 +105,6 @@ class ListModeHotelsSearch extends Component {
         return (
             <HotelItemView
                 item = {item}
-                currencySign = {this.state.currencySign}
-                locRate = {this.state.locRate}
                 gotoHotelDetailsPage = {this.props.gotoHotelDetailsPage}
                 daysDifference = {this.state.daysDifference}
                 isDoneSocket = {this.state.allElements}

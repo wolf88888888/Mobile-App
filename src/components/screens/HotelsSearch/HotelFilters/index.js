@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import {View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet} from 'react-native';
 import Image from 'react-native-remote-svg';
 import styles from './styles';
@@ -8,7 +9,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 
-export default class HotelFilters extends Component {
+class HotelFilters extends Component {
     static propTypes = {
         navigation: PropTypes.shape({
             navigate: PropTypes.func
@@ -230,8 +231,8 @@ export default class HotelFilters extends Component {
                         
                         <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
                             <View style={{width: '80%', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Text>{params.currencySign} {this.state.sliderValue[0]}</Text>
-                                <Text>{params.currencySign} {this.state.sliderValue[1]}</Text>
+                                <Text>{this.props.currencySign} {this.state.sliderValue[0]}</Text>
+                                <Text>{this.props.currencySign} {this.state.sliderValue[1]}</Text>
                             </View>
                             <MultiSlider
                             isMarkersSeparated={true}
@@ -248,8 +249,8 @@ export default class HotelFilters extends Component {
                             onValuesChangeFinish={this.multiSliderValuesChange}
                             />
                             <View style={{width: '80%', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Text>{params.currencySign} 0</Text>
-                                <Text>{params.currencySign} 5000</Text>
+                                <Text>{this.props.currencySign} 0</Text>
+                                <Text>{this.props.currencySign} 5000</Text>
                             </View>
                         </View>
 
@@ -387,3 +388,13 @@ const pickerSelectStyles = StyleSheet.create({
         color: 'black'
     }
 });
+
+
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign
+    };
+}
+
+export default connect(mapStateToProps, null)(HotelFilters);

@@ -10,7 +10,6 @@ const SVGButton = (props) => {
         <View style={[styles.container, props.style]}>
             <TouchableOpacity style={styles.ButtonView} onPress={props.onPress}>
                 <Image source={props.image} style={styles.ButtonImage}/>
-                
             </TouchableOpacity>
         </View>
     );

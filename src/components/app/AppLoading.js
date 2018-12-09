@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Platform, NativeModules, AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { setCurrency, setLocRate, setPreferCurrency, setPreferLocRate } from '../../redux/action/Currency'
+import { setCurrency } from '../../redux/action/Currency'
 
 import SplashScreen from 'react-native-smart-splash-screen';
 import { domainPrefix } from '../../config';
 import { bindActionCreators } from 'redux';
 
-import * as countryActions from '../../redux/action/Country'
-import { socketHost } from '../../config';
+import { getCountries } from '../../redux/action/Country'
+import { getCurrencyRates, getLocRate } from '../../redux/action/exchangeRates'
+import { socketHost, ROOMS_XML_CURRENCY } from '../../config';
 
 const androidStomp = NativeModules.StompModule;
 
@@ -25,47 +26,28 @@ class AppLoading extends Component {
     constructor(props) {
         super(props);
         console.log("AppLoading - constructor")
-        this.props.actions.getCountries();
+        this.props.getCountries();
+        this.props.getCurrencyRates();
+        this.props.getLocRate(ROOMS_XML_CURRENCY);
         this.bootstrapAsync();
     }
 
     async componentDidMount() {
         console.log("AppLoading - componentDidMount")
-        
     }
 
     // Fetch the token from storage then navigate to our appropriate place
     bootstrapAsync = async () => {
         console.log("AppLoading - bootstrapAsync")
         let currency = await AsyncStorage.getItem('currency');
-        let locRate = await AsyncStorage.getItem('locRate');
-        locRate = JSON.parse(locRate)
-
-        let preferCurrency = await AsyncStorage.getItem('preferCurrency');
-        let preferLocRate = await AsyncStorage.getItem('preferLocRate');
 
         if (currency != undefined && currency != null) {
             console.log("currency--------------", currency);
-            this.props.navigation.dispatch(setCurrency({currency}));
-        }
-
-        if (locRate != undefined && locRate != null) {
-            this.props.navigation.dispatch(setLocRate({locRate}));
-        }
-
-        if (preferCurrency != undefined && preferCurrency != null) {
-            console.log("preferCurrency--------------", preferCurrency);
-            this.props.navigation.dispatch(setPreferCurrency({preferCurrency}));
-        }
-
-        if (preferLocRate != undefined && preferLocRate != null) {
-            this.props.navigation.dispatch(setPreferLocRate({preferLocRate}));
+            this.props.setCurrency({currency});
+            // this.props.navigation.dispatch(setCurrency({currency}));
         }
 
         console.log("currency", currency);
-        console.log("locRate", locRate);
-        console.log("preferCurrency", preferCurrency);
-        console.log("preferLocRate", preferLocRate);
 
         const keys = await AsyncStorage.getAllKeys();
         const isLoggedIn = keys.includes(`${domainPrefix}.auth.locktrip`) &&
@@ -105,11 +87,12 @@ class AppLoading extends Component {
     }
 }
 
-
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(countryActions, dispatch)
+    getCountries: bindActionCreators(getCountries, dispatch),
+    getCurrencyRates: bindActionCreators(getCurrencyRates, dispatch),
+    getLocRate: bindActionCreators(getLocRate, dispatch),
+    setCurrency: bindActionCreators(setCurrency, dispatch)
 })
-
 
 export default connect(undefined, mapDispatchToProps)(AppLoading);
 // export default AppLoading;

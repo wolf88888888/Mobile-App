@@ -100,12 +100,15 @@ class AvailableRoomsView extends Component {
                             cardMaxElevation={1.5}
                             cornerRadius={0}>
                             <Text style={styles.name} numberOfLines={1} ellipsizeMode ={'tail'}>{rowData.roomsResults[0].name + "(" + rowData.roomsResults[0].mealType + ")"}</Text>
+                            <View style={{flexDirection:'column'}}>                                
                             <Text
-                                style={styles.price}>
-                                {this.props.daysDifference} nights:
-                                { this.props.currencySign} 
-                                {rowData.roomsResults[0].price === undefined ? "" :
-                                ((rowData.roomsResults[0].price) * this.props.daysDifference).toFixed(2)} (LOC {(((rowData.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2)})</Text>
+                                    style={styles.price}>
+                                    {this.props.daysDifference} nights:
+                                    { this.props.currencySign} 
+                                    {rowData.roomsResults[0].price === undefined ? "" :
+                                    ((rowData.roomsResults[0].price) * this.props.daysDifference).toFixed(2)}</Text>
+                                <Text style={styles.price}>> (LOC {(((rowData.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2)})</Text>
+                            </View>
                             {/* <Text style={styles.price}>{"1 night:" + Number(((parseFloat(rowData.roomsResults[0].price))).toFixed(2)) + " (" + rowData.roomsResults[0].price + "LOC)"}</Text> */}
                             
                                 <Text style={styles.book}>Book Now</Text>

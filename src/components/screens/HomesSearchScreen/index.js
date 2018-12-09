@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { StyleSheet, Text,  TouchableOpacity, View, Dimensions } from 'react-native';
 
 import Image from 'react-native-remote-svg';
@@ -14,7 +13,6 @@ import { DotIndicator } from 'react-native-indicators';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
-import * as currencyActions from '../../../redux/action/Currency'
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { imgHost } from '../../../config';
@@ -627,11 +625,7 @@ let mapStateToProps = (state) => {
     };
 }
 
-const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(currencyActions, dispatch)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomesSearchScreen);
+export default connect(mapStateToProps, null)(HomesSearchScreen);
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {

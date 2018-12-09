@@ -4,15 +4,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 import Toast from 'react-native-easy-toast'
 import { Wallet } from '../../../services/blockchain/wallet';
 import { userInstance } from '../../../utils/userInstance';
-import styles from './styles';
 import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectMaterialDialog'
-
-import * as currencyActions from '../../../redux/action/Currency'
+import ProfileWalletCard from  '../../atoms/ProfileWalletCard'
+import { setCurrency } from '../../../redux/action/Currency'
+import styles from './styles';
 
 const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];
 class Profile extends Component {
@@ -25,10 +24,9 @@ class Profile extends Component {
             ethBalance: '0.0',
             currency: props.currency,
             currencySign: props.currencySign,
-            locRate: props.locRate,
             currencySelectionVisible: false,
         }
-        this.props.actions.getCurrency(props.currency, false);
+        // this.props.actions.getCurrency(props.currency, false);
     }
 
     async componentDidMount() {
@@ -61,11 +59,10 @@ class Profile extends Component {
 
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
-        if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
+        if (this.props.currency != prevProps.currency) {
             this.setState({
                 currency: this.props.currency, 
-                currencySign:this.props.currencySign, 
-                locRate: this.props.locRate});
+                currencySign:this.props.currencySign});
         }
     }
 
@@ -136,15 +133,10 @@ class Profile extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        const { currency, currencySign, locRate, locBalance, walletAddress, ethBalance } = this.state;
+        const { currency, currencySign, locBalance, walletAddress, ethBalance } = this.state;
 
         console.log("profile walletAddress: ", walletAddress);
         console.log("profile currency: ", currency);
-        console.log("profile locPrice: ", locRate);
-        let price = locBalance * locRate;
-        var displayPrice = currencySign;
-        if (locBalance == 0 || price != 0)
-            displayPrice += " " + price.toFixed(2);
 
         return (
             <View style={styles.container}>
@@ -159,33 +151,11 @@ class Profile extends Component {
                     textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
                 />
                 <ScrollView showsHorizontalScrollIndicator={false} style={{ width: '100%' }}>
-                    <View style={styles.cardBox}>
-                        <Image
-                            source={require('../../../assets/splash.png')}
-                            style={styles.logo} />
-                        <View style={{ width: '100%' }}>
-                            <Text style={styles.walletAddres}>{walletAddress}</Text>
-                        </View>
-                        <Text style={styles.balanceLabel}>Current Balance</Text>
-                        <View style={{ width: '100%' }}>
-                            <Text style={styles.balanceText}>{locBalance.toFixed(6)} LOC / {displayPrice}</Text>
-                        </View>
-                        <Text style={styles.balanceLabel}>ETH Balance</Text>
-                        <View style={{ width: '100%' }}>
-                            <Text style={styles.balanceText}>{parseFloat(ethBalance).toFixed(6)}</Text>
-                        </View>
-                        <Image
-                            source={require('../../../assets/splash.png')}
-                            style={styles.logoBackground} />
-                        {
-                            (this.state.walletAddress == null || this.state.walletAddress == '') &&
-                            (
-                                <TouchableOpacity onPress={this.createWallet} style={styles.addMore}>
-                                    <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
-                                </TouchableOpacity>
-                            )
-                        }
-                    </View>
+                    <ProfileWalletCard
+                        walletAddress = { walletAddress }
+                        locBalance = { locBalance }
+                        ethBalance = { ethBalance }
+                        createWallet = { this.createWallet }/>
                     <TouchableOpacity onPress={() => { Clipboard.setString(this.state.walletAddress) }}>
                         <View style={styles.copyBox}>
                             <Text style={styles.copyText}>Copy your wallet address to clipboard</Text>
@@ -234,7 +204,8 @@ class Profile extends Component {
                     onOk = { result => {
                         console.log("select country", result);
                         this.setState({ currencySelectionVisible: false });
-                        this.props.actions.getCurrency(result.selectedItem.label);
+                        this.props.setCurrency({currency: result.selectedItem.label});
+                        // this.props.actions.getCurrency(result.selectedItem.label);
                     }}
                 />
             </View>
@@ -245,15 +216,12 @@ class Profile extends Component {
 let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate
+        currencySign: state.currency.currencySign
     };
 }
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(currencyActions, dispatch)
+    setCurrency: bindActionCreators(setCurrency, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
-
-// export default Profile;

@@ -4,22 +4,26 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { connect } from 'react-redux';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
+import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
 import _ from 'lodash';
-import styles from './styles';
 import FastImage from 'react-native-fast-image'
+import { CurrencyConverter } from '../../../services/utilities/currencyConverter'
+import LocPrice from '../../atoms/LocPrice'
+
+import styles from './styles';
+
 
 const RNPropTypes = PropTypes || React.PropTypes;
 
 class HotelItemView extends Component {
     static propTypes = {
         item: RNPropTypes.object | RNPropTypes.array,
-        currencySign: RNPropTypes.string,
-        locRate: RNPropTypes.number,
         gotoHotelDetailsPage: PropTypes.func.isRequired,
         daysDifference: PropTypes.number,
         isDoneSocket: PropTypes.bool.isRequired
@@ -27,8 +31,6 @@ class HotelItemView extends Component {
 
     static defaultProps = {
         item: [],
-        currencySign: undefined,
-        locRate: 0,
         daysDifference : 1,
         isDoneSocket: false
     };
@@ -82,9 +84,16 @@ class HotelItemView extends Component {
 
     render() {
         const {
-            item, currencySign, locRate, isDoneSocket
+            item, currencySign, isDoneSocket, exchangeRates, currency, locAmounts
         } = this.props;
         
+        // const fiat = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, exchangeRates.locRateFiatAmount);
+        // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] && locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount;
+        // if (!locAmount) {
+        //     locAmount = exchangeRates.locRateFiatAmount / exchangeRates.locEurRate;
+        // }
+        // let locRate = fiat / locAmount;
+        let locRate = 1.0;
 
         let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
                  (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
@@ -97,7 +106,9 @@ class HotelItemView extends Component {
             isLoadingPricing = false;
         }
 
-        let price = item.price / this.props.daysDifference;
+        let price = exchangeRates.currencyExchangeRates && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, item.price)) / this.props.daysDifference).toFixed(2);
+
+        // let price = item.price / this.props.daysDifference;
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
@@ -141,7 +152,8 @@ class HotelItemView extends Component {
                         !isLoadingPricing?
                             <View style={styles.costView}>
                                 <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
-                                <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text>
+                                {/* <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text> */}
+                                <LocPrice style= {styles.costLoc} fiat={item.price / this.props.daysDifference}/>
                                 <Text style={styles.perNight}>per night</Text>
                             </View>
                         :
@@ -161,4 +173,13 @@ class HotelItemView extends Component {
     }
 }
 
-export default HotelItemView;
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+        
+        locAmounts: state.locAmounts,
+        exchangeRates: state.exchangeRates,
+    };
+}
+export default connect(mapStateToProps, null)(HotelItemView);

@@ -19,7 +19,6 @@ import { DotIndicator } from 'react-native-indicators';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
-import * as currencyActions from '../../../../redux/action/Currency'
 
 import { TabView } from 'react-native-tab-view';
 
@@ -59,9 +58,6 @@ class HotelsSearchScreen extends Component {
 
             isHotel: true,
             regionId : '',
-            currency: props.currency,
-            currencySign: props.currencySign,
-            locRate: _.isString(props.locRate) ? parseFloat(props.locRate) : props.locRate,
 
             hotelsInfo : [],
             allElements: false,
@@ -122,13 +118,6 @@ class HotelsSearchScreen extends Component {
         this.saveState();
     }
 
-    componentDidUpdate(prevProps) {
-        // Typical usage (don't forget to compare props):
-        if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
-            this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
-        }
-    }
-    
     componentWillMount() {
         if(this.state.isHotel) {
             this.getHotels();
@@ -306,9 +295,6 @@ class HotelsSearchScreen extends Component {
                     guests: this.state.guests,
                     hotelDetail: item,
                     searchString: this.searchString,
-                    locRate: this.state.locRate,
-                    currency: this.state.currency,
-                    currencySign: this.state.currencySign,
                     hotelFullDetails: data,
                     dataSourcePreview: hotelPhotos,
                     daysDifference: this.state.daysDifference
@@ -341,9 +327,6 @@ class HotelsSearchScreen extends Component {
                     guests: this.state.guests,
                     hotelDetail: item,
                     searchString: this.searchString,
-                    locRate: this.state.locRate,
-                    currency: this.state.currency,
-                    currencySign: this.state.currencySign,
                     hotelFullDetails: data,
                     dataSourcePreview: hotelPhotos,
                     daysDifference: this.state.daysDifference
@@ -575,8 +558,7 @@ class HotelsSearchScreen extends Component {
                     updateFilter: this.updateFilter,
                     selectedRating: this.state.selectedRating,
                     showUnAvailable: this.state.showUnAvailable,
-                    hotelName: this.state.nameFilter,
-                    currencySign: this.state.currencySign
+                    hotelName: this.state.nameFilter
                 });
             }
         }
@@ -794,18 +776,12 @@ class HotelsSearchScreen extends Component {
                 return <ListModeHotelsSearch 
                             ref = {ref => this.listView = ref}
                             allElements = {this.state.allElements}
-                            currency = {this.state.currency}
-                            currencySign = {this.state.currencySign}
-                            locRate = {this.state.locRate}
                             daysDifference = {this.state.daysDifference}
                             onFetch = {this.onFetch}
                             gotoHotelDetailsPage = {this.gotoHotelDetailsPageByList} />;
             case 'map':
                 return <MapModeHotelsSearch
                             ref={(ref) => this.mapView = ref}
-                            currency = {this.state.currency}
-                            currencySign = {this.state.currencySign}
-                            locRate = {this.state.locRate}
                             isFilterResult = {this.state.isFilterResult}
                             initialLat = {this.state.initialLat}
                             initialLon = {this.state.initialLon}
@@ -906,19 +882,6 @@ class HotelsSearchScreen extends Component {
         }
     }
 }
-
-let mapStateToProps = (state) => {
-    return {
-        currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate
-    };
-}
-
-const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(currencyActions, dispatch)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(HotelsSearchScreen);
+export default HotelsSearchScreen;//connect(mapStateToProps, null)(HotelsSearchScreen);
 
 // export default withNavigation(Property);

@@ -7,5 +7,5 @@ const locAmountsInfoType = {
 };
 
 export const updateLocAmounts = createAction(locAmountsInfoType.UPDATE_LOC_AMOUNTS);
-export const removeLocAamount = createAction(locAmountsInfoType.REMOVE_LOC_AMOUNT);
+export const removeLocAmount = createAction(locAmountsInfoType.REMOVE_LOC_AMOUNT);
 export const clearLocAmounts = createAction(locAmountsInfoType.CLEAR_LOC_AMOUNTS);
