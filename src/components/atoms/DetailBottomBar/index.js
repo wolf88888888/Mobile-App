@@ -16,6 +16,7 @@ const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
 class DetailBottomBar extends Component {
     static self;
+    isStop = false;
     constructor(props) {
         super(props);
         DetailBottomBar.self = this;
@@ -28,6 +29,7 @@ class DetailBottomBar extends Component {
         if (exchangeRates.currencyExchangeRates) {
             fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
         
+            console.log("DetailBottomBar WebsocketClient.sendMessage0", fiatInEur);
             WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
             isLocPriceRendered = true;
         }
@@ -39,6 +41,9 @@ class DetailBottomBar extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (this.isStop) {
+            return;
+        }
         if (nextProps.isLocPriceWebsocketConnected &&
             nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
             WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
@@ -76,21 +81,25 @@ class DetailBottomBar extends Component {
     }
 
     _didFocus() {
-        console.log("DetailBottomBar - _didFocus", DetailBottomBar.self.props);
         const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
         if (isLocPriceWebsocketConnected && !DetailBottomBar.self.state.isLocPriceRendered) {
             DetailBottomBar.self.state.isLocPriceRendered = true;
+            console.log("DetailBottomBar WebsocketClient.sendMessage3", fiatInEur);
             WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, null, { fiatAmount: DetailBottomBar.self.state.fiatInEur });
+            console.log("DetailBottomBar - _didFocus", DetailBottomBar.self.props, DetailBottomBar.self.state.fiatInEur);
         }
+        DetailBottomBar.self.isStop = true;
     }
 
     _willBlur() {
-        console.log("DetailBottomBar - _willBlur", DetailBottomBar.self.props);
+        console.log("DetailBottomBar - _willBlur");
         const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
         if (isLocPriceWebsocketConnected && DetailBottomBar.self.state.isLocPriceRendered) {
+            console.log("DetailBottomBar - _willBlur", DetailBottomBar.self.props, DetailBottomBar.self.state.isLocPriceRendered, DetailBottomBar.self.state.fiatInEur);
             WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, 'unsubscribe');
             DetailBottomBar.self.state.isLocPriceRendered = false;
         }
+        DetailBottomBar.self.isStop = false;
     }
 
     render() {

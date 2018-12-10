@@ -13,108 +13,69 @@ import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
 import styles from './styles';
 
 const DEFAULT_CRYPTO_CURRENCY = 'EUR';
+const DEFAULT_QUOTE_LOC_ID = 'quote';
+const DEFAULT_QUOTE_LOC_METHOD = 'quoteLoc';
 
-class DetailBottomBar extends Component {
+class ConfirmBottomBar extends Component {
     static self;
+    isQuoteLocRendered = false;
+
     constructor(props) {
         super(props);
-        DetailBottomBar.self = this;
-
-        const {exchangeRates, price} = props;
-
-        let isLocPriceRendered = false;
-        let fiatInEur;
-    
-        if (exchangeRates.currencyExchangeRates) {
-            fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
+        ConfirmBottomBar.self = this;
         
-            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
-            isLocPriceRendered = true;
+        this.isQuoteLocRendered = false;
+        this.quoteLocSendAttempts = 0;
+        if (this.props.params.bookingId !== "") {
+            this.sendWebsocketMessage(null, null, this.props.params);
         }
-    
-        this.state = {
-            fiatInEur,
-            isLocPriceRendered
-        };
     }
-
+    
     componentWillReceiveProps(nextProps) {
-        if (nextProps.isLocPriceWebsocketConnected &&
-            nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
-            WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
+        if (nextProps.isLocPriceWebsocketConnected && nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
+            if (this.props.params.bookingId !== "") {
+                this.sendWebsocketMessage(null, null, this.props.params);
+            }
         }
-    
-        if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
-            const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.price);
-        
-            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
-            this.setState({
-                isLocPriceRendered: true,
-                fiatInEur
-            });
+        else if (nextProps.params.bookingId !== "" && this.props.params.bookingId === "") {
+            this.sendWebsocketMessage(null, null, nextProps.params);
         }
     }
-
-	componentWillMount() {
-		this.list = [
-			this.props.navigation.addListener('didFocus', this._didFocus),
-			this.props.navigation.addListener('willBlur', this._willBlur)
-		];
-	}
-    
     
     componentWillUnmount() {
-        console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
-        WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
+        this.sendWebsocketMessage(null, 'unsubscribe');
         if (this.props.locAmount) {
-            removeLocAmount(this.state.fiatInEur);
-        }
-        
-		if (this.list !== undefined && this.list !== null) {
-			this.list.forEach( item => item.remove() )
-		}
-    }
-
-    _didFocus() {
-        console.log("DetailBottomBar - _didFocus", DetailBottomBar.self.props);
-        const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
-        if (isLocPriceWebsocketConnected && !DetailBottomBar.self.state.isLocPriceRendered) {
-            DetailBottomBar.self.state.isLocPriceRendered = true;
-            WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, null, { fiatAmount: DetailBottomBar.self.state.fiatInEur });
+            this.props.removeLocAmount(DEFAULT_QUOTE_LOC_ID);
         }
     }
 
-    _willBlur() {
-        console.log("DetailBottomBar - _willBlur", DetailBottomBar.self.props);
-        const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
-        if (isLocPriceWebsocketConnected && DetailBottomBar.self.state.isLocPriceRendered) {
-            WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, 'unsubscribe');
-            DetailBottomBar.self.state.isLocPriceRendered = false;
-        }
+    sendWebsocketMessage(id, method, params) {
+        WebsocketClient.sendMessage(id || DEFAULT_QUOTE_LOC_ID, method || DEFAULT_QUOTE_LOC_METHOD, params);
     }
 
-    restartWebsocket() {
-        const {isLocPriceWebsocketConnected} = this.props;
-        if (isLocPriceWebsocketConnected && !this.state.isLocPriceRendered) {
-            this.state.isLocPriceRendered = true;
-            WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
-        }
-    }
-
-    stopWebsocket() {
-        const {isLocPriceWebsocketConnected} = this.props;
-        if (isLocPriceWebsocketConnected && this.state.isLocPriceRendered) {
-            WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
-            this.state.isLocPriceRendered = false;
-        }
+    redirectToHotelDetailsPage() {
+        console.log("redirectToHotelDetailsPage -------------");
+        // this.props.navigation.pop(3);
     }
 
     render() {
-        const {currency, currencySign, exchangeRates, price, locAmount, daysDifference, onPress, titleBtn} = this.props;
+        const {currency, currencySign, exchangeRates, locPriceUpdateTimer, fiat, locAmount, quoteLocError, daysDifference, onPress, titleBtn} = this.props;
 
-        let priceInCurrency = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, price);
+        if (!this.isQuoteLocRendered && locAmount) {
+            this.isQuoteLocRendered = true;
+        }
+        if (!this.isQuoteLocRendered && quoteLocError) {
+            if (this.quoteLocSendAttempts === 10) {
+                this.redirectToHotelDetailsPage();
+            } else {
+                this.quoteLocSendAttempts += 1;
+                this.sendWebsocketMessage(null, null, params);
+            }
+        } else if (this.isQuoteLocRendered && quoteLocError) {
+            this.redirectToHotelDetailsPage();
+        }
 
-        // let locRate = priceInCurrency * locAmount / price;
+        let priceInCurrency = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, fiat);
 
         return (
             <View style={styles.floatingBar}>
@@ -139,24 +100,25 @@ class DetailBottomBar extends Component {
     }
 }
 
-DetailBottomBar.propTypes = {
+ConfirmBottomBar.propTypes = {
     onPress: PropTypes.func
 };
 
-DetailBottomBar.defaultProps = {
+ConfirmBottomBar.defaultProps = {
     onPress: () => {}
 };
 
 let mapStateToProps = (state, ownProps) => {
-    const { price } = ownProps;
+    const { fiat  } = ownProps;
 
-    const { exchangerSocket, locAmounts, exchangeRates, currency } = state;
+    const { exchangerSocket, locAmounts, exchangeRates, currency, locPriceUpdateTimer } = state;
 
-    const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
-    let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
-    // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
-
+    let locAmount = locAmounts.locAmounts[DEFAULT_QUOTE_LOC_ID] && locAmounts.locAmounts[DEFAULT_QUOTE_LOC_ID].locAmount && (locAmounts.locAmounts[DEFAULT_QUOTE_LOC_ID].locAmount).toFixed(2);
+    const quoteLocError = locAmounts.locAmounts[DEFAULT_QUOTE_LOC_ID] && locAmounts.locAmounts[DEFAULT_QUOTE_LOC_ID].error;
+  
     if (!locAmount) {
+        const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, fiat );
+    
         locAmount = (fiatInEur / exchangeRates.locEurRate).toFixed(2);
     }
 
@@ -165,11 +127,13 @@ let mapStateToProps = (state, ownProps) => {
         currency: currency.currency,
         currencySign: currency.currencySign,
         locAmount,
-        exchangeRates
+        exchangeRates,
+        quoteLocError,
+        locPriceUpdateTimer
     };
 }
 
 const mapDispatchToProps = dispatch => ({
     removeLocAmount: bindActionCreators(removeLocAmount, dispatch),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(DetailBottomBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(ConfirmBottomBar));

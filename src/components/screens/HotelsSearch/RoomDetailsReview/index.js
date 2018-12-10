@@ -9,11 +9,17 @@ import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast';
 import moment from 'moment';
 import requester from '../../../../initDependencies';
-import styles from './styles';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+
+import { CurrencyConverter } from '../../../../services/utilities/currencyConverter'
+import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrency'
 import { setLocRateFiatAmount } from '../../../../redux/action/exchangeRates';
 
-import DetailBottomBar from '../../../atoms/DetailBottomBar'
+import ConfirmBottomBar from '../../../atoms/ConfirmBottomBar'
+import styles from './styles';
+
+const SAFECHARGE_VAR = 'SCPaymentModeOn';
+const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
 class RoomDetailsReview extends Component {
     constructor() {
@@ -23,24 +29,25 @@ class RoomDetailsReview extends Component {
             cancellationView: false,
             walletPassword: '',
             password: '',
-            // bookingDetail:[],
             roomName: '',
             arrivalDate: '',
             leavingDate: '',
             creationDate: '',
-            // cancellationLOCPrice: '',
             cancellationPrice: '',
             bookingId: '',
             hotelBooking: '',
             booking: '',
             data: '',
             isLoading: false,
-            cancelationDate: ''
+            cancelationDate: '',
+
+            safeChargeMode: false
         };
     }
 
     componentDidMount() {
         this.refs.toast.show("Confirming Rooms", 1500);
+        this.requestSafechargeMode();
         const { params } = this.props.navigation.state; //eslint-disable-line
         console.log(params.guestRecord);
         const value = {
@@ -60,26 +67,41 @@ class RoomDetailsReview extends Component {
                 console.log("createReservation  ---", res)
                 res.body.then(data => {
                     // console.log("createReservation  ---", data)
-                    const bookingId = data.preparedBookingId;
-                    const hotelBooking = data.booking.hotelBooking[0];
-                    const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
-                    const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
-                    const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD')
-                    .add(data.booking.hotelBooking[0].nights, 'days');
-                    this.setState({
-                        // bookingDetail: data,
-                        roomName: data.booking.hotelBooking[0].room.roomType.text,
-                        arrivalDate: endDate.format('DD MMM'),
-                        leavingDate: leavingDate.format('DD MMM'),
-                        cancelationDate: endDate.format('DD MMM YYYY'),
-                        creationDate: startDate.format('DD MMM'),
-                        cancellationPrice: data.fiatPrice,
-                        bookingId: bookingId,
-                        hotelBooking: hotelBooking,
-                        booking: value,
-                        data: data
-                        // cancellationLOCPrice: data.locPrice,
-                    });
+                    const quoteBookingCandidate = { bookingId: data.preparedBookingId };
+                    requester.quoteBooking(quoteBookingCandidate)
+                        .then((res) => {
+                            res.body.then(success => {
+                                console.log("quoteBooking  ---", success)
+                                if (success.is_successful_quoted) {
+
+                                    const bookingId = data.preparedBookingId;
+                                    const hotelBooking = data.booking.hotelBooking[0];
+                                    const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
+                                    const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
+                                    const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD').add(data.booking.hotelBooking[0].nights, 'days');
+                                    this.setState({
+                                        roomName: data.booking.hotelBooking[0].room.roomType.text,
+                                        arrivalDate: endDate.format('DD MMM'),
+                                        leavingDate: leavingDate.format('DD MMM'),
+                                        cancelationDate: endDate.format('DD MMM YYYY'),
+                                        creationDate: startDate.format('DD MMM'),
+                                        cancellationPrice: data.fiatPrice,
+                                        bookingId: bookingId,
+                                        hotelBooking: hotelBooking,
+                                        booking: value,
+                                        data: data
+                                    }, () => {
+                                        const { currencyExchangeRates } = this.props.exchangeRates;
+                                        const fiatPriceRoomsXML = params.price;
+                                        const fiatPriceRoomsXMLInEur = currencyExchangeRates && CurrencyConverter.convert(currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, fiatPriceRoomsXML);
+                                        this.props.setLocRateFiatAmount(fiatPriceRoomsXMLInEur);
+                                    });
+                                } else {
+                                    this.props.navigation.navigation.pop(3);
+                                }
+                            });
+                        });
+
                 }).catch((err) => {
                     console.log(err); //eslint-disable-line
                 });
@@ -87,14 +109,51 @@ class RoomDetailsReview extends Component {
             else {
                 res.errors.then(data => {
                     console.log(data.errors);
-                    console.log(data.errors.RoomsXmlResponse.message);
-                    this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000);
+                    // console.log(data.errors.RoomsXmlResponse.message);
+                    const errors = data.errors;
+                    if (errors.hasOwnProperty('RoomsXmlResponse')) {
+                        if (errors['RoomsXmlResponse'].message.indexOf('QuoteNotAvailable:') !== -1) {
+                            this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000, () => {
+                                this.props.navigation.navigation.pop(3);
+                            });
+                        }
+                    } else {
+                        for (let key in errors) {
+                            if (typeof errors[key] !== 'function') {
+                                this.refs.toast.show(errors[key].message, 5000);
+                            }
+                        }
+                    }
                 });
             }
         }).catch((main_err) => {
-            this.refs.toast.show("Error", 1500);
+            this.refs.toast.show("Unknown Error! Please try again.", 5000, () => {
+                this.props.navigation.navigation.goBack();
+            });
             console.log("Error Room");
             console.log(main_err);
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.setLocRateFiatAmount(1000);
+    }
+
+    requestSafechargeMode = () => {
+        requester.getConfigVarByName(SAFECHARGE_VAR)
+        .then((res) => {
+            console.log("requester.getConfigVarByName", res);
+            if (res.success) {
+                res.body.then((data) => {
+                    this.setState({
+                        safeChargeMode: data.value === 'true'
+                    });
+                });
+            } else {
+                res.errors.then((err) => {
+                    console.log(err);
+                });
+            }
         });
     }
 
@@ -434,13 +493,13 @@ class RoomDetailsReview extends Component {
                 </ScrollView>
 
                 {/* Bottom Bar */}
-                {/* <DetailBottomBar 
-                    price = {params.price}
+                <ConfirmBottomBar 
+                    fiat = {params.price}
+                    params={{ bookingId: this.state.bookingId }} 
                     daysDifference = {params.daysDifference}
                     titleBtn = {"Confirm and Pay"}
-                    onPress = {() => {this.setModalVisible(true);}}
-                    /> */}
-                <View style={styles.floatingBar}>
+                    onPress = {() => {this.setModalVisible(true);}}/>
+                {/* <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>${params.price} </Text>
@@ -461,7 +520,7 @@ class RoomDetailsReview extends Component {
                             <Text style={styles.confirmPayText}>Confirm and Pay</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
                 <ProgressDialog
                     visible={this.state.isLoading}
                     title="Please Wait"
@@ -527,20 +586,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomDetailsReview);
-// export default RoomDetailsReview;
-// testBookParameter: {
-    //     "quoteId":"249357191-0",
-    //         "rooms":[{
-    //             "adults":[{
-    //                     "title":"Mr","firstName":"test","lastName":"test"
-    //                 },{
-    //                     "title":"Mr","firstName":"test","lastName":"test"}
-    //             ],"children":[]
-    //         }],
-    //         "currency":"USD"
-    // }
-
-
-
-//     Cancellation fee before 27 Sep 2018 including	USD 0.00 (0.0000 LOC)
-// Cancel on 27 Sep 2018	USD 424.47 (890.6885 LOC)

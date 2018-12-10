@@ -13,14 +13,18 @@ const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
 class LocRateButton extends Component {
     static self;
+    isSendMessage = false;
+    isStop = false;
     constructor(props) {
         super(props);
         console.log("LocRateButton - constructor", props);
-        this.isSendMessage = false;
         LocRateButton.self = this;
     }
 
     componentDidUpdate(prevProps) {
+        if (this.isStop) {
+            return;
+        }
         const {isLocPriceWebsocketConnected, exchangeRates} = this.props;
         if (!isLocPriceWebsocketConnected && this.isSendMessage) {
             this.isSendMessage = false;
@@ -54,6 +58,7 @@ class LocRateButton extends Component {
             LocRateButton.self.isSendMessage = true;
             WebsocketClient.sendMessage(exchangeRates.locRateFiatAmount, null, { fiatAmount: exchangeRates.locRateFiatAmount });
         }
+        LocRateButton.self.isStop = false;
     }
 
     _willBlur() {
@@ -63,6 +68,7 @@ class LocRateButton extends Component {
             WebsocketClient.sendMessage(exchangeRates.locRateFiatAmount, 'unsubscribe');
             LocRateButton.self.isSendMessage = false;
         }
+        LocRateButton.self.isStop = true;
     }
 
     render() {
