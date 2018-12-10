@@ -133,7 +133,7 @@ class Profile extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        const { currency, currencySign, locBalance, walletAddress, ethBalance } = this.state;
+        const { currency, locBalance, walletAddress, ethBalance } = this.state;
 
         console.log("profile walletAddress: ", walletAddress);
         console.log("profile currency: ", currency);

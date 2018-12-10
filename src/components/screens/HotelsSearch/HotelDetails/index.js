@@ -98,12 +98,9 @@ class HotelDetails extends Component {
         this.props.navigation.navigate('GuestInfoForm', { 
             roomDetail: roomDetail, 
             guests: this.state.guests, 
-            'price': ((roomDetail.roomsResults[0].price) * this.state.daysDifference).toFixed(2),
-            'priceLOC': (((roomDetail.roomsResults[0].price) / this.state.locRate)*this.state.daysDifference).toFixed(2), 
-            'daysDifference': this.props.daysDifference,
-            currency: this.state.daysDifference,
-            currencySign: this.state.currencySign,
-            'hotelDetails': this.state.hotelFullDetails,
+            price: ((roomDetail.roomsResults[0].price) * this.state.daysDifference).toFixed(2),
+            daysDifference: this.props.daysDifference,
+            hotelDetails: this.state.hotelFullDetails,
             searchString: this.state.searchString,
         });
         // }

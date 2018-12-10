@@ -52,45 +52,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 90
     },
-    floatingBar: {
-        padding: 17,
-        position:'absolute',
-        bottom: 0,
-        alignSelf:'center',
-        height: 90,
-        width: '100%',
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    detailsView: {
-        flex: 1,
-    },
-    nextButtonView: {
-        flex: 0.8,
-        alignItems: 'center',
-    },
-    nextButton: {
-        backgroundColor: '#DA7B61',
-        alignSelf: 'stretch',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 16
-    },
-    nextText: {
-        color: 'white',
-        fontSize: 18,
-        fontFamily: 'FuturaStd-Light'
-    },
-    pricePeriodWrapper: {
-        flexDirection: 'row',
-        alignSelf: 'stretch',
-        paddingVertical: 2
-    },
-    price: {
-        color: 'black',
-        fontSize: 17
-    },
+    
     hotelName: {
         color: 'black',
         fontFamily: 'FuturaStd-Medium',
@@ -101,24 +63,9 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: '#54585b',
     },
-    period1: {
-        marginTop: 5,
-        fontSize: 10,
-        color: '#000',
-    },
-    period2: {
-        marginTop: 5,
-        fontSize: 10,
-        color: '#000',
-    },
+    
     bold400: {
         fontWeight: '400'
-    },
-    fontFuturaStd: {
-        fontFamily: 'FuturaStd-Light'
-    },
-    fontFuturaMed: {
-        fontFamily: 'FuturaStd-Medium'
     },
     form: {
         flex: 1,

@@ -34,7 +34,7 @@ class HotelFilters extends Component {
                 bathrooms: 0
             },
             rooms : [{ adults: 2, children: [] }],
-            priceSort: 'priceForSort,asc',
+            priceSort: 'rank,desc',//'priceForSort,asc',
             selectedRating: [false,false,false,false,false],
             sliderValue: [1,5000],
             priceItems: [

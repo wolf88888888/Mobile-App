@@ -7,11 +7,12 @@ import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast';
 import { hasLetter } from '../../../../utils/validation';
 import { userInstance } from '../../../../utils/userInstance';
+import DetailBottomBar from '../../../atoms/DetailBottomBar'
 
-let testingArray = [];
+let guestInfos = [];
 var newElement = {};
 
-export default class GuestInfoForm extends Component {
+class GuestInfoForm extends Component {
     constructor(props) {
         super(props);
         // Save guests array for dynamic form generation
@@ -78,7 +79,7 @@ export default class GuestInfoForm extends Component {
         newElement = {};
         newElement['title'] = 'Mr';
         newElement['firstName'] = text;
-        testingArray[key] = newElement;
+        guestInfos[key] = newElement;
     }
 
     handleLastName(key,text){
@@ -87,7 +88,7 @@ export default class GuestInfoForm extends Component {
             text = "Optional"
         }
         newElement['lastName'] = text;
-        testingArray[key] = newElement;
+        guestInfos[key] = newElement;
     }
 
     guestInfo(index, isFirstName, isLastName){
@@ -109,17 +110,17 @@ export default class GuestInfoForm extends Component {
         }
         const {params} = this.props.navigation.state;
         var isValid = true;
-        for (var i = 0; i < testingArray.length; i ++) {
-            isValid = hasLetter(testingArray[i]['firstName']);
+        for (var i = 0; i < guestInfos.length; i ++) {
+            isValid = hasLetter(guestInfos[i]['firstName']);
              if (!isValid) {
                  break;
              }
-             isValid = hasLetter(testingArray[i]['lastName']);
+             isValid = hasLetter(guestInfos[i]['lastName']);
              if (!isValid) {
                  break;
              }
         }
-        if (testingArray.length != this.state.guests.length){
+        if (guestInfos.length != this.state.guests.length){
             this.refs.toast.show("Please enter details for all the guests", 2000);
         }
         else if (!isValid) {
@@ -127,16 +128,13 @@ export default class GuestInfoForm extends Component {
         }
         else {
             this.props.navigation.navigate('RoomDetailsReview', {
-                'roomDetails' : params.roomDetail, 
-                'quoteId': params.roomDetail.quoteId, 
-                'guests': testingArray.length,
-                'hotelDetails': params.hotelDetails, 
-                'price': params.price, 
-                'priceLOC': params.priceLOC,
-                currency: params.currency,
-                currencySign: params.currencySign,
-                'daysDifference': params.daysDifference,
-                'guestRecord': testingArray,
+                roomDetails : params.roomDetail, 
+                quoteId: params.roomDetail.quoteId, 
+                hotelDetails: params.hotelDetails, 
+                price: params.price, 
+                daysDifference: params.daysDifference,
+                guests: guestInfos.length,
+                guestRecord: guestInfos,
                 searchString: params.searchString
             });
         }
@@ -197,7 +195,12 @@ export default class GuestInfoForm extends Component {
                 </View>
 
                 {/*Bottom Bar*/}
-                <View style={styles.floatingBar}>
+                <DetailBottomBar 
+                    price = {params.price}
+                    daysDifference = {params.daysDifference}
+                    titleBtn = {"Next"}
+                    onPress = {this.onProceedPress}/>
+                {/* <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price, styles.fontFuturaMed]}>{params.currencySign} {params.price}</Text>
@@ -214,7 +217,7 @@ export default class GuestInfoForm extends Component {
                             <Text style={styles.nextText}>Next</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
             </View>
             
         )
@@ -247,4 +250,7 @@ GuestInfoForm.propTypes = {
     quoteId: PropTypes.string,
     roomDetail: PropTypes.object,
     guests : PropTypes.number
-  };
+};
+
+
+export default GuestInfoForm;

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
 
 import { WebsocketClient } from '../../../utils/exchangerWebsocket';
@@ -11,20 +12,16 @@ import styles from './styles';
 const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
 class LocRateButton extends Component {
+    static self;
     constructor(props) {
         super(props);
+        console.log("LocRateButton - constructor", props);
         this.isSendMessage = false;
+        LocRateButton.self = this;
     }
 
     componentDidUpdate(prevProps) {
-        console.log("LocRateButton - componentDidUpdate");
-        // Typical usage (don't forget to compare props):
-        const {currency, currencySign, isLocPriceWebsocketConnected, exchangeRates} = this.props;
-
-        if (currency != prevProps.currency) {
-            this.setState({ currency: currency, currencySign: currencySign });
-        }
-
+        const {isLocPriceWebsocketConnected, exchangeRates} = this.props;
         if (!isLocPriceWebsocketConnected && this.isSendMessage) {
             this.isSendMessage = false;
         }
@@ -34,9 +31,39 @@ class LocRateButton extends Component {
         }
     }
 
-    componentDidMount() {
+	componentWillMount() {
+		this.list = [
+			this.props.navigation.addListener('didFocus', this._didFocus),
+			this.props.navigation.addListener('willBlur', this._willBlur)
+		];
+	}
+    
+    componentWillUnmount() {
+        const { exchangeRates } = this.props;
+        WebsocketClient.sendMessage(exchangeRates.locRateFiatAmount, 'unsubscribe');
+        
+		if (this.list !== undefined && this.list !== null) {
+			this.list.forEach( item => item.remove() )
+		}
+    }
+      
+    _didFocus() {
+        console.log("LocRateButton - _didFocus", LocRateButton.self.props);
+        const {isLocPriceWebsocketConnected, exchangeRates} = LocRateButton.self.props;
+        if (isLocPriceWebsocketConnected && !LocRateButton.self.isSendMessage) {
+            LocRateButton.self.isSendMessage = true;
+            WebsocketClient.sendMessage(exchangeRates.locRateFiatAmount, null, { fiatAmount: exchangeRates.locRateFiatAmount });
+        }
     }
 
+    _willBlur() {
+        console.log("LocRateButton - _willBlur", LocRateButton.self.props, LocRateButton.self.isSendMessage);
+        const {isLocPriceWebsocketConnected, exchangeRates} = LocRateButton.self.props;
+        if (isLocPriceWebsocketConnected && LocRateButton.self.isSendMessage) {
+            WebsocketClient.sendMessage(exchangeRates.locRateFiatAmount, 'unsubscribe');
+            LocRateButton.self.isSendMessage = false;
+        }
+    }
 
     render() {
         const {currency, exchangeRates, locAmounts} = this.props;
@@ -76,7 +103,6 @@ let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
         currencySign: state.currency.currencySign,
-        countries: state.country.countries,
         
         isLocPriceWebsocketConnected: state.exchangerSocket.isLocPriceWebsocketConnected,
         locAmounts: state.locAmounts,
@@ -84,4 +110,4 @@ let mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, null)(LocRateButton);
+export default connect(mapStateToProps, null)(withNavigation(LocRateButton));

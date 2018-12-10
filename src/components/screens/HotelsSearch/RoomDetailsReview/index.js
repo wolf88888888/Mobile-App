@@ -1,5 +1,7 @@
-import { AsyncStorage, Modal, ScrollView, Text, TextInput, TouchableOpacity, View, WebView } from 'react-native';
+import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { HotelReservation } from '../../../../services/blockchain/hotelReservation';
 import Image from 'react-native-remote-svg';
@@ -9,11 +11,13 @@ import moment from 'moment';
 import requester from '../../../../initDependencies';
 import styles from './styles';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+import { setLocRateFiatAmount } from '../../../../redux/action/exchangeRates';
 
-export default class RoomDetailsReview extends Component {
+import DetailBottomBar from '../../../atoms/DetailBottomBar'
+
+class RoomDetailsReview extends Component {
     constructor() {
         super();
-        //this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             modalVisible: false,
             cancellationView: false,
@@ -55,7 +59,6 @@ export default class RoomDetailsReview extends Component {
             if (res.success){
                 console.log("createReservation  ---", res)
                 res.body.then(data => {
-                    // let data = res.body;
                     // console.log("createReservation  ---", data)
                     const bookingId = data.preparedBookingId;
                     const hotelBooking = data.booking.hotelBooking[0];
@@ -258,60 +261,6 @@ export default class RoomDetailsReview extends Component {
                 });
             });
         }, 1000);
-        
-        // requester.getCancellationFees(this.state.bookingId).then(res => {
-        //     res.body.then(data => {
-        //         const password = this.state.password;
-        //         const preparedBookingId = this.state.bookingId;
-        //         const booking = this.state.hotelBooking;
-        //         const startDate = moment(booking.arrivalDate, 'YYYY-MM-DD');
-        //         const endDate = moment(booking.arrivalDate, 'YYYY-MM-DD')
-        //             .add(booking.nights, 'days');
-        //         const hotelId = booking.hotelId;
-        //         const roomId = this.state.booking.quoteId;
-        //         const cancellationFees = data;
-        //         const daysBeforeStartOfRefund = [];
-        //         const refundPercentages = [];
-        //         const wei = (this.tokensToWei(this.state.data.locPrice.toString()));
-        //         const numberOfTravelers = 2;
-
-        //         requester.getMyJsonFile().then(res => {
-        //             res.body.then(data => {
-        //                 setTimeout(() => {
-        //                     HotelReservation.createReservation(//this line needs to be checked
-        //                         data.jsonFile,
-        //                         password,
-        //                         preparedBookingId.toString(),
-        //                         wei,
-        //                         startDate.unix()
-        //                             .toString(),
-        //                         endDate.unix()
-        //                             .toString(),
-        //                         daysBeforeStartOfRefund,
-        //                         refundPercentages,
-        //                         hotelId,
-        //                         roomId,
-        //                         numberOfTravelers.toString()
-        //                     )
-        //                         .then(transaction => {
-        //                             this.setState({isLoading: false});
-        //                             this.refs.toast.show('' + transaction, 1500);
-        //                         })
-        //                         .catch((err) => {
-        //                             this.setState({isLoading: false});
-        //                             this.refs.toast.show('' + err, 1500);
-        //                         });
-        //                 }, 3000);
-        //             }).catch((err) => {
-        //                 this.setState({isLoading: false});
-        //                 this.refs.toast.show('' + err, 1500);
-        //             });
-        //         });
-        //     });
-        // }).catch((err) => {
-        //     this.setState({isLoading: false});
-        //     this.refs.toast.show('' + err, 1500);
-        // });
     }
 
     // Keys for flatlist
@@ -378,7 +327,6 @@ export default class RoomDetailsReview extends Component {
                     transparent={true}//eslint-disable-line
                     visible={this.state.cancellationView}
                     onRequestClose={() => {
-
                     }}
                 >
                     <View style={styles.modalView}>
@@ -411,7 +359,7 @@ export default class RoomDetailsReview extends Component {
                                     this.setCancellationView(!this.state.cancellationView);
                                 }}
                             >
-                                <Text style={styles.confirmButtonText}>Hide</Text>
+                                <Text style={styles.confirmButtonText}>OK</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -486,6 +434,12 @@ export default class RoomDetailsReview extends Component {
                 </ScrollView>
 
                 {/* Bottom Bar */}
+                {/* <DetailBottomBar 
+                    price = {params.price}
+                    daysDifference = {params.daysDifference}
+                    titleBtn = {"Confirm and Pay"}
+                    onPress = {() => {this.setModalVisible(true);}}
+                    /> */}
                 <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
@@ -556,6 +510,24 @@ RoomDetailsReview.propTypes = {
 };
 
 
+
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+        
+        isLocPriceWebsocketConnected: state.exchangerSocket.isLocPriceWebsocketConnected,
+        locAmounts: state.locAmounts,
+        exchangeRates: state.exchangeRates,
+    };
+}
+
+const mapDispatchToProps = dispatch => ({
+    setLocRateFiatAmount : bindActionCreators(setLocRateFiatAmount , dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoomDetailsReview);
+// export default RoomDetailsReview;
 // testBookParameter: {
     //     "quoteId":"249357191-0",
     //         "rooms":[{

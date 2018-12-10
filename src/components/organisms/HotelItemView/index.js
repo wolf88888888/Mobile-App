@@ -10,9 +10,9 @@ import Image from 'react-native-remote-svg';
 import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
-import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
 import _ from 'lodash';
 import FastImage from 'react-native-fast-image'
+import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
 import { CurrencyConverter } from '../../../services/utilities/currencyConverter'
 import LocPrice from '../../atoms/LocPrice'
 
@@ -53,14 +53,6 @@ class HotelItemView extends Component {
         for (let i = count; i < 5; i ++) {
             indents.push(<Text key = {`star - ${i}`} style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
         }
-        // for (let i = 0; i < 5; i++) {
-        //     if (count > 0) {
-        //         indents.push(<Text style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-        //     } else {
-        //         indents.push(<Text style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
-        //     }
-        //     count--;
-        // }
         return indents;
     }
 
@@ -93,7 +85,7 @@ class HotelItemView extends Component {
         //     locAmount = exchangeRates.locRateFiatAmount / exchangeRates.locEurRate;
         // }
         // let locRate = fiat / locAmount;
-        let locRate = 1.0;
+        // let locRate = 1.0;
 
         let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
                  (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
