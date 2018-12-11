@@ -9,6 +9,9 @@ class LocPriceUpdateTimer extends Component {
         super(props);
         this.timer = null;
         this.tick = this.tick.bind(this);
+        this.state = {
+            seconds: 0
+        }
     }
 
     componentDidMount() {
@@ -28,35 +31,22 @@ class LocPriceUpdateTimer extends Component {
     }
 
     tick() {
-        let { seconds } = this.props;
-        this.props.dispatch(setSeconds(seconds - 1));
+        // let { seconds } = this.props;
+        // this.props.dispatch(setSeconds(seconds - 1));
+        let { seconds } = this.state
+        this.setState({seconds: seconds - 1});
     }
 
     render() {
         return (
-            <TouchableWithoutFeedback onPress={this.props.onPress}>
-                <View style={styles.fab}>
-                {
-                    locRate != 0 ? 
-                        (<Text style={styles.fabText}>LOC/{currency} {parseFloat(locRate).toFixed(2)}</Text>)
-                        :
-                        (<Text style={styles.fabText}>LOC/{currency}    </Text>)
-                }
-                    
-                </View>
-            </TouchableWithoutFeedback>
+            <Text style={styles.fabText}>{}</Text>
         );
     }
 }
 
 let mapStateToProps = (state) => {
     return {
-        currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        
-        isLocPriceWebsocketConnected: state.exchangerSocket.isLocPriceWebsocketConnected,
-        locAmounts: state.locAmounts,
-        exchangeRates: state.exchangeRates,
+        seconds: state.locPriceUpdateTimer.seconds
     };
 }
 
