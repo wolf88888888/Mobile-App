@@ -32,6 +32,7 @@ class ConfirmBottomBar extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
+        console.log("ConfirmBottomBar - componentWillUnmount", this.props.params);
         if (nextProps.isLocPriceWebsocketConnected && nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
             if (this.props.params.bookingId !== "") {
                 this.sendWebsocketMessage(null, null, this.props.params);
@@ -50,12 +51,21 @@ class ConfirmBottomBar extends Component {
     }
 
     sendWebsocketMessage(id, method, params) {
+        console.log("ConfirmBottomBar =- sendWebsocketMessage-------------", id, method, params);
         WebsocketClient.sendMessage(id || DEFAULT_QUOTE_LOC_ID, method || DEFAULT_QUOTE_LOC_METHOD, params);
     }
 
     redirectToHotelDetailsPage() {
         console.log("redirectToHotelDetailsPage -------------");
         // this.props.navigation.pop(3);
+    }
+
+    stopQuote = (preparedBookingId) => {
+        WebsocketClient.sendMessage(DEFAULT_QUOTE_LOC_ID, 'approveQuote', { bookingId: preparedBookingId });
+    }
+    
+    restartQuote = (preparedBookingId) => {
+        WebsocketClient.sendMessage(DEFAULT_QUOTE_LOC_ID, 'quoteLoc', { bookingId: preparedBookingId });
     }
 
     render() {
@@ -136,4 +146,9 @@ let mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     removeLocAmount: bindActionCreators(removeLocAmount, dispatch),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(ConfirmBottomBar));
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    return Object.assign({}, ownProps, stateProps, dispatchProps)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(ConfirmBottomBar);

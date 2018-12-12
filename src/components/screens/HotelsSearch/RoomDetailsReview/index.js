@@ -16,6 +16,7 @@ import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrenc
 import { setLocRateFiatAmount } from '../../../../redux/action/exchangeRates';
 
 import ConfirmBottomBar from '../../../atoms/ConfirmBottomBar'
+import LocPriceUpdateTimer from '../../../atoms/LocPriceUpdateTimer'
 import styles from './styles';
 
 const SAFECHARGE_VAR = 'SCPaymentModeOn';
@@ -24,6 +25,8 @@ const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 class RoomDetailsReview extends Component {
     constructor() {
         super();
+        RoomDetailsReview.self = this;
+        this.isQuoteApproved = false;
         this.state = {
             modalVisible: false,
             cancellationView: false,
@@ -60,6 +63,8 @@ class RoomDetailsReview extends Component {
             'currency': params.currency
         };
 
+        const that = this;
+
         console.log("createReservationcreateReservation  ---", value)
         requester.createReservation(value).then(res => {
             console.log("createReservation  ---", res)
@@ -79,7 +84,7 @@ class RoomDetailsReview extends Component {
                                     const startDate = moment(data.booking.hotelBooking[0].creationDate, 'YYYY-MM-DD');
                                     const endDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD');
                                     const leavingDate = moment(data.booking.hotelBooking[0].arrivalDate, 'YYYY-MM-DD').add(data.booking.hotelBooking[0].nights, 'days');
-                                    this.setState({
+                                    that.setState({
                                         roomName: data.booking.hotelBooking[0].room.roomType.text,
                                         arrivalDate: endDate.format('DD MMM'),
                                         leavingDate: leavingDate.format('DD MMM'),
@@ -91,13 +96,13 @@ class RoomDetailsReview extends Component {
                                         booking: value,
                                         data: data
                                     }, () => {
-                                        const { currencyExchangeRates } = this.props.exchangeRates;
+                                        const { currencyExchangeRates } = that.props.exchangeRates;
                                         const fiatPriceRoomsXML = params.price;
                                         const fiatPriceRoomsXMLInEur = currencyExchangeRates && CurrencyConverter.convert(currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, fiatPriceRoomsXML);
-                                        this.props.setLocRateFiatAmount(fiatPriceRoomsXMLInEur);
+                                        that.props.setLocRateFiatAmount(fiatPriceRoomsXMLInEur);
                                     });
                                 } else {
-                                    this.props.navigation.navigation.pop(3);
+                                    that.props.navigation.navigation.pop(3);
                                 }
                             });
                         });
@@ -113,22 +118,22 @@ class RoomDetailsReview extends Component {
                     const errors = data.errors;
                     if (errors.hasOwnProperty('RoomsXmlResponse')) {
                         if (errors['RoomsXmlResponse'].message.indexOf('QuoteNotAvailable:') !== -1) {
-                            this.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000, () => {
-                                this.props.navigation.navigation.pop(3);
+                            that.refs.toast.show(data.errors.RoomsXmlResponse.message, 5000, () => {
+                                that.props.navigation.navigation.pop(3);
                             });
                         }
                     } else {
                         for (let key in errors) {
                             if (typeof errors[key] !== 'function') {
-                                this.refs.toast.show(errors[key].message, 5000);
+                                that.refs.toast.show(errors[key].message, 5000);
                             }
                         }
                     }
                 });
             }
         }).catch((main_err) => {
-            this.refs.toast.show("Unknown Error! Please try again.", 5000, () => {
-                this.props.navigation.navigation.goBack();
+            that.refs.toast.show("Unknown Error! Please try again.", 5000, () => {
+                that.props.navigation.navigation.goBack();
             });
             console.log("Error Room");
             console.log(main_err);
@@ -155,11 +160,6 @@ class RoomDetailsReview extends Component {
                 });
             }
         });
-    }
-
-    // Control Modal Visibility
-    setModalVisible(visible) {
-        this.setState({ modalVisible: visible });
     }
 
     setCancellationView(visible) {
@@ -209,24 +209,17 @@ class RoomDetailsReview extends Component {
         }
     }
 
-    approveQuote() {
-        // this.isQuoteApproved = true;
-    }
-    
     stopQuote() {
-        // Websocket.sendMessage(DEFAULT_QUOTE_LOC_ID, 'approveQuote', { bookingId: this.props.reservation.preparedBookingId });
-    
-        // this.setState({
-        //   isQuoteStopped: true
-        // });
+        // WebsocketClient.sendMessage(DEFAULT_QUOTE_LOC_ID, 'approveQuote', { bookingId: this.state.bookingId });
+        this.refs.bottomBar.getWrappedInstance().stopQuote(this.state.bookingId);
+        // if (this.bottomBar !== undefined && this.bottomBar !== null) {
+        //     this.bottomBar.stopQuote(this.state.bookingId);
+        // }
     }
     
     restartQuote() {
-        // Websocket.sendMessage(DEFAULT_QUOTE_LOC_ID, 'quoteLoc', { bookingId: this.props.reservation.preparedBookingId });
-    
-        // this.setState({
-        //   isQuoteStopped: false
-        // });
+        // WebsocketClient.sendMessage(DEFAULT_QUOTE_LOC_ID, 'quoteLoc', { bookingId: this.state.bookingId });
+        this.refs.bottomBar.getWrappedInstance().restartQuote(this.state.bookingId);
     }
 
     payWithLocSingleWithdrawer = () => {
@@ -322,6 +315,40 @@ class RoomDetailsReview extends Component {
         }, 1000);
     }
 
+    handlePayWithLOC = () => {
+        requester.getUserHasPendingBooking()
+        .then(res => res.body).then(data => {
+            if (data.userHasPendingBooking) {
+                this.ref.toast.show("You already have one active booking with status PENDING in your dashboard. This booking is still being processed and is pending confirmation from the hotel.", 5000);
+
+                // this.openModal(PENDING_BOOKING_LOC);
+            } else {
+                this.stopQuote();
+                this.openConfirmModal();
+            }
+        }).catch((e) => {
+            console.log(e);
+            NotificationManager.error(SERVICE_UNAVAILABLE);
+        });
+    }
+
+
+    approveQuote() {
+        this.isQuoteApproved = true;
+    }
+    
+    // Control Modal Visibility
+    openConfirmModal() {
+        this.setState({ modalVisible: true });
+    }
+
+    closeConfirmModal = () => {
+        if (!this.isQuoteApproved) {
+            this.restartQuote();
+        }
+        this.setState({ modalVisible: false });
+    }
+
     // Keys for flatlist
     _keyExtractor = (item, index) => item.key; //eslint-disable-line
 
@@ -354,9 +381,7 @@ class RoomDetailsReview extends Component {
                                 <Text style={styles.walletPasswordLabel}>Enter your wallet password</Text>
                                 <View style={styles.closeButtonView}>
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({ modalVisible: false }); //eslint-disable-line
-                                        }}
+                                        onPress={this.closeConfirmModal}
                                     >
                                         <Image style={styles.closeButtonSvg}
                                             source={require('../../../../../src/assets/png/close.png')} />
@@ -489,16 +514,18 @@ class RoomDetailsReview extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-
+                    <LocPriceUpdateTimer style={{flex: 1, marginLeft: 20, marginRight: 20, paddingLeft:5, paddingRight:5, height: 28}}/>
                 </ScrollView>
 
                 {/* Bottom Bar */}
                 <ConfirmBottomBar 
+                    // ref = {connectedComponent  => this.bottomBar = connectedComponent.getWrappedInstance()}
+                    ref = "bottomBar"
                     fiat = {params.price}
                     params={{ bookingId: this.state.bookingId }} 
                     daysDifference = {params.daysDifference}
                     titleBtn = {"Confirm and Pay"}
-                    onPress = {() => {this.setModalVisible(true);}}/>
+                    onPress = {this.handlePayWithLOC}/>
                 {/* <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>

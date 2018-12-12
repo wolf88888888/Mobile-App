@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { reset } from '../../../redux/action/locPriceUpdateTimer'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 
 class LocPriceUpdateTimer extends Component {
@@ -10,17 +12,20 @@ class LocPriceUpdateTimer extends Component {
         this.timer = null;
         this.tick = this.tick.bind(this);
         this.state = {
-            seconds: 0
+            seconds: null
         }
     }
 
-    componentDidMount() {
-        this.timer = setInterval(this.tick, 1000);
-    }
+    // componentDidMount() {
+    //     this.timer = setInterval(this.tick, 1000);
+    // }
     
     componentWillReceiveProps(nextProps) {
-        if (nextProps.seconds > this.props.seconds) {
+        console.log("LocPriceUpdateTimer - componentWillReceiveProps", nextProps);
+        if (nextProps.seconds != null && nextProps.seconds > this.state.seconds) {
             clearInterval(this.timer);
+            this.props.reset();
+            this.setState({seconds: nextProps.seconds});
             this.timer = setInterval(this.tick, 1000);
         }
     }
@@ -31,15 +36,22 @@ class LocPriceUpdateTimer extends Component {
     }
 
     tick() {
-        // let { seconds } = this.props;
-        // this.props.dispatch(setSeconds(seconds - 1));
-        let { seconds } = this.state
-        this.setState({seconds: seconds - 1});
+        this.setState((previousState) => {
+            let seconds = previousState.seconds - 1;
+            if (seconds < 0) seconds = 0;
+            console.log("tick ------", seconds);
+            return {seconds};
+        });
     }
 
     render() {
         return (
-            <Text style={styles.fabText}>{}</Text>
+                this.state.seconds != null?
+                    <Text style={[this.props.style, styles.info]}>
+                        LOC price will update in <Icon name={'clock-o'} color={'#fff'} size={16}/> {this.state.seconds}
+                    </Text>
+                :
+                    null
         );
     }
 }

@@ -282,8 +282,10 @@ class HotelsSearchScreen extends Component {
 
         this.setState({isLoadingHotelDetails: true});
         requester.getHotelById(item.id, this.searchString.split('&')).then((res) => {
+            console.log("requester.getHotelById", res);
             // here you set the response in to json
             res.body.then((data) => {
+                console.log("requester.getHotelById data", data);
                 const hotelPhotos = [];
                 for (let i = 0; i < data.hotelPhotos.length; i++) {
                     hotelPhotos.push({ uri: imgHost + data.hotelPhotos[i].url });

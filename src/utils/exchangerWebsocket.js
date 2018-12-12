@@ -35,7 +35,7 @@ class WS {
     }
 
     sendMessage(id, method, params) {
-        console.log("sendMessage", id, method, params);
+        console.log("WS - sendMessage", id, method, params);
         if (this.ws.readyState === 1 && id) {
             method = method ? method : DEFAULT_SOCKET_METHOD;
             this.ws.send(JSON.stringify({ id, method, params }));

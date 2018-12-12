@@ -44,6 +44,7 @@ class DetailBottomBar extends Component {
         if (this.isStop) {
             return;
         }
+        console.log("DetailBottomBar  componentWillReceiveProps");
         if (nextProps.isLocPriceWebsocketConnected &&
             nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
             WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
@@ -88,7 +89,7 @@ class DetailBottomBar extends Component {
             WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, null, { fiatAmount: DetailBottomBar.self.state.fiatInEur });
             console.log("DetailBottomBar - _didFocus", DetailBottomBar.self.props, DetailBottomBar.self.state.fiatInEur);
         }
-        DetailBottomBar.self.isStop = true;
+        DetailBottomBar.self.isStop = false;
     }
 
     _willBlur() {
@@ -99,7 +100,7 @@ class DetailBottomBar extends Component {
             WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, 'unsubscribe');
             DetailBottomBar.self.state.isLocPriceRendered = false;
         }
-        DetailBottomBar.self.isStop = false;
+        DetailBottomBar.self.isStop = true;
     }
 
     render() {
