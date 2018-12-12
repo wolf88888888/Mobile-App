@@ -17,10 +17,12 @@ import { setLocRateFiatAmount } from '../../../../redux/action/exchangeRates';
 
 import ConfirmBottomBar from '../../../atoms/ConfirmBottomBar'
 import LocPriceUpdateTimer from '../../../atoms/LocPriceUpdateTimer'
+import { imgHost } from '../../../../config'
 import styles from './styles';
 
 const SAFECHARGE_VAR = 'SCPaymentModeOn';
 const DEFAULT_CRYPTO_CURRENCY = 'EUR';
+const DEFAULT_QUOTE_LOC_ID = 'quote';
 
 class RoomDetailsReview extends Component {
     constructor() {
@@ -231,11 +233,17 @@ class RoomDetailsReview extends Component {
             // this.setState({ modalVisible: false });
 
             this.requestLockOnQuoteId('privateWallet').then( () => {
-                console.log("requestLockOnQuoteId -- ");
+                console.log("requestLockOnQuoteId -- ", this.props.locAmounts);
 
                 const { password } = this.state;
                 const preparedBookingId = this.state.bookingId;
-                const locAmount = params.priceLOC;
+                const { locAmounts } = this.props.locAmounts;
+
+                if (!(locAmounts[DEFAULT_QUOTE_LOC_ID] && locAmounts[DEFAULT_QUOTE_LOC_ID].locAmount)) {
+                    this.refs.toast.show('Sorry, Cannot get Loc Amount, Please try again later.', 1000);
+                    return;
+                }
+                const locAmount = locAmounts[DEFAULT_QUOTE_LOC_ID].locAmount;
                 
                 const wei = (this.tokensToWei(locAmount.toString()));
 
@@ -354,6 +362,7 @@ class RoomDetailsReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
+        const imgURL = params.hotelImg;
         // console.log(params);
         // console.log(this.state);
         return (
@@ -464,7 +473,7 @@ class RoomDetailsReview extends Component {
                         <Text style={styles.heading}>Review room details</Text>
                         <View style={styles.hotelInfoContainer}>
                             <View style={styles.hotelThumbView}>
-                                <Image source={require('../../../../../src/assets/apartment.png')}
+                                <Image source={{uri: imgHost + imgURL}}
                                     style={styles.hotelThumb} />
                             </View>
                             <View style={styles.hotelInfoView}>

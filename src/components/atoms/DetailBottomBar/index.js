@@ -85,7 +85,6 @@ class DetailBottomBar extends Component {
         const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
         if (isLocPriceWebsocketConnected && !DetailBottomBar.self.state.isLocPriceRendered) {
             DetailBottomBar.self.state.isLocPriceRendered = true;
-            console.log("DetailBottomBar WebsocketClient.sendMessage3", fiatInEur);
             WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, null, { fiatAmount: DetailBottomBar.self.state.fiatInEur });
             console.log("DetailBottomBar - _didFocus", DetailBottomBar.self.props, DetailBottomBar.self.state.fiatInEur);
         }

@@ -95,6 +95,10 @@ class HotelDetails extends Component {
     onBooking = (roomDetail) => {
         // onRoomPress = (roomDetail) => {
         console.log("onRoomPress", roomDetail);
+        let hotelImg = this.state.hotel.hotelPhoto.url;
+        if (hotelImg === undefined || hotelImg === null) {
+            hotelImg = this.state.hotel.hotelPhoto;
+        }
         this.props.navigation.navigate('GuestInfoForm', { 
             roomDetail: roomDetail, 
             guests: this.state.guests, 
@@ -102,6 +106,7 @@ class HotelDetails extends Component {
             daysDifference: this.props.daysDifference,
             hotelDetails: this.state.hotelFullDetails,
             searchString: this.state.searchString,
+            hotelImg: hotelImg
         });
         // }
     }

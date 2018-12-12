@@ -8,6 +8,7 @@ import Toast from 'react-native-easy-toast';
 import { hasLetter } from '../../../../utils/validation';
 import { userInstance } from '../../../../utils/userInstance';
 import DetailBottomBar from '../../../atoms/DetailBottomBar'
+import { imgHost } from '../../../../config'
 
 let guestInfos = [];
 var newElement = {};
@@ -28,8 +29,6 @@ class GuestInfoForm extends Component {
             testGuestArray : [{}]
         };
     }
-
-
     // async componentDidMount(){
     //     console.disableYellowBox = true
     //     console.log("componentDidMount", this.state.guests);
@@ -135,7 +134,8 @@ class GuestInfoForm extends Component {
                 daysDifference: params.daysDifference,
                 guests: guestInfos.length,
                 guestRecord: guestInfos,
-                searchString: params.searchString
+                searchString: params.searchString,
+                hotelImg: params.hotelImg
             });
         }
         
@@ -144,6 +144,7 @@ class GuestInfoForm extends Component {
     render() {
         const {params} = this.props.navigation.state
         console.log("GuestInfoForm", params);
+        const imgURL = params.hotelImg;
         return (
             <View style={styles.container}>
                 <Toast
@@ -168,7 +169,7 @@ class GuestInfoForm extends Component {
                     
                     <View style={styles.hotelInfoContainer}>
                         <View style={styles.hotelThumbView}>
-                            <Image source={require('../../../../../src/assets/apartment.png')} style={styles.hotelThumb} />
+                            <Image source={{uri: imgHost + imgURL}} style={styles.hotelThumb} />
                         </View>
                         <View style={styles.hotelInfoView}>
                             <Text style={styles.hotelName}>{params.hotelDetails.name}</Text>
