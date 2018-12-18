@@ -15,8 +15,6 @@ import LocationView from '../../../atoms/LocationView';
 import WhiteBackButton from '../../../atoms/WhiteBackButton';
 import ImageCarousel from '../../../atoms/ImagePage';
 import HomeDetailBottomBar from '../../../atoms/HomeDetailBottomBar'
-import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrency';
-import { CurrencyConverter } from '../../../../services/utilities/currencyConverter'
 
 import styles from './styles';
 
@@ -79,9 +77,9 @@ class HomeDetails extends Component {
             nights: params.nights,
             cleaningFee: params.homeData.cleaningFee,
             calendar: params.calendar,
-            rateExchange: params.rateExchange,
             guests: params.guests,
-            guestsIncluded: params.homeData.guestsIncluded
+            guestsIncluded: params.homeData.guestsIncluded,
+            currencyCode: params.currencyCode
         });
     }
 
@@ -92,8 +90,9 @@ class HomeDetails extends Component {
             smokingAllowed,
             suitableForPets,
             suitableForInfants,
-            house_rules,
-            currencyCode } = params.roomDetails;
+            house_rules } = params.roomDetails;
+        
+        const {currencyCode} = params;
         
         const hasHouseRules = eventsAllowed || smokingAllowed || suitableForPets || suitableForInfants || house_rules;
         //const houseRules = house_rules && house_rules.split('\r\n');

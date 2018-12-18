@@ -1,10 +1,7 @@
 import {
-    Dimensions,
-    ScrollView,
     View,
     Text,
-    TouchableOpacity,
-    StyleSheet
+    TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -16,6 +13,10 @@ import Toast from 'react-native-easy-toast';
 import BackButton from '../../../atoms/BackButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewListItem from '../../../atoms/Property/ReviewListItem';
+import ReviewDetailItem from '../../../atoms/Property/ReviewDetailItem';
+import HomeDetailBottomBar from '../../../atoms/HomeDetailBottomBar'
+import { CurrencyConverter } from '../../../../services/utilities/currencyConverter'
+import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrency';
 
 import styles from './styles';
 
@@ -85,7 +86,6 @@ class HomeReview extends Component {
             nights: params.nights,
             // cleaningFee: params.homeData.cleaningFee,
             calendar: params.calendar,
-            rateExchange: params.rateExchange,
             guests: this.state.guests,
             // guestsIncluded: params.homeData.guestsIncluded
         });
@@ -93,13 +93,23 @@ class HomeReview extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
+        console.log("HomeReview-------", params);
 
-        const locRate = _.isString(this.props.locRate) ? parseFloat(this.props.locRate) : this.props.locRate;
-        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar) * params.rateExchange;
-        const cleaningFee = params.cleaningFee * params.rateExchange;
+        const { currencyCode } = params;
+        // const { exchangeRates, currency } = this.props;
 
-        const locPrice = price/locRate;
-        const locCleaningFee = cleaningFee/locRate;
+        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar);
+        // const defaultPrice = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, price);
+        // const fiatPriceInRoomsXMLCurrency = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
+
+        const cleaningFee = params.cleaningFee;
+        // const defaultCleaningFee = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, cleaningFee);
+        // const fiatCleaningFeeInRoomsXMLCurrency = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), cleaningFee);
+        
+        // console.log("HomeReview-------", price, defaultPrice, fiatPriceInRoomsXMLCurrency);
+
+        const locPrice = 0;//price/locRate;
+        const locCleaningFee = 0;//cleaningFee/locRate;
 
         return (
             <View style={styles.container}>
@@ -132,29 +142,30 @@ class HomeReview extends Component {
                     />    
                 </View>
                 
-                <ReviewListItem
-                    textFirst = { this.props.currencySign + price.toFixed(2) + " x " + params.nights + " nights" }
-                    textLast = { this.props.currencySign + (price * params.nights).toFixed(2) }
+                <ReviewDetailItem
+                    title = {params.nights === 1 ?  params.nights + " night" : params.nights + " nights" }
+                    // textLast = { this.props.currencySign + (defaultPrice * params.nights).toFixed(2) }
+                    fiat = {price * params.nights}
+                    currencyCode = {currencyCode}
                     styleContainer = {{marginTop: 15}}
                     styleLast={{color:'#000'}}/>
 
-                <ReviewListItem
+                {/* <ReviewListItem
                     textFirst = "Cleaning fee"
-                    textLast = { this.props.currencySign + (cleaningFee * params.nights).toFixed(2) }
+                    textLast = { this.props.currencySign + (defaultCleaningFee * params.nights).toFixed(2) }
                     styleContainer = {{marginTop: 15}}
                     styleLast = {{color:'#000'}}/>
 
-                <ReviewListItem
+                <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15}]} /> */}
+
+                {/* <ReviewListItem
                     textFirst = "Total"
-                    textLast = {this.props.currencySign + ((price + cleaningFee) * params.nights).toFixed(2) }
+                    textLast = {this.props.currencySign + ((defaultPrice + defaultCleaningFee) * params.nights).toFixed(2) }
                     styleContainer = {{marginTop: 15}}
                     styleFirst = {{color:'#000', fontFamily: 'FuturaStd-Medium', fontSize: 16}}
-                    styleLast = {{color:'#000', fontFamily: 'FuturaStd-Medium', fontSize: 16}}/>
+                    styleLast = {{color:'#000', fontFamily: 'FuturaStd-Medium', fontSize: 16}}/> */}
 
-                <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15}]} />
-
-                <ReviewListItem
-                
+                {/* <ReviewListItem
                     textFirst= { "LOC" + locPrice.toFixed(2) + " x " + params.nights + " nights"}
                     textLast = { "LOC" + (locPrice * params.nights).toFixed(2) }
                     styleContainer = {{marginTop: 15}}
@@ -171,9 +182,9 @@ class HomeReview extends Component {
                     textLast =  { "LOC" + ((locPrice + locCleaningFee) * params.nights).toFixed(2) }
                     styleContainer = {{marginTop: 15}}
                     styleFirst={{color:'#000', fontFamily: 'FuturaStd-Medium', fontSize: 16}}
-                    styleLast={{color:'#000', fontFamily: 'FuturaStd-Medium', fontSize: 16}}/>
+                    styleLast={{color:'#000', fontFamily: 'FuturaStd-Medium', fontSize: 16}}/> */}
 
-                <View style={styles.floatingBar}>
+                {/* <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price.toFixed(2)} </Text>
@@ -192,7 +203,14 @@ class HomeReview extends Component {
                             <Text style={styles.confirmPayText}>Agree & Confirm</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
+                
+                <HomeDetailBottomBar 
+                    price = {price}
+                    currencyCode = {currencyCode}
+                    daysDifference = {1}
+                    titleBtn = {"Check Availability"}
+                    onPress = {this.gotoRequestBooking}/>
                 <Toast
                     ref="toast"
                     style={{ backgroundColor: '#DA7B61' }}
@@ -208,29 +226,28 @@ class HomeReview extends Component {
     }
 }
 HomeReview.propTypes = {
-    currency: PropTypes.string,
-    currencySign: PropTypes.string,
-    locRate: PropTypes.float,
+    // currency: PropTypes.string,
+    // currencySign: PropTypes.string,
     guests: PropTypes.integer,
 };
 
 HomeReview.defaultProps = {
-    currency: "USD",
-    currencySign: "$",
-    locRate: 1.0,
-    guests: 3,
+    // currency: "USD",
+    // currencySign: "$",
+    guests: 2,
 };
 
-let mapStateToProps = (state) => {
-    return {
-        currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate
-    };
-}
+// let mapStateToProps = (state) => {
+//     return {
+//         currency: state.currency.currency,
+//         currencySign: state.currency.currencySign,
+//         exchangeRates: state.exchangeRates,
+//     };
+// }
 
 
-export default connect(mapStateToProps, null)(HomeReview);
+// export default connect(mapStateToProps, null)(HomeReview);
+export default HomeReview;
 
 const pickerSelectStyles = {
     height: 50,

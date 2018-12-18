@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Text } from 'react-native';
@@ -58,21 +59,45 @@ class LocPrice extends Component {
     // }
     
     render() {
-        const {locAmount} = this.props;
+        const {locAmount, hasBacket} = this.props;
 
         return (
-            <Text style={this.props.style} numberOfLines={1} ellipsizeMode="tail"> (LOC {locAmount}) </Text>
+            <Text style={this.props.style} numberOfLines={1} ellipsizeMode="tail"> 
+            {
+                hasBacket ?
+                    "(LOC " + locAmount +")"
+                :
+                    "LOC " + locAmount
+            }
+            </Text>
         );
     }
 }
 
+LocPrice.propTypes = {
+    hasBacket: PropTypes.bool,
+    currencyCode: PropTypes.string
+};
+
+LocPrice.defaultProps = {
+    hasBacket: true,
+    currencyCode: ''//RoomsXMLCurrency.get()
+};
+
 let mapStateToProps = (state, ownProps) => {
-    const { fiat } = ownProps;
+    let { fiat, currencyCode } = ownProps;
+
+    console.log("LOC Price ----", currencyCode);
+
+    if (currencyCode === undefined || currencyCode === '') {
+        currencyCode = RoomsXMLCurrency.get();
+    }
 
     const { exchangerSocket, locAmounts, exchangeRates } = state;
 
-    const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, fiat);
+    const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, DEFAULT_CRYPTO_CURRENCY, fiat);
 
+    console.log("LOC Price ----", currencyCode, fiatInEur);
     // let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
     let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] 
         && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);

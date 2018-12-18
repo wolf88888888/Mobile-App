@@ -396,8 +396,10 @@ class HomesSearchScreen extends Component {
         try {
             const resListing = await requester.getListing(home.id);
             console.log("requester.getListing",resListing);
-            if (!resListing.success) {
-                this.refs.toast.show('Sorry, Cannot get home details.', 1500);
+            if (resListing.success === false) {
+                this.setState({isLoadingDetails: false}, () => {
+                    this.refs.toast.show('Sorry, Cannot get home details.', 1500);
+                });
                 return;
             }
             const data = await resListing.body;
@@ -434,8 +436,8 @@ class HomesSearchScreen extends Component {
                 homePhotos.push({ uri: imgHost + data.pictures[i].original });
             }
 
-            const defaultPrice = home.defaultDailyPrice
-            const price = home.prices && this.props.currency === home.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(home.prices[this.props.currency], 10).toFixed(2);
+            // const defaultPrice = home.defaultDailyPrice
+            // const price = home.prices && this.props.currency === home.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(home.prices[this.props.currency], 10).toFixed(2);
 
             this.setState({isLoadingDetails: false});
             

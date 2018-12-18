@@ -21,13 +21,13 @@ class HomeDetailBottomBar extends Component {
         super(props);
         HomeDetailBottomBar.self = this;
 
-        const {exchangeRates, price} = props;
+        const {exchangeRates, price, currencyCode} = props;
 
         let isLocPriceRendered = false;
         let fiatInEur;
     
         if (exchangeRates.currencyExchangeRates) {
-            fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
+            fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
         
             console.log("HomeDetailBottomBar WebsocketClient.sendMessage0", fiatInEur);
             WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
@@ -51,7 +51,8 @@ class HomeDetailBottomBar extends Component {
         }
     
         if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
-            const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.price);
+            const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, this.props.currencyCode, RoomsXMLCurrency.get(), this.props.price);
+            // const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.price);
         
             WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
             this.setState({
@@ -103,7 +104,7 @@ class HomeDetailBottomBar extends Component {
     }
 
     render() {
-        const {currency, currencySign, exchangeRates, price, locAmount, daysDifference, onPress, titleBtn} = this.props;
+        const {currency, currencySign, exchangeRates, price, currencyCode, locAmount, daysDifference, onPress, titleBtn} = this.props;
 
     
         let priceInCurrency = exchangeRates.currencyExchangeRates &&  CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, price);
@@ -156,10 +157,10 @@ HomeDetailBottomBar.defaultProps = {
 let mapStateToProps = (state, ownProps) => {
     const { price, currencyCode} = ownProps;
 
-    const { exchangerSocket, locAmounts, exchangeRates, currency,  } = state;
+    const { exchangerSocket, locAmounts, exchangeRates, currency } = state;
 
-    let fiatInEur = exchangeRates.currencyExchangeRates &&  CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
-
+    let fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
+    
     // const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
     let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
     // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
