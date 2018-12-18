@@ -8,12 +8,15 @@ import {
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import CheckInOutView from '../../atoms/Property/CheckInOutView';
-import FacilitiesView from '../../molecules/FacilitiesView';
-import HomeDetailView from '../../organisms/HomeDetailView';
-import LocationView from '../../atoms/LocationView';
-import WhiteBackButton from '../../atoms/WhiteBackButton';
-import ImageCarousel from '../../atoms/ImagePage';
+import CheckInOutView from '../../../atoms/Property/CheckInOutView';
+import FacilitiesView from '../../../molecules/FacilitiesView';
+import HomeDetailView from '../../../organisms/HomeDetailView';
+import LocationView from '../../../atoms/LocationView';
+import WhiteBackButton from '../../../atoms/WhiteBackButton';
+import ImageCarousel from '../../../atoms/ImagePage';
+import HomeDetailBottomBar from '../../../atoms/HomeDetailBottomBar'
+import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrency';
+import { CurrencyConverter } from '../../../../services/utilities/currencyConverter'
 
 import styles from './styles';
 
@@ -89,14 +92,19 @@ class HomeDetails extends Component {
             smokingAllowed,
             suitableForPets,
             suitableForInfants,
-            house_rules } = params.roomDetails;
+            house_rules,
+            currencyCode } = params.roomDetails;
         
         const hasHouseRules = eventsAllowed || smokingAllowed || suitableForPets || suitableForInfants || house_rules;
         //const houseRules = house_rules && house_rules.split('\r\n');
 
-        const locRate = _.isString(this.props.locRate) ? parseFloat(this.props.locRate) : this.props.locRate;
-        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar) * params.rateExchange;
+        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar);// * params.rateExchange;
 
+        // const {exchangeRates, currency} = this.props;
+        // let defaultDailyPrice = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, price);
+        // let fiatPriceInRoomsXMLCurrency = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
+
+        // console.log("price----------", price, defaultDailyPrice, fiatPriceInRoomsXMLCurrency);
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
@@ -172,7 +180,7 @@ class HomeDetails extends Component {
                         <View style={{ marginBottom: 100 }} /> 
                     </View>
                 </ScrollView>
-                <View style={styles.floatingBar}>
+                {/* <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price.toFixed(2)} </Text>
@@ -191,19 +199,26 @@ class HomeDetails extends Component {
                             <Text style={styles.confirmPayText}>Check Availability</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
+                
+                <HomeDetailBottomBar 
+                    price = {price}
+                    currencyCode = {currencyCode}
+                    daysDifference = {1}
+                    titleBtn = {"Check Availability"}
+                    onPress = {this.gotoRequestBooking}/>
             </View>
         );
     }
 }
 
-let mapStateToProps = (state) => {
-    return {
-        currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate
-    };
-}
-//export default HomeDetails;
+export default HomeDetails;
 
-export default connect(mapStateToProps, null)(HomeDetails);
+// let mapStateToProps = (state) => {
+//     return {
+//         currency: state.currency.currency,
+//         currencySign: state.currency.currencySign,
+//         exchangeRates: state.exchangeRates,
+//     };
+// }
+// export default connect(mapStateToProps, null)(HomeDetails);

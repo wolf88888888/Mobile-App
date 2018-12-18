@@ -13,9 +13,9 @@ import _ from 'lodash';
 import RNPickerSelect from 'react-native-picker-select';//eslint-disable-line
 import Toast from 'react-native-easy-toast';
 
-import BackButton from '../../atoms/BackButton';
-import ReviewTitle from '../../molecules/ReviewTitle';
-import ReviewListItem from '../../atoms/Property/ReviewListItem';
+import BackButton from '../../../atoms/BackButton';
+import ReviewTitle from '../../../molecules/ReviewTitle';
+import ReviewListItem from '../../../atoms/Property/ReviewListItem';
 
 import styles from './styles';
 

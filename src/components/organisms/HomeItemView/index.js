@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
     Text,
     TouchableOpacity,
@@ -12,6 +13,8 @@ import { imgHost } from '../../../config';
 import _ from 'lodash';
 import styles from './styles';
 import FastImage from 'react-native-fast-image'
+import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
+import LocPrice from '../../atoms/LocPrice'
 
 const RNPropTypes = PropTypes || React.PropTypes;
 
@@ -20,16 +23,14 @@ class HomeItemView extends Component {
         item: RNPropTypes.object,
         currencySign: RNPropTypes.string,
         currency: RNPropTypes.string,
-        locRate: RNPropTypes.number,
         gotoHomeDetailPage: PropTypes.func.isRequired,        
         daysDifference: RNPropTypes.number,
     };
 
     static defaultProps = {
         item: [],
-        currencySign: undefined,
+        currencySign: '',
         currency: '',
-        locRate: 0,
         daysDifference : 1,
     };
 
@@ -72,7 +73,7 @@ class HomeItemView extends Component {
 
     render() {
         const {
-            item, currencySign, locRate, currency
+            item, currencySign, currency
         } = this.props;
         
         let urlThumbnail = "";
@@ -88,6 +89,7 @@ class HomeItemView extends Component {
 
         const price = item.prices && currency === item.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(item.prices[currency], 10).toFixed(2);
         //let price = item.defaultDailyPrice / this.props.daysDifference;
+        const priceInRoomsCurrency = item.prices && item.prices[RoomsXMLCurrency.get()];
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
@@ -129,7 +131,8 @@ class HomeItemView extends Component {
 
                         <View style={styles.costView}>
                             <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
-                            <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text>
+                            {/* <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text> */}
+                            <LocPrice style= {styles.costLoc} fiat={priceInRoomsCurrency}/>
                             <Text style={styles.perNight}>per night</Text>
                         </View>
                     </View>
@@ -139,4 +142,11 @@ class HomeItemView extends Component {
     }
 }
 
-export default HomeItemView;
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+    };
+}
+
+export default connect(mapStateToProps, null)(HomeItemView);

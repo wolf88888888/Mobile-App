@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import Toast from 'react-native-easy-toast';
 import { hasLetter } from '../../../../utils/validation';
 import { userInstance } from '../../../../utils/userInstance';
-import DetailBottomBar from '../../../atoms/DetailBottomBar'
+import HotelDetailBottomBar from '../../../atoms/HotelDetailBottomBar'
 import { imgHost } from '../../../../config'
 
 let guestInfos = [];
@@ -196,7 +196,7 @@ class GuestInfoForm extends Component {
                 </View>
 
                 {/*Bottom Bar*/}
-                <DetailBottomBar 
+                <HotelDetailBottomBar 
                     price = {params.price}
                     daysDifference = {params.daysDifference}
                     titleBtn = {"Next"}

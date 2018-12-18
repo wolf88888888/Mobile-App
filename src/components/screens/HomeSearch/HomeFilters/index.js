@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, FlatList} from 'react-native';
 import Image from 'react-native-remote-svg';
-import styles from './styles';
 import CheckBox from 'react-native-checkbox';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import styles from './styles';
 
 export default class HomeFilters extends Component {
     
@@ -74,7 +74,7 @@ export default class HomeFilters extends Component {
             <View style={styles.container}>
                 <View style={styles.backButton}>
                     <TouchableOpacity onPress={this.onBackPress}>
-                        <Image style={styles.btn_backImage} source={require('../../../assets/close.png')}/>
+                        <Image style={styles.btn_backImage} source={require('../../../../assets/close.png')}/>
                     </TouchableOpacity>
                     <Text style={styles.titleText}>Filters</Text>
                 </View>
@@ -82,8 +82,8 @@ export default class HomeFilters extends Component {
                     <View style={{height: '100%',}}>
                         <View style={styles.residenceView}>
                             <TouchableOpacity style={[styles.residence, this.state.isHotelSelected? styles.selected: '']}>
-                                <Image source={require('../../../assets/png/Filters/check.png')} style={styles.tick}/>
-                                <Image source={require('../../../assets/png/Filters/home.png')} style={styles.headerIcons}/>
+                                <Image source={require('../../../../assets/png/Filters/check.png')} style={styles.tick}/>
+                                <Image source={require('../../../../assets/png/Filters/home.png')} style={styles.headerIcons}/>
                             </TouchableOpacity>
                             <Text style={styles.residenceType}>Home</Text>
                         </View>

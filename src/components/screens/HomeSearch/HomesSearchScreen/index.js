@@ -3,24 +3,23 @@ import { connect } from 'react-redux';
 import { StyleSheet, Text,  TouchableOpacity, View, Dimensions } from 'react-native';
 
 import Image from 'react-native-remote-svg';
-
-import DateAndGuestPicker from '../../organisms/DateAndGuestPicker';
-import HomeItemView from '../../organisms/HomeItemView';
-import requester from '../../../initDependencies';
-
-import { UltimateListView } from '../../../../library/UltimateListView';
 import { DotIndicator } from 'react-native-indicators';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { imgHost } from '../../../config';
+import Toast from 'react-native-easy-toast';
+
+import DateAndGuestPicker from '../../../organisms/DateAndGuestPicker';
+import HomeItemView from '../../../organisms/HomeItemView';
+import requester from '../../../../initDependencies';
+import { UltimateListView } from '../../../../../library/UltimateListView';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+import { imgHost } from '../../../../config';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window')
-import Toast from 'react-native-easy-toast';
 
 class HomesSearchScreen extends Component {
     isFilterResult = false;
@@ -49,11 +48,6 @@ class HomesSearchScreen extends Component {
             countryId: 0,
             countryName: '',
             home: '',
-
-            currency: props.currency,
-            currencySign: props.currencySign,
-            locRate: _.isString(props.locRate) ? parseFloat(props.locRate) : props.locRate,
-
             checkInDateFormated: startDate.format('DD/MM/YYYY').toString(),
             checkOutDateFormated: endDate.format('DD/MM/YYYY').toString(),
             checkInDate: startDate.format('ddd, DD MMM').toString(),
@@ -104,10 +98,6 @@ class HomesSearchScreen extends Component {
 
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
-        if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
-            this.setState({currency: this.props.currency, currencySign:this.props.currencySign, locRate: this.props.locRate});
-        }
-
         if (this.props.countries != prevProps.countries) {
             this.setCountriesInfo();
         }
@@ -405,8 +395,15 @@ class HomesSearchScreen extends Component {
         this.setState({isLoadingDetails: true});
         try {
             const resListing = await requester.getListing(home.id);
+            console.log("requester.getListing",resListing);
+            if (!resListing.success) {
+                this.refs.toast.show('Sorry, Cannot get home details.', 1500);
+                return;
+            }
             const data = await resListing.body;
             const checks = this.calculateCheckInOuts(data);
+        
+            console.log("resListing", data, checks);
 
             const DAY_INTERVAL = 365;
 
@@ -415,12 +412,13 @@ class HomesSearchScreen extends Component {
                 `startDate=${this.state.checkInDateFormated}`,
                 `endDate=${this.state.checkOutDateFormated}`,
                 `page=${0}`,
-                `toCode=${this.state.currency}`,
+                `toCode=${this.props.currency}`,
                 `size=${DAY_INTERVAL}`];
         
             console.log("searchTermMap", searchTermMap);
 
             const resCalendar =  await requester.getCalendarByListingIdAndDateRange(searchTermMap);
+            console.log("resCalendar", resCalendar);
             const dataCalendar = await resCalendar.body;
             console.log("dataCalendar", dataCalendar);
             let calendar = dataCalendar.content;
@@ -437,9 +435,7 @@ class HomesSearchScreen extends Component {
             }
 
             const defaultPrice = home.defaultDailyPrice
-            const price = home.prices && this.state.currency === home.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(home.prices[this.state.currency], 10).toFixed(2);
-
-            const rateExchange = price / defaultPrice;
+            const price = home.prices && this.props.currency === home.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(home.prices[this.props.currency], 10).toFixed(2);
 
             this.setState({isLoadingDetails: false});
             
@@ -454,8 +450,9 @@ class HomesSearchScreen extends Component {
                 checkInDate: this.state.checkInDate,
                 checkOutDate: this.state.checkOutDate,
                 nights: nights,
-                rateExchange: rateExchange,
-                guests:this.state.guests
+                guests:this.state.guests,
+                // rateExchange: rateExchange,
+                currencyCode: home.currency_code
             });
         } catch (e) {
             this.setState({isLoadingDetails: false}, () => {
@@ -468,9 +465,6 @@ class HomesSearchScreen extends Component {
         return (
             <HomeItemView
                 item = {item}
-                currencySign = {this.state.currencySign}
-                currency = {this.state.currency}
-                locRate = {this.state.locRate}
                 gotoHomeDetailPage = {this.gotoHomeDetailPage}
                 daysDifference = {this.state.daysDifference}
             />
@@ -479,7 +473,7 @@ class HomesSearchScreen extends Component {
 
     renderPaginationFetchingView = () => (
         <View style={{width, height:height - 160, justifyContent: 'center', alignItems: 'center'}}>
-            <Image style={{width:50, height:50}} source={require('../../../assets/loader.gif')}/>
+            <Image style={{width:50, height:50}} source={require('../../../../assets/loader.gif')}/>
         </View>
     )
     
@@ -619,8 +613,6 @@ class HomesSearchScreen extends Component {
 let mapStateToProps = (state) => {
     return {
         currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate,
         countries: state.country.countries
     };
 }

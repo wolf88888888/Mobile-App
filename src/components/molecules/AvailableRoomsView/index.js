@@ -25,7 +25,6 @@ class AvailableRoomsView extends Component {
         hotelDetails: PropTypes.object,
         currency: PropTypes.string,
         currencySign: PropTypes.string,
-        locRate: PropTypes.number,
         daysDifference: PropTypes.number
     };
 

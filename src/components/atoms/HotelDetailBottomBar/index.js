@@ -14,12 +14,12 @@ import styles from './styles';
 
 const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
-class DetailBottomBar extends Component {
+class HotelDetailBottomBar extends Component {
     static self;
     isStop = false;
     constructor(props) {
         super(props);
-        DetailBottomBar.self = this;
+        HotelDetailBottomBar.self = this;
 
         const {exchangeRates, price} = props;
 
@@ -29,7 +29,7 @@ class DetailBottomBar extends Component {
         if (exchangeRates.currencyExchangeRates) {
             fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
         
-            console.log("DetailBottomBar WebsocketClient.sendMessage0", fiatInEur);
+            console.log("HotelDetailBottomBar WebsocketClient.sendMessage0", fiatInEur);
             WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
             isLocPriceRendered = true;
         }
@@ -44,7 +44,7 @@ class DetailBottomBar extends Component {
         if (this.isStop) {
             return;
         }
-        console.log("DetailBottomBar  componentWillReceiveProps");
+        console.log("HotelDetailBottomBar  componentWillReceiveProps");
         if (nextProps.isLocPriceWebsocketConnected &&
             nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
             WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
@@ -82,24 +82,24 @@ class DetailBottomBar extends Component {
     }
 
     _didFocus() {
-        const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
-        if (isLocPriceWebsocketConnected && !DetailBottomBar.self.state.isLocPriceRendered) {
-            DetailBottomBar.self.state.isLocPriceRendered = true;
-            WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, null, { fiatAmount: DetailBottomBar.self.state.fiatInEur });
-            console.log("DetailBottomBar - _didFocus", DetailBottomBar.self.props, DetailBottomBar.self.state.fiatInEur);
+        const {isLocPriceWebsocketConnected} = HotelDetailBottomBar.self.props;
+        if (isLocPriceWebsocketConnected && !HotelDetailBottomBar.self.state.isLocPriceRendered) {
+            HotelDetailBottomBar.self.state.isLocPriceRendered = true;
+            WebsocketClient.sendMessage(HotelDetailBottomBar.self.state.fiatInEur, null, { fiatAmount: HotelDetailBottomBar.self.state.fiatInEur });
+            console.log("HotelDetailBottomBar - _didFocus", HotelDetailBottomBar.self.props, HotelDetailBottomBar.self.state.fiatInEur);
         }
-        DetailBottomBar.self.isStop = false;
+        HotelDetailBottomBar.self.isStop = false;
     }
 
     _willBlur() {
-        console.log("DetailBottomBar - _willBlur");
-        const {isLocPriceWebsocketConnected} = DetailBottomBar.self.props;
-        if (isLocPriceWebsocketConnected && DetailBottomBar.self.state.isLocPriceRendered) {
-            console.log("DetailBottomBar - _willBlur", DetailBottomBar.self.props, DetailBottomBar.self.state.isLocPriceRendered, DetailBottomBar.self.state.fiatInEur);
-            WebsocketClient.sendMessage(DetailBottomBar.self.state.fiatInEur, 'unsubscribe');
-            DetailBottomBar.self.state.isLocPriceRendered = false;
+        console.log("HotelDetailBottomBar - _willBlur");
+        const {isLocPriceWebsocketConnected} = HotelDetailBottomBar.self.props;
+        if (isLocPriceWebsocketConnected && HotelDetailBottomBar.self.state.isLocPriceRendered) {
+            console.log("HotelDetailBottomBar - _willBlur", HotelDetailBottomBar.self.props, HotelDetailBottomBar.self.state.isLocPriceRendered, HotelDetailBottomBar.self.state.fiatInEur);
+            WebsocketClient.sendMessage(HotelDetailBottomBar.self.state.fiatInEur, 'unsubscribe');
+            HotelDetailBottomBar.self.state.isLocPriceRendered = false;
         }
-        DetailBottomBar.self.isStop = true;
+        HotelDetailBottomBar.self.isStop = true;
     }
 
     render() {
@@ -114,11 +114,22 @@ class DetailBottomBar extends Component {
                 <View style={styles.detailsView}>
                     <View style={styles.pricePeriodWrapper}>
                         <Text style={[styles.price, styles.fontFuturaMed]}>{currencySign} {priceInCurrency.toFixed(2)}</Text>
-                        <Text style={[styles.period1, styles.fontFuturaStd]}> for {daysDifference} nights</Text>
+                        {
+                            daysDifference == 1 ?
+                                (<Text style={[styles.period1, styles.fontFuturaStd]}> /per night</Text>)
+                            :
+                                (<Text style={[styles.period1, styles.fontFuturaStd]}> for {daysDifference} nights</Text>)
+                        }
                     </View>
                     <View style={styles.pricePeriodWrapper}>
                         <Text style={[styles.price, styles.fontFuturaStd]}>{locAmount} LOC</Text>
-                        <Text style={[styles.period2, styles.fontFuturaStd]}> for {daysDifference} nights</Text>
+                        {
+                            daysDifference == 1 ?
+                                (<Text style={[styles.period2, styles.fontFuturaStd]}> /per night</Text>)
+                            :
+                                (<Text style={[styles.period2, styles.fontFuturaStd]}> for {daysDifference} nights</Text>)
+
+                        }
                     </View>
                 </View>
                 
@@ -132,11 +143,11 @@ class DetailBottomBar extends Component {
     }
 }
 
-DetailBottomBar.propTypes = {
+HotelDetailBottomBar.propTypes = {
     onPress: PropTypes.func
 };
 
-DetailBottomBar.defaultProps = {
+HotelDetailBottomBar.defaultProps = {
     onPress: () => {}
 };
 
@@ -165,4 +176,4 @@ let mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     removeLocAmount: bindActionCreators(removeLocAmount, dispatch),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(DetailBottomBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(HotelDetailBottomBar));

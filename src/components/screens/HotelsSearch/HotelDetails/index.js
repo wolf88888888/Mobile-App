@@ -49,9 +49,6 @@ class HotelDetails extends Component {
             countryName: '',
             latitude: 37.78825,
             longitude: -122.4324,
-            currency: 'EUR',
-            currencySign: '€',
-            locRate: 0,
             hotelRatingStars: 0,
             daysDifference: 1
         }
@@ -60,9 +57,6 @@ class HotelDetails extends Component {
         this.state.hotel = params ? params.hotelDetail : [];
         this.state.guests = params ? params.guests : 0;
         this.state.searchString = params ? params.searchString : '';
-        this.state.currency = params ? params.currency : [];
-        this.state.currencySign = params ? params.currencySign : '€';
-        this.state.locRate = params ? params.locRate : '';
         this.state.hotelFullDetails = params ? params.hotelFullDetails : [];
         this.state.hotelAmenities = params ? params.hotelFullDetails.hotelAmenities : [];
         this.state.mainAddress = params ? params.hotelFullDetails.additionalInfo.mainAddress : '';
@@ -161,9 +155,6 @@ class HotelDetails extends Component {
                             onBooking={this.onBooking}
                             guests={this.state.guests}
                             hotelDetails={this.state.hotelFullDetails}
-                            currency={this.state.currency}
-                            currencySign={this.state.currencySign}
-                            locRate={this.state.locRate}
                             daysDifference={this.state.daysDifference}
                         />
 

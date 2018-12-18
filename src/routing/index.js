@@ -79,11 +79,12 @@ import HotelDetails from '../components/screens/HotelsSearch/HotelDetails'
 import GuestInfoForm from '../components/screens/HotelsSearch/GuestInfoForm';
 import RoomDetailsReview from '../components/screens/HotelsSearch/RoomDetailsReview';
 
-import HomesSearchScreen from '../components/screens/HomesSearchScreen';
-import HomeFilters from '../components/screens/HomeFilters';
-import HomeDetails from '../components/screens/HomeDetails';
-import HomeReview from '../components/screens/HomeReview';
-import HomeRequestConfirm from '../components/screens/HomeRequestConfirm';
+import HomesSearchScreen from '../components/screens/HomeSearch/HomesSearchScreen';
+import HomeFilters from '../components/screens/HomeSearch/HomeFilters';
+import HomeDetails from '../components/screens/HomeSearch/HomeDetails';
+import HomeReview from '../components/screens/HomeSearch/HomeReview';
+import HomeRequestConfirm from '../components/screens/HomeSearch/HomeRequestConfirm';
+
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(

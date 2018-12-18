@@ -293,7 +293,7 @@ class Explore extends Component {
             }
             else {
                 console.log("this.state.value.", this.state.value);
-                if (this.state.value === '') {
+                if (this.state.value === '' || this.state.value === 0) {
                     this.refs.toast.show('Please select country to book home.', 2500);
                     return;
                 }

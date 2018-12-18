@@ -10,13 +10,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Toast from 'react-native-easy-toast';
-import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-
-import requester from '../../../initDependencies';
-import BackButton from '../../atoms/BackButton';
-import ReviewTitle from '../../molecules/ReviewTitle';
-import ReviewInputView from '../../atoms/Property/ReviewInputView';
-import  { userInstance } from '../../../utils/userInstance';
+import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
+import requester from '../../../../initDependencies';
+import BackButton from '../../../atoms/BackButton';
+import ReviewTitle from '../../../molecules/ReviewTitle';
+import ReviewInputView from '../../../atoms/Property/ReviewInputView';
+import  { userInstance } from '../../../../utils/userInstance';
 
 import styles from './styles';
 
