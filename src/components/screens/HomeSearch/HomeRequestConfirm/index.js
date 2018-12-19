@@ -16,6 +16,7 @@ import BackButton from '../../../atoms/BackButton';
 import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewInputView from '../../../atoms/Property/ReviewInputView';
 import  { userInstance } from '../../../../utils/userInstance';
+import HomeDetailBottomBar from '../../../atoms/HomeDetailBottomBar'
 
 import styles from './styles';
 
@@ -133,13 +134,16 @@ class HomeRequestConfirm extends Component {
         if (nights === 0) {
             return 0;
         }
-        return price / nights;
+        // return price / nights;
+        return price;
     }
 
     render() {
         const { params } = this.props.navigation.state;
-        const locRate = _.isString(this.props.locRate) ? parseFloat(this.props.locRate) : this.props.locRate;
-        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar) * params.rateExchange;
+        const { currencyCode, cleaningFee, nights } = params;
+        const price = this.getPriceForPeriod(params.startDate, params.nights, params.calendar);
+
+        const totalPrice = price + cleaningFee * nights;
 
         return (
             <View style={styles.container}>
@@ -176,7 +180,7 @@ class HomeRequestConfirm extends Component {
                     textLast ={this.state.email}
                     onChangeText={this.onChangeEmail} />
 
-                <View style={styles.floatingBar}>
+                {/* <View style={styles.floatingBar}>
                     <View style={styles.detailsView}>
                         <View style={styles.pricePeriodWrapper}>
                             <Text style={[styles.price,styles.fontFuturaMed]}>{this.props.currencySign}{price.toFixed(2)} </Text>
@@ -195,7 +199,15 @@ class HomeRequestConfirm extends Component {
                             <Text style={styles.confirmPayText}>Request Booking</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
+
+                
+                <HomeDetailBottomBar 
+                    price = { totalPrice }
+                    currencyCode = { currencyCode }
+                    daysDifference = {nights}
+                    titleBtn = {"Request Booking"}
+                    onPress = {this.confirmBooking}/>
 
                 <Toast
                     ref="toast"
@@ -218,27 +230,24 @@ class HomeRequestConfirm extends Component {
         );
     }
 }
-HomeRequestConfirm.propTypes = {
-    currency: PropTypes.string,
-    currencySign: PropTypes.string,
-    locRate: PropTypes.float,
-    guests: PropTypes.integer,
-};
+// HomeRequestConfirm.propTypes = {
+//     currency: PropTypes.string,
+//     currencySign: PropTypes.string,
+// };
 
-HomeRequestConfirm.defaultProps = {
-    currency: "USD",
-    currencySign: "$",
-    locRate: 1.0,
-    guests: 0,
-};
+// HomeRequestConfirm.defaultProps = {
+//     currency: "USD",
+//     currencySign: "$",
+// };
 
-let mapStateToProps = (state) => {
-    return {
-        currency: state.currency.currency,
-        currencySign: state.currency.currencySign,
-        locRate: state.currency.locRate
-    };
-}
+// let mapStateToProps = (state) => {
+//     return {
+//         currency: state.currency.currency,
+//         currencySign: state.currency.currencySign,
+//         locRate: state.currency.locRate
+//     };
+// }
 
 
-export default connect(mapStateToProps, null)(HomeRequestConfirm);
+// export default connect(mapStateToProps, null)(HomeRequestConfirm);
+export default HomeRequestConfirm;

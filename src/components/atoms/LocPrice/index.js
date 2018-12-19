@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Text } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 import { WebsocketClient } from '../../../utils/exchangerWebsocket';
 import { CurrencyConverter } from '../../../services/utilities/currencyConverter'
@@ -14,9 +15,10 @@ import styles from './styles';
 const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
 class LocPrice extends Component {
+    isStop = false;
     constructor(props) {
         super(props);
-    
+
         let isLocPriceRendered = false;
         let fiatInEur;
     
@@ -32,6 +34,19 @@ class LocPrice extends Component {
         //     isLocPriceRendered
         // };
     }
+
+	componentDidMount() {
+        console.log("LocPrice - componentDidMount");
+		// this.list = [
+		// 	this.props.navigation.addListener('didFocus', 
+        //     payload => {
+        //       console.debug('LocPrice - didFocus', payload);
+        //     }),
+		// 	this.props.navigation.addListener('willBlur', payload => {
+        //         console.debug('LocPrice - willBlur', payload);
+        //     })
+		// ];
+	}
     
     // componentWillReceiveProps(nextProps) {
     //     if (nextProps.isLocPriceWebsocketConnected &&
@@ -50,15 +65,22 @@ class LocPrice extends Component {
     //     }
     // }
     
-    // componentWillUnmount() {
-    //     console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
-    //     WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
-    //     if (this.props.locAmount) {
-    //         removeLocAmount(this.state.fiatInEur);
-    //     }
+    componentWillUnmount() {
+        console.log("LocPrice - componentWillUnmount");
+        // console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
+        // WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
+        // if (this.props.locAmount) {
+        //     removeLocAmount(this.state.fiatInEur);
+        // }
+    }
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log("LocPrice - shouldComponentUpdate", this.isStop);
+    //     return this.isStop;  
     // }
-    
+
     render() {
+        console.log("LOC Price render");
         const {locAmount, hasBacket} = this.props;
 
         return (
@@ -81,13 +103,13 @@ LocPrice.propTypes = {
 
 LocPrice.defaultProps = {
     hasBacket: true,
-    currencyCode: ''//RoomsXMLCurrency.get()
+    currencyCode: ''
 };
 
 let mapStateToProps = (state, ownProps) => {
     let { fiat, currencyCode } = ownProps;
 
-    console.log("LOC Price ----", currencyCode);
+    // console.log("LOC Price ----", currencyCode, fiat);
 
     if (currencyCode === undefined || currencyCode === '') {
         currencyCode = RoomsXMLCurrency.get();
@@ -97,7 +119,7 @@ let mapStateToProps = (state, ownProps) => {
 
     const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, DEFAULT_CRYPTO_CURRENCY, fiat);
 
-    console.log("LOC Price ----", currencyCode, fiatInEur);
+    // console.log("LOC Price ----", currencyCode, fiatInEur);
     // let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
     let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] 
         && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
@@ -116,4 +138,5 @@ let mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     removeLocAmount: bindActionCreators(removeLocAmount, dispatch),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(LocPrice);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(LocPrice));

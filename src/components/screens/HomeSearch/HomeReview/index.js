@@ -15,8 +15,6 @@ import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewListItem from '../../../atoms/Property/ReviewListItem';
 import ReviewDetailItem from '../../../atoms/Property/ReviewDetailItem';
 import HomeDetailBottomBar from '../../../atoms/HomeDetailBottomBar'
-import { CurrencyConverter } from '../../../../services/utilities/currencyConverter'
-import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrency';
 
 import styles from './styles';
 
@@ -64,7 +62,8 @@ class HomeReview extends Component {
         if (nights === 0) {
             return 0;
         }
-        return price / nights;
+        // return price / nights;
+        return price;
     }
 
     gotoConfirm = () => {
@@ -84,9 +83,10 @@ class HomeReview extends Component {
             checkInDate: params.checkInDate,
             checkOutDate: params.checkOutDate,
             nights: params.nights,
-            // cleaningFee: params.homeData.cleaningFee,
+            cleaningFee: params.cleaningFee,
             calendar: params.calendar,
             guests: this.state.guests,
+            currencyCode: params.currencyCode
             // guestsIncluded: params.homeData.guestsIncluded
         });
     }
@@ -102,14 +102,11 @@ class HomeReview extends Component {
         // const defaultPrice = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, price);
         // const fiatPriceInRoomsXMLCurrency = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
 
-        const cleaningFee = params.cleaningFee;
+        const cleaningFee = params.cleaningFee * params.nights;
         // const defaultCleaningFee = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, cleaningFee);
         // const fiatCleaningFeeInRoomsXMLCurrency = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), cleaningFee);
         
         // console.log("HomeReview-------", price, defaultPrice, fiatPriceInRoomsXMLCurrency);
-
-        const locPrice = 0;//price/locRate;
-        const locCleaningFee = 0;//cleaningFee/locRate;
 
         return (
             <View style={styles.container}>
@@ -144,20 +141,27 @@ class HomeReview extends Component {
                 
                 <ReviewDetailItem
                     title = {params.nights === 1 ?  params.nights + " night" : params.nights + " nights" }
-                    // textLast = { this.props.currencySign + (defaultPrice * params.nights).toFixed(2) }
-                    fiat = {price * params.nights}
+                    fiat = {price}
                     currencyCode = {currencyCode}
                     styleContainer = {{marginTop: 15}}
                     styleLast={{color:'#000'}}/>
 
-                {/* <ReviewListItem
-                    textFirst = "Cleaning fee"
-                    textLast = { this.props.currencySign + (defaultCleaningFee * params.nights).toFixed(2) }
+                <ReviewDetailItem
+                    title = "Cleaning fee"
+                    fiat = {cleaningFee}
+                    currencyCode = {currencyCode}
                     styleContainer = {{marginTop: 15}}
-                    styleLast = {{color:'#000'}}/>
+                    styleLast={{color:'#000'}}/>
 
-                <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15}]} /> */}
+                <View style={[styles.lineStyle, { marginLeft: 20, marginRight: 20, marginTop: 15}]} /> 
 
+                <ReviewDetailItem
+                    title = "Total"
+                    fiat = {price + cleaningFee}
+                    currencyCode = {currencyCode}
+                    styleContainer = {{marginTop: 15}}
+                    styleLast={{color:'#000'}}/>
+                    
                 {/* <ReviewListItem
                     textFirst = "Total"
                     textLast = {this.props.currencySign + ((defaultPrice + defaultCleaningFee) * params.nights).toFixed(2) }
@@ -206,11 +210,11 @@ class HomeReview extends Component {
                 </View> */}
                 
                 <HomeDetailBottomBar 
-                    price = {price}
+                    price = {price + cleaningFee}
                     currencyCode = {currencyCode}
-                    daysDifference = {1}
-                    titleBtn = {"Check Availability"}
-                    onPress = {this.gotoRequestBooking}/>
+                    daysDifference = {params.nights}
+                    titleBtn = {"Agree & Confirm"}
+                    onPress = {this.gotoConfirm}/>
                 <Toast
                     ref="toast"
                     style={{ backgroundColor: '#DA7B61' }}

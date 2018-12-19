@@ -11,7 +11,6 @@ import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrenc
 import styles from './styles';
 
 class ReviewDetailItem extends Component {
-
     render() {
         const {
             title,
@@ -28,6 +27,7 @@ class ReviewDetailItem extends Component {
         console.log("ReviewDetailItem ---", this.props);
 
         const defaultPrice = CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, currency, fiat);
+
         return (
             <View style={[styles.container, styleContainer]}>
                 <Text style={[styles.textFirst, styleFirst]}>{title}</Text>
