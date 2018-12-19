@@ -7,6 +7,7 @@ const lastname_key = 'lastname_key';
 const birthday_key = 'birthday_key';
 const city_key = 'city_key';
 const country_key = 'country_key';
+const state_key = 'state_key';
 const gender_key = 'gender_key';
 const profileimage_key = 'profileimage_key';
 const jsonfile_key = 'jsonfile_key';
@@ -106,6 +107,18 @@ export const userInstance = {
     getCity: async function() {
         let city = await AsyncStorage.getItem(city_key);
         return JSON.parse(city);
+    },
+
+    setCountryState: function(countryState) {
+        if (countryState == undefined || countryState == null) {
+            countryState = '';
+        }
+        AsyncStorage.setItem(state_key, JSON.stringify(countryState));
+    },
+
+    getCountryState: async function() {
+        let countryState = await AsyncStorage.getItem(state_key);
+        return JSON.parse(countryState);
     },
 
     setCountry: function(country) {
@@ -249,6 +262,7 @@ export const userInstance = {
         this.setGender(data.gender);
         this.setCity(data.city);
         this.setCountry(data.country);
+        this.setCountryState(data.countryState);
         this.setProfileImage(data.image);
         this.setJsonFile(data.jsonFile);
         this.setLocAddress(data.locAddress);

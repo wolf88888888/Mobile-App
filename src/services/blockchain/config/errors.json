@@ -28,7 +28,7 @@
   "EMPTY_REQ_BODY": "Request body is empty",
   "INVALID_RATE": "Rate should be > 0",
   "INSUFFICIENT_AMOUNT_LOC": "Insufficient LOC amount",
-  "INSUFFICIENT_AMOUNT_ETH": "Insufficient ETH amount",
+  "INSUFFICIENT_AMOUNT_ETH": "Insufficient ETH amount.",
   "INSUFFICIENT_AMOUNT_ETH_EXCHANGE_CONTRACT": "Insufficient ETH amount in the exchange contract",
   "MISSING_RENTAL_ID": "Missing rental id",
   "MISSING_RESERVATION_ID": "Missing reservation id",
@@ -41,7 +41,8 @@
   "INVALID_OBJECT": "Object is not valid",
   "ONLY_HOST": "Only host of the rental is allowed to this function",
   "INVALID_PERIOD": "Selected period is not correct - start date should be before end date",
-  "INVALID_PERIOD_START": "Selected period is not correct - start date should be after today",
+  "INVALID_PERIOD_START": "Selected start date is not correct",
+  "INVALID_PERIOD_END": "Selected end date is not correct",
   "INVALID_PERIOD_LENGTH": "Selected period is too long, max allowed days of booking are: ",
   "INVALID_PRICE": "Price should be more than 0",
   "INVALID_JSON": "The provided JSON file is not valid or empty",
@@ -51,5 +52,13 @@
   "INVALID_REFUND_DAYS_ARRAY": "Refund days array is not sorted right",
   "INVALID_REFUND_PARAMS": "Refund parameters are not correct",
   "INVALID_DISPUTE": "Its not allowed to open a dispute",
-  "ALREADY_OPENED_DISPUTE": "Dispute for this reservation is already opened"
+  "ALREADY_OPENED_DISPUTE": "Dispute for this reservation is already opened",
+  "INVALID_WITHDRAW_DATE": "The withdraw date is not valid",
+  "INVALID_ID_PARAM": "The id parameters are too long",
+  "INVALID_DATE_FOR_WITHDRAW": "The reservation is not ready for withdraw",
+  "WITHDRAW_ARRAY_GREATER_THAN_POSSIBLE": "The withdraw dates array is greater than the maximum possible",
+  "INVALID_WITHDRAWER": "The withdrawer and the address from the reservations are different",
+  "INVALID_BOOKING_FOR_WITHDRAW": "The reservation was already withdrawed",
+  "FAILED_APPROVE": "Network Error. Please, try again later"
+
 }

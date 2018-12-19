@@ -10,11 +10,18 @@
   "globalEndDateTimestampMinutes": 59,
   "globalEndDateTimestampSeconds": 59,
   "LOG_FILE_PATH": "./log/withdraw.log",
-  "TIMES_GAS_AMOUNT": 5,
-  "MIN_TIMES_GAS_AMOUNT": 2,
-  "HD_WALLET_PATH": "m/44'/60'/0'/0",
   "GAS_STATION_API": "https://ethgasstation.info/json/ethgasAPI.json",
   "JAVA_REST_API_SEND_FUNDS": "/sendFundsToAccount",
   "nonceMaxNumber": 5,
-  "maxRefundPeriods": 7
+  "maxRefundPeriods": 7,
+  "yearsForTimeValidation": 10,
+  "timestampInSecondsLength": 10,
+  "timestampInDaysLength": 5,
+  "bytesParamsLength": 32,
+  "yearInDays": 365,
+  "leapYearDay": 1,
+  "secondsInMilliSeconds": 1000,
+  "singleReservationWithdrawGas": 3000,
+  "successStatusCode": 1,
+  "failedSatusCode": 0
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
     Text,
     TouchableOpacity,
@@ -12,6 +13,8 @@ import { imgHost } from '../../../config';
 import _ from 'lodash';
 import styles from './styles';
 import FastImage from 'react-native-fast-image'
+import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
+import LocPrice from '../../atoms/LocPrice'
 
 const RNPropTypes = PropTypes || React.PropTypes;
 
@@ -19,15 +22,15 @@ class HomeItemView extends Component {
     static propTypes = {
         item: RNPropTypes.object,
         currencySign: RNPropTypes.string,
-        locRate: RNPropTypes.number,
+        currency: RNPropTypes.string,
         gotoHomeDetailPage: PropTypes.func.isRequired,        
         daysDifference: RNPropTypes.number,
     };
 
     static defaultProps = {
         item: [],
-        currencySign: undefined,
-        locRate: 0,
+        currencySign: '',
+        currency: '',
         daysDifference : 1,
     };
 
@@ -70,17 +73,23 @@ class HomeItemView extends Component {
 
     render() {
         const {
-            item, currencySign, locRate
+            item, currencySign, currency
         } = this.props;
         
-        let pictures = JSON.parse(item.pictures);
         let urlThumbnail = "";
-        if (pictures.length > 0) {
-            urlThumbnail = imgHost + pictures[0].thumbnail;
+        if (item.pictures != null) {
+            let pictures = JSON.parse(item.pictures);
+    
+            if (pictures.length > 0) {
+                urlThumbnail = imgHost + pictures[0].thumbnail;
+            }
         }
 
         let stars = item.averageRating;
-        let price = item.defaultDailyPrice / this.props.daysDifference;
+
+        const price = item.prices && currency === item.currency_code ? parseFloat(item.defaultDailyPrice, 10).toFixed() : parseFloat(item.prices[currency], 10).toFixed(2);
+        //let price = item.defaultDailyPrice / this.props.daysDifference;
+        const priceInRoomsCurrency = item.prices && item.prices[RoomsXMLCurrency.get()];
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
@@ -112,7 +121,7 @@ class HomeItemView extends Component {
                         <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
 
                         <View style={styles.aboutPlaceView}>
-                            <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text>
+                            {/* <Text style={styles.placeReviewText}>{this.ratingTitle(stars)}</Text> */}
                             <Text style={styles.placeReviewNumber}> {stars}/5 </Text>
                             <View style={styles.ratingIconsWrapper}>
                                 {this.renderStars(stars)}
@@ -122,7 +131,8 @@ class HomeItemView extends Component {
 
                         <View style={styles.costView}>
                             <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
-                            <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text>
+                            {/* <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text> */}
+                            <LocPrice style= {styles.costLoc} fiat={priceInRoomsCurrency}/>
                             <Text style={styles.perNight}>per night</Text>
                         </View>
                     </View>
@@ -132,4 +142,11 @@ class HomeItemView extends Component {
     }
 }
 
-export default HomeItemView;
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+    };
+}
+
+export default connect(mapStateToProps, null)(HomeItemView);

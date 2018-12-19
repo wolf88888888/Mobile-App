@@ -41,8 +41,8 @@ class Terms extends Component {
         this.setState({ showProgress: true });
         requester.register(user, null).then(res => {
             this.setState({ showProgress: false });
+            console.log(res);
             if (res.success) {
-                console.log(res);
                 navigate('CongratulationRegister')
             } else {
                 res.errors.then(data => {

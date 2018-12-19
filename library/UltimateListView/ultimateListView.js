@@ -197,10 +197,22 @@ export default class UltimateListView extends Component {
             }
         }
         this.setRows(refineHotels);
-        this.setState({ dataSource: this.rows });
+
+        if (this.rows.length > 0) {
+            this.setState({ dataSource: this.getRows() });
+        }
+        else {
+            this.setState( 
+                { 
+                    paginationStatus: PaginationStatus.allLoaded, 
+                    dataSource: this.getRows(),
+                } 
+            );
+        }
     }
 
     initListView = () => {
+        console.log("initListView");
         this.clearRows();
         this.clearPage();
         this.setState( 
@@ -590,6 +602,7 @@ export default class UltimateListView extends Component {
     }
 
     render() {
+        console.log("ultimateListView render");
         const { numColumns } = this.props
         return (
             <FlatList
@@ -610,6 +623,7 @@ export default class UltimateListView extends Component {
             />
         )
     }
+
 }
 
 const styles = StyleSheet.create({

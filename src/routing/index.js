@@ -58,13 +58,8 @@ import ReviewSend from '../components/screens/Booking/ReviewSend';
 import ReviewTrip from '../components/screens/Booking/ReviewTrip';
 import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
-import RoomDetailsReview from '../components/screens/RoomDetailsReview';
-import GuestInfoForm from '../components/screens/GuestInfoForm';
-
 import PropertyScreen from '../components/screens/Property';
-import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
-import HotelFilters from '../components/screens/HotelFilters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
@@ -78,8 +73,18 @@ import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
-import HotelsSearchScreen from '../components/screens/HotelsSearchScreen';
-import HomesSearchScreen from '../components/screens/HomesSearchScreen';
+import HotelsSearchScreen from '../components/screens/HotelsSearch/HotelsSearchScreen';
+import HotelFilters from '../components/screens/HotelsSearch/HotelFilters';
+import HotelDetails from '../components/screens/HotelsSearch/HotelDetails'
+import GuestInfoForm from '../components/screens/HotelsSearch/GuestInfoForm';
+import RoomDetailsReview from '../components/screens/HotelsSearch/RoomDetailsReview';
+
+import HomesSearchScreen from '../components/screens/HomeSearch/HomesSearchScreen';
+import HomeFilters from '../components/screens/HomeSearch/HomeFilters';
+import HomeDetails from '../components/screens/HomeSearch/HomeDetails';
+import HomeReview from '../components/screens/HomeSearch/HomeReview';
+import HomeRequestConfirm from '../components/screens/HomeSearch/HomeRequestConfirm';
+
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
@@ -119,6 +124,7 @@ const RootNavigator = createStackNavigator(
         CreateWallet: { screen: CreateWallet },
         WalletRecoveryKeywords: { screen: WalletRecoveryKeywords },
         WalletKeywordValidation: {screen: WalletKeywordValidation},
+
         CongratsWallet: { screen: CongratsWallet },
         CongratulationRegister: { screen: CongratulationRegister },
         MainScreen: { screen: MainNavigator },
@@ -138,7 +144,6 @@ const RootNavigator = createStackNavigator(
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
-        HotelFilterScreen: { screen: HotelFilters },
         AvailableRoomsView: { screen: AvailableRoomsView},
         Notifications: { screen: Notifications},
         CreditCard :  { screen: CreditCard},
@@ -156,7 +161,12 @@ const RootNavigator = createStackNavigator(
         Chat: {screen: Chat},
 
         HotelsSearchScreen: {screen: HotelsSearchScreen},
+        HotelFilterScreen: { screen: HotelFilters },
         HomesSearchScreen: {screen: HomesSearchScreen},
+        HomeFilterScreen: { screen: HomeFilters },
+        HomeDetailsScreen: { screen: HomeDetails },
+        HomeReviewScreen: { screen: HomeReview },
+        HomeRequestConfirm: { screen: HomeRequestConfirm },
         MapFullScreen: {screen: MapFullScreen}
     },
     {

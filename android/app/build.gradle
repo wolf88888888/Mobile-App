@@ -79,7 +79,7 @@ project.ext.react = [
 apply from: "../../node_modules/react-native/react.gradle"
 
 project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'SimpleLineIcons.ttf'] // Name of the font files you want to copy
+    iconFontNames: [ 'MaterialIcons.ttf', 'SimpleLineIcons.ttf', 'FontAwesome.ttf'] // Name of the font files you want to copy
 ]
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
@@ -106,7 +106,7 @@ android {
         applicationId "com.locktrip"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 15
+        versionCode 19
         versionName "1.0." + versionCode
         multiDexEnabled  true
         ndk {
@@ -170,7 +170,7 @@ android {
           // Or, if you prefer, you can continue to check for errors in release builds,
           // but continue the build even when errors are found:
           abortOnError false
-      }
+    }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -184,6 +184,7 @@ android {
             }
         }
     }
+
 }
 
 dependencies {
@@ -215,7 +216,9 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.facebook.fresco:animated-gif:1.9.0'
     
-    implementation project(':react-native-fast-image')
+    implementation (project(':react-native-fast-image')) {
+        exclude group: "com.android.support"
+    }
     implementation project(':react-native-vector-icons')
 }
 

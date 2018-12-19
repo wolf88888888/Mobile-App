@@ -2,7 +2,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    View
+    View,
+    ScrollView
 } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -23,18 +24,18 @@ class CreateAccount extends Component {
     constructor(props) {
         super(props);
         this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.getCountriesForSignup = this.getCountriesForSignup.bind(this);
         this.state = {
+            countries: [],
+            countryStates: [],
+            hasCountryState: false,
             firstName: '',
             lastName: '',
             email: '',
-            country: '',
             userWantsPromo: true,
             checkZIndex: 1, // zIndex of switchCheckView
-            countries: [],
             countriesLoaded: false,
-            countryId: undefined,
-            countryName: undefined
+            country: undefined,
+            countryState: undefined,
         };
         this.animationTime = 150; // time for switch to slide from one end to the other
         
@@ -45,7 +46,6 @@ class CreateAccount extends Component {
             this.state.lastName = params.lastName;
             this.state.email = params.email;
         }
-        // this.getCountriesForSignup();
     }
 
     
@@ -78,53 +78,80 @@ class CreateAccount extends Component {
         this.setState({
             countries: countryArr,
             countriesLoaded: true,
-            countryId: countryArr[0].value.id,
-            countryName: countryArr[0].label,
+            // country: countryArr[0].value,
         });
     }
 
-    getCountriesForSignup() {
-        // requester.getCountries(true).then(res => {
-        //     res.body.then(data => {
-        //         console.log("getCountriesForSignup -------------- ", data);
-        //         countryArr = [];
-        //         data.map((item, i) => {
-        //             countryArr.push({
-        //                 'label': item.name,
-        //                 'value': item
-        //             });
-                    
-        //         });
-        //         this.setState({
-        //             countries: countryArr,
-        //             countriesLoaded: true,
-        //             countryId: countryArr[0].value.id,
-        //             countryName: countryArr[0].label,
-        //         });
-        //     });
-        // });
+    hasCountryState = (country) => {
+        if (country == undefined || country == 0) {
+            return false;
+        }
+        
+        return ['Canada', 'India', 'United States of America'].includes(country.name);
+    }
+
+    
+    setCountryStates = (states) => {
+        countryStates = [];
+        states.map((item, i) => {
+            countryStates.push({
+                'label': item.name,
+                'value': item
+            });
+            
+        });
+        this.setState({
+            countryStates,
+        });
+    }
+
+    onCountrySelected = (value) => {
+        console.log("onCountrySelected", value);
+        const hasCountryState = this.hasCountryState(value);
+        this.setState({
+            // countryId: value.id,
+            // countryName: value.name,
+            country: value != 0 ? value : undefined,
+            countryStates: [],
+            hasCountryState: hasCountryState,
+            countryState: '',
+        });
+
+        if (hasCountryState) {
+            requester.getStates(value.id).then(res => {
+                res.body.then(data => {
+                    console.log("countryStates", data);
+                    this.setCountryStates(data);
+                });
+            });
+        }
     }
 
     goToNextScreen() {
+        console.log("state", this.state);
+        if (this.state.hasCountryState && (this.state.countryState == undefined || this.state.countryState == '')) {
+            Toast.showWithGravity('Please Select State of Country.', Toast.SHORT, Toast.BOTTOM);
+            return;
+        }
         const { params } = this.props.navigation.state;
 
         if (params != undefined && params != null) {
             const {
-                firstName, lastName, email, country, userWantsPromo, checkZIndex
+                firstName, lastName, email, country, userWantsPromo, checkZIndex, countryState
             } = this.state;
-            if (country === undefined || country === '') {
+            if (country === undefined || country === null) {
                 Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
             }
             else {
-                this.props.navigation.navigate('Terms', { ...params, firstName, lastName, email, country, userWantsPromo })
+                this.props.navigation.navigate('Terms', { ...params, firstName, lastName, email, country: country.id, countryState: countryState.id, userWantsPromo })
             }
         }
         else {
             const {
-                firstName, lastName, email, country, userWantsPromo, checkZIndex
+                firstName, lastName, email, country, userWantsPromo, checkZIndex, countryState
             } = this.state;
             
-            if (country === undefined || country === '') {
+            if (country === undefined || country === null) {
                 Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
             }
             else {
@@ -134,7 +161,7 @@ class CreateAccount extends Component {
                             Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.BOTTOM);
                         } else {
                             this.props.navigation.navigate('CreatePassword', {
-                                firstName, lastName, email, country, userWantsPromo
+                                firstName, lastName, email, country: country.id, countryState: countryState.id, userWantsPromo
                             })
                         }
                     });
@@ -145,7 +172,7 @@ class CreateAccount extends Component {
 
     render() {
         const {
-            firstName, lastName, email, country, userWantsPromo, checkZIndex
+            firstName, lastName, email, userWantsPromo, checkZIndex
         } = this.state;
         const { params } = this.props.navigation.state;
         const { navigate, goBack } = this.props.navigation;
@@ -164,6 +191,7 @@ class CreateAccount extends Component {
                 enableAutoAutomaticScroll={(Platform.OS === 'ios')}
             >
                 <View style={styles.main_container}>
+                    <ScrollView  style={styles.scrollView} automaticallyAdjustContentInsets={true}>
                     <WhiteBackButton style={styles.closeButton} onPress={() => goBack()} />
                     
                     <View style={styles.lowOpacity}>
@@ -218,20 +246,31 @@ class CreateAccount extends Component {
                                     label: 'Country of Residence',
                                     value: 0
                                 }}
-                                onValueChange={(value) => {
-                                    this.setState({
-                                        countryId: value.id,
-                                        countryName: value.name,
-                                        //country: value.name,
-                                        country: value.id,
-                                        value: value
-                                    });
-                                }}
+                                onValueChange={(value) => this.onCountrySelected(value)}
                                 style={{...pickerSelectStyles}}
                             >
                             </RNPickerSelect>
                         </View>
-
+                        {
+                            this.state.hasCountryState && (
+                                <View style={styles.inputView}>
+                                    <RNPickerSelect
+                                        items={this.state.countryStates}
+                                        placeholder={{
+                                            label: 'State of Residence',
+                                            value: 0
+                                        }}
+                                        onValueChange={(value) => {
+                                            this.setState({
+                                                countryState: value
+                                            });
+                                        }}
+                                        style={{...pickerSelectStyles}}
+                                    >
+                                    </RNPickerSelect>
+                                </View>
+                            )
+                        }
                         <View style={styles.finePrintView}>
                             <Text style={styles.finePrintText}>
                                 I'd like to receive promotional communications, including discounts,
@@ -281,6 +320,7 @@ class CreateAccount extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    </ScrollView>
                 </View>
             </KeyboardAwareScrollView>
         );
