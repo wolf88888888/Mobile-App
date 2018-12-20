@@ -274,7 +274,7 @@ class HotelsSearchScreen extends Component {
     }
 
     gotoHotelDetailsPageByList = (item) => {
-        console.log("gotoHotelDetailsPage", item);
+        // console.log("gotoHotelDetailsPage", item, this.searchString.substring(1), this.searchString.substring(1).split('&'));
         
         if (item.price == null || item.price == undefined) {
             return;
@@ -568,7 +568,7 @@ class HotelsSearchScreen extends Component {
 
     getSearchString = () => {
         let search = `?region=${this.state.regionId}`;
-        search += `&currency=${this.state.currency}`;
+        search += `&currency=${this.props.currency}`;
         search += `&startDate=${this.state.checkInDateFormated}`;
         search += `&endDate=${this.state.checkOutDateFormated}`;
         search += `&rooms=${this.state.roomsDummyData}`;
@@ -884,6 +884,12 @@ class HotelsSearchScreen extends Component {
         }
     }
 }
-export default HotelsSearchScreen;//connect(mapStateToProps, null)(HotelsSearchScreen);
+
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+    };
+}
+export default connect(mapStateToProps, null)(HotelsSearchScreen);
 
 // export default withNavigation(Property);
