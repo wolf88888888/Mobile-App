@@ -22,17 +22,17 @@ class LocPrice extends Component {
         let isLocPriceRendered = false;
         let fiatInEur;
     
-        // if (this.props.exchangeRates.currencyExchangeRates) {
-        //     fiatInEur = this.props.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(this.props.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.fiat);
+        if (this.props.exchangeRates.currencyExchangeRates) {
+            fiatInEur = this.props.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(this.props.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.fiat);
         
-        //     WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
-        //     isLocPriceRendered = true;
-        // }
+            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
+            isLocPriceRendered = true;
+        }
     
-        // this.state = {
-        //     fiatInEur,
-        //     isLocPriceRendered
-        // };
+        this.state = {
+            fiatInEur,
+            isLocPriceRendered
+        };
     }
 
 	componentDidMount() {
@@ -48,36 +48,31 @@ class LocPrice extends Component {
 		// ];
 	}
     
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.isLocPriceWebsocketConnected &&
-    //         nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
-    //         WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
-    //     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isLocPriceWebsocketConnected &&
+            nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
+            WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
+        }
     
-    //     if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
-    //         const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.fiat);
+        if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
+            const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.fiat);
         
-    //         WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
-    //         this.setState({
-    //             isLocPriceRendered: true,
-    //             fiatInEur
-    //         });
-    //     }
-    // }
+            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
+            this.setState({
+                isLocPriceRendered: true,
+                fiatInEur
+            });
+        }
+    }
     
     componentWillUnmount() {
         console.log("LocPrice - componentWillUnmount");
-        // console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
-        // WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
-        // if (this.props.locAmount) {
-        //     removeLocAmount(this.state.fiatInEur);
-        // }
+        console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
+        WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
+        if (this.props.locAmount) {
+            removeLocAmount(this.state.fiatInEur);
+        }
     }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log("LocPrice - shouldComponentUpdate", this.isStop);
-    //     return this.isStop;  
-    // }
 
     render() {
         console.log("LOC Price render");
@@ -120,9 +115,9 @@ let mapStateToProps = (state, ownProps) => {
     const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, DEFAULT_CRYPTO_CURRENCY, fiat);
 
     // console.log("LOC Price ----", currencyCode, fiatInEur);
-    // let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
-    let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] 
-        && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
+    let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
+    // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] 
+    //     && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
 
     if (!locAmount) {
         locAmount = (fiatInEur / exchangeRates.locEurRate).toFixed(2);
