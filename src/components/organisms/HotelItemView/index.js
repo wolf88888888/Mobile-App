@@ -101,6 +101,7 @@ class HotelItemView extends Component {
         let price = exchangeRates.currencyExchangeRates && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, item.price)) / this.props.daysDifference).toFixed(2);
 
         // let price = item.price / this.props.daysDifference;
+        // console.log("HotelItemView urlThumb", urlThumbnail);
         
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>

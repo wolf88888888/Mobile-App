@@ -50,7 +50,7 @@ class WS {
                 const seconds = Math.round(data.params.secondsLeft / 1000);
                 store.dispatch(setSeconds(seconds));
             }
-            store.dispatch(updateLocAmounts({fiatAmount: data.id, params: data.params, error: data.error}));
+            // store.dispatch(updateLocAmounts({fiatAmount: data.id, params: data.params, error: data.error}));
         }
     }
 

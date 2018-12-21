@@ -46,17 +46,6 @@ class AvailableRoomsView extends Component {
         console.log ("AvailableRoomsView", props);
     }
 
-    renderLoader() {
-        return (
-            <View style={{
-                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
-            }}
-            >
-                <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
-            </View>
-        );
-    }
-
     componentDidMount() {
         let request = this.props.search.replace(/\?/ig, "")
         requester.getHotelRooms(this.props.id, request.split('&')).then(res => {
@@ -86,13 +75,14 @@ class AvailableRoomsView extends Component {
                     (b.roomsResults[0].price < a.roomsResults[0].price ? 1 : 0)
         })
     }
+
     renderRoom = (rowData) => {
         const {
-            exchangeRates, currency, currencySign, daysDifference, onBooking
+            currencyExchangeRates, currency, currencySign, daysDifference, onBooking
         } = this.props;
         let price = undefined;
         if (rowData.roomsResults[0].price != undefined)
-            price = exchangeRates.currencyExchangeRates && (CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, (rowData.roomsResults[0].price) * daysDifference)).toFixed(2);
+            price = currencyExchangeRates && (CurrencyConverter.convert(currencyExchangeRates, RoomsXMLCurrency.get(), currency, (rowData.roomsResults[0].price) * daysDifference)).toFixed(2);
 
         return (
             <TouchableOpacity onPress={() => {onBooking(rowData)}}>
@@ -119,6 +109,17 @@ class AvailableRoomsView extends Component {
                     <Text style={styles.book}>Book Now</Text>
                 </CardView>
             </TouchableOpacity>
+        );
+    }
+
+    renderLoader() {
+        return (
+            <View style={{
+                flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 10
+            }}
+            >
+                <Image style={{width:35, height:35}} source={require('../../../assets/loader.gif')}/>
+            </View>
         );
     }
 
@@ -158,7 +159,7 @@ let mapStateToProps = (state) => {
         currency: state.currency.currency,
         currencySign: state.currency.currencySign,
         
-        exchangeRates: state.exchangeRates,
+        currencyExchangeRates: state.exchangeRates.currencyExchangeRates,
     };
 }
 

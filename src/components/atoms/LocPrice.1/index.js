@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Text, AppState } from 'react-native';
+import { Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 import { WebsocketClient } from '../../../utils/exchangerWebsocket';
@@ -31,50 +31,21 @@ class LocPrice extends Component {
     
         this.state = {
             fiatInEur,
-            isLocPriceRendered,
-            appState: AppState.currentState
-            // locAmount: 0
+            isLocPriceRendered
         };
     }
 
-    // componentWillUpdate() {
-    //     let { fiat, currencyCode } = this.props;
-
-    //     // console.log("LOC Price ----", currencyCode, fiat);
-
-    //     // if (currencyCode === undefined || currencyCode === '') {
-    //     //     currencyCode = RoomsXMLCurrency.get();
-    //     // }
-
-    //     // const { locAmounts, exchangeRates } = state;
-
-    //     // const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, DEFAULT_CRYPTO_CURRENCY, fiat);
-
-    //     // // console.log("LOC Price ----", currencyCode, fiatInEur);
-    //     // let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
-    //     // // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] 
-    //     // //     && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
-
-    //     // if (!locAmount) {
-    //     //     locAmount = (fiatInEur / exchangeRates.locEurRate).toFixed(2);
-    //     // }
-
-    //     this.setState({locAmount});
-    // }
-
 	componentDidMount() {
         console.log("LocPrice - componentDidMount");
-		this.list = [
-			this.props.navigation.addListener('didFocus', 
-            payload => {
-              console.debug('LocPrice - didFocus', payload);
-            }),
-			this.props.navigation.addListener('willBlur', payload => {
-                console.debug('LocPrice - willBlur', payload);
-            })
-        ];
-        
-        AppState.addEventListener('change', this._handleAppStateChange);
+		// this.list = [
+		// 	this.props.navigation.addListener('didFocus', 
+        //     payload => {
+        //       console.debug('LocPrice - didFocus', payload);
+        //     }),
+		// 	this.props.navigation.addListener('willBlur', payload => {
+        //         console.debug('LocPrice - willBlur', payload);
+        //     })
+		// ];
 	}
     
     componentWillReceiveProps(nextProps) {
@@ -96,21 +67,13 @@ class LocPrice extends Component {
     }
     
     componentWillUnmount() {
+        console.log("LocPrice - componentWillUnmount");
         console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
         WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
         if (this.props.locAmount) {
             removeLocAmount(this.state.fiatInEur);
         }
-        AppState.removeEventListener('change', this._handleAppStateChange);
     }
-
-    _handleAppStateChange = (nextAppState) => {
-        console.log('_handleAppStateChange!', nextAppState)
-        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-          console.log('App has come to the foreground!')
-        }
-        this.setState({appState: nextAppState});
-      }
 
     shouldComponentUpdate(nextProps, nextState) {
         return false;

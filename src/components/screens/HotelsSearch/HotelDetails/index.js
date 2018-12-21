@@ -37,37 +37,24 @@ class HotelDetails extends Component {
         this.onClose = this.onClose.bind(this);
         this.onFacilityMore = this.onFacilityMore.bind(this);
 
-        this.state = {
-            hotel: {},
-            hotelFullDetails: [],
-            hotelAmenities: [],
-            dataSourcePreview: [],
-            description: '',
-            searchString: '',
-            guests: 0,
-            mainAddress: '',
-            countryName: '',
-            latitude: 37.78825,
-            longitude: -122.4324,
-            hotelRatingStars: 0,
-            daysDifference: 1
-        }
-
         const { params } = this.props.navigation.state;
-        this.state.hotel = params ? params.hotelDetail : [];
-        this.state.guests = params ? params.guests : 0;
-        this.state.searchString = params ? params.searchString : '';
-        this.state.hotelFullDetails = params ? params.hotelFullDetails : [];
-        this.state.hotelAmenities = params ? params.hotelFullDetails.hotelAmenities : [];
-        this.state.mainAddress = params ? params.hotelFullDetails.additionalInfo.mainAddress : '';
-        this.state.regionName = params ? params.hotelFullDetails.city : '';
-        this.state.countryName = params ? params.hotelFullDetails.country : '';
-        this.state.description = params ? params.hotelFullDetails.generalDescription : '';
-        this.state.latitude = params ? params.hotelFullDetails.latitude : 0.0;
-        this.state.longitude = params ? params.hotelFullDetails.longitude : 0.0;
-        this.state.dataSourcePreview = params ? params.dataSourcePreview : [];
-        this.state.hotelRatingStars = params ? params.hotelDetail.stars : 0;
-        this.state.daysDifference = params ? params.daysDifference : 1;
+
+        this.state = {
+            hotel: params ? params.hotelDetail : [],
+            guests: params ? params.guests : 0,
+            searchString: params ? params.searchString : '',
+            hotelFullDetails: params ? params.hotelFullDetails : [],
+            hotelAmenities: params ? params.hotelFullDetails.hotelAmenities : [],
+            mainAddress: params ? params.hotelFullDetails.additionalInfo.mainAddress : '',
+            dataSourcePreview: params ? params.dataSourcePreview : [],
+            regionName: params ? params.hotelFullDetails.city : '',
+            countryName: params ? params.hotelFullDetails.country : '',
+            description: params ? params.hotelFullDetails.generalDescription : '',
+            latitude: params ? params.hotelFullDetails.latitude : 0.0,
+            longitude: params ? params.hotelFullDetails.longitude : 0.0,
+            hotelRatingStars: params ? params.hotelDetail.stars : 0,
+            daysDifference: params ? params.daysDifference : 1
+        }
     }
 
     onMapTap() {
