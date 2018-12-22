@@ -99,20 +99,11 @@ class AvailableRoomsView extends Component {
     getTotalPrice = (room) => {
         let total = 0;
         for (let i = 0; i < room.length; i++) {
-          total += room[i].price;
+            total += room[i].price;
         }
     
         return total;
-      };
-
-    sortArray(array, key) {
-        return array.sort(function (a, b) {
-            return b.roomsResults[0].price > a.roomsResults[0].price ? 
-                    -1
-                : 
-                    (b.roomsResults[0].price < a.roomsResults[0].price ? 1 : 0)
-        })
-    }
+    };
 
     renderRoom = ({item}) => {
         console.log("renderRoom", item);
