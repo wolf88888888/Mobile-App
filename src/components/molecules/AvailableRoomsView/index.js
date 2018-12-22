@@ -105,7 +105,7 @@ class AvailableRoomsView extends Component {
         return total;
     };
 
-    renderRoom = ({item}) => {
+    renderRoom = (item) => {
         console.log("renderRoom", item);
         if (item.length > 0 && item[0].roomsResults) {
             let rowData = item[0];
@@ -124,7 +124,7 @@ class AvailableRoomsView extends Component {
                         cardMaxElevation={1.5}
                         cornerRadius={0}>
                         {
-                            rowData.roomsResults.map((room, roomInde) => {
+                            rowData.roomsResults.map((room, roomIndex) => {
                                 return (
                                     <Text style={styles.name} numberOfLines={1} ellipsizeMode ={'tail'}>{room.name + "(" + room.mealType + ")"}</Text>
                                 );
@@ -172,19 +172,34 @@ class AvailableRoomsView extends Component {
                 <Text style={styles.title}>Available Rooms</Text>
                 {
                     !this.state.loading > 0 ? 
-                        <FlatList
-                            style={{ marginLeft: 0, marginRight: 0 }}
-                            keyExtractor={(item, index) => {index}}
-                            data={rooms}
-                            showsVeticalScrollIndicator={false}
-                            renderItem={this.renderRoom}/>
+                        <View>
+                            {
+                                rooms && rooms.length > 0 && 
+                                (
+                                    <View>
+                                        {
+                                            rooms.map((results, resultIndex) => {
+                                                return this.renderRoom(results);
+                                            })
+                                        }
+                                    </View>
+                                )
+                            }
+                        </View>
                         
+    // <FlatList
+    // style={{ marginLeft: 0, marginRight: 0 }}
+    // keyExtractor={(item, index) => {index}}
+    // data={rooms}
+    // showsVeticalScrollIndicator={false}
+    // renderItem={this.renderRoom}/>
                     :
                         this.renderLoader()
                 }
             </View>
         );
     }
+
     // onRoomPress = (roomDetail) => {
     //     console.log("onRoomPress", roomDetail, this.props);
     //     this.props.navigate('GuestInfoForm', { 
