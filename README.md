@@ -72,3 +72,7 @@ Now you can run `npm run flow` (or `yarn flow`) to check the files for type erro
 You can optionally use a [plugin for your IDE or editor](https://flow.org/en/docs/editors/) for a better integrated experience.
 
 To learn more about Flow, check out [its documentation](https://flow.org/).
+
+
+BUILDING ISSUE FOR IOS 12, XCODE 10.1
+https://zivost.com/blog/xcode-10-causes-haywire-for-react-native-developers/
