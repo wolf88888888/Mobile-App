@@ -5,6 +5,7 @@ import {
     View,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { withNavigation } from 'react-navigation';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 import CardView from 'react-native-cardview'
@@ -18,12 +19,9 @@ import LocPrice from '../../atoms/LocPrice'
 
 import styles from './styles';
 
-
-const RNPropTypes = PropTypes || React.PropTypes;
-
 class HotelItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.object | RNPropTypes.array,
+        item: PropTypes.object | PropTypes.array,
         gotoHotelDetailsPage: PropTypes.func.isRequired,
         daysDifference: PropTypes.number,
         isDoneSocket: PropTypes.bool.isRequired
@@ -146,7 +144,7 @@ class HotelItemView extends Component {
                             <View style={styles.costView}>
                                 <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
                                 {/* <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text> */}
-                                <LocPrice style= {styles.costLoc} fiat={item.price / this.props.daysDifference}/>
+                                <LocPrice style= {styles.costLoc} fiat={item.price / this.props.daysDifference} fromParentType={0}/>
                                 <Text style={styles.perNight}>per night</Text>
                             </View>
                         :
@@ -175,4 +173,4 @@ let mapStateToProps = (state) => {
         exchangeRates: state.exchangeRates,
     };
 }
-export default connect(mapStateToProps, null)(HotelItemView);
+export default connect(mapStateToProps, null)(withNavigation(HotelItemView));

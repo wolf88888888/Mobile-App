@@ -16,15 +16,13 @@ import FastImage from 'react-native-fast-image'
 import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
 import LocPrice from '../../atoms/LocPrice'
 
-const RNPropTypes = PropTypes || React.PropTypes;
-
 class HomeItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.object,
-        currencySign: RNPropTypes.string,
-        currency: RNPropTypes.string,
+        item: PropTypes.object,
+        currencySign: PropTypes.string,
+        currency: PropTypes.string,
         gotoHomeDetailPage: PropTypes.func.isRequired,        
-        daysDifference: RNPropTypes.number,
+        daysDifference: PropTypes.number,
     };
 
     static defaultProps = {

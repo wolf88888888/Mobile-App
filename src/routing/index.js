@@ -193,8 +193,8 @@ class ReduxNavigation extends PureComponent {
     }
   
     onBackPress = () => {
-         const { dispatch, navigation } = this.props;
-        if (navigation.index === 0) {
+         const { dispatch, state } = this.props;
+        if (state.index === 0) {
             return false;
         }
     
@@ -203,13 +203,13 @@ class ReduxNavigation extends PureComponent {
     };
   
     render() {
-        const { dispatch, navigation } = this.props;
-        return <AppWithNavigationState dispatch={dispatch} state={navigation}/>;
+        const { dispatch, state } = this.props;
+        return <AppWithNavigationState dispatch={dispatch} state={state}/>;
     }
 }
 
 const mapNavStateProps = state => ({
-    navigation: state.nav
+    state: state.nav
 });
 
 const AppNavigator = connect(mapNavStateProps)(ReduxNavigation);

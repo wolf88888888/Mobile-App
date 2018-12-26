@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Dimensions, Image } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import _ from 'lodash';
 
 import styles from './styles';

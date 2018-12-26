@@ -24,6 +24,7 @@ import { TabView } from 'react-native-tab-view';
 
 import ListModeHotelsSearch from '../ListModeHotelsSearch'
 import MapModeHotelsSearch from '../MapModeHotelsSearch'
+import { WebsocketClient } from '../../../../utils/exchangerWebsocket';
 
 import styles from './styles';
 
@@ -122,10 +123,14 @@ class HotelsSearchScreen extends Component {
         if(this.state.isHotel) {
             this.getHotels();
         }
+
+        WebsocketClient.startGrouping();
     }
 
     componentWillUnmount() {
         this.unsubscribe();
+
+        WebsocketClient.stopGrouping();
     }
 
     getHotels() {
@@ -150,7 +155,7 @@ class HotelsSearchScreen extends Component {
     
                     console.log("getStaticHotels", content);
                     const hotels = content;
-                     this.listView.onFirstLoad(hotels, false);
+                    this.listView.onFirstLoad(hotels, false);
                     this.getHotelsInfoBySocket();
                 });
             });
@@ -776,6 +781,7 @@ class HotelsSearchScreen extends Component {
         switch (route.key) {
             case 'list':
                 return <ListModeHotelsSearch 
+                            navigation = {this.props.navigation}
                             ref = {ref => this.listView = ref}
                             allElements = {this.state.allElements}
                             daysDifference = {this.state.daysDifference}

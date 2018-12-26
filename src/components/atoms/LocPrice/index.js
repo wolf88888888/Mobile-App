@@ -15,7 +15,7 @@ import styles from './styles';
 const DEFAULT_CRYPTO_CURRENCY = 'EUR';
 
 class LocPrice extends Component {
-    isStop = false;
+    isPause = false;
     constructor(props) {
         super(props);
 
@@ -39,34 +39,36 @@ class LocPrice extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.isStop) {
-            return;
+        const { fromParentType } = this.props;
+        if (fromParentType == 0) { // hotel search
+            if (!this.isPause && nextProps.nav.routes.length > 2 && this.props.nav.routes.length === 2 && this.props.nav.routes[1].routeName ==="HotelsSearchScreen") {
+                this.pauseWebocket(nextProps);
+            }
+            else if (this.isPause && this.props.nav.routes.length > 2 && nextProps.nav.routes.length === 2 && nextProps.nav.routes[1].routeName ==="HotelsSearchScreen") {
+                this.resumeWebsocket(nextProps);
+            }
         }
-        console.log("LocPrice  componentWillReceiveProps");
-        if (nextProps.isLocPriceWebsocketConnected &&
-            nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
-            WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
-        }
-    
-        if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
-            const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, this.props.currencyCode, RoomsXMLCurrency.get(), this.props.fiat);
-            // const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.fiat);
+        else {
+            if (this.isPause) {
+                return;
+            }
+            if (nextProps.isLocPriceWebsocketConnected &&
+                nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
+                WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
+            }
         
-            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
-            this.setState({
-                isLocPriceRendered: true,
-                fiatInEur
-            });
+            if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
+                const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, this.props.currencyCode, RoomsXMLCurrency.get(), this.props.fiat);
+                // const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.fiat);
+            
+                WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
+                this.setState({
+                    isLocPriceRendered: true,
+                    fiatInEur
+                });
+            }
         }
     }
-
-	componentWillMount() {
-		this.list = [
-			this.props.navigation.addListener('didFocus', this._didFocus),
-			this.props.navigation.addListener('willBlur', this._willBlur)
-		];
-	}
-    
     
     componentWillUnmount() {
         console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
@@ -74,18 +76,18 @@ class LocPrice extends Component {
         if (this.props.locAmount) {
             removeLocAmount(this.state.fiatInEur);
         }
-        
-		if (this.list !== undefined && this.list !== null) {
-			this.list.forEach( item => item.remove() )
-		}
     }
 
-    _didFocus() {
-        console.log("LocPrice - _didFocus");
+    resumeWebsocket() {
+        console.log("LocPrice  resumeWebsocket");
+        this.isPause = false;
+        WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
     }
 
-    _willBlur() {
-        console.log("LocPrice - _willBlur");
+    pauseWebocket() {
+        console.log("LocPrice  pauseWebocket");
+        this.isPause = true;
+        WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
     }
 
     render() {
@@ -111,29 +113,30 @@ class LocPrice extends Component {
 
 LocPrice.propTypes = {
     hasBacket: PropTypes.bool,
-    currencyCode: PropTypes.string
+    currencyCode: PropTypes.string,
+    fromParentType : PropTypes.number
 };
 
 LocPrice.defaultProps = {
     hasBacket: true,
-    currencyCode: ''
+    currencyCode: '',
+    fromParentType : -1
 };
 
 let mapStateToProps = (state, ownProps) => {
-    let { fiat, currencyCode} = ownProps;
+    let { fiat, currencyCode, fromParentType} = ownProps;
+
+    const { exchangerSocket, locAmounts, exchangeRates, nav } = state;
 
     if (currencyCode === undefined || currencyCode === '') {
         currencyCode = RoomsXMLCurrency.get();
     }
-
-    const { exchangerSocket, locAmounts, exchangeRates } = state;
 
     let fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, DEFAULT_CRYPTO_CURRENCY, fiat);
     
     // const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
     let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);
     // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] && (locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount * fiatInEur / exchangeRates.locRateFiatAmount).toFixed(2);
-
     if (!locAmount) {
         locAmount = (fiatInEur / exchangeRates.locEurRate).toFixed(2);
     }
@@ -142,7 +145,8 @@ let mapStateToProps = (state, ownProps) => {
         isLocPriceWebsocketConnected: exchangerSocket.isLocPriceWebsocketConnected,
         currencyCode,
         locAmount,
-        exchangeRates
+        exchangeRates, 
+        nav
     };
 }
 

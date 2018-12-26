@@ -15,10 +15,14 @@ const WEBSOCKET_RECONNECT_DELAY = 5000;
 const DEFAULT_SOCKET_METHOD = 'getLocPrice';
 
 class WS {
+    static self;
     constructor() {
+        WS.self = this;
         this.ws = null;
+        this.grouping = false;
         this.shoudSocketReconnect = true;
         this.initSocket();
+        this.locAmounts = [];
     }
 
     initSocket() {
@@ -28,6 +32,14 @@ class WS {
         this.ws.onclose = () => { 
             this.close(this); 
         };
+    }
+
+    startGrouping(){
+        this.grouping = true;
+    }
+
+    stopGrouping() {
+        this.grouping = false;
     }
 
     connect() {
@@ -44,13 +56,19 @@ class WS {
 
     handleRecieveMessage(event) {
         if (event) {
-            console.log("handleRecieveMessage", event.data);
+            console.log("handleRecieveMessage", event.data, WS.self.grouping);
             const data = JSON.parse(event.data);
             if (data.params && data.params.secondsLeft) {
                 const seconds = Math.round(data.params.secondsLeft / 1000);
                 store.dispatch(setSeconds(seconds));
             }
-            // store.dispatch(updateLocAmounts({fiatAmount: data.id, params: data.params, error: data.error}));
+            if (!WS.self.grouping) {
+                store.dispatch(updateLocAmounts({fiatAmount: data.id, params: data.params, error: data.error}));
+            }
+            else {
+                console.log("handleRecieveMessage gropuing", WS.self.locAmounts);
+                WS.self.locAmounts = [...WS.self.locAmounts, {fiatAmount: data.id, params: data.params, error: data.error}];
+            }
         }
     }
 
