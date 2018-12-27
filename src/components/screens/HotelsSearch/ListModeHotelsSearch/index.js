@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Dimensions, Image } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import _ from 'lodash';
 
 import styles from './styles';
@@ -26,14 +25,6 @@ class ListModeHotelsSearch extends Component {
             daysDifference: props.daysDifference,
         };
     }
-
-	// shouldComponentUpdate(nextProps) {
-    //     if (this.isRefresh) {
-    //         this.isRefresh = false;
-    //         return true;
-    //     }
-	// 	return false;
-	// }
 
     componentDidUpdate(prevProps) {
         // if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {

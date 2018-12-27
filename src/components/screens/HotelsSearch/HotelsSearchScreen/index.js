@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions, WebView, Modal } from 'react-native';
+import { Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, Dimensions } from 'react-native';
 
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import Image from 'react-native-remote-svg';
 
 import { imgHost } from '../../../../config';
 import SearchBar from '../../../molecules/SearchBar';
@@ -14,8 +10,6 @@ import DateAndGuestPicker from '../../../organisms/DateAndGuestPicker';
 import requester from '../../../../initDependencies';
 
 import UUIDGenerator from 'react-native-uuid-generator';
-import { UltimateListView } from '../../../../../library/UltimateListView';
-import { DotIndicator } from 'react-native-indicators';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import _ from 'lodash';
 import moment from 'moment';
@@ -793,6 +787,7 @@ class HotelsSearchScreen extends Component {
                             isFilterResult = {this.state.isFilterResult}
                             initialLat = {this.state.initialLat}
                             initialLon = {this.state.initialLon}
+                            daysDifference = {this.state.daysDifference}
                             hotelsInfo = {this.state.hotelsInfo}
                             gotoHotelDetailsPage = {this.gotoHotelDetailsPageByMap} />;
             default:
@@ -893,7 +888,7 @@ class HotelsSearchScreen extends Component {
 
 let mapStateToProps = (state) => {
     return {
-        currency: state.currency.currency,
+        currency: state.currency.currency
     };
 }
 export default connect(mapStateToProps, null)(HotelsSearchScreen);

@@ -5,7 +5,6 @@ import {
     View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { withNavigation } from 'react-navigation';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
 import CardView from 'react-native-cardview'
@@ -74,17 +73,9 @@ class HotelItemView extends Component {
 
     render() {
         const {
-            item, currencySign, isDoneSocket, exchangeRates, currency, locAmounts
+            item, currencySign, isDoneSocket, exchangeRates, currency
         } = this.props;
         
-        // const fiat = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, exchangeRates.locRateFiatAmount);
-        // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] && locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount;
-        // if (!locAmount) {
-        //     locAmount = exchangeRates.locRateFiatAmount / exchangeRates.locEurRate;
-        // }
-        // let locRate = fiat / locAmount;
-        // let locRate = 1.0;
-
         let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
                  (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
                  : 
@@ -97,10 +88,7 @@ class HotelItemView extends Component {
         }
 
         let price = exchangeRates.currencyExchangeRates && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, item.price)) / this.props.daysDifference).toFixed(2);
-
-        // let price = item.price / this.props.daysDifference;
-        // console.log("HotelItemView urlThumb", urlThumbnail);
-        
+      
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
                 <CardView 
@@ -173,4 +161,4 @@ let mapStateToProps = (state) => {
         exchangeRates: state.exchangeRates,
     };
 }
-export default connect(mapStateToProps, null)(withNavigation(HotelItemView));
+export default connect(mapStateToProps, null)(HotelItemView);

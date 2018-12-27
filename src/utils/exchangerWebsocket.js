@@ -36,10 +36,21 @@ class WS {
 
     startGrouping(){
         this.grouping = true;
+        this.timer = setInterval(this.onTick, 20 * 1000);
     }
 
     stopGrouping() {
         this.grouping = false;
+        clearInterval(this.timer);
+    }
+
+    onTick() {
+        let clonedLocAmounts = [...WS.self.locAmounts];
+        WS.self.locAmounts = [];
+        
+        if (clonedLocAmounts.length > 0) {
+            store.dispatch(updateLocAmounts(clonedLocAmounts));
+        }
     }
 
     connect() {

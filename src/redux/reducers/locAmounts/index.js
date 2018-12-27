@@ -40,6 +40,47 @@ export default handleActions(
                     }
                 };
             }
+            else if (Array.isArray(payload)) {
+                let locAmounts = {};
+                for (let i = 0; i < payload.length; i ++) {
+                    const locInfo = payload[i];
+                    if (locInfo.params && locInfo.params.quotedLoc){
+                        locAmounts = {
+                            ...locAmounts, 
+                            [locInfo.fiatAmount]: { //fiatAmount
+                                locAmount: locInfo.params.locAmount,
+                                quotedLoc: locInfo.params.quotedLoc,
+                                quotedPair: locInfo.params.quotedPair,
+                                roundedLocInEur: locInfo.params.roundedLocInEur,
+                                fundsSufficient: locInfo.params.fundsSufficient,
+                                fiatAmount: locInfo.params.fiatAmount
+                            }
+                        }
+                    }
+                    else if (locInfo.error){
+                        locAmounts = {
+                            ...locAmounts, 
+                            [locInfo.fiatAmount]: { //fiatAmount
+                                locAmount: null,
+                                error: locInfo.error
+                            }
+                        }
+                    }
+                    else {
+                        locAmounts = {
+                            ...locAmounts, 
+                            [locInfo.fiatAmount]: { //fiatAmount
+                                locAmount: locInfo.params.locAmount
+                            }
+                        }
+                    }
+                }
+                console.log("update locamounts array", locAmounts);
+                return {
+                    ...state, 
+                    locAmounts
+                };
+            }
             return {
                 ...state,
                 locAmounts: {
