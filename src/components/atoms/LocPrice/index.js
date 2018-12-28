@@ -48,6 +48,14 @@ class LocPrice extends Component {
                 this.resumeWebsocket(nextProps);
             }
         }
+        else if (fromParentType == 1) {//available room
+            if (!this.isPause && nextProps.nav.routes.length > 3 && this.props.nav.routes.length === 3 && this.props.nav.routes[2].routeName ==="HotelDetails") {
+                this.pauseWebocket(nextProps);
+            }
+            else if (this.isPause && this.props.nav.routes.length > 3 && nextProps.nav.routes.length === 3 && nextProps.nav.routes[2].routeName ==="HotelDetails") {
+                this.resumeWebsocket(nextProps);
+            }
+        }
         else {
             if (this.isPause) {
                 return;
@@ -120,7 +128,7 @@ LocPrice.propTypes = {
 LocPrice.defaultProps = {
     hasBacket: true,
     currencyCode: '',
-    fromParentType : -1
+    fromParentType : -1 // 0: hotelsearch, 1: available_rooms
 };
 
 let mapStateToProps = (state, ownProps) => {

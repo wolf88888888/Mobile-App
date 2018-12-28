@@ -140,7 +140,7 @@ class AvailableRoomsView extends Component {
                                 price}</Text>
                             {
                                 rowData.roomsResults[0].price !== undefined
-                                && (<LocPrice style={styles.price} fiat={fiat}/>)
+                                && (<LocPrice style={styles.price} fiat={fiat} fromParentType={1}/>)
                             }
                             {/* <Text style={styles.price}> (LOC {(((rowData.roomsResults[0].price) / this.props.locRate)*this.props.daysDifference).toFixed(2)})</Text> */}
                         </View>

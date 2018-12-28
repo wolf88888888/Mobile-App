@@ -13,6 +13,7 @@ import store from '../redux/store';
 const WEBSOCKET_RECONNECT_DELAY = 5000;
 
 const DEFAULT_SOCKET_METHOD = 'getLocPrice';
+const UNSUBSCRIBE_SOCKET_METHOD = 'unsubscribe';
 
 class WS {
     static self;
@@ -35,13 +36,26 @@ class WS {
     }
 
     startGrouping(){
+        console.log("LOC PRICE startGrouping")
         this.grouping = true;
+        if (this.timerOut !== undefined && this.timerOut !== null) {
+            clearTimeout(this.timerOut);
+            this.timerOut = null;
+        }
+        console.log("LOC PRICE stopGrouping setInterval");
         this.timer = setInterval(this.onTick, 20 * 1000);
     }
 
     stopGrouping() {
-        this.grouping = false;
-        clearInterval(this.timer);
+        console.log("LOC PRICE stopGrouping");
+        const that = this;
+        clearInterval(that.timer);
+        that.timer = null;
+        this.timerOut = setTimeout(()=>{
+            console.log("LOC PRICE stopGrouping timerOut");
+            that.grouping = false;
+            that.timerOut = null;
+        }, 10 * 1000);
     }
 
     onTick() {
@@ -57,11 +71,21 @@ class WS {
         store.dispatch(setLocPriceWebsocketConnection(true));
     }
 
-    sendMessage(id, method, params) {
-        console.log("WS - sendMessage", id, method, params);
+    sendMessage(id, method, params, isMarked = false) {
+        console.log("WS - sendMessage", id, method, params, this.markedID);
         if (this.ws.readyState === 1 && id) {
             method = method ? method : DEFAULT_SOCKET_METHOD;
-            this.ws.send(JSON.stringify({ id, method, params }));
+            if (isMarked) {
+                if (method === DEFAULT_SOCKET_METHOD) {
+                    this.markedID = id;
+                }
+                else if (method === UNSUBSCRIBE_SOCKET_METHOD){
+                    this.markedID = null;
+                }
+            }
+            if (!(method === UNSUBSCRIBE_SOCKET_METHOD && this.markedID === id)) {
+                this.ws.send(JSON.stringify({ id, method, params }));
+            }
         }
     }
 
@@ -77,7 +101,7 @@ class WS {
                 store.dispatch(updateLocAmounts({fiatAmount: data.id, params: data.params, error: data.error}));
             }
             else {
-                console.log("handleRecieveMessage gropuing", WS.self.locAmounts);
+                // console.log("handleRecieveMessage gropuing", WS.self.locAmounts);
                 WS.self.locAmounts = [...WS.self.locAmounts, {fiatAmount: data.id, params: data.params, error: data.error}];
             }
         }

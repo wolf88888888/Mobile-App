@@ -98,7 +98,7 @@ class MapModeHotelsSearch extends Component {
                 resizeMode={FastImage.resizeMode.cover}
                 // onLoad={e => console.log(e.nativeEvent.width, e.nativeEvent.height)}
                 // onError={e => console.log("errr", e)}
-                onLoadEnd={e => {console.log("onLoadEnd"); that.selected_mark.redraw();}}
+                onLoadEnd={e => {console.log("onLoadEnd"); that.selected_mark.showCallout();}}
             />
         );
         // if(Platform.OS === 'ios') {
@@ -128,38 +128,56 @@ class MapModeHotelsSearch extends Component {
         // }
     }
 
-    // renderCallout = (hotel) => {
-    //     console.log("----------------- renderCallout", hotel);
-    //     return (
-    //         <MapView.Callout tooltip={false}>
-    //             <View style={ styles.map_item }>
-    //                 <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
-    //                     { 
-    //                         hotel.thumbnail !== null && this.renderImageInCallout(hotel)
-    //                     }
-    //                 </View>
-    //                 <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
-    //                     {hotel.name}
-    //                 </Text>
-    //                 {
-    //                     hotel.price == null || hotel.price == undefined ?
-    //                         <Text style={styles.description}>
-    //                             Unavailable
-    //                         </Text>
-    //                     : 
-    //                         <Text style={styles.description}>
-    //                              {this.state.currencySign}{hotel.price.toFixed(2)}(LOC{parseFloat(hotel.price/this.state.locRate).toFixed(2)}) / Night
-    //                         </Text>
-    //                 }
-    //                 <Text style={styles.ratingsMap}>
-    //                     {
-    //                         Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-    //                     }
-    //                 </Text>
-    //             </View>
-    //         </MapView.Callout>
-    //     );
-    // }
+    renderCallout = (hotel) => {
+        console.log("----------------- renderCallout", hotel);
+
+        if (hotel === undefined || hotel === null) {
+            return null;
+        }
+        
+        const {
+            currencySign, exchangeRates, currency, daysDifference
+        } = this.props;
+
+        let price = exchangeRates.currencyExchangeRates 
+            && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, hotel.price)) / daysDifference).toFixed(2);
+
+        return (
+            <MapView.Callout tooltip={false}>
+                <View style={ styles.map_item }>
+                    <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
+                        { 
+                            hotel.thumbnail !== null && this.renderImageInCallout(hotel)
+                        }
+                    </View>
+                    <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
+                        {hotel.name}
+                    </Text>
+                    {
+                        price == null || price == undefined ?
+                            <Text style={styles.description}>
+                                Unavailable
+                            </Text>
+                        : 
+                            <View style={{flex: 1, flexDirection:'row'}}>
+                                <Text style={styles.description}>
+                                    {currencySign}{price}
+                                </Text>
+                                <LocPrice style= {styles.description} fiat={hotel.price} fromParentType={0}/>
+                                <Text style={styles.description}>
+                                        / Night
+                                </Text>
+                            </View>
+                    }
+                    <Text style={styles.ratingsMap}>
+                        {
+                            Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                        }
+                    </Text>
+                </View>
+            </MapView.Callout>
+        );
+    }
 
     onPressMarker = (e, index) => {
         console.log("onPressMarker", index);
@@ -177,17 +195,10 @@ class MapModeHotelsSearch extends Component {
     render() {
         console.log("map view", this.state);
         
-        const {
-            currencySign, exchangeRates, currency, daysDifference
-        } = this.props;
 
         let hotel = null;
-        let price;
         if (this.state.selectedMarkerIndex != -1 && this.state.selectedMarkerIndex < this.state.hotelsInfo.length) {
             hotel = this.state.hotelsInfo[this.state.selectedMarkerIndex];
-
-            price = exchangeRates.currencyExchangeRates 
-                && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, hotel.price)) / daysDifference).toFixed(2);
         }
 
         return (
@@ -201,6 +212,7 @@ class MapModeHotelsSearch extends Component {
                         longitudeDelta: 0.2
                     }}
                     style={styles.map}
+                    onRegionChangeComplete={() => {if (this.selected_mark !== undefined && this.selected_mark !== null) this.selected_mark.showCallout();}}
                 >
                 {
                     this.state.hotelsInfo.map((marker, i) => (marker.lat != null || marker.latitude != null) && (
@@ -223,51 +235,26 @@ class MapModeHotelsSearch extends Component {
                 }
                 {
                     hotel !== null && 
-                        (<Marker
-                            // image={blue_marker}
-                            style={{zIndex: 1, backgroundColor: '#f00', marginBottom: 35}}
-                            key={"selected_mark"}
-                            ref={(ref) => this.selected_mark = ref}
-                            coordinate={{
-                                latitude: hotel.lat === null || hotel.lat === undefined? parseFloat(hotel.latitude) : parseFloat(hotel.lat),
-                                longitude: hotel.lon === null || hotel.lon === undefined? parseFloat(hotel.longitude) : parseFloat(hotel.lon)
-                            }}
-                            tracksViewChanges = {true}
-                        >   
-                            <TouchableOpacity 
-                                onPress={(e) => this.props.gotoHotelDetailsPage(hotel)}
-                                style={ styles.map_item }>
-                                <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
-                                    { 
-                                        hotel.thumbnail !== null && this.renderImageInCallout(hotel)
-                                    }
-                                </View>
-                                <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
-                                    {hotel.name}
-                                </Text>
+                        (
+                            <Marker
+                                image={blue_marker}
+                                style={{zIndex: 1}}
+                                // image={red_marker}
+                                key={"selected_mark"}
+                                ref={(ref) => this.selected_mark = ref}
+                                coordinate={{
+                                    latitude: hotel.lat === null || hotel.lat === undefined? parseFloat(hotel.latitude) : parseFloat(hotel.lat),
+                                    longitude: hotel.lon === null || hotel.lon === undefined? parseFloat(hotel.longitude) : parseFloat(hotel.lon)
+                                }}
+                                tracksViewChanges = {true}
+                                onCalloutPress={() => {this.props.gotoHotelDetailsPage(hotel)}}
+                            >
                                 {
-                                    price == null || price == undefined ?
-                                        <Text style={styles.description}>
-                                            Unavailable
-                                        </Text>
-                                    : 
-                                        <View style={{flex: 1, flexDirection:'row'}}>
-                                            <Text style={styles.description}>
-                                                {currencySign}{price}
-                                            </Text>
-                                            <LocPrice style= {styles.description} fiat={hotel.price} fromParentType={0}/>
-                                            <Text style={styles.description}>
-                                                 / Night
-                                            </Text>
-                                        </View>
+                                    this.renderCallout(hotel)
                                 }
-                                <Text style={styles.ratingsMap}>
-                                    {
-                                        Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-                                    }
-                                </Text>
-                            </TouchableOpacity>
-                    </Marker>)
+                            </Marker>
+                        )
+                       
                 }
                     
                 </MapView>
