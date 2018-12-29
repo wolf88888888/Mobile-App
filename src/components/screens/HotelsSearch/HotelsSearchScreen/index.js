@@ -783,7 +783,13 @@ class HotelsSearchScreen extends Component {
                             gotoHotelDetailsPage = {this.gotoHotelDetailsPageByList} />;
             case 'map':
                 return <MapModeHotelsSearch
-                            ref={(ref) => this.mapView = ref}
+                            ref={ref => 
+                                {
+                                    if (!!ref) {
+                                        this.mapView = ref.getWrappedInstance()
+                                    }
+                                }
+                            }
                             isFilterResult = {this.state.isFilterResult}
                             initialLat = {this.state.initialLat}
                             initialLon = {this.state.initialLon}
