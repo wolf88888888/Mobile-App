@@ -16,6 +16,7 @@ import requester from '../../../../initDependencies';
 import { UltimateListView } from '../../../../../library/UltimateListView';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import { imgHost } from '../../../../config';
+import { WebsocketClient } from '../../../../utils/exchangerWebsocket';
 
 import styles from './styles';
 
@@ -104,8 +105,13 @@ class HomesSearchScreen extends Component {
     }
 
     componentWillMount() {
+        WebsocketClient.startGrouping();
         this.setCountriesInfo();
         this.getHomes();
+    }
+
+    componentWillUnmount() {
+        WebsocketClient.stopGrouping();
     }
 
     setCountriesInfo() {

@@ -40,7 +40,7 @@ class LocPrice extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { fromParentType } = this.props;
-        if (fromParentType == 0) { // hotel search
+        if (fromParentType === 0) { // hotel search
             if (!this.isPause && nextProps.nav.routes.length > 2 && this.props.nav.routes.length === 2 && this.props.nav.routes[1].routeName ==="HotelsSearchScreen") {
                 this.pauseWebocket(nextProps);
             }
@@ -48,11 +48,27 @@ class LocPrice extends Component {
                 this.resumeWebsocket(nextProps);
             }
         }
-        else if (fromParentType == 1) {//available room
+        else if (fromParentType === 1) {//available room
             if (!this.isPause && nextProps.nav.routes.length > 3 && this.props.nav.routes.length === 3 && this.props.nav.routes[2].routeName ==="HotelDetails") {
                 this.pauseWebocket(nextProps);
             }
             else if (this.isPause && this.props.nav.routes.length > 3 && nextProps.nav.routes.length === 3 && nextProps.nav.routes[2].routeName ==="HotelDetails") {
+                this.resumeWebsocket(nextProps);
+            }
+        }
+        else if (fromParentType === 2) {
+            if (!this.isPause && nextProps.nav.routes.length > 2 && this.props.nav.routes.length === 2 && this.props.nav.routes[1].routeName ==="HomesSearchScreen") {
+                this.pauseWebocket(nextProps);
+            }
+            else if (this.isPause && this.props.nav.routes.length > 2 && nextProps.nav.routes.length === 2 && nextProps.nav.routes[1].routeName ==="HomesSearchScreen") {
+                this.resumeWebsocket(nextProps);
+            }
+        }
+        else if (fromParentType === 3) {
+            if (!this.isPause && nextProps.nav.routes.length > 4 && this.props.nav.routes.length === 4 && this.props.nav.routes[3].routeName ==="HomeReviewScreen") {
+                this.pauseWebocket(nextProps);
+            }
+            else if (this.isPause && this.props.nav.routes.length > 4 && nextProps.nav.routes.length === 4 && nextProps.nav.routes[3].routeName ==="HomeReviewScreen") {
                 this.resumeWebsocket(nextProps);
             }
         }

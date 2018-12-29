@@ -15,6 +15,7 @@ import ReviewTitle from '../../../molecules/ReviewTitle';
 import ReviewListItem from '../../../atoms/Property/ReviewListItem';
 import ReviewDetailItem from '../../../atoms/Property/ReviewDetailItem';
 import HomeDetailBottomBar from '../../../atoms/HomeDetailBottomBar'
+import { WebsocketClient } from '../../../../utils/exchangerWebsocket';
 
 import styles from './styles';
 
@@ -31,6 +32,10 @@ class HomeReview extends Component {
         //console.log("param", props.navigation.state.params);
     }
 
+    componentWillMount() {
+        WebsocketClient.startGrouping(10 * 1000);
+    }
+
     componentDidMount() {
         let itemGuests = [];
         const { params } = this.props.navigation.state;
@@ -43,6 +48,10 @@ class HomeReview extends Component {
             ]
         }
         this.setState({itemGuests: itemGuests});
+    }
+
+    componentWillUnmount() {
+        WebsocketClient.stopGrouping();
     }
 
     onClose = () => {
@@ -230,27 +239,13 @@ class HomeReview extends Component {
     }
 }
 HomeReview.propTypes = {
-    // currency: PropTypes.string,
-    // currencySign: PropTypes.string,
     guests: PropTypes.integer,
 };
 
 HomeReview.defaultProps = {
-    // currency: "USD",
-    // currencySign: "$",
     guests: 2,
 };
 
-// let mapStateToProps = (state) => {
-//     return {
-//         currency: state.currency.currency,
-//         currencySign: state.currency.currencySign,
-//         exchangeRates: state.exchangeRates,
-//     };
-// }
-
-
-// export default connect(mapStateToProps, null)(HomeReview);
 export default HomeReview;
 
 const pickerSelectStyles = {
