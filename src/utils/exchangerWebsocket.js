@@ -35,7 +35,7 @@ class WS {
         };
     }
 
-    startGrouping(){
+    startGrouping(scehduleTime = 20 * 1000){
         console.log("LOC PRICE startGrouping")
         this.grouping = true;
         if (this.timerOut !== undefined && this.timerOut !== null) {
@@ -43,7 +43,7 @@ class WS {
             this.timerOut = null;
         }
         console.log("LOC PRICE stopGrouping setInterval");
-        this.timer = setInterval(this.onTick, 20 * 1000);
+        this.timer = setInterval(this.onTick, scehduleTime);
     }
 
     stopGrouping() {
