@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, ImageBackground, Dimensions, WebView, Modal, Image } from 'react-native';
-import MapView, { Marker, Overlay } from 'react-native-maps';
+import { connect } from 'react-redux';
+import { Text, View, TouchableOpacity} from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import _ from 'lodash';
 import styles from './styles';
@@ -8,16 +9,15 @@ import { imgHost } from '../../../../config';
 import red_marker from '../../../../assets/red_marker.png';
 import blue_marker from '../../../../assets/blue_marker.png';
 import FastImage from 'react-native-fast-image'
-const { width, height } = Dimensions.get('window')
+import { RoomsXMLCurrency } from '../../../../services/utilities/roomsXMLCurrency';
+import { CurrencyConverter } from '../../../../services/utilities/currencyConverter'
+import LocPrice from '../../../atoms/LocPrice'
 
 class MapModeHotelsSearch extends Component {
     _markers = [];
     constructor(props) {
         super(props);
         this.state = {
-            currency: this.props.currency, 
-            currencySign: props.currencySign,
-            locRate: props.locRate,
             isFilterResult: props.isFilterResult, 
             initialLat: props.initialLat,
             initialLon: props.initialLon,
@@ -34,16 +34,6 @@ class MapModeHotelsSearch extends Component {
         // if (this.props.currency != prevProps.currency || this.props.locRate != prevProps.locRate) {
         let newState  = {};
         let isChanged = false;
-
-        if (this.props.currency !== prevProps.currency) {
-            newState = {...newState, currency: this.props.currency, currencySign: this.props.currencySign};
-            isChanged = true;
-        }
-
-        if (this.props.locRate !== prevProps.locRate) {
-            newState = {...newState, locRate: this.props.locRate};
-            isChanged = true;
-        }
 
         if (this.props.isFilterResult !== prevProps.isFilterResult) {
             newState = {...newState, isFilterResult: this.props.isFilterResult};
@@ -108,7 +98,7 @@ class MapModeHotelsSearch extends Component {
                 resizeMode={FastImage.resizeMode.cover}
                 // onLoad={e => console.log(e.nativeEvent.width, e.nativeEvent.height)}
                 // onError={e => console.log("errr", e)}
-                onLoadEnd={e => {console.log("onLoadEnd"); that.selected_mark.redraw();}}
+                onLoadEnd={e => {console.log("onLoadEnd"); that.selected_mark.showCallout();}}
             />
         );
         // if(Platform.OS === 'ios') {
@@ -138,38 +128,56 @@ class MapModeHotelsSearch extends Component {
         // }
     }
 
-    // renderCallout = (hotel) => {
-    //     console.log("----------------- renderCallout", hotel);
-    //     return (
-    //         <MapView.Callout tooltip={false}>
-    //             <View style={ styles.map_item }>
-    //                 <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
-    //                     { 
-    //                         hotel.thumbnail !== null && this.renderImageInCallout(hotel)
-    //                     }
-    //                 </View>
-    //                 <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
-    //                     {hotel.name}
-    //                 </Text>
-    //                 {
-    //                     hotel.price == null || hotel.price == undefined ?
-    //                         <Text style={styles.description}>
-    //                             Unavailable
-    //                         </Text>
-    //                     : 
-    //                         <Text style={styles.description}>
-    //                              {this.state.currencySign}{hotel.price.toFixed(2)}(LOC{parseFloat(hotel.price/this.state.locRate).toFixed(2)}) / Night
-    //                         </Text>
-    //                 }
-    //                 <Text style={styles.ratingsMap}>
-    //                     {
-    //                         Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-    //                     }
-    //                 </Text>
-    //             </View>
-    //         </MapView.Callout>
-    //     );
-    // }
+    renderCallout = (hotel) => {
+        console.log("----------------- renderCallout", hotel);
+
+        if (hotel === undefined || hotel === null) {
+            return null;
+        }
+        
+        const {
+            currencySign, exchangeRates, currency, daysDifference
+        } = this.props;
+
+        let price = exchangeRates.currencyExchangeRates 
+            && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, hotel.price)) / daysDifference).toFixed(2);
+
+        return (
+            <MapView.Callout tooltip={false}>
+                <View style={ styles.map_item }>
+                    <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
+                        { 
+                            hotel.thumbnail !== null && this.renderImageInCallout(hotel)
+                        }
+                    </View>
+                    <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
+                        {hotel.name}
+                    </Text>
+                    {
+                        price == null || price == undefined ?
+                            <Text style={styles.description}>
+                                Unavailable
+                            </Text>
+                        : 
+                            <View style={{flex: 1, flexDirection:'row'}}>
+                                <Text style={styles.description}>
+                                    {currencySign}{price}
+                                </Text>
+                                <LocPrice style= {styles.description} fiat={hotel.price} fromParentType={0}/>
+                                <Text style={styles.description}>
+                                        / Night
+                                </Text>
+                            </View>
+                    }
+                    <Text style={styles.ratingsMap}>
+                        {
+                            Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                        }
+                    </Text>
+                </View>
+            </MapView.Callout>
+        );
+    }
 
     onPressMarker = (e, index) => {
         console.log("onPressMarker", index);
@@ -186,6 +194,8 @@ class MapModeHotelsSearch extends Component {
 
     render() {
         console.log("map view", this.state);
+        
+
         let hotel = null;
         if (this.state.selectedMarkerIndex != -1 && this.state.selectedMarkerIndex < this.state.hotelsInfo.length) {
             hotel = this.state.hotelsInfo[this.state.selectedMarkerIndex];
@@ -202,6 +212,7 @@ class MapModeHotelsSearch extends Component {
                         longitudeDelta: 0.2
                     }}
                     style={styles.map}
+                    onRegionChangeComplete={() => {if (this.selected_mark !== undefined && this.selected_mark !== null) this.selected_mark.showCallout();}}
                 >
                 {
                     this.state.hotelsInfo.map((marker, i) => (marker.lat != null || marker.latitude != null) && (
@@ -224,46 +235,26 @@ class MapModeHotelsSearch extends Component {
                 }
                 {
                     hotel !== null && 
-                        (<Marker
-                            // image={blue_marker}
-                            style={{zIndex: 1}}
-                            key={"selected_mark"}
-                            ref={(ref) => this.selected_mark = ref}
-                            coordinate={{
-                                latitude: hotel.lat === null || hotel.lat === undefined? parseFloat(hotel.latitude) : parseFloat(hotel.lat),
-                                longitude: hotel.lon === null || hotel.lon === undefined? parseFloat(hotel.longitude) : parseFloat(hotel.lon)
-                            }}
-                            tracksViewChanges = {true}
-                            onPress={(e) => this.props.gotoHotelDetailsPage(hotel)}
-                            // onPress={(e) => this.onPressMap(hotel)}
-                        >   
-                            <View 
-                                style={ styles.map_item }>
-                                <View style={{ width: 120, height: 90, backgroundColor:'#fff' }}>
-                                    { 
-                                        hotel.thumbnail !== null && this.renderImageInCallout(hotel)
-                                    }
-                                </View>
-                                <Text style={styles.location} numberOfLines={1} ellipsizeMode="tail">
-                                    {hotel.name}
-                                </Text>
+                        (
+                            <Marker
+                                image={blue_marker}
+                                style={{zIndex: 1}}
+                                // image={red_marker}
+                                key={"selected_mark"}
+                                ref={(ref) => this.selected_mark = ref}
+                                coordinate={{
+                                    latitude: hotel.lat === null || hotel.lat === undefined? parseFloat(hotel.latitude) : parseFloat(hotel.lat),
+                                    longitude: hotel.lon === null || hotel.lon === undefined? parseFloat(hotel.longitude) : parseFloat(hotel.lon)
+                                }}
+                                tracksViewChanges = {true}
+                                onCalloutPress={() => {this.props.gotoHotelDetailsPage(hotel)}}
+                            >
                                 {
-                                    hotel.price == null || hotel.price == undefined ?
-                                        <Text style={styles.description}>
-                                            Unavailable
-                                        </Text>
-                                    : 
-                                        <Text style={styles.description}>
-                                            {this.state.currencySign}{hotel.price.toFixed(2)}(LOC{parseFloat(hotel.price/this.state.locRate).toFixed(2)}) / Night
-                                        </Text>
+                                    this.renderCallout(hotel)
                                 }
-                                <Text style={styles.ratingsMap}>
-                                    {
-                                        Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
-                                    }
-                                </Text>
-                            </View>
-                    </Marker>)
+                            </Marker>
+                        )
+                       
                 }
                     
                 </MapView>
@@ -272,4 +263,15 @@ class MapModeHotelsSearch extends Component {
     }
 }
 
-export default MapModeHotelsSearch;
+let mapStateToProps = (state) => {
+    return {
+        currency: state.currency.currency,
+        currencySign: state.currency.currencySign,
+        
+        locAmounts: state.locAmounts,
+        exchangeRates: state.exchangeRates,
+    };
+}
+export default connect(mapStateToProps, null, null, { withRef: true })(MapModeHotelsSearch);
+
+// export default MapModeHotelsSearch;

@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         paddingRight: 5, 
         paddingTop: 5, 
         paddingBottom: 5, 
-        marginBottom: 35, 
+        // marginBottom: 35, 
         flexDirection: 'column', 
         justifyContent: 'center', 
         alignItems: 'center', 

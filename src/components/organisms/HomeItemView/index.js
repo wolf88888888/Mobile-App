@@ -16,15 +16,13 @@ import FastImage from 'react-native-fast-image'
 import { RoomsXMLCurrency } from '../../../services/utilities/roomsXMLCurrency';
 import LocPrice from '../../atoms/LocPrice'
 
-const RNPropTypes = PropTypes || React.PropTypes;
-
 class HomeItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.object,
-        currencySign: RNPropTypes.string,
-        currency: RNPropTypes.string,
+        item: PropTypes.object,
+        currencySign: PropTypes.string,
+        currency: PropTypes.string,
         gotoHomeDetailPage: PropTypes.func.isRequired,        
-        daysDifference: RNPropTypes.number,
+        daysDifference: PropTypes.number,
     };
 
     static defaultProps = {
@@ -132,7 +130,7 @@ class HomeItemView extends Component {
                         <View style={styles.costView}>
                             <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
                             {/* <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text> */}
-                            <LocPrice style= {styles.costLoc} fiat={priceInRoomsCurrency}/>
+                            <LocPrice style= {styles.costLoc} fiat={priceInRoomsCurrency} fromParentType={2}/>
                             <Text style={styles.perNight}>per night</Text>
                         </View>
                     </View>

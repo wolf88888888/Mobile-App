@@ -1,7 +1,6 @@
 PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.5)
-  - FLAnimatedImage (1.0.12)
   - Folly (2016.09.26.00):
     - boost-for-react-native
     - DoubleConversion
@@ -30,18 +29,13 @@ PODS:
     - GoogleMaps/Base
   - React (0.55.4):
     - React/Core (= 0.55.4)
-  - react-native-fast-image (5.0.3):
-    - FLAnimatedImage
-    - React
-    - SDWebImage/Core
-    - SDWebImage/GIF
-  - react-native-google-maps (0.21.0):
+  - react-native-google-maps (0.22.1):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 2.5.0)
     - React
   - react-native-image-resizer (1.0.0):
     - React
-  - react-native-maps (0.21.0):
+  - react-native-maps (0.22.1):
     - React
   - React/Core (0.55.4):
     - yoga (= 0.55.4.React)
@@ -88,10 +82,6 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - SDWebImage/Core (4.4.1)
-  - SDWebImage/GIF (4.4.1):
-    - FLAnimatedImage (~> 1.0)
-    - SDWebImage/Core
   - yoga (0.55.4.React)
 
 DEPENDENCIES:
@@ -100,7 +90,6 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
-  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -122,10 +111,8 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - boost-for-react-native
-    - FLAnimatedImage
     - Google-Maps-iOS-Utils
     - GoogleMaps
-    - SDWebImage
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -136,8 +123,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
-  react-native-fast-image:
-    :path: "../node_modules/react-native-fast-image"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-resizer:
@@ -150,19 +135,16 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: e22e0762848812a87afd67ffda3998d9ef29170c
-  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Folly: 211775e49d8da0ca658aebc8eab89d642935755c
   glog: 1de0bb937dccdc981596d3b5825ebfb765017ded
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
   React: aa2040dbb6f317b95314968021bd2888816e03d5
-  react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
-  react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
+  react-native-google-maps: b946d62e25dc66097921ed82520e45b0b081768a
   react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
-  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: df4a3a69c33095e5bcf81ca5e926e36a209a9cce
+PODFILE CHECKSUM: f2a7bd6b009be710a892d7fed0cd68bf1574e374
 
 COCOAPODS: 1.5.3

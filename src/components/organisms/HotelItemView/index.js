@@ -18,12 +18,9 @@ import LocPrice from '../../atoms/LocPrice'
 
 import styles from './styles';
 
-
-const RNPropTypes = PropTypes || React.PropTypes;
-
 class HotelItemView extends Component {
     static propTypes = {
-        item: RNPropTypes.object | RNPropTypes.array,
+        item: PropTypes.object | PropTypes.array,
         gotoHotelDetailsPage: PropTypes.func.isRequired,
         daysDifference: PropTypes.number,
         isDoneSocket: PropTypes.bool.isRequired
@@ -76,17 +73,9 @@ class HotelItemView extends Component {
 
     render() {
         const {
-            item, currencySign, isDoneSocket, exchangeRates, currency, locAmounts
+            item, currencySign, isDoneSocket, exchangeRates, currency
         } = this.props;
         
-        // const fiat = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, exchangeRates.locRateFiatAmount);
-        // let locAmount = locAmounts.locAmounts[exchangeRates.locRateFiatAmount] && locAmounts.locAmounts[exchangeRates.locRateFiatAmount].locAmount;
-        // if (!locAmount) {
-        //     locAmount = exchangeRates.locRateFiatAmount / exchangeRates.locEurRate;
-        // }
-        // let locRate = fiat / locAmount;
-        // let locRate = 1.0;
-
         let urlThumbnail = item.hotelPhoto != undefined && item.hotelPhoto != null?
                  (_.isString(item.hotelPhoto) ? imgHost + item.hotelPhoto : imgHost + item.hotelPhoto.url) 
                  : 
@@ -99,9 +88,7 @@ class HotelItemView extends Component {
         }
 
         let price = exchangeRates.currencyExchangeRates && ((CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), currency, item.price)) / this.props.daysDifference).toFixed(2);
-
-        // let price = item.price / this.props.daysDifference;
-        
+      
         return (
             <TouchableOpacity onPress={() => this.onFlatClick(item)}>
                 <CardView 
@@ -145,7 +132,7 @@ class HotelItemView extends Component {
                             <View style={styles.costView}>
                                 <Text style={styles.cost} numberOfLines={1} ellipsizeMode="tail">{currencySign}{parseFloat(price).toFixed(2)}</Text>
                                 {/* <Text style={styles.costLoc} numberOfLines={1} ellipsizeMode="tail"> (LOC {parseFloat(price/locRate).toFixed(2)}) </Text> */}
-                                <LocPrice style= {styles.costLoc} fiat={item.price / this.props.daysDifference}/>
+                                <LocPrice style= {styles.costLoc} fiat={item.price / this.props.daysDifference} fromParentType={0}/>
                                 <Text style={styles.perNight}>per night</Text>
                             </View>
                         :

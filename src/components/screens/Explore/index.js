@@ -142,9 +142,9 @@ class Explore extends Component {
         }
     }
 
-    componentWillUnmount() {
-        // Websocket.sendMessage(this.props.exchangeRatesInfo.locRateFiatAmount, 'unsubscribe');
-    }
+    // componentWillUnmount() {
+    //     // Websocket.sendMessage(this.props.exchangeRatesInfo.locRateFiatAmount, 'unsubscribe');
+    // }
 
     setCountriesInfo() {
         countryArr = [];

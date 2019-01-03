@@ -30,7 +30,7 @@ class HomeDetailBottomBar extends Component {
             fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
         
             console.log("HomeDetailBottomBar WebsocketClient.sendMessage0", fiatInEur);
-            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
+            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur }, true);
             isLocPriceRendered = true;
         }
     
@@ -47,14 +47,14 @@ class HomeDetailBottomBar extends Component {
         console.log("HomeDetailBottomBar  componentWillReceiveProps");
         if (nextProps.isLocPriceWebsocketConnected &&
             nextProps.isLocPriceWebsocketConnected !== this.props.isLocPriceWebsocketConnected) {
-            WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur });
+            WebsocketClient.sendMessage(this.state.fiatInEur, null, { fiatAmount: this.state.fiatInEur }, true);
         }
     
         if (nextProps.exchangeRates.currencyExchangeRates && !this.state.isLocPriceRendered) {
             const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, this.props.currencyCode, RoomsXMLCurrency.get(), this.props.price);
             // const fiatInEur = nextProps.exchangeRates.currencyExchangeRates && CurrencyConverter.convert(nextProps.exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, this.props.price);
         
-            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur });
+            WebsocketClient.sendMessage(fiatInEur, null, { fiatAmount: fiatInEur }, true);
             this.setState({
                 isLocPriceRendered: true,
                 fiatInEur
@@ -72,7 +72,7 @@ class HomeDetailBottomBar extends Component {
     
     componentWillUnmount() {
         console.log("LocPrice - componentWillUnmount", this.state.fiatInEur);
-        WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe');
+        WebsocketClient.sendMessage(this.state.fiatInEur, 'unsubscribe', null, true);
         if (this.props.locAmount) {
             removeLocAmount(this.state.fiatInEur);
         }
@@ -86,7 +86,7 @@ class HomeDetailBottomBar extends Component {
         const {isLocPriceWebsocketConnected} = HomeDetailBottomBar.self.props;
         if (isLocPriceWebsocketConnected && !HomeDetailBottomBar.self.state.isLocPriceRendered) {
             HomeDetailBottomBar.self.state.isLocPriceRendered = true;
-            WebsocketClient.sendMessage(HomeDetailBottomBar.self.state.fiatInEur, null, { fiatAmount: HomeDetailBottomBar.self.state.fiatInEur });
+            WebsocketClient.sendMessage(HomeDetailBottomBar.self.state.fiatInEur, null, { fiatAmount: HomeDetailBottomBar.self.state.fiatInEur }, true);
             console.log("HomeDetailBottomBar - _didFocus", HomeDetailBottomBar.self.props, HomeDetailBottomBar.self.state.fiatInEur);
         }
         HomeDetailBottomBar.self.isStop = false;
@@ -97,7 +97,7 @@ class HomeDetailBottomBar extends Component {
         const {isLocPriceWebsocketConnected} = HomeDetailBottomBar.self.props;
         if (isLocPriceWebsocketConnected && HomeDetailBottomBar.self.state.isLocPriceRendered) {
             console.log("HomeDetailBottomBar - _willBlur", HomeDetailBottomBar.self.props, HomeDetailBottomBar.self.state.isLocPriceRendered, HomeDetailBottomBar.self.state.fiatInEur);
-            WebsocketClient.sendMessage(HomeDetailBottomBar.self.state.fiatInEur, 'unsubscribe');
+            WebsocketClient.sendMessage(HomeDetailBottomBar.self.state.fiatInEur, 'unsubscribe', null, true);
             HomeDetailBottomBar.self.state.isLocPriceRendered = false;
         }
         HomeDetailBottomBar.self.isStop = true;
@@ -159,7 +159,7 @@ let mapStateToProps = (state, ownProps) => {
 
     const { exchangerSocket, locAmounts, exchangeRates, currency } = state;
 
-    let fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, RoomsXMLCurrency.get(), price);
+    let fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, currencyCode, DEFAULT_CRYPTO_CURRENCY, price);
     
     // const fiatInEur = exchangeRates.currencyExchangeRates && CurrencyConverter.convert(exchangeRates.currencyExchangeRates, RoomsXMLCurrency.get(), DEFAULT_CRYPTO_CURRENCY, price);
     let locAmount = locAmounts.locAmounts[fiatInEur] && (locAmounts.locAmounts[fiatInEur].locAmount).toFixed(2);

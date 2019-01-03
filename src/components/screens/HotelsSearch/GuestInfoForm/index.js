@@ -9,6 +9,7 @@ import { hasLetter } from '../../../../utils/validation';
 import { userInstance } from '../../../../utils/userInstance';
 import HotelDetailBottomBar from '../../../atoms/HotelDetailBottomBar'
 import { imgHost } from '../../../../config'
+import { WebsocketClient } from '../../../../utils/exchangerWebsocket';
 
 let guestInfos = [];
 var newElement = {};
@@ -29,11 +30,6 @@ class GuestInfoForm extends Component {
             testGuestArray : [{}]
         };
     }
-    // async componentDidMount(){
-    //     console.disableYellowBox = true
-    //     console.log("componentDidMount", this.state.guests);
-    // }
-
     async componentWillMount() {
         console.log("GuestInfoForm componentWillMount", this.props.navigation.state.params.guests);
         let firstName = await userInstance.getFirstName();
@@ -67,6 +63,15 @@ class GuestInfoForm extends Component {
         }
         
         this.setState({guests: guests, isLoading: false});
+    }
+
+    componentDidMount() {
+        console.log("----------------------componentDidMount");
+        WebsocketClient.stopGrouping();
+    }
+
+    componentWillUnmount() {
+        WebsocketClient.startGrouping();
     }
 
     handleFirstName(key,text){
