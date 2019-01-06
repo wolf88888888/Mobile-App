@@ -31,27 +31,45 @@ class LocPriceUpdateTimer extends Component {
     }
     
     componentWillUnmount() {
-        clearInterval(this.timer);
+        if (this.timer != undefined && this.timer != null) {
+            clearInterval(this.timer);
+        }
         this.props.reset();
     }
 
     tick() {
         this.setState((previousState) => {
             let seconds = previousState.seconds - 1;
-            if (seconds < 0) seconds = 0;
+            if (seconds < 0) 
+                seconds = 0;
             console.log("tick ------", seconds);
             return {seconds};
         });
     }
 
+    stopQuote = () => {
+        if (this.timer === undefined || this.timer === null) {
+            return;
+        }
+        clearInterval(this.timer); 
+        this.timer = null
+    }
+    
+    restartQuote = () => {
+        if (this.timer != undefined && this.timer != null) {
+            clearInterval(this.timer);
+        }
+        this.timer = setInterval(this.tick, 1000);
+    }
+
     render() {
         return (
-                this.state.seconds != null?
-                    <Text style={[this.props.style, styles.info]}>
-                        LOC price will update in <Icon name={'clock-o'} color={'#fff'} size={16}/> {this.state.seconds}
-                    </Text>
-                :
-                    null
+            this.state.seconds != null?
+                <Text style={[this.props.style, styles.info]}>
+                    LOC price will update in <Icon name={'clock-o'} color={'#fff'} size={16}/> {this.state.seconds}
+                </Text>
+            :
+                null
         );
     }
 }
@@ -67,4 +85,4 @@ const mapDispatchToProps = dispatch => ({
     reset : bindActionCreators(reset , dispatch),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LocPriceUpdateTimer);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(LocPriceUpdateTimer);

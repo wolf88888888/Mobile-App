@@ -258,9 +258,11 @@ export class HotelReservation {
 
     const withdrawDateFormatted = formatTimestampToDays(withdrawDateInSeconds);
 
+    console.log("createSimpleReservationSingleWithdrawer0");
     let wallet = await ethers.Wallet.fromEncryptedWallet(jsonObj, password);
-
+    console.log("createSimpleReservationSingleWithdrawer1", wallet);
     const gasPrice = await getGasPrice();
+    console.log("createSimpleReservationSingleWithdrawer2", gasPrice);
 
     let overrideOptions = {
       gasLimit: gasConfig.simpleReservationSingleWithdrawer.create,
