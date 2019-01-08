@@ -2,7 +2,8 @@ import {
     AsyncStorage,
     Text,
     View,
-    StatusBar
+    StatusBar,
+    Linking
 } from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -242,6 +243,10 @@ class Welcome extends Component {
         this.props.navigation.navigate('CreateAccount');
     }
 
+    gotoRecover = () => {
+        Linking.openURL('https://beta.locktrip.com');
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -270,6 +275,11 @@ class Welcome extends Component {
                         wrapStyle={styles.createAccountButton}
                         onPress={ this.gotoSignup }
                         text="Create an Account"
+                    />
+                    <Button
+                        wrapStyle={styles.recoverButton}
+                        onPress={ this.gotoRecover }
+                        text="Recover"
                     />
                 </View>
 
