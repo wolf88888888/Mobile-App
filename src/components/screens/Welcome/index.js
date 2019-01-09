@@ -13,7 +13,7 @@ import GetStartedImage from '../../atoms/GetStartedImage';
 import Image from 'react-native-remote-svg';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import SplashPNG from '../../../assets/png/locktrip_logo.png';
-import { domainPrefix } from '../../../config';
+import { domainPrefix, basePath } from '../../../config';
 import requester from '../../../initDependencies';
 import styles from './styles';
 import LoginLocationDialog from '../../atoms/LoginLocationDialog'
@@ -244,7 +244,8 @@ class Welcome extends Component {
     }
 
     gotoRecover = () => {
-        Linking.openURL('https://beta.locktrip.com');
+        // TODO: Move this to a native version - two calls: (1) send e-mail, (2) send token from e-mail
+        Linking.openURL(`${basePath}recover`);
     }
 
     render() {
