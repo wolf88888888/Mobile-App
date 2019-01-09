@@ -147,8 +147,4 @@ const mapDispatchToProps = dispatch => ({
     removeLocAmount: bindActionCreators(removeLocAmount, dispatch),
 })
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-    return Object.assign({}, ownProps, stateProps, dispatchProps)
-}
-
 export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(ConfirmBottomBar);

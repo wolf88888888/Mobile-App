@@ -214,6 +214,7 @@ class RoomDetailsReview extends Component {
     stopQuote() {
         // WebsocketClient.sendMessage(DEFAULT_QUOTE_LOC_ID, 'approveQuote', { bookingId: this.state.bookingId });
         this.refs.bottomBar.getWrappedInstance().stopQuote(this.state.bookingId);
+        this.refs.updateTimer.getWrappedInstance().stopQuote();
         // if (this.bottomBar !== undefined && this.bottomBar !== null) {
         //     this.bottomBar.stopQuote(this.state.bookingId);
         // }
@@ -222,39 +223,42 @@ class RoomDetailsReview extends Component {
     restartQuote() {
         // WebsocketClient.sendMessage(DEFAULT_QUOTE_LOC_ID, 'quoteLoc', { bookingId: this.state.bookingId });
         this.refs.bottomBar.getWrappedInstance().restartQuote(this.state.bookingId);
+        this.refs.updateTimer.getWrappedInstance().restartQuote();
     }
 
     payWithLocSingleWithdrawer = () => {
         const { params } = this.props.navigation.state;
         // this.setState({ modalVisible: false });
-        this.refs.toast.show('We are working on your transaction this might take some time.', 1000);
-        setTimeout(() => {
+        this.refs.toast.show('We are working on your transaction this might take some time.', 1000, () => {
             this.setState({ modalVisible: false, isLoading: true });
             // this.setState({ modalVisible: false });
 
             this.requestLockOnQuoteId('privateWallet').then( () => {
-                console.log("requestLockOnQuoteId -- ", this.props.locAmounts);
+                console.log("requestLockOnQuoteId -- ", this.props.locAmounts, DEFAULT_QUOTE_LOC_ID);
 
                 const { password } = this.state;
                 const preparedBookingId = this.state.bookingId;
                 const { locAmounts } = this.props.locAmounts;
 
                 if (!(locAmounts[DEFAULT_QUOTE_LOC_ID] && locAmounts[DEFAULT_QUOTE_LOC_ID].locAmount)) {
-                    this.refs.toast.show('Sorry, Cannot get Loc Amount, Please try again later.', 1000);
+                    this.setState({isLoading: false}, ()=>{
+                        this.refs.toast.show('Sorry, Cannot get Loc Amount, Please try again later.', 1000);
+                    });
                     return;
                 }
                 const locAmount = locAmounts[DEFAULT_QUOTE_LOC_ID].locAmount;
                 
                 const wei = (this.tokensToWei(locAmount.toString()));
 
-                console.log(wei);
+                console.log("payWithLocSingleWithdrawer wei", wei);
 
                 const booking = this.state.hotelBooking;
                 console.log("this.state.hotelBooking", this.state.hotelBooking);
                 const endDate = moment.utc(booking.arrivalDate, 'YYYY-MM-DD').add(booking.nights, 'days');
 
                 const queryString = params.searchString;
-                console.log("this.state.hotelBooking", this.state.hotelBooking, endDate, queryString);
+                console.log("this.state.hotelBooking queryString", queryString);
+                console.log("this.state.hotelBooking endDate", endDate.unix().toString());
 
                 requester.getMyJsonFile().then(res => {
                     res.body.then(data => {
@@ -266,7 +270,7 @@ class RoomDetailsReview extends Component {
                             wei.toString(),
                             endDate.unix().toString(),
                         ).then(transaction => {
-                            console.log('transaction', transaction);
+                            console.log('transaction----', transaction);
                             setTimeout(() => {
                                 this.setState({isLoading: false}, ()=>{
                                     const bookingConfirmObj = {
@@ -278,20 +282,19 @@ class RoomDetailsReview extends Component {
                     
                                     requester.confirmBooking(bookingConfirmObj).then(() => {
                                         // NotificationManager.success('LOC Payment has been initiated. We will send you a confirmation message once it has been processed by the Blockchain.', '', LONG);
-                                        this.refs.toast.show('LOC Payment has been initiated. We will send you a confirmation message once it has been processed by the Blockchain.', 2000);
-                                        setTimeout(() => {
+                                        this.refs.toast.show('LOC Payment has been initiated. We will send you a confirmation message once it has been processed by the Blockchain.', 2000, () => {
                                             this.props.navigation.pop(5);
-                                        }, 2000);
+                                        });
                                     }).catch(error => {
+                                        console.log("--------requester.confirmBooking errr------", error);
                                         this.restartQuote();
                                         this.refs.toast.show('Something with your transaction went wrong...', 2000);
-                                        console.log(error);
                                     });
                                 });
                             }, 1000);
                             
                         }).catch(error => {
-                            console.log("--------payWithLocSingleWithdrawer------", error);
+                            console.log("--------payWithLocSingleWithdrawer errr------", error);
                             this.restartQuote();
                             this.setState({isLoading: false }, () => {
                                 setTimeout(() => {
@@ -320,7 +323,7 @@ class RoomDetailsReview extends Component {
                     })
                 });
             });
-        }, 1000);
+        });
     }
 
     handlePayWithLOC = () => {
@@ -523,7 +526,7 @@ class RoomDetailsReview extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <LocPriceUpdateTimer style={{flex: 1, marginLeft: 20, marginRight: 20, paddingLeft:5, paddingRight:5, height: 28}}/>
+                    <LocPriceUpdateTimer ref="updateTimer" style={{flex: 1, marginLeft: 20, marginRight: 20, paddingLeft:5, paddingRight:5, height: 28}}/>
                 </ScrollView>
 
                 {/* Bottom Bar */}
