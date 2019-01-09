@@ -131,6 +131,17 @@ class Profile extends Component {
         this.refs.toast.show('This feature is not enabled yet in the current alpha version.', 1500);
     }
 
+    onSendToken = () => {
+        const { locBalance, walletAddress, ethBalance } = this.state;
+        const {navigate} = this.props.navigation;
+        console.log("walletAddress ----", walletAddress);
+        if (walletAddress === undefined || walletAddress === null || walletAddress === "") {
+            this.refs.toast.show('Please create LOC wallet before send token.', 1500);
+            return;
+        }
+        navigate('SendToken', { locBalance: locBalance.toFixed(6), ethBalance: parseFloat(ethBalance).toFixed(6)});
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         const { currency, locBalance, walletAddress, ethBalance } = this.state;
@@ -186,7 +197,7 @@ class Profile extends Component {
                             <Text style={styles.navItemText}>Switch to Hosting</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity> */}
-                        <TouchableOpacity onPress={() => navigate('SendToken', { locBalance: locBalance.toFixed(6), ethBalance: parseFloat(ethBalance).toFixed(6)})} style={styles.navItem}>
+                        <TouchableOpacity onPress={this.onSendToken} style={styles.navItem}>
                             <Text style={styles.navItemText}>Send Tokens</Text>
                             <Image resizeMode="stretch" source={require('../../../assets/png/Profile/icon-switch.png')} style={styles.navIcon} />
                         </TouchableOpacity>

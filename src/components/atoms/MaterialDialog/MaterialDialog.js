@@ -20,14 +20,14 @@ const { height, width } = Dimensions.get('window');
 // TODO: Support custom actions
 // TODO: Stacked full-width buttons
 
-const ActionButton = ({ testID, onPress, colorAccent, label }) => (
+const ActionButton = ({ testID, onPress, colorAccent, style, label }) => (
   <TouchableHighlight
     testID={testID}
     style={styles.actionContainer}
     underlayColor={colors.androidPressedUnderlay}
     onPress={onPress}
   >
-    <Text style={[material.button, { color: colorAccent }]}>{label}</Text>
+    <Text style={[material.button, { color: colorAccent }, style]}>{label}</Text>
   </TouchableHighlight>
 );
 
@@ -37,6 +37,8 @@ const MaterialDialog = ({
   title,
   titleColor,
   colorAccent,
+  cancelStyle,
+  okStyle,
   backgroundColor,
   addPadding,
   isVisibleBottomBar,
@@ -45,7 +47,8 @@ const MaterialDialog = ({
   okLabel,
   cancelLabel,
   children,
-}) => (
+}) => {
+ return (
   <Modal
     animationType={'fade'}
     transparent
@@ -87,19 +90,21 @@ const MaterialDialog = ({
                   <View
                     style={scrolled ? styles.actionsContainerScrolled : styles.actionsContainer}
                   >
-                    {onCancel != null ? (
+                    {onCancel != undefined && onCancel != null ? (
                     <ActionButton
                       testID="dialog-cancel-button"
                       colorAccent={colorAccent}
+                      style = {cancelStyle}
                       onPress={onCancel}
                       label={cancelLabel}
                     />) : null
                     }
                     {
-                    onOk ?
+                    onOk != undefined && onOk != null ?
                     <ActionButton
                       testID="dialog-ok-button"
                       colorAccent={colorAccent}
+                      style = {okStyle}
                       onPress={onOk}
                       label={okLabel}
                     /> : null
@@ -113,7 +118,8 @@ const MaterialDialog = ({
       </View>
     </TouchableWithoutFeedback>
   </Modal>
-);
+)
+};
 
 const styles = StyleSheet.create({
   backgroundOverlay: {
@@ -204,6 +210,8 @@ MaterialDialog.propTypes = {
   titleColor: PropTypes.string,
   backgroundColor: PropTypes.string,
   colorAccent: PropTypes.string,
+  cancelStyle: PropTypes.object,
+  okStyle: PropTypes.object,
   scrolled: PropTypes.bool,
   addPadding: PropTypes.bool,
 };
@@ -215,6 +223,8 @@ MaterialDialog.defaultProps = {
   titleColor: colors.androidPrimaryTextColor,
   backgroundColor: colors.background,
   colorAccent: colors.androidColorAccent,
+  cancelStyle: {},
+  okStyle: {},
   scrolled: false,
   addPadding: true,
   onOk: undefined,
@@ -224,6 +234,8 @@ MaterialDialog.defaultProps = {
 ActionButton.propTypes = {
   testID: PropTypes.string.isRequired,
   colorAccent: PropTypes.string.isRequired,
+  cancelStyle: PropTypes.object,
+  okStyle: PropTypes.object,
   label: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };
