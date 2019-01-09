@@ -80,6 +80,7 @@ class Login extends Component {
                     // this.props.navigation.navigate('MainScreen');
                     let resetAction = StackActions.reset({
                         index: 0,
+                        key: null,
                         actions: [
                             NavigationActions.navigate({routeName: 'MainScreen'})
                         ]

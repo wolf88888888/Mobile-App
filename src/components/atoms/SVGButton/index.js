@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import React from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-remote-svg';
 
@@ -10,7 +9,7 @@ const SVGButton = (props) => {
     return (
         <View style={[styles.container, props.style]}>
             <TouchableOpacity style={styles.ButtonView} onPress={props.onPress}>
-              <Image source={props.image} style={styles.ButtonImage}/>
+                <Image source={props.image} style={styles.ButtonImage}/>
             </TouchableOpacity>
         </View>
     );

@@ -1,5 +1,6 @@
 import { AsyncStorage, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment, { lang } from 'moment';
 
 import BackButton from '../../atoms/BackButton';
@@ -57,6 +58,7 @@ class EditUserProfile extends Component {
             gender: '',
             governmentId: '',
             countryId: 1,
+            stateId: '',
             school: '',
             work: '',
             image: '',
@@ -68,6 +70,7 @@ class EditUserProfile extends Component {
             isDateTimePickerVisible: false,
             jsonFile: '',
             showProgress: false,
+            countries: this.props.countries,
         }
         this.onPhoto = this.onPhoto.bind(this);
         this.onEditName = this.onEditName.bind(this);
@@ -108,6 +111,7 @@ class EditUserProfile extends Component {
         let preferredCurrency = await userInstance.getCurrency();
         let gender = await userInstance.getGender();
         let country = await userInstance.getCountry();
+        let countryState = await userInstance.getCountryState();
         let city = await userInstance.getCity();
         let locAddress = await userInstance.getLocAddress();
         let jsonFile = await userInstance.getJsonFile();
@@ -133,8 +137,8 @@ class EditUserProfile extends Component {
             school: school,
             work: work,
             city: city,
-            countries: [],
             country: country,
+            countryState: countryState,
             email: email,
             firstName: firstName,
             lastName: lastName,
@@ -149,15 +153,24 @@ class EditUserProfile extends Component {
             month: month,
             year: year,
         });
-        requester.getCountries().then(res => {
-            res.body.then(data => {
-                this.setState({
-                    countries: data,
-                })
+        // requester.getCountries().then(res => {
+        //     res.body.then(data => {
+        //         this.setState({
+        //             countries: data,
+        //         })
+        //     })
+        // }).catch(err => {
+        //     console.log('countries--error--', err);
+        // });
+    }
+
+    
+    componentDidUpdate(prevProps) {
+        if (this.props.countries != prevProps.countries) {
+            this.setState({
+                countries: this.props.countries
             })
-        }).catch(err => {
-            console.log('countries--error--', err);
-        });
+        }
     }
 
     upperFirst(string) {
@@ -321,10 +334,11 @@ class EditUserProfile extends Component {
         this.setState({
             modalVisible: true,
             modalView: <EditLocationModal
-                onSave={(country, city) => this.onSaveLocation(country, city)}
+                onSave={(country, countryState) => this.onSaveLocation(country, countryState)}
                 onCancel={() => this.onCancel()}
                 countries={this.state.countries}
                 country={this.state.country}
+                countryState={this.state.countryState}
                 city={this.state.city}
             />
         });
@@ -413,15 +427,15 @@ class EditUserProfile extends Component {
         });
     }
 
-    onSaveLocation(country, city) {
-        index = _.findIndex(this.state.countries, function (o) {
-            return o.id == country.id;
-        })
-        country.name = this.state.countries[index].name
+    onSaveLocation(country, countryState) {
+        // index = _.findIndex(this.state.countries, function (o) {
+        //     return o.id == country.id;
+        // })
+        // country.name = this.state.countries[index].name
         this.setState({
             modalVisible: false,
             country: country,
-            city: city,
+            countryState: countryState,
         })
     }
 
@@ -488,15 +502,19 @@ class EditUserProfile extends Component {
             preferredCurrency: parseInt(this.state.preferredCurrency, 10),
             gender: this.state.gender,
             country: parseInt(this.state.country.id, 10),
+            countryState: this.state.countryState !== undefined && this.state.countryState !== null ? parseInt(this.state.countryState.id, 10) : '',
             // city: parseInt(this.state.city.id, 10),
             birthday: `${this.state.day}/${this.state.month}/${this.state.year}`,
             locAddress: this.state.locAddress,
             jsonFile: this.state.jsonFile
         };
 
+        console.log("user info", userInfo);
+
         Object.keys(userInfo).forEach((key) => (userInfo[key] === null || userInfo[key] === '') && delete userInfo[key]);
 
         requester.updateUserInfo(userInfo, null).then(res => {
+            console.log("------", res)
             if (res.success) {
                 userInstance.setFirstName(userInfo.firstName);
                 userInstance.setLastName(userInfo.lastName);
@@ -504,7 +522,9 @@ class EditUserProfile extends Component {
                 userInstance.setLanguage(userInfo.preferredLanguage);
                 userInstance.setGender(userInfo.gender);
                 userInstance.setCountry(this.state.country);
+                // userInstance.setCountry(this.state.countryState);
                 // userInstance.setCity(this.state.city);
+                userInstance.setCountryState(this.state.countryState);
                 userInstance.setBirthday(new Date(`${this.state.year}/${this.state.month}/${this.state.day} 00:00:00`).getTime());
                 this.setState({
                     showProgress: false
@@ -679,4 +699,10 @@ class EditUserProfile extends Component {
     }
 }
 
-export default EditUserProfile;
+const mapStateToProps = (state) => {
+    return {
+        countries: state.country.countries
+    };
+}
+
+export default connect(mapStateToProps, null)(EditUserProfile);

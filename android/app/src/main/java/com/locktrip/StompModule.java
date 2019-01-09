@@ -170,7 +170,7 @@ public class StompModule extends ReactContextBaseJavaModule {
             _session.send("search", _message);
         }
         else {
-        Log.e(TAG, "subscription2");
+            Log.e(TAG, "subscription2");
             _isOnce = true;
             connect();
         }
@@ -223,54 +223,4 @@ public class StompModule extends ReactContextBaseJavaModule {
     private void emitEventToJS(String eventName, @Nullable WritableMap eventData){
         this._reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
     }
-
-    // @ReactMethod
-    // public void startSession(String uid, String query, Callback success) {
-    //     count = 0;
-    //     ClientManager client = ClientManager.createClient();
-
-    //     WebSocketClient transport = new StandardWebSocketClient(client);
-    //     WebSocketStompClient stompClient = new WebSocketStompClient(transport);
-    //     StringMessageConverter converter = new StringMessageConverter();
-    //     stompClient.setMessageConverter(converter);
-
-    //     stompClient.connect(url, new StompSessionHandler() {
-
-    //         @Override
-    //         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-    //             session.send("search","{\"uuid\":\""+uid+"\",\"query\":\""+query+"\"}");
-    //             session.subscribe("search/"+uid, this);
-    //         }
-
-    //         @Override
-    //         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
-    //         }
-
-    //         @Override
-    //         public void handleTransportError(StompSession session, Throwable exception) {
-
-    //         }
-
-    //         @Override
-    //         public Type getPayloadType(StompHeaders headers) {
-    //             return String.class;
-    //         }
-
-    //         @Override
-    //         public void handleFrame(StompHeaders headers, Object payload) {
-    //             WritableMap event = Arguments.createMap();
-    //             event.putString("message",payload.toString());
-    //             emitDeviceEvent("SOCK_EVENT", event);
-    //             if (count == 0){
-    //                 success.invoke();
-    //             }
-    //             count ++;
-    //         }
-    //     });
-    // }
-
-    // private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData){
-    //     _reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, eventData);
-    // }
 }

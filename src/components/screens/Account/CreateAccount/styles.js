@@ -70,7 +70,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         width: '100%',
         paddingRight: 18,
-        marginTop: 36
+        marginTop: 36,
+        marginBottom: 36
     },
     nextButton: {
         height: 50,

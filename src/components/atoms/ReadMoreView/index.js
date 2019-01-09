@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -50,7 +49,7 @@ class ReadMoreView extends React.Component {
           {this.props.children}
         </Text>
 
-        {this._maybeRenderReadMore()}
+        {this.state.shouldShowReadMore && this._maybeRenderReadMore()}
       </View>
     );
   }

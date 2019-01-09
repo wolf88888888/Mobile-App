@@ -39,6 +39,9 @@ const styles = StyleSheet.create({
     createAccountButton: {
         marginTop: 20
     },
+    recoverButton: {
+        marginTop: -20
+    },
     finePrintText: {
         marginLeft: 30,
         marginRight: 30,

@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-
 import ethers from 'ethers';
 import {
   BaseValidators
@@ -7,14 +5,13 @@ import {
 import {
   LOCTokenContract,
   getNodeProvider
-} from './config/contracts-config';
+} from './config/contracts-config.js';
 import crypto from '../../../library/react-native-fast-crypto';
 
 // import ERROR from './config/errors.json';
 const ERROR = require('./config/errors.json');
 
 class Wallet {
-
   static async getTokenBalance(address) {
     let balance = await LOCTokenContract.balanceOf(address);
     return balance;
@@ -102,6 +99,4 @@ class Wallet {
   }
 }
 
-export {
-  Wallet
-};
+export {Wallet};

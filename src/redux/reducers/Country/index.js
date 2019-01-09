@@ -11,7 +11,7 @@ const initialState = () => ({
         },
         {
             "code": "GB",
-            "name": "United Kingdom of Great Britain and Northern Ireland",
+            "name": "United Kingdom",
             "id": 2
         },
         {

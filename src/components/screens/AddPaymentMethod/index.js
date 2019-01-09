@@ -16,6 +16,13 @@ class AddPaymentMethod extends Component {
   componentDidMount() {
   }
 
+  
+  createWallet = () => {
+    const {navigate} = this.props.navigation;
+    navigate("CreateWallet");
+  }
+
+
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -38,7 +45,7 @@ class AddPaymentMethod extends Component {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.navItem} onPress={() => navigate('CreditCard')}>
+                {/* <TouchableOpacity style={styles.navItem} onPress={() => navigate('CreditCard')}>
                     <View style={styles.listItem}>
                         <View>
                            <Image style={styles.leftIcon} source={require('../../../../src/assets/svg/credit-card.svg')}/>
@@ -50,9 +57,9 @@ class AddPaymentMethod extends Component {
                         <Image source={require('../../../../src/assets/svg/next.svg')} style={styles.arrowSvg}/>
                     </View>
  
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
-                <TouchableOpacity style={styles.navItem}>
+                <TouchableOpacity style={styles.navItem} onPress={this.createWallet}>
                     <View style={styles.listItem}>
                         <View>
                            <Image source={require('../../../../src/assets/svg/loc.svg')} style={styles.leftIcon}/>

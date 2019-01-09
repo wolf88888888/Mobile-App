@@ -120,7 +120,7 @@ export default styles = StyleSheet.create({
     },
     pricingText: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontFamily: 'FuturaStd-Medium',
     },
     set: {
         alignSelf: 'stretch',

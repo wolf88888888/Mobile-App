@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import {
         Text,
-        TouchableOpacity,
         View,
         ListView,
         Dimensions
       } from 'react-native';
 import Image from 'react-native-remote-svg';
-import PropTypes from 'prop-types';
-import FacilityView from '../../atoms/FacilityView'
 import StarRatings from '../../atoms/StarRatings';
 import LikeButton from '../../atoms/LikeButton';
 

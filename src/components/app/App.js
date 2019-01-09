@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { StatusBar, View } from 'react-native';
 import { Provider } from 'react-redux';
-
-import { AppNavigator } from '../../routing';
 import store from '../../redux/store';
+import { AppNavigator } from '../../routing';
 
 class App extends Component {
     componentDidMount() {

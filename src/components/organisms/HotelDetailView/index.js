@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import {
         Text,
-        TouchableOpacity,
         View,
-        ListView,
         Dimensions,
-        ViewPropTypes
       } from 'react-native';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
-import Slideshow from '../../atoms/Slideshow';
 import StarRatings from '../../atoms/StarRatings';
-
-import ImageCarousel from '../../atoms/ImagePage';
 
 import styles from './styles';
 
@@ -21,7 +15,6 @@ const dimensionWindows = Dimensions.get('window');
 const logoWidth = dimensionWindows.width;
 const logoHeight = logoWidth * 35 / 54;
 
-const RNViewPropTypes = ViewPropTypes || View.propTypes;
 const RNPropTypes = PropTypes || React.PropTypes;
 
 class HotelDetailView extends Component {
@@ -32,7 +25,6 @@ class HotelDetailView extends Component {
         rateVal: RNPropTypes.number.isRequired,
         reviewNum: RNPropTypes.number.isRequired,
         address: RNPropTypes.string.isRequired,
-        dataSourcePreview: RNPropTypes.array
     };
 
     static defaultProps = {
@@ -41,7 +33,6 @@ class HotelDetailView extends Component {
         rateVal: 0,
         reviewNum: 0,
         address: '',
-        dataSourcePreview: []
     };
 
     constructor(props) {
@@ -49,9 +40,7 @@ class HotelDetailView extends Component {
         this.state = {
             position: 0,
             interval: null,
-            dataSource: [],
         };
-        this.state.dataSource = props.dataSourcePreview;
     }
 
     componentDidMount() {

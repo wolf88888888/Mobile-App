@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import {
         Text,
-        TouchableOpacity,
         View,
-        ViewPropTypes
       } from 'react-native';
 import PropTypes from 'prop-types';
-import Image from 'react-native-remote-svg';
 import MapView from 'react-native-maps';
 import CardView from 'react-native-cardview';
 import styles from './styles';
 
-const RNViewPropTypes = ViewPropTypes || View.propTypes;
 
 class LocationView extends Component {
     static propTypes = {
@@ -22,8 +18,7 @@ class LocationView extends Component {
         lat: PropTypes.number.isRequired,
         lon: PropTypes.number.isRequired,
         radius: PropTypes.number.isRequired,
-        hotelName: PropTypes.string.isRequired,
-        hotelPrice: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
     };
 
     static defaultProps = {
@@ -34,8 +29,7 @@ class LocationView extends Component {
         lat: 0,
         lon: 0,
         radius: 200,
-        hotelName: '',
-        hotelPrice: '',
+        name: '',
     };
 
     calloutClick(){
@@ -50,7 +44,7 @@ class LocationView extends Component {
     }
 
     render() {
-        const { title, subtitle, count, titleStyle } = this.props;
+        const { titleStyle } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.descriptionView}>
@@ -67,8 +61,9 @@ class LocationView extends Component {
                     <View style={{flexDirection:'column'}}>
                         <View style={styles.info}>
                             <View style={styles.infoContainer}>
-                                <Text style={styles.location}>{this.props.location}</Text>
-                                <Text style={styles.description}>{this.props.description}</Text>
+                                {/* <Text style={styles.location}>{this.props.location}</Text> */}
+                                <Text style={styles.location}>{this.props.name}</Text>
+                                {/* <Text style={styles.description}>{this.props.description}</Text> */}
                             </View>
                         </View>
                         <MapView
@@ -86,8 +81,8 @@ class LocationView extends Component {
                             debug={false}>
                             <MapView.Marker
                                 coordinate={{latitude: this.props.lat, longitude: this.props.lon}}
-                                title={this.props.hotelName}
-                                description={this.props.hotelPrice}
+                                // title={this.props.name}
+                                // description={this.props.hotelPrice}
                             >
                             </MapView.Marker>
                             <MapView.Circle

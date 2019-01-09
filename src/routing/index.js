@@ -10,7 +10,9 @@ import {
     reduxifyNavigator,
     createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
-import {Platform, BackHandler} from 'react-native';
+import {Platform, BackHandler, View} from 'react-native';
+
+import ExitConfirmDialog from '../components/molecules/ExitConfirmDialog'
 
 import AppLoading from '../components/app/AppLoading';
 
@@ -58,13 +60,8 @@ import ReviewSend from '../components/screens/Booking/ReviewSend';
 import ReviewTrip from '../components/screens/Booking/ReviewTrip';
 import RequestAccepted from '../components/screens/Booking/RequestAccepted';
 
-import RoomDetailsReview from '../components/screens/RoomDetailsReview';
-import GuestInfoForm from '../components/screens/GuestInfoForm';
-
 import PropertyScreen from '../components/screens/Property';
-import HotelDetails from '../components/screens/HotelDetails'
 import Filters from '../components/screens/Filters';
-import HotelFilters from '../components/screens/HotelFilters';
 import AvailableRoomsView from '../components/molecules/AvailableRoomsView'
 import UserProfile from '../components/screens/UserProfile';
 import SimpleUserProfile from '../components/screens/SimpleUserProfile';
@@ -78,7 +75,18 @@ import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
 import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
-import PropertySock from '../components/screens/PropertySock';
+import HotelsSearchScreen from '../components/screens/HotelsSearch/HotelsSearchScreen';
+import HotelFilters from '../components/screens/HotelsSearch/HotelFilters';
+import HotelDetails from '../components/screens/HotelsSearch/HotelDetails'
+import GuestInfoForm from '../components/screens/HotelsSearch/GuestInfoForm';
+import RoomDetailsReview from '../components/screens/HotelsSearch/RoomDetailsReview';
+
+import HomesSearchScreen from '../components/screens/HomeSearch/HomesSearchScreen';
+import HomeFilters from '../components/screens/HomeSearch/HomeFilters';
+import HomeDetails from '../components/screens/HomeSearch/HomeDetails';
+import HomeReview from '../components/screens/HomeSearch/HomeReview';
+import HomeRequestConfirm from '../components/screens/HomeSearch/HomeRequestConfirm';
+
 import MapFullScreen from '../components/screens/MapFullScreen';
 
 export const MyTripNavigator = createStackNavigator(
@@ -118,6 +126,7 @@ const RootNavigator = createStackNavigator(
         CreateWallet: { screen: CreateWallet },
         WalletRecoveryKeywords: { screen: WalletRecoveryKeywords },
         WalletKeywordValidation: {screen: WalletKeywordValidation},
+
         CongratsWallet: { screen: CongratsWallet },
         CongratulationRegister: { screen: CongratulationRegister },
         MainScreen: { screen: MainNavigator },
@@ -137,7 +146,6 @@ const RootNavigator = createStackNavigator(
         ReviewTripScreen: { screen: ReviewTrip },
         RequestAcceptedScreen: { screen: RequestAccepted },
         FilterScreen: { screen: Filters },
-        HotelFilterScreen: { screen: HotelFilters },
         AvailableRoomsView: { screen: AvailableRoomsView},
         Notifications: { screen: Notifications},
         CreditCard :  { screen: CreditCard},
@@ -153,7 +161,14 @@ const RootNavigator = createStackNavigator(
         SingleWishlist: {screen: SingleWishlist},
         Debug : {screen: Debug},
         Chat: {screen: Chat},
-        PropertySock: {screen: PropertySock},
+
+        HotelsSearchScreen: {screen: HotelsSearchScreen},
+        HotelFilterScreen: { screen: HotelFilters },
+        HomesSearchScreen: {screen: HomesSearchScreen},
+        HomeFilterScreen: { screen: HomeFilters },
+        HomeDetailsScreen: { screen: HomeDetails },
+        HomeReviewScreen: { screen: HomeReview },
+        HomeRequestConfirm: { screen: HomeRequestConfirm },
         MapFullScreen: {screen: MapFullScreen}
     },
     {
@@ -171,6 +186,10 @@ const AppWithNavigationState = reduxifyNavigator(RootNavigator, 'root');
 
 // create nav component
 class ReduxNavigation extends PureComponent {
+    state = {
+        visibleConfirmDialog: false,
+    }
+
     componentDidMount() {
         BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
     }
@@ -180,23 +199,50 @@ class ReduxNavigation extends PureComponent {
     }
   
     onBackPress = () => {
-         const { dispatch, navigation } = this.props;
-        if (navigation.index === 0) {
-            return false;
+         const { dispatch, state } = this.props;
+        if (state.index === 0) {
+            console.log("exit-------");
+            this.setState({ visibleConfirmDialog: true });
+            return true;
         }
     
         dispatch(NavigationActions.back());
         return true;
     };
+
+    onConfirmOk = () => {
+        console.log("onConfirmOk ---");
+        this.setState({ visibleConfirmDialog: false }, () => {
+            console.log("onConfirmOk ---123123123");
+            BackHandler.exitApp();
+            // const { dispatch } = this.props;
+            // dispatch(NavigationActions.back());
+        });
+    }
+
+    onConfirmCancel = () => {
+        this.setState({ visibleConfirmDialog: false });
+    }
   
     render() {
-        const { dispatch, navigation } = this.props;
-        return <AppWithNavigationState dispatch={dispatch} state={navigation}/>;
+        const { dispatch, state } = this.props;
+        const { visibleConfirmDialog } = this.state;
+        return (
+            <View style={{flex: 1}}>
+                <AppWithNavigationState dispatch={dispatch} state={state}/>
+                <ExitConfirmDialog
+                    title = { "Confirm"}
+                    visible = { visibleConfirmDialog }
+                    onCancel = { this.onConfirmCancel }
+                    onOk = { this.onConfirmOk }
+                />
+            </View>
+        );
     }
 }
 
 const mapNavStateProps = state => ({
-    navigation: state.nav
+    state: state.nav
 });
 
 const AppNavigator = connect(mapNavStateProps)(ReduxNavigation);
