@@ -77,6 +77,7 @@ class SendToken extends Component {
         setTimeout(() => {
             const wei = (this.tokensToWei(this.state.loc_amount.toString()));
             console.log("onClickSend - wei", wei);
+            console.log("onClickSend - this.state.jsonFile", this.state.jsonFile);
             TokenTransactions.sendTokens(
               this.state.jsonFile,
               this.state.wallet_password,
