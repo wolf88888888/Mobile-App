@@ -5,11 +5,10 @@ import {
     TouchableOpacity,
     } from 'react-native';
 import PropTypes from 'prop-types';
+import Toast from 'react-native-easy-toast';
 
 import CloseButton from '../../atoms/CloseButton';
 import GuestRow from '../../molecules/GuestRow';
-import Toast from 'react-native-easy-toast';
-
 import styles from './styles';
 
 class Guests extends Component {
