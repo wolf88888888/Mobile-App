@@ -34,7 +34,7 @@ class SendToken extends Component {
             wallet_password: '',
             showProgress: false,
             jsonFile: '',
-            loadMessage: 'loading...',
+            loadMessage: 'sending...',
         };
         this.onClickSend = this.onClickSend.bind(this);
     }
