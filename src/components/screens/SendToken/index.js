@@ -82,12 +82,15 @@ class SendToken extends Component {
                 this.state.wallet_address,
                 wei.toString()//(parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
             ).then(() => {
-                alert('Transaction made successfully');
                 this.setState({
                     wallet_address: '',
                     locAmount: 0,
                     wallet_password: '',
                     showProgress: false,
+                }, ()=> {
+                    setTimeout(() => {
+                        alert('Transaction made successfully');
+                    }, 1000)
                 });
             }).catch(x => {
                 this.setState({ showProgress: false });
