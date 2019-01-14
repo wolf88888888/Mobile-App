@@ -76,13 +76,11 @@ class SendToken extends Component {
         this.setState({ showProgress: true });
         setTimeout(() => {
             const wei = (this.tokensToWei(this.state.loc_amount.toString()));
-            console.log("onClickSend - wei", wei);
-            console.log("onClickSend - this.state.jsonFile", this.state.jsonFile);
             TokenTransactions.sendTokens(
-              this.state.jsonFile,
-              this.state.wallet_password,
-              this.state.wallet_address,
-              wei.toString()//(parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
+                this.state.jsonFile,
+                this.state.wallet_password,
+                this.state.wallet_address,
+                wei.toString()//(parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
             ).then(() => {
                 alert('Transaction made successfully');
                 this.setState({

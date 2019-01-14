@@ -65,7 +65,6 @@ export class TokenTransactions {
 
     if (fromSignedkey === null) {
         key = await crypto.scrypt(fromPassword, fromSalt, fromN, fromR, fromP, fromDkLen);
-        console.log("key", key);
         ethers.Wallet.getSignKeyForEncryptedWalletDef(jsonObj, key, (error, signedkey) => {
             if (error != null) {
                 throw error;
@@ -73,7 +72,6 @@ export class TokenTransactions {
             }
 
             fromSignedkey = signedkey;
-            console.log("fromSignedkey", fromSignedkey);
         });
     }
 
