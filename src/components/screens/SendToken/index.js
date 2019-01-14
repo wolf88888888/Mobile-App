@@ -93,19 +93,22 @@ class SendToken extends Component {
                     }, 1000)
                 });
             }).catch(x => {
-                this.setState({ showProgress: false });
-                if (x.hasOwnProperty('message')) {
-                    alert(x.message);
-                } 
-                else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
-                    alert(x.err.message);
-                }
-                else if (typeof x === 'string') {
-                    alert(x);
-                } 
-                else {
-                    console.log(x);
-                }
+                this.setState({ showProgress: false }, () => {
+                    setTimeout(() => {
+                        if (x.hasOwnProperty('message')) {
+                            alert(x.message);
+                        } 
+                        else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
+                            alert(x.err.message);
+                        }
+                        else if (typeof x === 'string') {
+                            alert(x);
+                        } 
+                        else {
+                            console.log(x);
+                        }
+                    }, 1000)
+                });
             });
         }, 1000);
     }
