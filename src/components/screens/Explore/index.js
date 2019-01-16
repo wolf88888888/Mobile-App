@@ -25,7 +25,7 @@ import SingleSelectMaterialDialog from '../../atoms/MaterialDialog/SingleSelectM
 import LocRateButton from '../../atoms/LocRateButton'
 import { setCurrency } from '../../../redux/action/Currency'
 
-const shouldBeNative = true; // This line controls which screen should be shown when clicked on search, it its true it will take to hardcoded hotel else will take to webview
+const shouldBeNative = false; // false: webview version, true: native search version
 const BASIC_CURRENCY_LIST = ['EUR', 'USD', 'GBP'];//eslint-disable-line
 
 class Explore extends Component {
