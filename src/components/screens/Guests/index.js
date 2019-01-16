@@ -2,18 +2,13 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    AsyncStorage,
     TouchableOpacity,
-    TouchableWithoutFeedback,
-    Keyboard
     } from 'react-native';
-import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
+import Toast from 'react-native-easy-toast';
 
 import CloseButton from '../../atoms/CloseButton';
-import Counter from '../../atoms/Counter';
 import GuestRow from '../../molecules/GuestRow';
-
 import styles from './styles';
 
 class Guests extends Component {
@@ -58,10 +53,14 @@ class Guests extends Component {
     }
 
     onDone() {
-      this.props.navigation.goBack();
-      if (this.props.navigation.state.params && this.props.navigation.state.params.updateData) {
-        this.props.navigation.state.params.updateData(this.state);
-      }
+        if (this.state.adults === 0){
+            this.refs.toast.show('You cannot book without adult.', 1500);
+            return;
+        }
+        if (this.props.navigation.state.params && this.props.navigation.state.params.updateData) {
+            this.props.navigation.state.params.updateData(this.state);
+        }
+        this.props.navigation.goBack();
     }
 
     render() {
@@ -80,6 +79,17 @@ class Guests extends Component {
                     <Text style={styles.doneButtonText}>Done</Text>
                 </TouchableOpacity>
               </View>
+              
+              <Toast
+                    ref="toast"
+                    style={{ backgroundColor: '#DA7B61' }}
+                    position='bottom'
+                    positionValue={150}
+                    fadeInDuration={500}
+                    fadeOutDuration={500}
+                    opacity={1.0}
+                    textStyle={{ color: 'white', fontFamily: 'FuturaStd-Light' }}
+                />
             </View>
         );
     }

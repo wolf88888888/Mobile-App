@@ -6,8 +6,10 @@ import BackButton from '../../atoms/BackButton';
 import UUIDGenerator from 'react-native-uuid-generator';
 import styles from './styles';
 
-let baseHomeUrl = 'https://beta.locktrip.com/homes/listings/?'
-let baseHotelUrl = 'https://beta.locktrip.com/mobile/hotels/listings?'
+import { basePath } from '../../../config'
+
+let baseHomeUrl = basePath + 'homes/listings/?'
+let baseHotelUrl = basePath + 'mobile/hotels/listings?'
 
 class Property extends Component {
     webViewRef = {

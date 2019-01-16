@@ -271,8 +271,8 @@ class RoomDetailsReview extends Component {
                             endDate.unix().toString(),
                         ).then(transaction => {
                             console.log('transaction----', transaction);
-                            setTimeout(() => {
-                                this.setState({isLoading: false}, ()=>{
+                            this.setState({isLoading: false}, ()=>{
+                                setTimeout(() => {
                                     const bookingConfirmObj = {
                                         bookingId: preparedBookingId,
                                         transactionHash: transaction.hash,
@@ -290,8 +290,8 @@ class RoomDetailsReview extends Component {
                                         this.restartQuote();
                                         this.refs.toast.show('Something with your transaction went wrong...', 2000);
                                     });
-                                });
-                            }, 1000);
+                                }, 1000);
+                            });
                             
                         }).catch(error => {
                             console.log("--------payWithLocSingleWithdrawer errr------", error);

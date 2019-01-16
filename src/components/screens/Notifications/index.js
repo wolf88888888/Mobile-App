@@ -64,7 +64,7 @@ class Notifications extends Component {
                         <View style={styles.navItem}>
                             <View>
                                 <Text style={styles.navItemText}>Messages</Text>
-                                <Text style={styles.navText}>Recieves messages from holtels and guests</Text>
+                                <Text style={styles.navText}>Receive messages from hotels and guests</Text>
                             </View>
                         </View>
 
@@ -201,10 +201,10 @@ class Notifications extends Component {
 
                         <View style={styles.navItem}>
                             <View>
-                                <Text style={styles.navItemText}>Reminder & Suggestions</Text>
+                                <Text style={styles.navItemText}>Reminders & Suggestions</Text>
                                 <Text style={styles.navText}>
-                                    Recieve reminders, helpful tips to improve your trip and other messages
-                                    related to your activites on LockChain.
+                                    Receive reminders, helpful tips to improve your trip and other messages
+                                    related to your activites on Locktrip.
                                 </Text>
                             </View>
                         </View>
