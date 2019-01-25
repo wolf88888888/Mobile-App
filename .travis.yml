@@ -1,5 +1,6 @@
 os: osx
 osx_image: xcode9.4
+language: objective-c
 node_js:
   - 8.14.1
 
@@ -30,7 +31,6 @@ jobs:
         - $encrypted_5478faad
 
     - stage: build and deploy ios appetize release
-      language: objective-c
       install: 
         - npm install
         - cd ios
