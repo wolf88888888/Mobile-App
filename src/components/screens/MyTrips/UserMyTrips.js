@@ -37,6 +37,7 @@ class UserMyTrips extends Component {
             isLoading: false,
         };
         this.onEndReached = this.onEndReached.bind(this)
+        this.renderItem = this.renderItem.bind(this)
     }
 
     async componentDidMount() {
@@ -71,13 +72,75 @@ class UserMyTrips extends Component {
         }
     }
 
-    render() {
-        const { navigate } = this.props.navigation;
-
+    renderItem(item) {
+        let invalidData = false;
+        let hotelImageURL;
+        let error;
         let imageAvatar = '';
-        if (this.state.image != '') {
-            imageAvatar = { uri: imgHost + this.state.userImageUrl }
+
+        // check if data is valid
+        if (item && item.item && item.item.hotel_photo) {
+            try {
+                let jsonData = item.item.hotel_photo;
+                const thumb =  JSON.parse(jsonData).thumbnail;
+                hotelImageURL = `${imgHost}${thumb}`;
+                if (this.state.image != '') {
+                    imageAvatar = { uri: imgHost + this.state.userImageUrl }
+                }
+            } catch (err) {
+                error = err;
+                invalidData = true;
+            }
+        } else {
+            invalidData = true;
+            error = 'Error in hotel data object - item/item.item/item.hotel_photo is null';
         }
+
+        // if invalid hotel data
+        if (invalidData) {
+            console.warn('Error in parsing hotel image thumbnail or getting avatar url from state.',{error,hotelData:item})
+            return <Text >{"Invalid hotel data."}</Text>;
+        } else {
+            return (
+                <View style={styles.flatListMainView}>
+                    <View>
+                        <View style={styles.img_round}>
+                            <Text style={styles.img_round_text}>
+                                {(moment(item.arrival_date)).format("DD").toString()}
+                                {"\n"}
+                                {(moment(item.arrival_date)).format("MMM").toString()}
+                            </Text>
+                        </View>
+                        <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
+                    </View>
+                    <View style={styles.flatListDataView}>
+                        <View style={styles.flatListTitleView}>
+                            <Text style={styles.subtext1}>
+                                {(moment(item.arrival_date)).format('ddd, DD MMM').toString()}
+                                {" "}<FontAwesome>{Icons.longArrowRight}</FontAwesome>{" "}
+                                {(moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString()}
+                            </Text>
+    
+                            <Text style={styles.subtitle}>Check into {item.hotel_name}</Text>
+                        </View>
+    
+                        <Image
+                            style={styles.hotelImage}
+                            source={{ uri: hotelImageURL }}
+                        />
+                        <View style={styles.flatListBottomView}>
+                            <View style={styles.flatListUserProfileView}>
+                                <Image style={styles.senderImage} source={imageAvatar} />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            )        }
+    }
+
+    render() {
+        const { navigate } = this.props.navigation;        
+
         return (
             <View style={styles.container}>
                 <View style={styles.chatToolbar}>
@@ -89,42 +152,7 @@ class UserMyTrips extends Component {
                     data={this.state.trips}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.5}
-                    renderItem={
-                        ({ item }) =>
-                            <View style={styles.flatListMainView}>
-                                <View>
-                                    <View style={styles.img_round}>
-                                        <Text style={styles.img_round_text}>
-                                            {(moment(item.arrival_date)).format("DD").toString()}
-                                            {"\n"}
-                                            {(moment(item.arrival_date)).format("MMM").toString()}
-                                        </Text>
-                                    </View>
-                                    <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
-                                </View>
-                                <View style={styles.flatListDataView}>
-                                    <View style={styles.flatListTitleView}>
-                                        <Text style={styles.subtext1}>
-                                            {(moment(item.arrival_date)).format('ddd, DD MMM').toString()}
-                                            {" "}<FontAwesome>{Icons.longArrowRight}</FontAwesome>{" "}
-                                            {(moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString()}
-                                        </Text>
-
-                                        <Text style={styles.subtitle}>Check into {item.hotel_name}</Text>
-                                    </View>
-
-                                    <Image
-                                        style={styles.hotelImage}
-                                        source={{ uri: imgHost + JSON.parse(item.hotel_photo).thumbnail }}
-                                    />
-                                    <View style={styles.flatListBottomView}>
-                                        <View style={styles.flatListUserProfileView}>
-                                            <Image style={styles.senderImage} source={imageAvatar} />
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                    }
+                    renderItem={this.renderItem}
                 />
             </View>
         )
