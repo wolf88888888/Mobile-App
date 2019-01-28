@@ -38,6 +38,7 @@ class UserMyTrips extends Component {
         };
         this.onEndReached = this.onEndReached.bind(this)
         this.renderItem = this.renderItem.bind(this)
+        this.renderHotelImage = this.renderHotelImage.bind(this)
     }
 
     async componentDidMount() {
@@ -72,7 +73,26 @@ class UserMyTrips extends Component {
         }
     }
 
+    renderHotelImage(hotelImageURL) {
+        console.log('@@[UserMyTrips]::renderHotelImage', {hotelImageURL});
+
+        let result = (
+            <Image
+                style={styles.hotelImage}
+                source={{ uri: hotelImageURL }}
+            /> 
+        );
+
+        if (hotelImageURL == null) {
+            result =<Text>{"No image"}</Text> 
+        }
+
+        return result;
+    }
+    
     renderItem(item) {
+        console.log('@@[UserMyTrips]::renderItem', item);        
+
         let invalidData = false;
         let hotelImageURL;
         let error;
@@ -99,46 +119,49 @@ class UserMyTrips extends Component {
         // if invalid hotel data
         if (invalidData) {
             console.warn('Error in parsing hotel image thumbnail or getting avatar url from state.',{error,hotelData:item})
-            return <Text >{"Invalid hotel data."}</Text>;
-        } else {
-            return (
-                <View style={styles.flatListMainView}>
-                    <View>
-                        <View style={styles.img_round}>
-                            <Text style={styles.img_round_text}>
-                                {(moment(item.arrival_date)).format("DD").toString()}
-                                {"\n"}
-                                {(moment(item.arrival_date)).format("MMM").toString()}
-                            </Text>
-                        </View>
-                        <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
+        }
+
+        const day1 = (moment(item.arrival_date)).format("DD").toString();
+        const month1 = (moment(item.arrival_date)).format("MMM").toString();
+        const dateInCircle = `${day1}\n${month1}`;
+
+        const dateFrom = (moment(item.arrival_date)).format('ddd, DD MMM').toString();
+        const dateTo = (moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString();
+        const arrow = (<FontAwesome>{Icons.longArrowRight}</FontAwesome>);
+
+        return (
+            <View style={styles.flatListMainView}>
+                <View>
+                    <View style={styles.img_round}>
+                        <Text style={styles.img_round_text}>
+                          {dateInCircle}
+                        </Text>
                     </View>
-                    <View style={styles.flatListDataView}>
-                        <View style={styles.flatListTitleView}>
-                            <Text style={styles.subtext1}>
-                                {(moment(item.arrival_date)).format('ddd, DD MMM').toString()}
-                                {" "}<FontAwesome>{Icons.longArrowRight}</FontAwesome>{" "}
-                                {(moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString()}
-                            </Text>
-    
-                            <Text style={styles.subtitle}>Check into {item.hotel_name}</Text>
-                        </View>
-    
-                        <Image
-                            style={styles.hotelImage}
-                            source={{ uri: hotelImageURL }}
-                        />
-                        <View style={styles.flatListBottomView}>
-                            <View style={styles.flatListUserProfileView}>
-                                <Image style={styles.senderImage} source={imageAvatar} />
-                            </View>
+                    <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
+                </View>
+                <View style={styles.flatListDataView}>
+                    <View style={styles.flatListTitleView}>
+                        <Text style={styles.subtext1}>
+                            {dateFrom}{" "}{arrow}{" "}{dateTo}
+                        </Text>
+                        <Text style={styles.subtitle}>Check into {item.item.hotel_name}</Text>
+                    </View>
+                    <View style={{height:150}}>
+                        { this.renderHotelImage(hotelImageURL)       }
+                    </View>
+                    <View style={styles.flatListBottomView}>
+                        <View style={styles.flatListUserProfileView}>
+                            <Image style={styles.senderImage} source={imageAvatar} />
                         </View>
                     </View>
                 </View>
-            )        }
+            </View>
+        )
     }
 
     render() {
+        console.log('@@[UserMyTrips]::render', {prop:this.props});
+
         const { navigate } = this.props.navigation;        
 
         return (
