@@ -16,7 +16,24 @@ const styles = StyleSheet.create({
         height: 135,
         marginTop: 75
     },
+    hotelBookingStatusContainer: {
+
+    },
+    hotelImageContainerBlank: {
+        height: 150,
+        borderRadius: 10,
+        backgroundColor: "#DADADA",
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    hotelImageContainer: {
+        height: 150,
+        justifyContent: 'flex-start',
+        borderRadius: 10,
+        marginBottom: 40
+    },
     hotelImage: {
+        borderRadius: 5,
         marginBottom: 10,
         marginTop: 10,
         height: 150,

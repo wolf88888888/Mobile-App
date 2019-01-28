@@ -10,6 +10,7 @@ import moment from 'moment';
 import requester from '../../../initDependencies';
 import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
+import lang from '../../../language/';
 
 class UserMyTrips extends Component {
 
@@ -73,52 +74,97 @@ class UserMyTrips extends Component {
         }
     }
 
-    renderHotelImage(hotelImageURL) {
-        console.log('@@[UserMyTrips]::renderHotelImage', {hotelImageURL});
+    renderBookingStatus(status) {
+        console.tron.log(lang)
+        if (status == 'PENDING_SAFECHARGE_CONFIRMATION') {
+            return (
+                <View
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                />
+            );
+        } else {
+            return (
+                <View 
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                >
+                    <Text>{`Booking status: ${lang.BOOKING_STATUSES[status]}`}</Text>
+                </View>
+            );
+        }
+    }
 
+    renderHotelImage(hotelImageURL,item) {
         let result = (
-            <Image
-                style={styles.hotelImage}
-                source={{ uri: hotelImageURL }}
-            /> 
+            <View 
+                style={styles.hotelImageContainer}
+                testID={'imageContainer'}
+            >
+                <Image
+                    style={styles.hotelImage}
+                    source={{ uri: hotelImageURL }}
+                /> 
+            </View>
         );
 
         if (hotelImageURL == null) {
-            result =<Text>{"No image"}</Text> 
+            result = (
+                <View 
+                    style={styles.hotelImageContainerBlank}
+                    testID={'blankImageContainer'}
+                    style={styles.hotelImageContainerBlank}
+                >
+                    <Text style={{color:"gray"}}>{lang.PLACEHOLDERS.MYTRIPS_BLANK_IMAGE}</Text>
+                </View>
+            )
         }
 
         return result;
     }
     
     renderItem(item) {
-        console.log('@@[UserMyTrips]::renderItem', item);        
-
         let invalidData = false;
-        let hotelImageURL;
-        let error;
+        let hotelImageURL = null;
+        let bookingStatusData = null;
+        let error; // {debug:String, error:Object}
         let imageAvatar = '';
 
         // check if data is valid
         if (item && item.item && item.item.hotel_photo) {
             try {
-                let jsonData = item.item.hotel_photo;
-                const thumb =  JSON.parse(jsonData).thumbnail;
+                let photoJSONData = item.item.hotel_photo;
+                const thumb =  JSON.parse(photoJSONData).thumbnail;
                 hotelImageURL = `${imgHost}${thumb}`;
                 if (this.state.image != '') {
                     imageAvatar = { uri: imgHost + this.state.userImageUrl }
                 }
             } catch (err) {
-                error = err;
+                error = {
+                    debug: 'Error in parsing hotel image thumbnail or getting avatar url from state.',
+                    error:err
+                };
                 invalidData = true;
+            }
+            try {
+                bookingStatusData = item.item.status;
+            } catch (err) {
+                error = {
+                    debug: 'Error in hotel data object from server - booking status not found',
+                    error:err
+                }
             }
         } else {
             invalidData = true;
-            error = 'Error in hotel data object - item/item.item/item.hotel_photo is null';
+            error = {
+                debug:'Error in hotel data object from server - item/item.item/item.hotel_photo is null',
+                error:{}
+            }
         }
 
         // if invalid hotel data
         if (invalidData) {
-            console.warn('Error in parsing hotel image thumbnail or getting avatar url from state.',{error,hotelData:item})
+            console.warn('Error in hotel item data',{error,hotelData:item})
         }
 
         const day1 = (moment(item.arrival_date)).format("DD").toString();
@@ -128,6 +174,7 @@ class UserMyTrips extends Component {
         const dateFrom = (moment(item.arrival_date)).format('ddd, DD MMM').toString();
         const dateTo = (moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString();
         const arrow = (<FontAwesome>{Icons.longArrowRight}</FontAwesome>);
+
 
         return (
             <View style={styles.flatListMainView}>
@@ -146,9 +193,10 @@ class UserMyTrips extends Component {
                         </Text>
                         <Text style={styles.subtitle}>Check into {item.item.hotel_name}</Text>
                     </View>
-                    <View style={{height:150}}>
-                        { this.renderHotelImage(hotelImageURL)       }
-                    </View>
+                    
+                    { this.renderHotelImage     (hotelImageURL)       }
+                    { this.renderBookingStatus  (item)       }
+
                     <View style={styles.flatListBottomView}>
                         <View style={styles.flatListUserProfileView}>
                             <Image style={styles.senderImage} source={imageAvatar} />
