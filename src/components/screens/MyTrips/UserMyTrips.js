@@ -52,7 +52,7 @@ class UserMyTrips extends Component {
 
     onEndReached() {
         console.log('reached to end');
-        pageNumber = this.state.page + 1
+        let pageNumber = this.state.page + 1
         if (!this.state.isLast && !this.state.isLoading) {
             this.setState({ isLoading: true })
             requester.getMyHotelBookings([`page=${pageNumber}`]).then(res => {
@@ -74,59 +74,9 @@ class UserMyTrips extends Component {
         }
     }
 
-    renderBookingStatus(status) {
-        console.tron.log(lang)
-        if (status == 'PENDING_SAFECHARGE_CONFIRMATION') {
-            return (
-                <View
-                    testID={'renderBookingStatus'}
-                    style={styles.hotelBookingStatusContainer}
-                />
-            );
-        } else {
-            return (
-                <View 
-                    testID={'renderBookingStatus'}
-                    style={styles.hotelBookingStatusContainer}
-                >
-                    <Text>{`Booking status: ${lang.BOOKING_STATUSES[status]}`}</Text>
-                </View>
-            );
-        }
-    }
-
-    renderHotelImage(hotelImageURL,item) {
-        let result = (
-            <View 
-                style={styles.hotelImageContainer}
-                testID={'imageContainer'}
-            >
-                <Image
-                    style={styles.hotelImage}
-                    source={{ uri: hotelImageURL }}
-                /> 
-            </View>
-        );
-
-        if (hotelImageURL == null) {
-            result = (
-                <View 
-                    style={styles.hotelImageContainerBlank}
-                    testID={'blankImageContainer'}
-                    style={styles.hotelImageContainerBlank}
-                >
-                    <Text style={{color:"gray"}}>{lang.PLACEHOLDERS.MYTRIPS_BLANK_IMAGE}</Text>
-                </View>
-            )
-        }
-
-        return result;
-    }
-    
-    renderItem(item) {
+    calcItemData(item) {
         let invalidData = false;
         let hotelImageURL = null;
-        let bookingStatusData = null;
         let error; // {debug:String, error:Object}
         let imageAvatar = '';
 
@@ -142,23 +92,15 @@ class UserMyTrips extends Component {
             } catch (err) {
                 error = {
                     debug: 'Error in parsing hotel image thumbnail or getting avatar url from state.',
-                    error:err
+                    error: err
                 };
                 invalidData = true;
-            }
-            try {
-                bookingStatusData = item.item.status;
-            } catch (err) {
-                error = {
-                    debug: 'Error in hotel data object from server - booking status not found',
-                    error:err
-                }
             }
         } else {
             invalidData = true;
             error = {
-                debug:'Error in hotel data object from server - item/item.item/item.hotel_photo is null',
-                error:{}
+                debug: 'Error in hotel data object from server - item/item.item/item.hotel_photo is null',
+                error: {}
             }
         }
 
@@ -167,14 +109,115 @@ class UserMyTrips extends Component {
             console.warn('Error in hotel item data',{error,hotelData:item})
         }
 
-        const day1 = (moment(item.arrival_date)).format("DD").toString();
-        const month1 = (moment(item.arrival_date)).format("MMM").toString();
-        const dateInCircle = `${day1}\n${month1}`;
+        const day = (moment(item.arrival_date)).format("DD").toString();
+        const month = (moment(item.arrival_date)).format("MMM").toString();
+        const dateInCircle = `${day}\n${month}`;
 
         const dateFrom = (moment(item.arrival_date)).format('ddd, DD MMM').toString();
         const dateTo = (moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString();
         const arrow = (<FontAwesome>{Icons.longArrowRight}</FontAwesome>);
 
+        return {
+            hotelImageURL,
+            imageAvatar,
+            dateInCircle,
+            dateFrom,
+            dateTo,
+            arrow
+        }
+    }
+
+    calcBookingStatusAndRefNo(item) {
+        let status;
+        let refNo;
+
+        try {
+            status = item.item.status;
+            refNo = item.item.booking_id;
+        } catch(err) {
+            console.warn('Error while getting My Trips -> booking -> (status or reference no) ', {error:err});
+            status = '';
+        }
+
+        return {
+            refNo,
+            status
+        }
+    }
+
+    renderBookingStatusAndRefNo(item) {
+        const {refNo,status} = this.calcBookingStatusAndRefNo(item);
+
+        let txtStatus = <Text style={styles.textBookingStatus}>{`${lang.TEXT.MY_TRIPS_BOOKING_STATUS}: ${lang.SERVER.BOOKING_STATUS[status]}`}</Text>;
+        let txtRefNo = <Text style={styles.textBookingId}>{`${lang.TEXT.MY_TRIPS_BOOKING_REF_NO}: ${refNo}`}</Text>
+
+        let result;
+
+        
+        if (status == '' || status == null || status == 'PENDING_SAFECHARGE_CONFIRMATION') {
+        // In this case no info should be shown
+            result = (
+                <View
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                ><Text>{'status null'}</Text></View>
+            );
+        } else if (status && status == 'COMPLETE') {
+            result = (
+                <View 
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                >
+                    {txtStatus}
+                    {txtRefNo}
+                </View>
+            );
+        } else {
+            result = (
+                <View 
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                >
+                    {txtStatus}
+                </View>
+            );
+        }
+        return result;
+    }
+
+    renderHotelImage(hotelImageURL) {
+        let result;
+
+        if (hotelImageURL == null) {
+            result = (
+                <View 
+                    style={styles.hotelImageContainerNoImage}
+                    testID={'blankImageContainer'}
+                >
+                    {/* <View style={styles.hotelImageNoImage}> */}
+                        <Text style={styles.txtHotelNoImage}>{lang.TEXT.MYTRIPS_NO_IMAGE}</Text>
+                    {/* </View> */}
+                </View>
+            )
+        } else {
+            result = (
+                <View 
+                    style={styles.hotelImageContainer}
+                    testID={'imageContainer'}
+                >
+                    <Image
+                        style={styles.hotelImage}
+                        source={{ uri: hotelImageURL }}
+                    />
+                </View>
+            );
+        }
+
+        return result;
+    }
+    
+    renderItem(item) {
+        const {hotelImageURL,imageAvatar,dateInCircle,dateFrom,dateTo,arrow} = this.calcItemData(item);
 
         return (
             <View style={styles.flatListMainView}>
@@ -194,22 +237,21 @@ class UserMyTrips extends Component {
                         <Text style={styles.subtitle}>Check into {item.item.hotel_name}</Text>
                     </View>
                     
-                    { this.renderHotelImage     (hotelImageURL)       }
-                    { this.renderBookingStatus  (item)       }
+                    { this.renderHotelImage             (hotelImageURL) }
+                    { this.renderBookingStatusAndRefNo  (item)          }
 
                     <View style={styles.flatListBottomView}>
                         <View style={styles.flatListUserProfileView}>
                             <Image style={styles.senderImage} source={imageAvatar} />
                         </View>
                     </View>
+                    <View style={styles.itemSeparator}/>
                 </View>
             </View>
         )
     }
 
     render() {
-        console.log('@@[UserMyTrips]::render', {prop:this.props});
-
         const { navigate } = this.props.navigation;        
 
         return (
