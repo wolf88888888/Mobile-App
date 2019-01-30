@@ -1638,6 +1638,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Locktrip;
 				PRODUCT_NAME = Locktrip;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1670,6 +1671,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Locktrip;
 				PRODUCT_NAME = Locktrip;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

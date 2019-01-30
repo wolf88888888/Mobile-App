@@ -41,8 +41,8 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
-    <string>FuturaStd-Light.otf</string>
-    <string>FuturaStd-Medium.otf</string>
+		<string>FuturaStd-Light.otf</string>
+		<string>FuturaStd-Medium.otf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -65,11 +65,11 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
