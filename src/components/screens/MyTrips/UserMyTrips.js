@@ -52,7 +52,7 @@ class UserMyTrips extends Component {
 
     onEndReached() {
         console.log('reached to end');
-        let pageNumber = this.state.page + 1
+        let pageNumber = this.state.page + 1;
         if (!this.state.isLast && !this.state.isLoading) {
             this.setState({ isLoading: true })
             requester.getMyHotelBookings([`page=${pageNumber}`]).then(res => {
@@ -109,12 +109,14 @@ class UserMyTrips extends Component {
             console.warn('Error in hotel item data',{error,hotelData:item})
         }
 
-        const day = (moment(item.arrival_date)).format("DD").toString();
-        const month = (moment(item.arrival_date)).format("MMM").toString();
+        const arrivalDate = moment(item.item.arrival_date);
+        const day = arrivalDate.format("DD").toString();
+        const month = arrivalDate.format("MMM").toString();
         const dateInCircle = `${day}\n${month}`;
 
-        const dateFrom = (moment(item.arrival_date)).format('ddd, DD MMM').toString();
-        const dateTo = (moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString();
+        const dateFormat = 'DD MMM, YYYY'; // example: "01 Oct, 2019"
+        const dateFrom = arrivalDate.format(dateFormat).toString();
+        const dateTo = arrivalDate.add(item.item.nights, 'day').format(dateFormat).toString();
         const arrow = (<FontAwesome>{Icons.longArrowRight}</FontAwesome>);
 
         return {

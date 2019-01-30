@@ -1,19 +1,4 @@
 import { StyleSheet } from 'react-native';
-
-const commonStyles = {
-    hotelImageCommon: {
-        borderRadius: 10,
-        height: 150
-    },
-    hotelImageContainerCommon: {
-        marginTop: 10,
-        marginBottom: 5,
-    },
-    fontsCommon: {
-        fontFamily: 'FuturaStd-Medium',
-    }
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -32,76 +17,37 @@ const styles = StyleSheet.create({
         marginTop: 75
     },
     hotelImage: {
-        ...commonStyles.hotelImageCommon
-    },
-    hotelImageNoImage: {
-        height: 150,
-        width: "100%",
-        alignContent: 'center',
-        flexDirection: 'column'
-    },
-    hotelImageContainerNoImage: {
-        ...commonStyles.hotelImageContainerCommon,
-        ...commonStyles.hotelImageCommon,
-        borderColor: 'black',
-        alignItems: 'center',
-        backgroundColor: "#DADADA",
-        justifyContent: 'center'
-    },
-    hotelImageContainer: {
-        ...commonStyles.hotelImageContainerCommon,
-        height: 150,
-        justifyContent: 'flex-start',
-    },
-    hotelBookingStatusContainer:{
+        marginBottom: 10,
         marginTop: 10,
-        marginBottom: 10
-    },
-    itemSeparator: {
-        height: 10,
-        // backgroundColor: '#0F0',
-        width: 50
-    },
-    // texsts
-    txtHotelNoImage: {
-        fontSize: 22,
-        color: '#AAA',
-    },
-    textBookingStatus: {
-        ...commonStyles.fontsCommon,
-        fontSize: 16
-    },
-    textBookingId: {
-        ...commonStyles.fontsCommon,
-        fontSize: 16
+        height: 150,
     },
     title: {
-        ...commonStyles.fontsCommon,
+        fontFamily: 'FuturaStd-Medium',
         fontSize: 22,
         color: '#000',
         marginLeft: 20,
         marginTop: 10
     },
     subtitle: {
-        ...commonStyles.fontsCommon,
+        fontFamily: 'FuturaStd-Light',
         fontSize: 16,
-        // marginRight: 10,
+        marginRight: 10,
         color: '#000'
     },
     subtext: {
-        ...commonStyles.fontsCommon,
+        fontFamily: 'FuturaStd-Light',
         fontSize: 15,
         marginTop: 5,
         color: '#000'
     },
     subtext1: {
-        ...commonStyles.fontsCommon,
+        fontFamily: 'FuturaStd-Light',
         fontSize: 13,
         marginTop: 5,
         color: '#000'
     },
     hoteltext: {
-        ...commonStyles.fontsCommon,
+        fontFamily: 'FuturaStd-Light',
         fontSize: 12,
         color: '#000'
     },
@@ -112,7 +58,7 @@ const styles = StyleSheet.create({
         marginTop: 90
     },
     exploreBtnText: {
-        ...commonStyles.fontsCommon,
+        fontFamily: 'FuturaStd-Light',
         fontSize: 17,
         color: '#fff'
     },
