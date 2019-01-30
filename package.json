@@ -22,7 +22,7 @@
     "net": "^1.0.2",
     "react": "16.6.3",
     "react-mixin": "^5.0.0",
-    "react-native": "0.58.0",
+    "react-native": "0.58.3",
     "react-native-cardview": "^2.0.2",
     "react-native-checkbox": "^2.0.0",
     "react-native-customisable-switch": "git://github.com/baderahmed/react-native-customisable-switch.git#118fe5aa51150b8c471c081a23ba38087aa210c6",
@@ -62,9 +62,9 @@
     "utf8": "^3.0.0"
   },
   "devDependencies": {
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "23.6.0",
-    "jest": "23.6.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "24.0.0",
+    "jest": "24.0.0",
     "metro-react-native-babel-preset": "0.51.1",
     "react-test-renderer": "16.6.3",
     "redux-devtools-extension": "^2.13.7",
