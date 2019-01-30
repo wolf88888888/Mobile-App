@@ -61,10 +61,6 @@ const styles = StyleSheet.create({
         top: 10,
         left: 10
     },
-    switchCheckText: {
-        color: '#DA7B61',
-        fontSize: 10.5
-    },
     nextButtonView: {
         display: 'flex',
         alignItems: 'flex-end',

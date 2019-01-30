@@ -1,5 +1,5 @@
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import React, { Component } from 'react';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
@@ -75,15 +75,11 @@ class Notifications extends Component {
                             <View>
                                 {recieveEmailMessage ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={13} color="#fff" />
                                     </View>
                                     :
                                     <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.unSwitchCheckText}>
-                                            <FontAwesome>{Icons.times}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"times"} size={13} color="#ccc" />
                                     </View>
                                 }
                                 {/* if you want to solve cross appearing above switch you need to set checkZIndex to 0 */}
@@ -117,16 +113,13 @@ class Notifications extends Component {
                             <Text style={styles.navItemText}>Text Message</Text>
                             <View>
                                 {recieveTextMessage ?
+                                
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={13} color="#fff" />
                                     </View>
                                     :
                                     <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.unSwitchCheckText}>
-                                            <FontAwesome>{Icons.times}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"times"} size={13} color="#ccc" />
                                     </View>
                                 }
                                 <Switch
@@ -162,15 +155,11 @@ class Notifications extends Component {
                             <View>
                                 {recievePushNotificationMessages ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={13} color="#fff" />
                                     </View>
                                     :
                                     <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.unSwitchCheckText}>
-                                            <FontAwesome>{Icons.times}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"times"} size={13} color="#ccc" />
                                     </View>
                                 }
                                 <Switch
@@ -213,15 +202,11 @@ class Notifications extends Component {
                             <View>
                                 {recieveEmail ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={13} color="#fff" />
                                     </View>
                                     :
                                     <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.unSwitchCheckText}>
-                                            <FontAwesome>{Icons.times}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"times"} size={13} color="#ccc" />
                                     </View>
                                 }
                                 <Switch
@@ -253,15 +238,11 @@ class Notifications extends Component {
                             <View>
                                 {recieveText ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={13} color="#fff" />
                                     </View>
                                     :
                                     <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.unSwitchCheckText}>
-                                            <FontAwesome>{Icons.times}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"times"} size={13} color="#ccc" />
                                     </View>
                                 }
                                 <Switch
@@ -297,15 +278,11 @@ class Notifications extends Component {
                             <View>
                                 {recievePushNotification ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={13} color="#fff" />
                                     </View>
                                     :
                                     <View style={[styles.switchUnCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.unSwitchCheckText}>
-                                            <FontAwesome>{Icons.times}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"times"} size={13} color="#ccc" />
                                     </View>
                                 }
                                 <Switch

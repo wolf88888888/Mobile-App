@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { TextInput } from 'react-native';
 
 import MaterialDialog from '../MaterialDialog/MaterialDialog';
-import Toast from 'react-native-simple-toast';
+import Toast, {DURATION} from 'react-native-easy-toast'
 import styles from './styles'
 
 class LoginEmailVerifyDialog extends Component {
@@ -48,7 +48,8 @@ class LoginEmailVerifyDialog extends Component {
                 onCancel = {()=>this.props.onCancel()}
                 onOk={() => {
                     if (this.state.emailToken == '') {
-                        Toast.showWithGravity('Please Input Token.', Toast.SHORT, Toast.BOTTOM);
+                        // Toast.showWithGravity('Please Input Token.', Toast.SHORT, Toast.BOTTOM);
+                        this.refs.toast.show('Please Input Token.');
                         return;
                     }
                     this.props.onOk(this.state.emailToken)}
@@ -61,6 +62,13 @@ class LoginEmailVerifyDialog extends Component {
                     style={styles.editInput}
                     value={this.state.emailToken}
                     onChangeText={(emailToken) => this.setState({emailToken})}
+                />
+                
+                <Toast
+                    ref="toast"
+                    position='bottom'
+                    opacity={0.8}
+                    positionValue={150}
                 />
             </MaterialDialog>
         )

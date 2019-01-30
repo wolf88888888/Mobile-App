@@ -13,7 +13,6 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { autobind } from 'core-decorators';
 import styles from './styles';
 import { validateEmail, validatePassword1 } from '../../../../utils/validation';
 import SmartInput from '../../../atoms/SmartInput';
@@ -118,8 +117,7 @@ class Login extends Component {
 
     }
 
-    @autobind
-    onChangeHandler(property) {
+    onChangeHandler = (property) => {
         return (value) => {
             this.setState({ [property]: value });
         };

@@ -10,7 +10,7 @@ import {
     reduxifyNavigator,
     createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
-import {Platform, BackHandler, View} from 'react-native';
+import {BackHandler, View} from 'react-native';
 
 import ExitConfirmDialog from '../components/molecules/ExitConfirmDialog'
 
@@ -72,7 +72,6 @@ import CongratsCreditCard from '../components/screens/CongratsCreditCard';
 
 import PropertyList from '../components/screens/PropertyList';
 import SingleWishlist from '../components/screens/Favorites/SingleWishlist';
-import Debug from '../components/screens/Debug';
 import Calendar from '../components/screens/Calendar';
 
 import HotelsSearchScreen from '../components/screens/HotelsSearch/HotelsSearchScreen';
@@ -159,7 +158,6 @@ const RootNavigator = createStackNavigator(
         SimpleUserProfile: {screen: SimpleUserProfile},
         SendToken: {screen: SendToken},
         SingleWishlist: {screen: SingleWishlist},
-        Debug : {screen: Debug},
         Chat: {screen: Chat},
 
         HotelsSearchScreen: {screen: HotelsSearchScreen},

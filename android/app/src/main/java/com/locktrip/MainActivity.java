@@ -6,7 +6,6 @@ import android.content.Intent;
 import com.facebook.react.ReactActivity;
 
 import com.reactnativecomponent.splashscreen.RCTSplashScreen;    //import RCTSplashScreen
-
 public class MainActivity extends ReactActivity {
 
     /**
@@ -15,9 +14,8 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "MobileApp";
+        return "Locktrip";
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RCTSplashScreen.openSplashScreen(this);   //open splashscreen

@@ -149,21 +149,15 @@ const styles = StyleSheet.create({
     switchCheckView: {
         position: 'absolute',
         top: 10,
-        left: 10
+        left: 10,
+        alignItems:'center'
     },
     switchUnCheckView: {
         position: 'absolute',
         top: 10,
         right: 10,
+        alignItems:'center',
         justifyContent: 'flex-end'
     },
-    switchCheckText: {
-        color: '#FFF',
-        fontSize: 10.5
-    },
-    unSwitchCheckText: {
-        color: '#cccccc',
-        fontSize: 10.5
-    }
 });
 export default styles;

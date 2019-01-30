@@ -3,9 +3,9 @@ import { StyleSheet} from 'react-native';
 
 import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
+import Toast from 'react-native-easy-toast';
 
 import MaterialDialog from '../MaterialDialog/MaterialDialog';
-import Toast from 'react-native-simple-toast';
 
 class LoginLocationDialog extends Component {
     static propTypes = {
@@ -57,7 +57,7 @@ class LoginLocationDialog extends Component {
                 visible={this.props.visible}
                 onOk={() => {
                     if (this.state.selectedCountryId == null) {
-                        Toast.showWithGravity('Please Select Country.', Toast.SHORT, Toast.BOTTOM);
+                        this.refs.toast.show('Please Select Country.', 1500);
                         return;
                     }
 
@@ -78,6 +78,13 @@ class LoginLocationDialog extends Component {
                     style={{...pickerSelectStyles}}
                 >
                 </RNPickerSelect>
+                
+                <Toast
+                    ref="toast"
+                    position='bottom'
+                    opacity={0.8}
+                    positionValue={150}
+                />
             </MaterialDialog>
         )
     }

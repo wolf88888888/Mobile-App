@@ -87,11 +87,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
-    icon: {
-        color: '#fff',
-        fontSize: 24
-    },
-
     map: {
         alignItems: 'center',
         height: '100%',

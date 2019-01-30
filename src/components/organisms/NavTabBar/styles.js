@@ -18,14 +18,6 @@ export default StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10
     },
-    activeIconStyle: {
-        fontSize: 25,
-        color: '#DA7B61'
-    },
-    inactiveIconStyle: {
-        fontSize: 25,
-        color: '#646467'
-    },
 
     activeTextStyle: {
         fontSize: 8.5,

@@ -73,10 +73,6 @@ const styles = StyleSheet.create({
         paddingLeft: 2,
         paddingBottom: 2
     },
-    buttonText: {
-        color: '#fff',
-        fontSize: 17
-    },
     lowOpacity: {
         opacity: 0.3,
         position: 'absolute',

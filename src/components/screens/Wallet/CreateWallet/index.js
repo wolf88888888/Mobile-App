@@ -6,17 +6,18 @@ import {
     View,
     StatusBar
 } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Toast from 'react-native-simple-toast';
-import styles from './styles';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import Toast, {DURATION} from 'react-native-easy-toast'
+
 import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../../utils/validation';
 import SmartInput from '../../../atoms/SmartInput';
 import { Wallet } from '../../../../services/blockchain/wallet';
 import LineProgressDialog from '../../../atoms/SimpleDialogs/LineProgressDialog';
 import WhiteBackButton from '../../../atoms/WhiteBackButton';
+import styles from './styles';
 
 class CreateWallet extends Component {
     constructor(props) {
@@ -70,20 +71,20 @@ class CreateWallet extends Component {
         const { params } = this.props.navigation.state;
         // return;
         if (this.state.password.length < 8) {
-            Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Password should be at least 8 symbols.', 1500);
             return;
         }
         if (!hasLetterAndNumber(this.state.password)) {
-            Toast.showWithGravity('Password must contain both latin letters and digits.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Password must contain both latin letters and digits.', 1500);
             return;
         }
         if (!hasSymbol(this.state.password)) {
-            Toast.showWithGravity('Password must contain symbols, like !, # or %..', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Password must contain symbols, like !, # or %...', 1500);
             return;
         }
 
         if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
-            Toast.showWithGravity('Passwords are not matched, Please input correctly.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Passwords are not matched, Please input correctly.', 1500);
             return;
         }
 
@@ -108,14 +109,14 @@ class CreateWallet extends Component {
                 })
                 .catch(err => {
                     this.setState({ showProgress: false });
-                    Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                    this.refs.toast.show('Cannot create wallet, Please check network connection.', 1500);
                     console.log(err);
                 });
             }, 500);
 
         } catch (error) {
             this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Cannot create wallet, Please check network connection.', 1500);
             console.log(error);
         }
     }
@@ -183,9 +184,7 @@ class CreateWallet extends Component {
                                 onPress={() => this.submitPassword()}
                             >
                                 <View style={styles.nextButton}>
-                                    <Text style={styles.buttonText}>
-                                        <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                    </Text>
+                                    <FontAwesome5Icon name={"arrow-right"} size={20} color="#fff" />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -197,6 +196,13 @@ class CreateWallet extends Component {
                         title=""
                         message={"Creating Wallet: " + parseInt(this.state.progress * 100) + "%" }
                         progress={this.state.progress}/>
+                        
+                    <Toast
+                        ref="toast"
+                        position='bottom'
+                        opacity={0.8}
+                        positionValue={150}
+                    />
                 </View>
             </KeyboardAwareScrollView>
         );

@@ -5,8 +5,8 @@ import {
     View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import Image from 'react-native-remote-svg';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import CardView from 'react-native-cardview'
 import PropTypes from 'prop-types';
 import { imgHost } from '../../../config';
@@ -45,10 +45,12 @@ class HotelItemView extends Component {
     renderStars = (count) => {
         const indents = [];
         for (let i = 0; i < count; i ++) {
-            indents.push(<Text key = {`star - ${i}`} style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+            indents.push(<FontAwesomeIcon key = {`star - ${i}`} name={"star"} size={16} color="#a3c5c0" />);
+            // indents.push(<Text key = {`star - ${i}`} style={{ color: '#a3c5c0' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
         }
         for (let i = count; i < 5; i ++) {
-            indents.push(<Text key = {`star - ${i}`} style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
+            indents.push(<FontAwesomeIcon key = {`star - ${i}`} name={"star"} size={16} color="#dddddd" />);
+            // indents.push(<Text key = {`star - ${i}`} style={{ color: '#dddddd' }}><FontAwesome>{Icons.star}</FontAwesome></Text>);
         }
         return indents;
     }

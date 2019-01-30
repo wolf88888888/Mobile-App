@@ -11,8 +11,9 @@ import Image from 'react-native-remote-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
 import Switch from 'react-native-customisable-switch';
-import Toast from 'react-native-simple-toast';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import Toast from 'react-native-easy-toast';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles';
 import { validateEmail, validateName } from '../../../../utils/validation';
 import SmartInput from '../../../atoms/SmartInput';
@@ -130,7 +131,7 @@ class CreateAccount extends Component {
     goToNextScreen() {
         console.log("state", this.state);
         if (this.state.hasCountryState && (this.state.countryState == undefined || this.state.countryState == '')) {
-            Toast.showWithGravity('Please Select State of Country.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Please Select State of Country.', 1500);
             return;
         }
         const { params } = this.props.navigation.state;
@@ -140,7 +141,7 @@ class CreateAccount extends Component {
                 firstName, lastName, email, country, userWantsPromo, checkZIndex, countryState
             } = this.state;
             if (country === undefined || country === null) {
-                Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
+                this.refs.toast.show('Select Country.', 1500);
             }
             else {
                 this.props.navigation.navigate('Terms', { ...params, firstName, lastName, email, country: country.id, countryState: countryState.id, userWantsPromo })
@@ -152,13 +153,13 @@ class CreateAccount extends Component {
             } = this.state;
             
             if (country === undefined || country === null) {
-                Toast.showWithGravity('Select Country.', Toast.SHORT, Toast.BOTTOM);
+                this.refs.toast.show('Select Country.', 1500);
             }
             else {
                 requester.getEmailFreeResponse(email).then(res => {
                     res.body.then(data => {
                         if (data.exist) {
-                            Toast.showWithGravity('Already exist email, please try with another email.', Toast.SHORT, Toast.BOTTOM);
+                            this.refs.toast.show('Already exist email, please try with another email.', 1500);
                         } else {
                             this.props.navigation.navigate('CreatePassword', {
                                 firstName, lastName, email, country: country.id, countryState: countryState.id, userWantsPromo
@@ -278,13 +279,14 @@ class CreateAccount extends Component {
                             </Text>
 
                             <View style={styles.switchContainer}>
-                                {userWantsPromo ?
+                                {
+                                userWantsPromo ?
                                     <View style={[styles.switchCheckView, { zIndex: checkZIndex }]}>
-                                        <Text style={styles.switchCheckText}>
-                                            <FontAwesome>{Icons.check}</FontAwesome>
-                                        </Text>
+                                        <FontAwesomeIcon name={"check"} size={15} color="#DA7B61" />
                                     </View>
-                                    : null}
+                                : 
+                                    null
+                                }
                                 <Switch
                                     value={userWantsPromo}
                                     onChangeValue={() => {
@@ -313,14 +315,19 @@ class CreateAccount extends Component {
                                 disabled={!validateName(firstName) || !validateName(lastName) || !validateEmail(email)}
                                 onPress={() => this.goToNextScreen()}>
                                 <View style={styles.nextButton}>
-                                    <Text style={styles.buttonText}>
-                                        <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                    </Text>
+                                    <FontAwesome5Icon name={"arrow-right"} size={20} color="#fff" />
                                 </View>
                             </TouchableOpacity>
                         </View>
                     </View>
                     </ScrollView>
+                    
+                    <Toast
+                        ref="toast"
+                        position='bottom'
+                        opacity={0.8}
+                        positionValue={150}
+                    />
                 </View>
             </KeyboardAwareScrollView>
         );

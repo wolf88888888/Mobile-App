@@ -7,9 +7,9 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 
+import Toast from 'react-native-easy-toast';
 import InboxMessagesView from './InboxMessagesView';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import Toast from 'react-native-simple-toast';
 import requester from '../../../initDependencies';
 import styles from './inboxStyle';
 
@@ -72,7 +72,7 @@ class Inbox extends Component {
                 this.isLoading = false;
                 if (isShowProgress) {
                     this.setState({ showProgress: false });
-                    Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                    this.refs.toast.show('Cannot get messages, Please check network connection.', 1500);
                 }
             });
         });
@@ -142,6 +142,12 @@ class Inbox extends Component {
                     animationType="slide"
                     activityIndicatorSize="large"
                     activityIndicatorColor="black" />
+                <Toast
+                        ref="toast"
+                        position='bottom'
+                        opacity={0.8}
+                        positionValue={150}
+                    />
             </View>
         );
     }

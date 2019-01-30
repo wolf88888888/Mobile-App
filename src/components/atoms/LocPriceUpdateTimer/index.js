@@ -85,4 +85,4 @@ const mapDispatchToProps = dispatch => ({
     reset : bindActionCreators(reset , dispatch),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(LocPriceUpdateTimer);
+export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(LocPriceUpdateTimer);

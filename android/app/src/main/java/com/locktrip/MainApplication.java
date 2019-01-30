@@ -2,28 +2,29 @@ package com.locktrip;
 
 import android.app.Application;
 
-import com.airbnb.android.react.maps.MapsPackage;
-import com.dylanvann.fastimage.FastImageViewPackage;
-import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
+import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.facebook.CallbackManager;
+import co.airbitz.fastcrypto.RNFastCryptoPackage;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
-import com.imagepicker.ImagePickerPackage;
-import com.kishanjvaghela.cardview.RNCardViewPackage;
-import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 
 import java.util.Arrays;
 import java.util.List;
 
-import co.airbitz.fastcrypto.RNFastCryptoPackage;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-
 public class MainApplication extends Application implements ReactApplication {
+
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
   protected static CallbackManager getCallbackManager() {
@@ -39,18 +40,20 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new RNCardViewPackage(),
-          new MainReactPackage(),
-          new ImageResizerPackage(),
-          new RNUUIDGeneratorPackage(),
-          new RCTSplashScreenPackage(),    //register Module
-          new MapsPackage(),
-          new ImagePickerPackage(),
-          new FBSDKPackage(mCallbackManager),
-          new RNFastCryptoPackage(),
-          new StompPackage(),
-          new FastImageViewPackage(),
-          new VectorIconsPackage()
+        new MainReactPackage(),
+            new RNGestureHandlerPackage(),
+        new VectorIconsPackage(),
+        new StompPackage(),
+        new RNUUIDGeneratorPackage(),
+        new RCTSplashScreenPackage(),
+        new MapsPackage(),
+        new ImageResizerPackage(),
+        new ImagePickerPackage(),
+
+        new RNFastCryptoPackage(),
+        new FBSDKPackage(mCallbackManager),
+        new FastImageViewPackage(),
+        new RNCardViewPackage()
       );
     }
 

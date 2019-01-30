@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text'
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 
 // TODO: move styles to separate file
@@ -17,10 +17,6 @@ const styles = StyleSheet.create({
         marginRight: 7,
         marginBottom: 7,
         backgroundColor: '#e4a193'
-    },
-    rightIconText: {
-        color: '#DA7B61',
-        fontSize: 11
     },
     container: {
         display: 'flex',
@@ -69,9 +65,7 @@ class SmartInputDate extends Component {
         if (rightIcon) {
             renderButton = (
                 <View style={styles.rightIconView}>
-                    <Text style={styles.rightIconText}>
-                        <FontAwesome>{Icons[rightIcon]}</FontAwesome>
-                    </Text>
+                    <FontAwesomeIcon name={"chevron-right"} size={14} color="#DA7B61" />
                 </View>
             );
         }

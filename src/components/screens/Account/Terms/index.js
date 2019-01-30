@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
+import Toast from 'react-native-easy-toast';
+import Hyperlink from 'react-native-hyperlink'
+
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import requester from '../../../../initDependencies';
 import { PUBLIC_URL } from '../../../../config';
-import Toast from 'react-native-simple-toast';
-import Hyperlink from 'react-native-hyperlink'
-
 import styles from './styles';
 
 class Terms extends Component {
@@ -49,7 +49,7 @@ class Terms extends Component {
                     const { errors } = data;
                     Object.keys(errors).forEach((key) => {
                         if (typeof key !== 'function') {
-                            Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
+                            this.refs.toast.show(errors[key].message, 1500);
                             console.log('Error logging in:', errors[key].message);
                         }
                     });
@@ -58,7 +58,7 @@ class Terms extends Component {
         })
         .catch(err => {
             this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Register is Failed, Please check network connection.', 1500);
             console.log(err);
         });
     }
@@ -99,6 +99,13 @@ class Terms extends Component {
                     animationType="slide"
                     activityIndicatorSize="large"
                     activityIndicatorColor="black"/>
+                    
+                <Toast
+                    ref="toast"
+                    position='bottom'
+                    opacity={0.8}
+                    positionValue={150}
+                />
             </View>
         );
     }

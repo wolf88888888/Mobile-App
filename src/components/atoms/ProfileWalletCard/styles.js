@@ -60,10 +60,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    addMorePlus: {
-        color: '#fff',
-        fontSize: 16
-    },
 });
 
 export default styles;

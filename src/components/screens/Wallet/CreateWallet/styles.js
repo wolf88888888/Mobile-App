@@ -57,11 +57,6 @@ const styles = StyleSheet.create({
         paddingRight: 18,
         marginTop: 0
     },
-    buttonText: {
-        color: '#fff',
-        fontSize: 17,
-        fontFamily: 'FuturaStd-Light'
-    },
     nextButton: {
         height: 50,
         width: 50,

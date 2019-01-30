@@ -2,8 +2,8 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React, { Component } from 'react';
 
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
+import Toast, {DURATION} from 'react-native-easy-toast'
 import PropTypes from 'prop-types';
-import Toast from 'react-native-simple-toast';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import requester from '../../../initDependencies';
@@ -85,7 +85,8 @@ class MyTrips extends Component {
             })
         }).catch(err => {
             this.hideProgress();
-            Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Cannot get messages, Please check network connection.', 1500);
+            // Toast.showWithGravity('Cannot get messages, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
             console.log(err);
         });
     }
@@ -112,6 +113,12 @@ class MyTrips extends Component {
                     animationType="slide"
                     activityIndicatorSize="large"
                     activityIndicatorColor="black" />
+                <Toast
+                        ref="toast"
+                        position='bottom'
+                        opacity={0.8}
+                        positionValue={150}
+                    />
             </View>
         )
     }

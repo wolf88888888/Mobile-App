@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, ScrollView, TouchableOpacity, View, Platform, NativeModules, DeviceEventEmitter, Dimensions } from 'react-native';
 
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import { imgHost } from '../../../../config';
 import SearchBar from '../../../molecules/SearchBar';
@@ -838,7 +838,12 @@ class HotelsSearchScreen extends Component {
                         {
                             this.state.isMAP != -1 &&
                                 <TouchableOpacity onPress={this.switchMode} style={styles.switchButton}>
-                                    <FontAwesome style={styles.icon}>{this.state.isMAP == 0? Icons.mapMarker : Icons.listUl}</FontAwesome>
+                                    {
+                                        this.state.isMAP == 0?
+                                            <FontAwesomeIcon name={"map-marker"} size={30} color="#fff" />
+                                        :
+                                            <FontAwesomeIcon name={"list-ul"} size={30} color="#fff" />
+                                    }
                                 </TouchableOpacity>
                         }
                     </View>

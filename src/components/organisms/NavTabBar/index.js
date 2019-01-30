@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import styles from './styles';
 import SplashScreen from 'react-native-smart-splash-screen';
@@ -47,55 +47,47 @@ export default class NavTabBar extends Component {
             <View style={styles.container}>
                 <TouchableWithoutFeedback onPress={() => navigate('PROFILE')}>
                     <View style={styles.tab}>
-                        <Text style={active === 'PROFILE' ? styles.activeIconStyle : styles.inactiveIconStyle}>
-                            <FontAwesome>{Icons.userO}</FontAwesome>
-                        </Text>
+                        
+                        <FontAwesomeIcon name={"user-o"} size={30} color={active === 'PROFILE' ? "#DA7B61" : '#646467'} />
                         <Text style={active === 'PROFILE' ? styles.activeTextStyle : styles.inactiveTextStyle}>
-              PROFILE
+                            PROFILE
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => navigate('MESSAGES')}>
                     <View style={styles.tab}>
-                        <Text style={active === 'MESSAGES' ? styles.activeIconStyle : styles.inactiveIconStyle}>
-                            <FontAwesome>{Icons.commentingO}</FontAwesome>
-                        </Text>
+                        <FontAwesomeIcon name={"commenting-o"} size={30} color={active === 'MESSAGES' ? "#DA7B61" : '#646467'} />
                         <Text style={active === 'MESSAGES' ? styles.activeTextStyle : styles.inactiveTextStyle}>
-              MESSAGES
+                            MESSAGES
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => navigate('MY_TRIPS', {reload: this.props.reloadTab})}>
                     <View style={styles.tab}>
-                        <Text style={active === 'MY_TRIPS' ? styles.activeIconStyle : styles.inactiveIconStyle}>
-                            <FontAwesome>{Icons.suitcase}</FontAwesome>
-                        </Text>
+                    
+                        <FontAwesomeIcon name={"suitcase"} size={30} color={active === 'MY_TRIPS' ? "#DA7B61" : '#646467'} />
                         <Text style={active === 'MY_TRIPS' ? styles.activeTextStyle : styles.inactiveTextStyle}>
-              MY TRIPS
+                            MY TRIPS
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => navigate('FAVORITES')}>
                     <View style={styles.tab}>
-                        <Text style={active === 'FAVORITES' ? styles.activeIconStyle : styles.inactiveIconStyle}>
-                            <FontAwesome>{Icons.heartO}</FontAwesome>
-                        </Text>
+                        <FontAwesomeIcon name={"heart-o"} size={30} color={active === 'FAVORITES' ? "#DA7B61" : '#646467'} />
                         <Text style={active === 'FAVORITES' ? styles.activeTextStyle : styles.inactiveTextStyle}>
-            FAVORITES
+                            FAVORITES
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => navigate('EXPLORE')}>
                     <View style={styles.tab}>
-                        <Text style={active === 'EXPLORE' ? styles.activeIconStyle : styles.inactiveIconStyle}>
-                            <FontAwesome>{Icons.search}</FontAwesome>
-                        </Text>
+                        <FontAwesomeIcon name={"search"} size={30} color={active === 'EXPLORE' ? "#DA7B61" : '#646467'} />
                         <Text style={active === 'EXPLORE' ? styles.activeTextStyle : styles.inactiveTextStyle}>
-              EXPLORE
+                            EXPLORE
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>

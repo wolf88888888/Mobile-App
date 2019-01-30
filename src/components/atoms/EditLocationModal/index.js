@@ -4,8 +4,10 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
 import _ from 'lodash';
+import Toast from 'react-native-easy-toast';
 import styles from './styles';
 import requester from '../../../initDependencies';
+import ProgressDialog from '../SimpleDialogs/ProgressDialog';
 
 class EditLocationModal extends Component {
     static propTypes = {
@@ -29,7 +31,7 @@ class EditLocationModal extends Component {
             countries: [],
             countryStates: [],
             country: null,
-            countryState: null,
+            countryState: undefined,
             // cities: [],
             // selectedCountryId: null,
             // selectedCountryName: '',
@@ -37,6 +39,7 @@ class EditLocationModal extends Component {
             // selectedCityName: '',
             // selectedStateId: '',
             hasCountryState: false,
+            showProgress: false,
         };
     }
 
@@ -89,7 +92,9 @@ class EditLocationModal extends Component {
             
         });
         this.setState({
-            countryStates,
+            hasCountryState: true,
+            countryStates: countryStates,
+            showProgress: false
         });
     }
 
@@ -103,18 +108,23 @@ class EditLocationModal extends Component {
         this.setState({
             // countryId: value.id,
             // countryName: value.name,
-            country: value !== null && value != 0 ? value : null,
+            country: value !== null && value != 0 ? value : undefined,
             countryStates: [],
-            hasCountryState: hasCountryState,
-            countryState: null,
+            hasCountryState: false,
+            countryState: undefined,
+            showProgress: hasCountryState
         });
 
         if (hasCountryState) {
             requester.getStates(value.id).then(res => {
                 res.body.then(data => {
-                    console.log("countryStates", data);
+                    // console.log("countryStates", data);
                     this.setCountryStates(data);
                 });
+            }).catch(err => {
+                this.setState({ showProgress: false });
+                this.refs.toast.show('Cannot get Country state, Please check network connection.', 1500);
+                console.log(err);
             });
         }
     }
@@ -185,6 +195,8 @@ class EditLocationModal extends Component {
                                     value: 0
                                 }}
                                 onValueChange={(value) => {
+                                    if (value === 0)
+                                        return;
                                     this.setState({
                                         countryState: value
                                     });
@@ -248,6 +260,21 @@ class EditLocationModal extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                
+                <ProgressDialog
+                       visible={this.state.showProgress}
+                       title=""
+                       message="Please Waiting..."
+                       animationType="slide"
+                       activityIndicatorSize="large"
+                       activityIndicatorColor="black"/>
+                       
+                <Toast
+                    ref="toast"
+                    position='bottom'
+                    opacity={0.8}
+                    positionValue={150}
+                />
             </View>
         )
     }

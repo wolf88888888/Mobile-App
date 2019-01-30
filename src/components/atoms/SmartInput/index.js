@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 
 // TODO: move styles to separate file
@@ -68,9 +68,7 @@ class SmartInput extends Component {
         if (rightIcon) {
             renderButton = (
                 <View style={styles.rightIconView}>
-                    <Text style={styles.rightIconText}>
-                        <FontAwesome>{Icons[rightIcon]}</FontAwesome>
-                    </Text>
+                    <FontAwesomeIcon name={rightIcon} size={15} color="#DA7B61" />
                 </View>
             );
         }

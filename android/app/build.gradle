@@ -82,7 +82,6 @@ project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf', 'SimpleLineIcons.ttf', 'FontAwesome.ttf'] // Name of the font files you want to copy
 ]
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -99,18 +98,18 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.locktrip"
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 21
         versionName "1.0." + versionCode
         multiDexEnabled  true
         ndk {
-            abiFilters "armeabi-v7a", "x86"
+            abiFilters "armeabi-v7a", "x86"//, "arm64-v8a"
         }
     }
     splits {
@@ -118,24 +117,24 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86"
+            include "armeabi-v7a", "x86"//, "arm64-v8a"
         }
     }
 	signingConfigs {
         release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            if (project.hasProperty('LOCKTRIP_RELEASE_STORE_FILE')) {
+                storeFile file(LOCKTRIP_RELEASE_STORE_FILE)
+                storePassword LOCKTRIP_RELEASE_STORE_PASSWORD
+                keyAlias LOCKTRIP_RELEASE_KEY_ALIAS
+                keyPassword LOCKTRIP_RELEASE_KEY_PASSWORD
             }
         }
         debug {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            if (project.hasProperty('LOCKTRIP_RELEASE_STORE_FILE')) {
+                storeFile file(LOCKTRIP_RELEASE_STORE_FILE)
+                storePassword LOCKTRIP_RELEASE_STORE_PASSWORD
+                keyAlias LOCKTRIP_RELEASE_KEY_ALIAS
+                keyPassword LOCKTRIP_RELEASE_KEY_PASSWORD
             }
         }
     }
@@ -176,7 +175,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -187,37 +186,34 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'com.android.support:multidex:1.0.3'
-    implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.facebook.react:react-native:+"             // From node_modules
-
-    implementation project(':react-native-smart-splashscreen')     // From node_modules
-    implementation project(':react-native-cardview')
-    implementation(project(':react-native-maps')){
-        exclude group: 'com.google.android.gms', module: 'play-services-base'
-        exclude group: 'com.google.android.gms', module: 'play-services-maps'
-    }
-    implementation 'com.google.android.gms:play-services-base:16.0.1'
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
-    implementation project(':react-native-uuid-generator')
-    implementation project(':react-native-fbsdk')
-    implementation project(':react-native-image-picker')
-    implementation project(':react-native-image-resizer')
-
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-fast-crypto')
 
     implementation group: 'org.springframework', name: 'spring-messaging', version: '4.3.18.RELEASE'
     implementation group: 'org.springframework', name: 'spring-websocket', version: '4.3.18.RELEASE'
     implementation "org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13.1"
-
-    implementation 'com.facebook.fresco:fresco:1.9.0'
-    implementation 'com.facebook.fresco:animated-gif:1.9.0'
-    
-    implementation (project(':react-native-fast-image')) {
+    implementation 'com.facebook.fresco:fresco:1.11.0'
+    implementation 'com.facebook.fresco:animated-gif:1.11.0'
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-uuid-generator')
+    implementation project(':react-native-smart-splash-screen')
+    implementation (project(':react-native-maps')){
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-maps'
+    }
+    implementation 'com.google.android.gms:play-services-base:16.1.0'
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation project(':react-native-image-resizer')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-fbsdk')
+    implementation (project(':react-native-fast-image')){
         exclude group: "com.android.support"
     }
-    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-cardview')
 }
 
 // Run this once to be able to run the application with BUCK

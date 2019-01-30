@@ -4,7 +4,6 @@ import BackButton from '../../atoms/BackButton';
 import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
 import PropTypes from 'prop-types';
-import { autobind } from 'core-decorators';
 import { userInstance } from '../../../utils/userInstance';
 import { validateNumberic, validateEmptyString } from '../../../utils/validation';
 import { TokenTransactions } from '../../../services/blockchain/tokenTransactions';
@@ -113,8 +112,7 @@ class SendToken extends Component {
         }, 1000);
     }
 
-    @autobind
-    onChangeHandler(property) {
+    onChangeHandler = (property) => {
         return (value) => {
             this.setState({ [property]: value });
         };

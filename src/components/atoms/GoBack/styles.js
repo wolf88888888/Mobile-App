@@ -19,10 +19,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    iconText: {
-        color: '#fff',
-        fontSize: 8
-    }
 });
 
 export default styles;

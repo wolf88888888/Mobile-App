@@ -9,26 +9,17 @@ import {
     View
 } from 'react-native';
 import React, { Component } from 'react';
+import Toast from 'react-native-easy-toast';
+import PropTypes from 'prop-types';
 
 import BackButton from '../../atoms/BackButton';
-import Image from 'react-native-remote-svg';
 import MessageView from './MessageView';
 import ProgressDialog from '../../atoms/SimpleDialogs/ProgressDialog';
-import PropTypes from 'prop-types';
-import Toast from 'react-native-simple-toast';
 import { domainPrefix } from '../../../config';
-import moment from 'moment';
 import requester from '../../../initDependencies';
 import styles from './styles';
 
 // import ImagePicker from 'react-native-image-picker';
-
-
-
-
-
-
-
 //import Message View for chat
 
 
@@ -90,7 +81,7 @@ class Chat extends Component {
                 // }
             }).catch(err => {
                 this.setState({ showProgress: false });
-                Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+                this.refs.toast.show('Cannot get messages, Please check network connection.', 1500);
                 console.log(err);
             });
         });
@@ -146,7 +137,7 @@ class Chat extends Component {
             });
         }).catch(err => {
             this.setState({ showProgress: false });
-            Toast.showWithGravity('Cannot create wallet, Please check network connection.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Cannot send message, Please check network connection.', 1500);
             console.log(err);
         });
     }
@@ -228,6 +219,13 @@ class Chat extends Component {
                     animationType="slide"
                     activityIndicatorSize="large"
                     activityIndicatorColor="black" />
+                    
+                <Toast
+                    ref="toast"
+                    position='bottom'
+                    opacity={0.8}
+                    positionValue={150}
+                />
             </KeyboardAvoidingView>// Ending Main View
         );
     }

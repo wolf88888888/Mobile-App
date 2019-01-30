@@ -1,4 +1,3 @@
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import {
     Platform,
     Text,
@@ -8,8 +7,9 @@ import {
 import React, { Component } from 'react';
 
 import Image from 'react-native-remote-svg';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Toast from 'react-native-simple-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Toast from 'react-native-easy-toast';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles';
 import { hasLetterAndNumber, hasSymbol, validateConfirmPassword, validatePassword } from '../../../../utils/validation';
 import SmartInput from '../../../atoms/SmartInput';
@@ -34,20 +34,20 @@ class CreatePassword extends Component {
 
     onCreatePassword() {
         if (this.state.password.length < 8) {
-            Toast.showWithGravity('Password should be at least 8 symbols.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Password should be at least 8 symbols.', 1500);
             return;
         }
         if (!hasLetterAndNumber(this.state.password)) {
-            Toast.showWithGravity('Password must contain both latin letters and digits.', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Password must contain both latin letters and digits.', 1500);
             return;
         }
         if (!hasSymbol(this.state.password)) {
-            Toast.showWithGravity('Password must contain symbols, like !, # or %..', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Password must contain symbols, like !, # or %...', 1500);
             return;
         }
 
         if (!validateConfirmPassword(this.state.password, this.state.confirmPassword)) {
-            Toast.showWithGravity('Passwords are not matched, Please input correctly', Toast.SHORT, Toast.BOTTOM);
+            this.refs.toast.show('Passwords are not matched, Please input correctly.', 1500);
             return;
         }
         const { params } = this.props.navigation.state;
@@ -113,13 +113,18 @@ class CreatePassword extends Component {
                         <TouchableOpacity
                             onPress={this.onCreatePassword}>
                             <View style={styles.nextButton}>
-                                <Text style={styles.buttonText}>
-                                    <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                </Text>
+                                <FontAwesome5Icon name={"arrow-right"} size={20} color="#fff" />
                             </View>
                         </TouchableOpacity>
                     </View>
                 </View>
+                
+                <Toast
+                    ref="toast"
+                    position='bottom'
+                    opacity={0.8}
+                    positionValue={150}
+                />
             </View>
             </KeyboardAwareScrollView>
         );

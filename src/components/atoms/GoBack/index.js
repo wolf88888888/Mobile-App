@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, Keyboard } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 
 import styles from './styles';
@@ -10,9 +10,7 @@ const GoBack = (props) => {
     if (props.icon) {
         renderIcon = (
             <View style={[styles.iconView, { borderColor: props.color }]}>
-                <Text style={[styles.iconText, { color: props.color }]}>
-                    <FontAwesome>{Icons[props.icon]}</FontAwesome>
-                </Text>
+                <FontAwesomeIcon name={props.icon} size={10} color={props.color} />
             </View>
         );
     }

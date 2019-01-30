@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, View, TouchableOpacity} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
 import styles from './styles';
 import { imgHost } from '../../../../config';
@@ -171,7 +171,7 @@ class MapModeHotelsSearch extends Component {
                     }
                     <Text style={styles.ratingsMap}>
                         {
-                            Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesome>{Icons.starO}</FontAwesome>)
+                            Array(hotel.stars !== null && hotel.stars).fill().map(i => <FontAwesomeIcon name={"star"} size={13} color="grey" />)
                         }
                     </Text>
                 </View>
@@ -272,6 +272,6 @@ let mapStateToProps = (state) => {
         exchangeRates: state.exchangeRates,
     };
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(MapModeHotelsSearch);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(MapModeHotelsSearch);
 
 // export default MapModeHotelsSearch;

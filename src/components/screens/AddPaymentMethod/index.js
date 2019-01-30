@@ -75,7 +75,7 @@ class AddPaymentMethod extends Component {
                     <TouchableOpacity style={styles.navItem} onPress={this.createWallet}>
                         <View style={styles.listItem}>
                             <View>
-                            <Image source={require('../../../../src/assets/svg/loc.svg')} style={styles.leftIcon}/>
+                                <Image source={require('../../../../src/assets/svg/loc.svg')} style={styles.leftIcon}/>
                             </View>
                             <Text style={styles.listItemText}>LOC</Text>
                         </View>

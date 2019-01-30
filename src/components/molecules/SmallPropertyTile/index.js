@@ -1,6 +1,6 @@
 import { AsyncStorage, Image, Text, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -44,14 +44,10 @@ class SmallPropertyTile extends Component {
         // Determine stars
         const stars = [];
         const fullStar = key => (
-            <Text style={{ color: '#acc6c1', fontSize: 7 }} key={key}>
-                <FontAwesome>{Icons.starO}</FontAwesome>
-            </Text>
+            <FontAwesomeIcon key = {key} name={"star"} size={9} color="#acc6c1" />
         );
         const emptyStar = key => (
-            <Text style={{ color: '#d8d8d8', fontSize: 7 }} key={key}>
-                <FontAwesome>{Icons.starO}</FontAwesome>
-            </Text>
+            <FontAwesomeIcon key = {key} name={"star"} size={9} color="#d8d8d8" />
         );
         for (let i = 0; i < averageRating; i++) stars.push(fullStar(i));
         for (let i = 0; i < 5 - averageRating; i++) stars.push(emptyStar(5 - i));

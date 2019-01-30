@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View, FlatList,TouchableOpacity, ProgressBarAndroid } from 'react-native';
+import { Image, Text, View, FlatList,TouchableOpacity } from 'react-native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
-import Icon from 'react-native-fontawesome';
 
-const dot = <FontAwesome style={{fontSize: 5}}>{Icons.circle}</FontAwesome>
-const starEmpty = <FontAwesome style={{fontSize: 15, color: '#8f9191'}}>{Icons.starO}</FontAwesome>;
-const starFill = <FontAwesome style={{fontSize: 15, color: '#bacfc9'}}>{Icons.starO}</FontAwesome>;
+const starEmpty = <FontAwesomeIcon name={"star"} size={18} color="#8f9191" />;
+const starFill = <FontAwesomeIcon name={"star"} size={18} color="#bacfc9" />;
 
 const flastlst_data = [{
     title1: "ENTIRE APPARTMENT . 1 BEDROOM 1 BED 1.5 BATHS",

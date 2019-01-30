@@ -1,5 +1,5 @@
 import { BackHandler, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import React, { Component } from 'react';
 import { domainPrefix, imgHost } from '../../../config';
 
@@ -106,7 +106,7 @@ class UserMyTrips extends Component {
                                     <View style={styles.flatListTitleView}>
                                         <Text style={styles.subtext1}>
                                             {(moment(item.arrival_date)).format('ddd, DD MMM').toString()}
-                                            {" "}<FontAwesome>{Icons.longArrowRight}</FontAwesome>{" "}
+                                            {" "}<FontAwesomeIcon name={"long-arrow-right"} size={13} color="#000" />{" "}
                                             {(moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString()}
                                         </Text>
 

@@ -1,17 +1,13 @@
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
 import { validateEmail, validateName, validateCardExpiry, validateCVV, validateCardNumber } from '../../../utils/validation';
 
-import GoBack from '../../atoms/GoBack';
 import Image from 'react-native-remote-svg';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import PropTypes from 'prop-types';
 import SmartInput from '../../atoms/SmartInput';
 import SmartInputCreditCard from '../../atoms/SmartInput/creditcard';
 import SmartInputDate from '../../atoms/SmartInput/date';
-import Switch from 'react-native-customisable-switch';
-import { TextInputMask } from 'react-native-masked-text';
-import { Header } from 'react-navigation';
 
 const styles = StyleSheet.create({
     container: {
@@ -98,10 +94,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingLeft: 2,
         paddingBottom: 2
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 17
     },
     lowOpacity: {
         opacity: 0.3
@@ -223,7 +215,7 @@ class CreditCard extends Component {
                     </View>
                     <View style={{flexDirection: 'row',marginLeft: 30, marginRight: 30}}>
                       
-                            <View style={styles.inputhalfView}>
+                        <View style={styles.inputhalfView}>
                              <View style={styles.titleHalfView}><Text style={styles.titleText}>Expiration Date</Text></View>
                                 <SmartInputDate
                                     value={MY}
@@ -252,23 +244,19 @@ class CreditCard extends Component {
                                     rightIcon={validateCVV(CVV) ? 'check' : null}
                                 />
                             </View>
+                        </View>
                     </View>
-                    </View>
-                    </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
                 </ScrollView>
-                
                     <View style={styles.nextButtonView}>
-                       
-                            <View style={styles.nextButton}>
-                                <TouchableOpacity
-                                    disabled={!CardHolder ||!CardNumber || !CVV || !MY}
-                                    onPress={() => this.onClickSave()}
-                                >
-                                    <Text style={styles.buttonText}>
-                                        <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                        <View style={styles.nextButton}>
+                            <TouchableOpacity
+                                disabled={!CardHolder ||!CardNumber || !CVV || !MY}
+                                onPress={() => this.onClickSave()}
+                            >
+                                <FontAwesome5Icon name={"arrow-right"} size={20} color="#fff" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 {/* <View style={styles.main}>
                     

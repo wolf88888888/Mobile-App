@@ -7,7 +7,7 @@ import {
     View,
     StatusBar
 } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import React, { Component } from 'react';
 
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
@@ -89,9 +89,7 @@ class WalletRecoveryKeywords extends Component {
                                 <TouchableOpacity
                                     onPress={() => this.toWalletKeywordValidation()}>
                                     <View style={styles.nextButton}>
-                                        <Text style={styles.buttonText}>
-                                            <FontAwesome>{Icons.arrowRight}</FontAwesome>
-                                        </Text>
+                                        <FontAwesome5Icon name={"arrow-right"} size={20} color="#fff" />
                                     </View>
                                 </TouchableOpacity>
                             </View>

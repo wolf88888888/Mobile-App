@@ -147,4 +147,4 @@ const mapDispatchToProps = dispatch => ({
     removeLocAmount: bindActionCreators(removeLocAmount, dispatch),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(ConfirmBottomBar);
+export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(ConfirmBottomBar);

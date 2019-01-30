@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { View, Text, TouchableOpacity } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 
@@ -56,7 +56,7 @@ class ProfileWalletCard extends Component {
                     (walletAddress == null || walletAddress == '') &&
                     (
                         <TouchableOpacity onPress={this.props.createWallet} style={styles.addMore}>
-                            <FontAwesome style={styles.addMorePlus}>{Icons.plus}</FontAwesome>
+                            <FontAwesome5Icon name={"plus"} size={20} color="#fff" />
                         </TouchableOpacity>
                     )
                 }
