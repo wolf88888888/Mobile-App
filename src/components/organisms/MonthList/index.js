@@ -38,6 +38,7 @@ export default class MonthList extends Component {
     }
 
     componentDidMount() {
+        console.log("MonthList componentDidMount", this.props.startDate, this.props.endDate)
         if (this.props.startDate) {
             this.scrollToSelecetdMonth();
         }
@@ -127,9 +128,13 @@ export default class MonthList extends Component {
         const monthOffset = ((12 * (startDate.year() - minDate.year())) + startDate.month()) - minDate.month();
         const weekOffset = this.getWeekNums(minDate, startDate);
         setTimeout(() => {
+            let moveY = (monthOffset * (24 + 25)) + (monthOffset ? weekOffset * Math.ceil((width / 7) + 10) : 0);
+            if (moveY === 0) {
+                moveY = 1;
+            }
             this.list.scrollTo({
                 x: 0,
-                y: (monthOffset * (24 + 25)) + (monthOffset ? weekOffset * Math.ceil((width / 7) + 10) : 0),
+                y: moveY,
                 animated: true
             });
         }, 400);
@@ -145,6 +150,7 @@ export default class MonthList extends Component {
     }
 
     render() {
+        console.log("Month List", this.state.dataSource);
         return (
             <ListView
                 ref={(list) => { this.list = list; }}
