@@ -27,6 +27,7 @@ class EditLocationModal extends Component {
 
     constructor(props) {
         super(props);
+        console.log("EditLocationModal props", props);
         this.state = {
             countries: [],
             countryStates: [],
@@ -43,7 +44,7 @@ class EditLocationModal extends Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         countryArr = [];
         this.props.countries.map((item, i) => {
             countryArr.push({ 'label': item.name, 'value': item })
@@ -54,12 +55,13 @@ class EditLocationModal extends Component {
         this.setState({
             countries: countryArr,
             country: this.props.country,
-            countryState: this.props.countryState,
+            // countryState: this.props.countryState,
             // selectedCityId: this.props.city==null? null: this.props.city.id,
             // selectedCountryId: this.props.country==null? null : this.props.country.id,
             // selectedCountryName: this.props.country==null? null : this.props.country.name,
             // selectedStateId: this.props.countryState==null? null : this.props.countryState.id,
-            hasCountryState: hasCountryState
+            hasCountryState: hasCountryState,
+            showProgress: hasCountryState
         }, () => {
             if (this.state.hasCountryState) {
                 requester.getStates(this.state.country.id).then(res => {
@@ -83,8 +85,13 @@ class EditLocationModal extends Component {
     }
 
     setCountryStates = (states) => {
+        console.log("setCountryStates", states);
         countryStates = [];
+        let selectedState;
         states.map((item, i) => {
+            if (item.id === this.props.countryState.id) {
+                selectedState = item
+            }
             countryStates.push({
                 'label': item.name,
                 'value': item
@@ -94,7 +101,10 @@ class EditLocationModal extends Component {
         this.setState({
             hasCountryState: true,
             countryStates: countryStates,
+            countryState: selectedState,
             showProgress: false
+        }, () => {
+            console.log("setCountryStates ----", this.state);
         });
     }
 
