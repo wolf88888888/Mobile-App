@@ -45,9 +45,9 @@ export default class Calendar extends Component {
         this.clear = this.clear.bind(this);
         this.confirm = this.confirm.bind(this);
         this.getDateRange();
+        this.resetCalendar();
     }
     componentDidMount() {
-        this.resetCalendar();
     }
 
     onChoose(day) {
@@ -116,14 +116,26 @@ export default class Calendar extends Component {
         const end = Moment(endDate, format_input);
         const isStartValid = start.isValid() && start >= this.minDate && start <= this.maxDate;
         const isEndValid = end.isValid() && end >= this.minDate && end <= this.maxDate;
-        this.setState({
+
+        console.log("resetCalendar this.minDate, this.maxDate", this.minDate, this.maxDate);
+        console.log("resetCalendar isStartValid", isStartValid, isEndValid);
+
+        this.state = {
             startDate: isStartValid ? start : null,
             startDateText: isStartValid ? this.i18n(start, 'date') : '',
             startWeekdayText: isStartValid ? this.i18n(start.isoWeekday(), 'w') : '',
             endDate: isEndValid ? end : null,
             endDateText: isEndValid ? this.i18n(end, 'date') : '',
             endWeekdayText: isEndValid ? this.i18n(end.isoWeekday(), 'w') : ''
-        });
+        };
+        // this.setState({
+        //     startDate: isStartValid ? start : null,
+        //     startDateText: isStartValid ? this.i18n(start, 'date') : '',
+        //     startWeekdayText: isStartValid ? this.i18n(start.isoWeekday(), 'w') : '',
+        //     endDate: isEndValid ? end : null,
+        //     endDateText: isEndValid ? this.i18n(end, 'date') : '',
+        //     endWeekdayText: isEndValid ? this.i18n(end.isoWeekday(), 'w') : ''
+        // });
     }
 
     i18n(data, type) {
@@ -194,6 +206,8 @@ export default class Calendar extends Component {
         const primaryFontColor = { color: primaryColor };
         const isValid = !startDate || endDate;
         const isClearVisible = startDate || endDate;
+
+        console.log("Calendar ----", startDate, endDate);
         return (
             <View style={[styles.container, mainBack]}>
                 <View style={{justifyContent: 'space-between', flexDirection: 'row',}}>
