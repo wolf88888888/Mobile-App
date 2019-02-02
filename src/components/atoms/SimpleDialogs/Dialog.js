@@ -5,8 +5,7 @@ import {
     ViewPropTypes,
     TouchableWithoutFeedback,
     Text,
-    Platform,
-    ModalProps
+    Platform
 } from 'react-native'
 const { OS } = Platform;
 
