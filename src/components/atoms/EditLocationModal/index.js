@@ -98,7 +98,7 @@ class EditLocationModal extends Component {
         this.setState({
             country: value !== null && value != 0 ? value : undefined,
             countryStates: [],
-            hasCountryState: hasCountryState,
+            hasCountryState: false,
             countryState: undefined,
             showProgress: hasCountryState
         });
