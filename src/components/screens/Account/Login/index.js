@@ -2,6 +2,7 @@ import {
     Alert,
     AsyncStorage,
     Keyboard,
+    Platform,
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
@@ -105,8 +106,14 @@ class Login extends Component {
                             if (typeof key !== 'function') {
                                 // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
                                 console.log('Error logging in  :', errors[key].message);
-                                this.setState({ showProgress: false, isAlert: true, messageAlert:  errors[key].message});
-                                // alert(errors[key].message);
+                                if (Platform.OS === 'ios') {
+                                    this.setState({ showProgress: false, isAlert: true, messageAlert:  errors[key].message});
+                                }
+                                else {
+                                    this.setState({ showProgress: false }, () => {
+                                        Alert.alert(errors[key].message);
+                                    });
+                                }
                             }
                         });
                     }
@@ -114,8 +121,14 @@ class Login extends Component {
             }
         })
         .catch(err => {
-            this.setState({ showProgress: false, isAlert: true, messageAlert:  'Cannot login, Please check network connection.'});
-            // alert('Cannot login, Please check network connection.');
+            if (Platform.OS === 'ios') {
+                this.setState({ showProgress: false, isAlert: true, messageAlert:  'Cannot login, Please check network connection.'});
+            }
+            else {
+                this.setState({ showProgress: false }, () => {
+                    Alert.alert('Cannot login, Please check network connection.');
+                });
+            }
             console.log(err);
         });
 
@@ -128,6 +141,7 @@ class Login extends Component {
     }
 
     onProgressClose = () => {
+        console.log("onProgressClose -------------");
         if (this.state.isAlert) {
             Alert.alert(this.state.messageAlert);
             this.setState({isAlert: false});

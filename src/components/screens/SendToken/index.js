@@ -1,4 +1,12 @@
-import { ScrollView, Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { 
+    Alert, 
+    Platform,
+    ScrollView, 
+    Text, 
+    TextInput, 
+    TouchableOpacity, 
+    View 
+} from 'react-native';
 import React, { Component } from 'react';
 import BackButton from '../../atoms/BackButton';
 import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
@@ -83,35 +91,74 @@ class SendToken extends Component {
             this.state.wallet_address,
             wei.toString()//(parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
         ).then(() => {
-            this.setState({
-                wallet_address: '',
-                locAmount: 0,
-                wallet_password: '',
-                showProgress: false,
-                isAlert: true, 
-                messageAlert:  'Transaction made successfully'
-            });
-        }).catch(x => {
-            if (x.hasOwnProperty('message')) {
+            if (Platform.OS === 'ios') {
                 this.setState({
+                    wallet_address: '',
+                    locAmount: 0,
+                    wallet_password: '',
                     showProgress: false,
                     isAlert: true, 
-                    messageAlert:  x.message
-                });
-            } 
-            else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
-                this.setState({
-                    showProgress: false,
-                    isAlert: true, 
-                    messageAlert:  x.err.message
+                    messageAlert:  'Transaction made successfully'
                 });
             }
-            else if (typeof x === 'string') {
+            else {
                 this.setState({
+                    wallet_address: '',
+                    locAmount: 0,
+                    wallet_password: '',
                     showProgress: false,
-                    isAlert: true, 
-                    messageAlert:  x
+                }, () => {
+                    Alert.alert('Transaction made successfully');
                 });
+            }
+        }).catch(x => {
+            if (x.hasOwnProperty('message')) {
+                if (Platform.OS === 'ios') {
+                    this.setState({
+                        showProgress: false,
+                        isAlert: true, 
+                        messageAlert:  x.message
+                    });
+                }
+                else {
+                    this.setState({
+                        showProgress: false
+                    }, () => {
+                        Alert.alert(x.message);
+                    });
+                }
+            } 
+            else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
+                if (Platform.OS === 'ios') {
+                    this.setState({
+                        showProgress: false,
+                        isAlert: true, 
+                        messageAlert:  x.err.message
+                    });
+                }
+                else {
+                    this.setState({
+                        showProgress: false
+                    }, () => {
+                        Alert.alert(x.err.message);
+                    });
+                }
+            }
+            else if (typeof x === 'string') {
+                if (Platform.OS === 'ios') {
+                    this.setState({
+                        showProgress: false,
+                        isAlert: true, 
+                        messageAlert:  x
+                    });
+                }
+                else {
+                    this.setState({
+                        showProgress: false
+                    }, () => {
+                        Alert.alert(x);
+                    });
+                }
             } 
             else {
                 this.setState({
