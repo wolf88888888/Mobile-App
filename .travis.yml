@@ -1,0 +1,65 @@
+os: osx
+osx_image: xcode9.4
+language: objective-c
+node_js:
+  - 8.14.1
+
+
+stages:
+  - test2
+  - test1
+  - build
+  - name: test branch 1
+    if: branch = master
+  - name: test branch 2
+    if: branch = staging
+  
+  
+jobs:
+  include:
+    - stage: test1
+      before_script:
+        - openssl aes-256-cbc -K $encrypted_5ada4aafeac8_key -iv $encrypted_5ada4aafeac8_iv -in deploy_key.enc -out ./deploy_key -d
+      script:
+        - pwd && ls
+        - eval "$(ssh-agent -s)"
+        - chmod 600 ./deploy_key
+        - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+        - ssh-add ./deploy_key
+        - ls
+        - pwd
+        - $encrypted_5478faad
+
+    - stage: build and deploy ios appetize release
+      install: 
+        - npm install
+        - cd ios
+        - pod --no-ansi install
+        - cd ..
+      before_script:
+        - "./scripts/versions.sh"
+      # - "./scripts/prepare-detox-ci-req.sh"
+      script:
+        - |
+          xcodebuild \
+            -workspace ios/MobileApp.xcworkspace \
+            -scheme MobileApp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -derivedDataPath ios/build \
+            -quiet
+
+    - stage: test2
+        - pwd && ls
+        - echo "testing"
+      #   - npm run test
+
+    - stage: test branch 1
+        - pwd && ls
+        - echo "testing branch master"
+      #   - npm run test
+
+    - stage: test branch 2
+        - pwd && ls
+        - echo "testing branch staging"
+      #   - npm run test
