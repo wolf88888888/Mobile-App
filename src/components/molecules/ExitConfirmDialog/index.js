@@ -29,7 +29,7 @@ class ExitConfirmDialog extends Component {
                 okStyle = {{color:'#000', fontSize: 17}}
             >
                 <Text style={{fontSize: 17}}>
-                    Are you sure to exit?
+                    Are you sure you want to exit?
                 </Text>
             </MaterialDialog>
             
