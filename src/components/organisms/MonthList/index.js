@@ -136,7 +136,7 @@ export default class MonthList extends Component {
                 y: moveY,
                 animated: true
             });
-        }, 400);
+        }, 500);
     }
 
     renderMonth(month) {
