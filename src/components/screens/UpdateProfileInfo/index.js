@@ -1,18 +1,8 @@
 import { AsyncStorage, Clipboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import React, { Component } from 'react';
 
 import BackButton from '../../atoms/BackButton';
-import Footer from '../../atoms/Footer';
-import Image from 'react-native-remote-svg';
-import ProfileHistoryItem from '../../atoms/ProfileHistoryItem';
 import PropTypes from 'prop-types';
-import UserProfileHomes from '../../organisms/UserProfileHomes'
-import UserProfileReviews from '../../organisms/UserProfileReviews'
-import UserProfileSummary from '../../organisms/UserProfileSummary'
-import UserPropertyItemTypeAction from '../../atoms/UserPropertyItemTypeAction'
-import UserPropertyItemTypeInfo from '../../atoms/UserPropertyItemTypeInfo'
-import { connect } from 'react-redux';
 import styles from './styles';
 
 class UpdateProfileInfo extends Component {

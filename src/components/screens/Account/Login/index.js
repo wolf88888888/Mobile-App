@@ -1,6 +1,8 @@
 import {
+    Alert,
     AsyncStorage,
     Keyboard,
+    Platform,
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
@@ -13,15 +15,14 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import Image from 'react-native-remote-svg';
 import PropTypes from 'prop-types';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { autobind } from 'core-decorators';
 import styles from './styles';
 import { validateEmail, validatePassword1 } from '../../../../utils/validation';
 import SmartInput from '../../../atoms/SmartInput';
 import ProgressDialog from '../../../atoms/SimpleDialogs/ProgressDialog';
 import { domainPrefix } from '../../../../config';
 import requester from '../../../../initDependencies';
-import LoginLocationDialog from '../../../atoms/LoginLocationDialog'
-import LoginEmailVerifyDialog from '../../../atoms/LoginEmailVerifyDialog'
+import LoginLocationDialog from '../../../atoms/LoginLocationDialog';
+import LoginEmailVerifyDialog from '../../../atoms/LoginEmailVerifyDialog';
 
 class Login extends Component {
     static propTypes = {
@@ -35,6 +36,8 @@ class Login extends Component {
         email: '',
         password: '',
         showProgress: false,
+        isAlert: false,
+        messageAlert: '',
         locationDialogVisible: false,
         verificationDialogVisible: false,
     }
@@ -71,9 +74,9 @@ class Login extends Component {
 
         requester.login(user, null).then(res => {
             console.log("requester.login", res);
-            this.setState({ showProgress: false });
             if (res.success) {
                 res.body.then(data => {
+                    this.setState({ showProgress: false });
                     AsyncStorage.setItem(`${domainPrefix}.auth.locktrip`, data.Authorization);
                     // TODO: Get first name + last name from response included with Authorization token (Backend)
                     AsyncStorage.setItem(`${domainPrefix}.auth.username`, user.email);
@@ -93,17 +96,24 @@ class Login extends Component {
                     const { errors } = data;
                     console.log("error", errors);
                     if (errors.hasOwnProperty('CountryNull')) {
-                        this.setState({ locationDialogVisible: true });
+                        this.setState({ showProgress: false, locationDialogVisible: true });
                     }
                     else if (errors.hasOwnProperty('EmailNotVerified')) {
-                        this.setState({ verificationDialogVisible: true });
+                        this.setState({ showProgress: false, verificationDialogVisible: true });
                     }
                     else {
                         Object.keys(errors).forEach((key) => {
                             if (typeof key !== 'function') {
                                 // Toast.showWithGravity(errors[key].message, Toast.SHORT, Toast.BOTTOM);
                                 console.log('Error logging in  :', errors[key].message);
-                                alert(errors[key].message);
+                                if (Platform.OS === 'ios') {
+                                    this.setState({ showProgress: false, isAlert: true, messageAlert:  errors[key].message});
+                                }
+                                else {
+                                    this.setState({ showProgress: false }, () => {
+                                        Alert.alert(errors[key].message);
+                                    });
+                                }
                             }
                         });
                     }
@@ -111,18 +121,31 @@ class Login extends Component {
             }
         })
         .catch(err => {
-            this.setState({ showProgress: false });
-            alert('Cannot login, Please check network connection.');
+            if (Platform.OS === 'ios') {
+                this.setState({ showProgress: false, isAlert: true, messageAlert:  'Cannot login, Please check network connection.'});
+            }
+            else {
+                this.setState({ showProgress: false }, () => {
+                    Alert.alert('Cannot login, Please check network connection.');
+                });
+            }
             console.log(err);
         });
 
     }
 
-    @autobind
-    onChangeHandler(property) {
+    onChangeHandler = (property) => {
         return (value) => {
             this.setState({ [property]: value });
         };
+    }
+
+    onProgressClose = () => {
+        console.log("onProgressClose -------------");
+        if (this.state.isAlert) {
+            Alert.alert(this.state.messageAlert);
+            this.setState({isAlert: false});
+        }
     }
 
     render() {
@@ -195,6 +218,7 @@ class Login extends Component {
 
                     <ProgressDialog
                        visible={this.state.showProgress}
+                       onDismiss = {this.onProgressClose}
                        title=""
                        message="Login..."
                        animationType="slide"

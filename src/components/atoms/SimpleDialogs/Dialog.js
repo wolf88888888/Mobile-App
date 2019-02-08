@@ -82,7 +82,7 @@ class Dialog extends Component {
 
     render() {
         const {
-            dialogStyle, visible, animationType, onRequestClose, onShow,
+            dialogStyle, visible, animationType, onRequestClose, onDismiss, onShow,
             onOrientationChange, onTouchOutside, overlayStyle, supportedOrientations
         } = this.props;
 
@@ -95,6 +95,7 @@ class Dialog extends Component {
                 transparent={true}
                 visible={visible}
                 onRequestClose={onRequestClose}
+                onDismiss={onDismiss}
                 onShow={onShow}
                 onOrientationChange={onOrientationChange}
                 supportedOrientations={supportedOrientations}
@@ -142,19 +143,22 @@ Dialog.propTypes = {
     overlayStyle: ViewPropTypes.style,
     buttons: PropTypes.element,
     visible: PropTypes.bool,
-    animationType: Modal.propTypes.animationType,
+    animationType: PropTypes.string,
     onRequestClose: PropTypes.func,
+    onDismiss: PropTypes.func,
     onShow: PropTypes.func,
-    onOrientationChange: Modal.propTypes.onOrientationChange,
+    onOrientationChange: PropTypes.func,
     onTouchOutside: PropTypes.func,
-    supportedOrientations: Modal.propTypes.supportedOrientations,
+    supportedOrientations: PropTypes.string,
     title: PropTypes.string,
     titleStyle: Text.propTypes.style
 }
 
 Dialog.defaultProps = {
     visible: false,
-    onRequestClose: () => null
+    onRequestClose: () => null,
+    onDismiss: () => null,
+    animationType: 'none'
 };
 
 export default Dialog;
