@@ -10,6 +10,7 @@ import moment from 'moment';
 import requester from '../../../initDependencies';
 import { userInstance } from '../../../utils/userInstance';
 import styles from './styles';
+import lang from '../../../language/';
 
 class UserMyTrips extends Component {
 
@@ -37,6 +38,8 @@ class UserMyTrips extends Component {
             isLoading: false,
         };
         this.onEndReached = this.onEndReached.bind(this)
+        this.renderItem = this.renderItem.bind(this)
+        this.renderHotelImage = this.renderHotelImage.bind(this)
     }
 
     async componentDidMount() {
@@ -49,7 +52,7 @@ class UserMyTrips extends Component {
 
     onEndReached() {
         console.log('reached to end');
-        pageNumber = this.state.page + 1
+        let pageNumber = this.state.page + 1;
         if (!this.state.isLast && !this.state.isLoading) {
             this.setState({ isLoading: true })
             requester.getMyHotelBookings([`page=${pageNumber}`]).then(res => {
@@ -71,13 +74,188 @@ class UserMyTrips extends Component {
         }
     }
 
-    render() {
-        const { navigate } = this.props.navigation;
-
+    calcItemData(item) {
+        let invalidData = false;
+        let hotelImageURL = null;
+        let error; // {debug:String, error:Object}
         let imageAvatar = '';
-        if (this.state.image != '') {
-            imageAvatar = { uri: imgHost + this.state.userImageUrl }
+
+        // check if data is valid
+        if (item && item.item && item.item.hotel_photo) {
+            try {
+                let photoJSONData = item.item.hotel_photo;
+                const thumb =  JSON.parse(photoJSONData).thumbnail;
+                hotelImageURL = `${imgHost}${thumb}`;
+                if (this.state.image != '') {
+                    imageAvatar = { uri: imgHost + this.state.userImageUrl }
+                }
+            } catch (err) {
+                error = {
+                    debug: 'Error in parsing hotel image thumbnail or getting avatar url from state.',
+                    error: err
+                };
+                invalidData = true;
+            }
+        } else {
+            invalidData = true;
+            error = {
+                debug: 'Error in hotel data object from server - item/item.item/item.hotel_photo is null',
+                error: {}
+            }
         }
+
+        // if invalid hotel data
+        if (invalidData) {
+            console.warn('Error in hotel item data',{error,hotelData:item})
+        }
+
+        const arrivalDate = moment(item.item.arrival_date);
+        const day = arrivalDate.format("DD").toString();
+        const month = arrivalDate.format("MMM").toString();
+        const dateInCircle = `${day}\n${month}`;
+
+        const dateFormat = 'DD MMM, YYYY'; // example: "01 Oct, 2019"
+        const dateFrom = arrivalDate.format(dateFormat).toString();
+        const dateTo = arrivalDate.add(item.item.nights, 'day').format(dateFormat).toString();
+        const arrow = (<FontAwesome>{Icons.longArrowRight}</FontAwesome>);
+
+        return {
+            hotelImageURL,
+            imageAvatar,
+            dateInCircle,
+            dateFrom,
+            dateTo,
+            arrow
+        }
+    }
+
+    calcBookingStatusAndRefNo(item) {
+        let status;
+        let refNo;
+
+        try {
+            status = item.item.status;
+            refNo = item.item.booking_id;
+        } catch(err) {
+            console.warn('Error while getting My Trips -> booking -> (status or reference no) ', {error:err});
+            status = '';
+        }
+
+        return {
+            refNo,
+            status
+        }
+    }
+
+    renderBookingStatusAndRefNo(item) {
+        const {refNo,status} = this.calcBookingStatusAndRefNo(item);
+
+        let txtStatus = <Text style={styles.textBookingStatus}>{`${lang.TEXT.MY_TRIPS_BOOKING_STATUS}: ${lang.SERVER.BOOKING_STATUS[status]}`}</Text>;
+        let txtRefNo = <Text style={styles.textBookingId}>{`${lang.TEXT.MY_TRIPS_BOOKING_REF_NO}: ${refNo}`}</Text>
+
+        let result;
+
+        
+        if (status == '' || status == null || status == 'PENDING_SAFECHARGE_CONFIRMATION') {
+        // In this case no info should be shown
+            result = (
+                <View
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                ><Text>{'status null'}</Text></View>
+            );
+        } else if (status && status == 'COMPLETE') {
+            result = (
+                <View 
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                >
+                    {txtStatus}
+                    {txtRefNo}
+                </View>
+            );
+        } else {
+            result = (
+                <View 
+                    testID={'renderBookingStatus'}
+                    style={styles.hotelBookingStatusContainer}
+                >
+                    {txtStatus}
+                </View>
+            );
+        }
+        return result;
+    }
+
+    renderHotelImage(hotelImageURL) {
+        let result;
+
+        if (hotelImageURL == null) {
+            result = (
+                <View 
+                    style={styles.hotelImageContainerNoImage}
+                    testID={'blankImageContainer'}
+                >
+                    {/* <View style={styles.hotelImageNoImage}> */}
+                        <Text style={styles.txtHotelNoImage}>{lang.TEXT.MYTRIPS_NO_IMAGE}</Text>
+                    {/* </View> */}
+                </View>
+            )
+        } else {
+            result = (
+                <View 
+                    style={styles.hotelImageContainer}
+                    testID={'imageContainer'}
+                >
+                    <Image
+                        style={styles.hotelImage}
+                        source={{ uri: hotelImageURL }}
+                    />
+                </View>
+            );
+        }
+
+        return result;
+    }
+    
+    renderItem(item) {
+        const {hotelImageURL,imageAvatar,dateInCircle,dateFrom,dateTo,arrow} = this.calcItemData(item);
+
+        return (
+            <View style={styles.flatListMainView}>
+                <View>
+                    <View style={styles.img_round}>
+                        <Text style={styles.img_round_text}>
+                          {dateInCircle}
+                        </Text>
+                    </View>
+                    <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
+                </View>
+                <View style={styles.flatListDataView}>
+                    <View style={styles.flatListTitleView}>
+                        <Text style={styles.subtext1}>
+                            {dateFrom}{" "}{arrow}{" "}{dateTo}
+                        </Text>
+                        <Text style={styles.subtitle}>Check into {item.item.hotel_name}</Text>
+                    </View>
+                    
+                    { this.renderHotelImage             (hotelImageURL) }
+                    { this.renderBookingStatusAndRefNo  (item)          }
+
+                    <View style={styles.flatListBottomView}>
+                        <View style={styles.flatListUserProfileView}>
+                            <Image style={styles.senderImage} source={imageAvatar} />
+                        </View>
+                    </View>
+                    <View style={styles.itemSeparator}/>
+                </View>
+            </View>
+        )
+    }
+
+    render() {
+        const { navigate } = this.props.navigation;        
+
         return (
             <View style={styles.container}>
                 <View style={styles.chatToolbar}>
@@ -89,42 +267,7 @@ class UserMyTrips extends Component {
                     data={this.state.trips}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.5}
-                    renderItem={
-                        ({ item }) =>
-                            <View style={styles.flatListMainView}>
-                                <View>
-                                    <View style={styles.img_round}>
-                                        <Text style={styles.img_round_text}>
-                                            {(moment(item.arrival_date)).format("DD").toString()}
-                                            {"\n"}
-                                            {(moment(item.arrival_date)).format("MMM").toString()}
-                                        </Text>
-                                    </View>
-                                    <Dash dashColor='#dedede' dashStyle={{ borderRadius: 80, overflow: 'hidden' }} style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }} />
-                                </View>
-                                <View style={styles.flatListDataView}>
-                                    <View style={styles.flatListTitleView}>
-                                        <Text style={styles.subtext1}>
-                                            {(moment(item.arrival_date)).format('ddd, DD MMM').toString()}
-                                            {" "}<FontAwesome>{Icons.longArrowRight}</FontAwesome>{" "}
-                                            {(moment(item.arrival_date).add(item.nights, 'day')).format('ddd, DD MMM').toString()}
-                                        </Text>
-
-                                        <Text style={styles.subtitle}>Check into {item.hotel_name}</Text>
-                                    </View>
-
-                                    <Image
-                                        style={styles.hotelImage}
-                                        source={{ uri: imgHost + JSON.parse(item.hotel_photo).thumbnail }}
-                                    />
-                                    <View style={styles.flatListBottomView}>
-                                        <View style={styles.flatListUserProfileView}>
-                                            <Image style={styles.senderImage} source={imageAvatar} />
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                    }
+                    renderItem={this.renderItem}
                 />
             </View>
         )
