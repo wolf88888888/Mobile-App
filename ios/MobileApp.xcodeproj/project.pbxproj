@@ -1388,7 +1388,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = c.om.locktrip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.locktrip;
 				PRODUCT_NAME = MobileApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1423,7 +1423,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = c.om.locktrip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.locktrip;
 				PRODUCT_NAME = MobileApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
