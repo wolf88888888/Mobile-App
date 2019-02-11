@@ -42,7 +42,7 @@ class SendToken extends Component {
             jsonFile: '',
             showProgress: false,
             isAlert: false,
-            messageAlert: '',
+            alertMessage: '',
             loadMessage: 'sending...',
         };
         this.onClickSend = this.onClickSend.bind(this);
@@ -82,7 +82,10 @@ class SendToken extends Component {
     }
 
     onClickSend() { 
-        this.setState({ showProgress: true });
+        this.setState({ 
+            showProgress: true,
+            isAlert: false,
+            alertMessage: '', });
 
         const wei = (this.tokensToWei(this.state.loc_amount.toString()));
         TokenTransactions.sendTokens(
@@ -91,74 +94,35 @@ class SendToken extends Component {
             this.state.wallet_address,
             wei.toString()//(parseFloat(this.state.loc_amount) * Math.pow(10, 18)).toString()
         ).then(() => {
-            if (Platform.OS === 'ios') {
-                this.setState({
-                    wallet_address: '',
-                    locAmount: 0,
-                    wallet_password: '',
-                    showProgress: false,
-                    isAlert: true, 
-                    messageAlert:  'Transaction made successfully'
-                });
-            }
-            else {
-                this.setState({
-                    wallet_address: '',
-                    locAmount: 0,
-                    wallet_password: '',
-                    showProgress: false,
-                }, () => {
-                    Alert.alert('Transaction made successfully');
-                });
-            }
+            this.setState({
+                wallet_address: '',
+                locAmount: 0,
+                wallet_password: '',
+                showProgress: false,
+                isAlert: true, 
+                alertMessage:  'Transaction made successfully'
+            });
         }).catch(x => {
             if (x.hasOwnProperty('message')) {
-                if (Platform.OS === 'ios') {
-                    this.setState({
-                        showProgress: false,
-                        isAlert: true, 
-                        messageAlert:  x.message
-                    });
-                }
-                else {
-                    this.setState({
-                        showProgress: false
-                    }, () => {
-                        Alert.alert(x.message);
-                    });
-                }
+                this.setState({
+                    showProgress: false,
+                    isAlert: true, 
+                    alertMessage:  x.message
+                });
             } 
             else if (x.hasOwnProperty('err') && x.err.hasOwnProperty('message')) {
-                if (Platform.OS === 'ios') {
-                    this.setState({
-                        showProgress: false,
-                        isAlert: true, 
-                        messageAlert:  x.err.message
-                    });
-                }
-                else {
-                    this.setState({
-                        showProgress: false
-                    }, () => {
-                        Alert.alert(x.err.message);
-                    });
-                }
+                this.setState({
+                    showProgress: false,
+                    isAlert: true, 
+                    alertMessage:  x.err.message
+                });
             }
             else if (typeof x === 'string') {
-                if (Platform.OS === 'ios') {
-                    this.setState({
-                        showProgress: false,
-                        isAlert: true, 
-                        messageAlert:  x
-                    });
-                }
-                else {
-                    this.setState({
-                        showProgress: false
-                    }, () => {
-                        Alert.alert(x);
-                    });
-                }
+                this.setState({
+                    showProgress: false,
+                    isAlert: true, 
+                    alertMessage:  x
+                });
             } 
             else {
                 this.setState({
@@ -175,12 +139,6 @@ class SendToken extends Component {
         };
     }
 
-    onProgressClose = () => {
-        if (this.state.isAlert) {
-            Alert.alert(this.state.messageAlert);
-            this.setState({isAlert: false});
-        }
-    }
 
     render() {
         const { navigate, goBack } = this.props.navigation;
@@ -268,8 +226,8 @@ class SendToken extends Component {
                 </TouchableOpacity>
                 <ProgressDialog
                     visible={this.state.showProgress}
-                    onDismiss = {this.onProgressClose}
-                    title=""
+                    isAlert={this.state.isAlert}
+                    alertMessage={this.state.alertMessage}
                     message={this.state.loadMessage}
                     animationType="fade"
                     activityIndicatorSize="large"
