@@ -146,7 +146,7 @@ class EditLocationModal extends Component {
                     <View style={styles.footer}>
                         <TouchableOpacity
                             onPress={() => {
-                                if (this.state.countryState === undefined) {
+                                if (this.state.hasCountryState && this.state.countryState === undefined) {
                                     this.refs.toast.show('Please select country state.', 1500);
                                     return;
                                 }
