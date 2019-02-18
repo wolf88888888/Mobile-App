@@ -126,7 +126,7 @@ export default class MonthList extends Component {
         } = this.props;
         const monthOffset = ((12 * (startDate.year() - minDate.year())) + startDate.month()) - minDate.month();
         const weekOffset = this.getWeekNums(minDate, startDate);
-        setTimeout(() => {
+        // setTimeout(() => {
             let moveY = (monthOffset * (24 + 25)) + (monthOffset ? weekOffset * Math.ceil((width / 7) + 10) : 0);
             if (moveY === 0) {
                 moveY = 1;
@@ -136,7 +136,7 @@ export default class MonthList extends Component {
                 y: moveY,
                 animated: true
             });
-        }, 500);
+        // }, 500);
     }
 
     renderMonth(month) {
