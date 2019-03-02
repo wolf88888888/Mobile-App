@@ -2,8 +2,7 @@ import {
     StyleSheet,
     Dimensions
 } from 'react-native';
-
-const { scale, width } = Dimensions.get('window');
+const {scale, width} = Dimensions.get('window');
 let iconSize = 30;
 let resultFontSize = 17;
 let weekTextFontSize = 15;
@@ -16,12 +15,15 @@ if (width < 350) {
 }
 
 const primaryColor = '#DA7B61';
-
 export default StyleSheet.create({
     container: {
         flex: 1,
         flexDirection:'column',
         justifyContent: 'flex-start'
+    },
+    ctrl: {
+        justifyContent: 'space-between',
+        flexDirection: 'row'
     },
     result: {
         height:80,
@@ -44,7 +46,6 @@ export default StyleSheet.create({
                 rotateZ: '-75deg'
             }
         ]
-        
     },
     resultPart: {
         flex: 1
@@ -82,10 +83,10 @@ export default StyleSheet.create({
         textAlign: 'center'
     },
     scroll: {
-        flex: 1,
+        flex: 9,     
         borderTopWidth: 3,
         borderColor: '#d6d7da',
-        paddingHorizontal:15
+        paddingLeft:15
     },
     btn: {
         height: 90,
@@ -122,4 +123,3 @@ export default StyleSheet.create({
         height: iconSize
     }
 });
-

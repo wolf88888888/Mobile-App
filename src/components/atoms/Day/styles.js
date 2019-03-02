@@ -2,8 +2,7 @@ import {
     StyleSheet,
     Dimensions
 } from 'react-native';
-
-const { scale, width } = Dimensions.get('window');
+const {scale, width} = Dimensions.get('window');
 let paddingH = 30;
 let dayWidth = (width - paddingH) / 7;
 const mod = (scale * (width - paddingH)) % 7;
@@ -32,7 +31,7 @@ export default StyleSheet.create({
     day: {
         width: dayWidth - 10,
         height: dayWidth - 10,
-        borderRadius: dayWidth / 2,
+        borderRadius: (dayWidth - 10) / 2,
         overflow: 'hidden',
         justifyContent: 'center',
         alignItems: 'center'
@@ -49,4 +48,4 @@ export default StyleSheet.create({
         textAlign: 'center'
     }
 });
-
+  

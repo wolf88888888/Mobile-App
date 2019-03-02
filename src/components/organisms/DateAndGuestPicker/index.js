@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View, Image } from 'react-native';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import Moment from 'moment';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
+import styles from './styles';
 
 class DateAndGuestPicker extends Component {
     constructor(props) {
@@ -29,11 +30,19 @@ class DateAndGuestPicker extends Component {
     }
 
     onCalendar = () => {
+        let format_input = "DD/MM/YYYY";
+        let format_display = "ddd, DD MMM";
+
+        let today = Moment(new Date());
+        let next_year = Moment(new Date()).add(1, 'years');
+
         this.props.navigation.navigate('CalendarScreen', {
+            format_input: format_input,
+            format_display: format_display,
+            minDate: today.format(format_input),
+            maxDate: next_year.format(format_input),
             startDate: this.props.checkInDateFormated,
             endDate: this.props.checkOutDateFormated,
-            format_input: "DD/MM/YYYY",
-            format_display: "ddd, DD MMM",
             onConfirm: this.props.onDatesSelect
         });
     }

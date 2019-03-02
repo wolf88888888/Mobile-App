@@ -1,7 +1,7 @@
 import {
-    StyleSheet,
-  } from 'react-native';
-  
+  StyleSheet,
+} from 'react-native';
+
 export default StyleSheet.create({
     month: {
         paddingTop: 5,
@@ -23,4 +23,3 @@ export default StyleSheet.create({
         paddingVertical: 5
     }
 });
-  
